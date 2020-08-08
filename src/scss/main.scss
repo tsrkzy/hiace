@@ -1,3 +1,16 @@
 html {
   font-size: 8px;
+
+  div.container > button {
+    &:disabled {
+      cursor: not-allowed;
+      color: lightgray;
+
+      &:hover {
+        color: lightgray;
+        border-color: #bbb;
+      }
+    }
+  }
 }
+
