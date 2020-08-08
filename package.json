@@ -14,6 +14,7 @@
     "dotenv": "^8.2.0",
     "firebase": "^7.17.2",
     "firebaseui": "^4.6.1",
+    "skeleton-css": "^2.0.4",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
@@ -27,6 +28,9 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.3",
+    "scss-loader": "0.0.1",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
