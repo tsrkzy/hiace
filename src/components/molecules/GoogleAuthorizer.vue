@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div v-if="!loggedIn" id="firebaseui-auth-container"></div>
-    <span v-if="loggedIn">ログイン中</span>
+    <div v-if="!authenticated" id="firebaseui-auth-container"></div>
+    <div v-if="authenticated">
+      <h5>auth.info</h5>
+      <pre>{{ $store.getters["auth/info"] }}</pre>
+    </div>
   </div>
 </template>
 
@@ -16,53 +19,52 @@ import "firebaseui/dist/firebaseui.css";
 export default {
   name: "GoogleAuthorizer",
   created() {
-    const { currentUser } = firebase.auth();
-    if (currentUser) {
-      this.$store.dispatch("auth/logIn");
-    }
+
   },
   mounted() {
-    const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
-
-    ui.start("#firebaseui-auth-container", {
-      callbacks: {
-        signInSuccessWithAuthResult: (/*authResult, redirectUrl*/) => {
-          /* ログイン状態はfirebase.auth().currentUserが握るので、
-           * ログイン後コールバックでは何もせずに終了 */
-          this.$store.dispatch("auth/logIn");
-          return false;
-        }
-      },
-      signInFlow: "popup",
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      ],
-      tosUrl: "/terms-of-service",
-      privacyPolicyUrl: "/privacy-policy"
-    });
+    if (!this.authenticated) {
+      const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start("#firebaseui-auth-container", {
+        callbacks: {
+          signInSuccessWithAuthResult: (/*authResult, redirectUrl*/) => {
+            /* ログイン状態はfirebase.auth().currentUserが握るので、
+             * ログイン後コールバックでは何もせずに終了 */
+            this.syncAuthInfo();
+            return false;
+          }
+        },
+        signInFlow: "popup",
+        signInOptions: [
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        ],
+        tosUrl: "/terms-of-service",
+        privacyPolicyUrl: "/privacy-policy"
+      });
+    }
 
   },
   methods: {
-    logIn() {
-      this.loggedIn = true;
+    syncAuthInfo() {
+      const { currentUser } = firebase.auth();
+      if (currentUser) {
+        const auth = {
+          name: currentUser.displayName,
+          photoUrl: currentUser.photoURL,
+          email: currentUser.email
+        };
+        this.$store.dispatch("auth/setAuth", { auth });
+      } else {
+        this.$store.dispatch("auth/clearAuth");
+      }
     }
   },
   computed: {
-    store_authLoggedIn() {
-      return this.$store.getters["auth/loggedIn"];
+    authenticated() {
+      return this.$store.getters["auth/authenticated"];
     }
   },
   data() {
-    return {
-      loggedIn: false,
-    };
-  },
-  watch: {
-    store_authLoggedIn(loggedIn) {
-      if (loggedIn) {
-        this.logIn();
-      }
-    }
+    return {};
   }
 };
 </script>

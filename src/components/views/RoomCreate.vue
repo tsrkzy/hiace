@@ -2,8 +2,8 @@
   <div class="container">
     <h3>部屋の作成</h3>
     <ha-input-form label="部屋名" v-model="roomName"></ha-input-form>
-    <ha-input-form label="パスワード" v-model="roomPassword" placeholder="暗号化してません。"></ha-input-form>
     <ha-select label="システム" v-model="system" :items="[{value:'sw2',text:'ソード・ワールド2.0'},{value:'sw2.5',text:'ソード・ワールド2.5'}]"></ha-select>
+    <google-authorizer></google-authorizer>
     <ha-button :disabled="!activateCreateRoomButton" @click="onClickCreateRoomButtonHandler">作成</ha-button>
   </div>
 </template>
@@ -12,35 +12,33 @@
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
+import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
 export default {
   name: "Room",
-  components: { HaInputForm, HaSelect, HaButton },
+  components: { GoogleAuthorizer, HaInputForm, HaSelect, HaButton },
   methods: {
     async onClickCreateRoomButtonHandler() {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
       const db = firebase.firestore();
       const me = firebase.auth().currentUser;
 
-      const {
-        roomName,
-        roomPassword
-      } = this;
+      const { roomName, } = this;
 
       const user = {
+        sys: { created: Date.now() },
         name: me.displayName,
         photoUrl: me.photoURL,
         email: me.email,
       };
       const userDocRef = await db.collection("user").add(user);
       const userId = userDocRef.id;
+      user.id = userId;
+      this.$store.dispatch("auth/logInAs", { user });
       const room = {
-        auth: {
-          password: roomPassword,
-        },
         name: roomName,
         owner: userId, // 部屋作成時に固定
         keepers: [userId], // 初期値ownerのみ、追加削除可能
@@ -64,14 +62,13 @@ export default {
   },
   computed: {
     activateCreateRoomButton() {
-      return this.$store.getters["auth/loggedIn"];
+      return this.$store.getters["auth/authenticated"];
     }
   },
   data() {
     return {
       roomName: "",
-      roomPassword: "",
-      system:"sw2",
+      system: "sw2",
     };
   },
 };

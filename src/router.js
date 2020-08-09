@@ -1,5 +1,3 @@
-import store from "@/store";
-import firebase from "firebase/app";
 import "firebase/auth";
 import Vue from "vue";
 import Room from "@/components/views/Room";
@@ -18,7 +16,7 @@ const router = new Router({
       component: RoomCreate
     },
     {
-      path: "/r",
+      path: "/r/:room_id",
       component: Room
     },
     {
@@ -30,14 +28,6 @@ const router = new Router({
       component: PrivacyPolicy
     }
   ]
-});
-
-router.beforeEach((to, from, next) => {
-  const { currentUser } = firebase.auth();
-  if (currentUser) {
-    store.dispatch("auth/logIn");
-  }
-  next();
 });
 
 export default router;
