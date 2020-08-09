@@ -1,34 +1,24 @@
 <template>
   <div class="container">
     <h3>部屋の作成</h3>
-    <label>
-      <span>部屋名</span>
-      <input v-model="roomName">
-    </label>
-    <label>
-      <span>パスワード</span>
-      <input placeholder="暗号化してません。" v-model="roomPassword">
-    </label>
-    <label>
-      <span>システム</span>
-      <select>
-        <option value="1">ソード・ワールド 2.0</option>
-        <option value="2">ソード・ワールド 2.5</option>
-      </select>
-    </label>
+    <ha-input-form label="部屋名" v-model="roomName"></ha-input-form>
+    <ha-input-form label="パスワード" v-model="roomPassword" placeholder="暗号化してません。"></ha-input-form>
+    <ha-select label="システム" v-model="system" :items="[{value:'sw2',text:'ソード・ワールド2.0'},{value:'sw2.5',text:'ソード・ワールド2.5'}]"></ha-select>
     <ha-button :disabled="!activateCreateRoomButton" @click="onClickCreateRoomButtonHandler">作成</ha-button>
   </div>
 </template>
 
 <script>
 import HaButton from "@/components/atoms/HaButton";
+import HaInputForm from "@/components/atoms/HaInputForm";
+import HaSelect from "@/components/atoms/HaSelect";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
 export default {
   name: "Room",
-  components: { HaButton },
+  components: { HaInputForm, HaSelect, HaButton },
   methods: {
     async onClickCreateRoomButtonHandler() {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
@@ -81,6 +71,7 @@ export default {
     return {
       roomName: "",
       roomPassword: "",
+      system:"sw2",
     };
   },
 };
