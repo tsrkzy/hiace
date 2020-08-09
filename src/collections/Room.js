@@ -42,12 +42,86 @@ export class FSRoom {
     return room;
   }
 
+  static async grantRequest(userId) {
+    console.log("Room.grantRequest", userId); // @DELETEME
+    const room = store.getters["room/info"];
+    if (room.requests.indexOf(userId) === -1) {
+      throw new Error(`no request found: ${userId}`);
+    }
+    if (room.users.indexOf(userId) !== -1) {
+      console.log(`already granted: ${userId}`); // @DELETEME
+      return false;
+    }
+    const requests = room.requests.filter(id => id !== userId);
+    const users = room.users.slice();
+    users.push(userId);
+
+    const db = firebase.firestore();
+    const doc = db.collection("room").doc(room.id);
+    await doc.update({ requests, users });
+  }
+
+  static async dropUser(userId) {
+    console.log("Room.dropUser", userId); // @DELETEME
+    const room = store.getters["room/info"];
+    if (room.users.indexOf(userId) === -1) {
+      throw new Error(`no user found: ${userId}`);
+    }
+    if (room.owner === userId) {
+      throw new Error(`cannnot drop owner: ${userId}`);
+    }
+    const users = room.users.filter(u => u !== userId);
+
+    const db = firebase.firestore();
+    const doc = db.collection("room").doc(room.id);
+    await doc.update({ users });
+  }
+
+  static async kickUser(userId) {
+    console.log("Room.kickUser", userId); // @DELETEME
+    const room = store.getters["room/info"];
+    if (room.kicked.indexOf(userId) !== -1) {
+      throw new Error(`already kicked: ${userId}`);
+    }
+    if (room.owner === userId) {
+      throw new Error("cannot kick owner");
+    }
+    const users = room.users.filter(u => u !== userId);
+    const requests = room.requests.filter(u => u !== userId);
+    const kicked = room.kicked.slice();
+    kicked.push(userId);
+
+    const db = firebase.firestore();
+    const doc = db.collection("room").doc(room.id);
+    await doc.update({ users, requests, kicked });
+  }
+
+  static async makeRequest(userId) {
+    console.log("Room.makeRequest", userId); // @DELETEME
+    const room = store.getters["room/info"];
+    if (room.requests.indexOf(userId) !== -1) {
+      throw new Error("already requested.");
+    }
+    if (room.users.indexOf(userId) !== -1) {
+      throw new Error("already joined.");
+    }
+
+    const requests = room.requests.slice();
+    requests.push(userId);
+    const db = firebase.firestore();
+    const doc = db.collection("room").doc(room.id);
+    await doc.update({ requests });
+  }
+
+
   static setListener(room) {
     const id = room.id;
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(id);
     const unsubscribe = docRef.onSnapshot((doc) => {
-      store.dispatch("room/setRoom", { room: doc.data() });
+      const room = doc.data();
+      room.id = doc.id;
+      store.dispatch("room/setRoom", { room });
     });
     FSRoom.listeners.push({ id, unsubscribe });
   }
@@ -61,17 +135,4 @@ export class FSRoom {
     }
     FSRoom.listeners = FSRoom.listeners.filter(l => l.id !== id);
   }
-
-  // static on(id, key, handler) {
-  //   const db = firebase.firestore();
-  //   const docRef = db.collection("room").doc(id);
-  //   const unsubscribe = docRef.onSnapshot(handler);
-  //   FSRoom.listeners.push({ key, unsubscribe });
-  // }
-  //
-  // static off(keyStartsWith) {
-  //   const listeners = FSRoom.listeners.filter(l => l.key.startsWith(keyStartsWith));
-  //   listeners.forEach(l => l.unsubscribe());
-  //   FSRoom.listeners = FSRoom.listeners.filter(l => !l.key.startsWith(keyStartsWith));
-  // }
 }
