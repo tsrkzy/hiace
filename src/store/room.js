@@ -1,8 +1,14 @@
 import "firebase/firestore";
 
+export const KICKED = "KICKED";
+export const JOINED = "JOINED";
+export const WAITING = "WAITING";
+export const NO_REQUEST = "NO_REQUEST";
+
 export const room = {
   namespaced: true,
   state: {
+    grant: {},
     room: {
       owner: null,
       keepers: [],
@@ -35,6 +41,23 @@ export const room = {
     info(state) {
       return state.room;
     },
+    grant(state, getters, rootState, rootGetters) {
+      const room = getters["info"];
+      const user = rootGetters["auth/user"];
+
+      const userId = user.id;
+      const { kicked = [], requests = [], users = [] } = room;
+      if (kicked.indexOf(userId) !== -1) {
+        return { state: KICKED };
+      }
+      if (users.indexOf(userId) !== -1) {
+        return { state: JOINED };
+      }
+      if (requests.indexOf(userId) !== -1) {
+        return { state: WAITING };
+      }
+      return { state: NO_REQUEST };
+    }
   },
   modules: {}
 };

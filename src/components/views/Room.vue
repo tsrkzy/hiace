@@ -10,33 +10,53 @@
       <h5>room.info</h5>
       <pre>{{ room }}</pre>
     </div>
+    <div v-if="youKicked">
+      <h5>キックされました</h5>
+    </div>
+    <div v-if="waitForGrant">
+      <h5>入出許可を待っています</h5>
+      <p>このタブを閉じて待つこともできます</p>
+    </div>
+    <div v-if="needRequest">
+      <h5>入室リクエストを送る</h5>
+      <ha-button>入室リクエストを送る</ha-button>
+    </div>
+    <div v-if="joined">
+      <h5>入室完了</h5>
+    </div>
   </div>
 </template>
 
 <script>
+import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import {
+  JOINED,
+  KICKED,
+  NO_REQUEST,
+  WAITING
+} from "@/store/room";
 
 export default {
   name: "Room",
   components: { GoogleAuthorizer, HaButton },
-  created() {
-    this.fetchRoomInfo();
+  async created() {
+    await this.fetchRoomInfo();
+  },
+  beforeDestroy() {
+    const room = this.$store.getters["room/info"];
+    FSRoom.removeListener(room);
   },
   methods: {
     async fetchRoomInfo() {
-      const roomId = this.$route.params.room_id;
-      const roomRef = firebase.firestore().collection("room");
-      const docRef = roomRef.doc(roomId);
-      const doc = await docRef.get();
-      if (!doc.exists) {
-        throw new Error("no room found on server");
+      if (this.authenticated) {
+        return false;
       }
-      const room = doc.data();
-      this.$store.dispatch("room/setRoom", { room });
+      const roomId = this.$route.params.room_id;
+      const room = await FSRoom.getById({ id: roomId });
+      FSRoom.setListener(room);
     }
   },
   computed: {
@@ -44,18 +64,50 @@ export default {
       return this.$store.getters["auth/authenticated"];
     },
     user() {
-      return this.$store.getters["auth/me"];
+      return this.$store.getters["auth/user"];
     },
     room() {
       return this.$store.getters["room/info"];
+    },
+    youKicked() {
+      return this.authenticated && this.$store.getters["room/grant"].state === KICKED;
+    },
+    waitForGrant() {
+      return this.authenticated && this.$store.getters["room/grant"].state === WAITING;
+    },
+    needRequest() {
+      return this.authenticated && this.$store.getters["room/grant"].state === NO_REQUEST;
+    },
+    joined() {
+      return this.authenticated && this.$store.getters["room/grant"].state === JOINED;
     }
   },
   watch: {
     async authenticated(authenticated) {
       if (authenticated) {
-        /* Googleの認証が有効になったら、userを作成/取得して登録 */
+        /* 部屋情報の取得 */
+        await this.fetchRoomInfo();
+        /* ユーザ情報の取得 */
         const user = await FSUser.create();
         this.$store.dispatch("auth/logInAs", { user });
+
+        const { state } = this.$store.getters["room/grant"];
+        /* kick済みの場合 */
+        if (state === KICKED) {
+          console.error("kicked."); // @DELETEME
+        }
+        /* 入室申請が未受理 */
+        if (state === WAITING) {
+          console.log("waiting"); // @DELETEME
+        }
+        /* 入室申請が出されていない */
+        if (state === NO_REQUEST) {
+          console.log("send request"); // @DELETEME
+        }
+        /* 入室済み */
+        if (state === JOINED) {
+          console.log("joined"); // @DELETEME
+        }
       }
     }
   }

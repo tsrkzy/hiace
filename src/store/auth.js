@@ -63,7 +63,7 @@ export const auth = {
     info(state){
       return state.auth;
     },
-    me(state) {
+    user(state) {
       return state.user;
     }
   },
