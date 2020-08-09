@@ -27,8 +27,6 @@ export default {
       ui.start("#firebaseui-auth-container", {
         callbacks: {
           signInSuccessWithAuthResult: (/*authResult, redirectUrl*/) => {
-            /* ログイン状態はfirebase.auth().currentUserが握るので、
-             * ログイン後コールバックでは何もせずに終了 */
             this.syncAuthInfo();
             return false;
           }

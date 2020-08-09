@@ -9,13 +9,13 @@
 </template>
 
 <script>
+import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/auth";
 
 export default {
   name: "Room",
@@ -24,27 +24,20 @@ export default {
     async onClickCreateRoomButtonHandler() {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
       const db = firebase.firestore();
-      const me = firebase.auth().currentUser;
 
       const { roomName, } = this;
 
-      const user = {
-        sys: { created: Date.now() },
-        name: me.displayName,
-        photoUrl: me.photoURL,
-        email: me.email,
-      };
-      const userDocRef = await db.collection("user").add(user);
-      const userId = userDocRef.id;
-      user.id = userId;
+      /* get User or create User */
+      const user = await FSUser.create();
       this.$store.dispatch("auth/logInAs", { user });
+
       const room = {
         name: roomName,
-        owner: userId, // 部屋作成時に固定
-        keepers: [userId], // 初期値ownerのみ、追加削除可能
+        owner: user.id, // 部屋作成時に固定
+        keepers: [user.id], // 初期値ownerのみ、追加削除可能
         requests: [],
         kicked: [],
-        users: [userId], // 初期値ownerのみ、追加可能
+        users: [user.id], // 初期値ownerのみ、追加可能
         characters: [],
         // logs: ["log_1", "log_2"],
         // resources: ["resource_1"], // 共有リソース
