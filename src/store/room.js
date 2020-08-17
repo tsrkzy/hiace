@@ -1,5 +1,3 @@
-import "firebase/firestore";
-
 export const KICKED = "KICKED";
 export const JOINED = "JOINED";
 export const WAITING = "WAITING";
@@ -8,7 +6,6 @@ export const NO_REQUEST = "NO_REQUEST";
 export const room = {
   namespaced: true,
   state: {
-    grant: {},
     room: {
       owner: null,
       keepers: [],
@@ -34,6 +31,26 @@ export const room = {
   actions: {
     setRoom({ commit }, { room = {} }) {
       console.log("room.setRoom", room); // @DELETEME
+      commit("setRoom", { room });
+    },
+    leaveRoom({ commit }) {
+      console.log("room.leaveRoom"); // @DELETEME
+      const room = {
+        owner: null,
+        keepers: [],
+        requests: [],
+        kicked: [],
+        users: [],
+        characters: [],
+        logs: [],
+        resources: [],
+        gameSystem: "",
+        initiative: null,
+        activeMap: null,
+        maps: [],
+        soundEffects: [],
+        musics: null,
+      };
       commit("setRoom", { room });
     }
   },

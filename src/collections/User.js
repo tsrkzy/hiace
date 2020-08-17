@@ -38,22 +38,32 @@ export class FSUser {
     const db = firebase.firestore();
     const me = firebase.auth().currentUser;
 
+    /* 既に同じメールアドレスでユーザが作成されていたら、それを返却 */
     const email = me.email;
     const user = await FSUser.getByEmail({ email });
-
     if (user) {
       return user;
     }
 
+    /* 新規作成 */
     const u = {
       sys: { created: Date.now() },
       name: me.displayName,
       photoUrl: me.photoURL,
       email: me.email,
+      joinTo: [],
     };
     const ref = await db.collection("user").add(u);
     u.id = ref.id;
 
     return u;
+  }
+
+  /**
+   * 現状、roomにjoinするには部屋を建てるか、入出リクエストが承認されるかの2択
+   * @return {Promise<void>}
+   */
+  static async joinRoom() {
+    /* @SEE Room.js#grantRequest */
   }
 }
