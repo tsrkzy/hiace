@@ -2,7 +2,11 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
+import store from "@/store";
+
 export class FSUser {
+  static  listeners = [];
+
   static async getById({ id }) {
     const db = firebase.firestore();
     const docRef = await db.collection("user").doc(id).get();
@@ -59,11 +63,41 @@ export class FSUser {
     return u;
   }
 
-  /**
-   * 現状、roomにjoinするには部屋を建てるか、入出リクエストが承認されるかの2択
-   * @return {Promise<void>}
-   */
-  static async joinRoom() {
-    /* @SEE Room.js#grantRequest */
+  static async joinRoom(userId, roomId) {
+    const db = firebase.firestore();
+    const userDoc = db.collection("user").doc(userId);
+    const userRef = await userDoc.get();
+    const user = userRef.data();
+
+    const { joinTo = [] } = user;
+    if (joinTo.indexOf(roomId) !== -1) {
+      console.log("already joined"); // @DELETEME
+      return false;
+    }
+    joinTo.push(roomId);
+    await userDoc.update({ joinTo });
+  }
+
+  static setListener(roomId) {
+    const db = firebase.firestore();
+    const docsRef = db.collection("user").where("joinTo", "array-contains", roomId);
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        console.log(querySnapshot.size); // @DELETEME
+        const user = doc.data();
+        user.id = doc.id;
+        users.push(user);
+      });
+      store.dispatch("user/setUsers", { users });
+    });
+    const listener = { id: "user.joinTo", unsubscribe };
+    FSUser.listeners.push(listener);
+  }
+
+  static removeListener() {
+    const { listeners } = FSUser;
+    listeners.foreach(l => l.unsubscribe());
+    FSUser.listeners = [];
   }
 }

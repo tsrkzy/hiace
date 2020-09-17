@@ -37,6 +37,14 @@ export default {
       const room = await FSRoom.getById({ id: roomId });
       FSRoom.setListener(room);
     },
+    afterJoined() {
+      const roomId = this.room.id;
+      FSUser.setListener(roomId);
+    },
+    afterKicked() {
+    },
+    afterWaiting() {
+    },
   },
   computed: {
     authenticated() {
@@ -64,10 +72,12 @@ export default {
         /* kick済みの場合 */
         if (state === KICKED) {
           console.error("kicked."); // @DELETEME
+          this.afterKicked();
         }
         /* 入室申請が未受理 */
         if (state === WAITING) {
           console.log("waiting"); // @DELETEME
+          this.afterWaiting();
         }
         /* 入室申請が出されていない */
         if (state === NO_REQUEST) {
@@ -76,6 +86,7 @@ export default {
         /* 入室済み */
         if (state === JOINED) {
           console.log("joined"); // @DELETEME
+          this.afterJoined();
         }
       }
     }

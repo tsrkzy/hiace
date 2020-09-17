@@ -11,7 +11,7 @@ export const user = {
   actions: {
     setUsers({ commit }, { users }) {
       console.log("user.setUsers", users); // @DELETEME
-      commit("user/setUsers", { users });
+      commit("setUsers", { users });
     }
   },
   getters: {}

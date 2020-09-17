@@ -1,3 +1,4 @@
+import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
@@ -39,6 +40,8 @@ export class FSRoom {
     const roomDocRef = await db.collection("room").add(room);
     room.id = roomDocRef.id;
 
+    await FSUser.joinRoom(owner.id, room.id);
+
     return room;
   }
 
@@ -57,8 +60,10 @@ export class FSRoom {
     users.push(userId);
 
     const db = firebase.firestore();
-    const doc = db.collection("room").doc(room.id);
-    await doc.update({ requests, users });
+
+    const roomDoc = db.collection("room").doc(room.id);
+    await roomDoc.update({ requests, users });
+    FSUser.joinRoom(userId, room.id);
   }
 
   static async dropUser(userId) {
