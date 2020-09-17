@@ -1,3 +1,5 @@
+import { FSChat } from "@/collections/Chat";
+import { FSLog } from "@/collections/Log";
 import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -20,6 +22,23 @@ export class FSRoom {
 
   static async create({ name, owner }) {
     const db = firebase.firestore();
+
+    const c = {
+      type: "text",
+      owner: "user_1",
+      character: "character_1",
+      value: { text: "welcome to hiace!" },
+    };
+    const welcomeChat = await FSChat.create(c);
+
+    /* master logを作成 */
+    const l = {
+      name: "",
+      chats: [welcomeChat.id],
+      subscribers: [],
+    };
+    const log = await FSLog.create(l);
+
     const room = {
       name,
       owner: owner.id, // 部屋作成時に固定
@@ -28,7 +47,10 @@ export class FSRoom {
       kicked: [],
       users: [owner.id], // 初期値ownerのみ、追加可能
       characters: [],
-      // logs: ["log_1", "log_2"],
+      logs: {
+        master: log.id,
+        channels: [],
+      },
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
       // activeMap: "map_1", // マップセット切り替え
