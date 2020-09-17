@@ -29,13 +29,13 @@ export default {
     }
   },
   beforeDestroy() {
-    FSRoom.removeListener(this.room);
+    FSRoom.RemoveListener(this.room);
   },
   methods: {
     async fetchRoomInfo() {
       const roomId = this.$route.params.room_id;
-      const room = await FSRoom.getById({ id: roomId });
-      FSRoom.setListener(room);
+      const room = await FSRoom.GetById({ id: roomId });
+      FSRoom.SetListener(room);
     },
     afterJoined() {
       const roomId = this.room.id;

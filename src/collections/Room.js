@@ -7,22 +7,158 @@ import store from "@/store";
 
 export class FSRoom {
   static listeners = [];
+  static IdMap = new Map();
 
+  /* instance */
+  id = null;
+  name;
+  owner;
+  keepers = [];
+  requests = [];
+  kicked = [];
+  users = [];
+  characters = [];
+  logs = {
+    master: null,
+    channels: []
+  };
 
-  static async getById({ id }) {
+  /**
+   * FSまたはMapから該当するidのroomのデータを取得し、インスタンスへ整形して返す
+   * @param id
+   * @return {Promise<FSRoom>}
+   */
+  static async GetById({ id }) {
+    /* hashMapまたはFSから取得 */
+    const { IdMap } = FSRoom;
+    let fsR = IdMap.get(id);
+    if (fsR) {
+      return fsR;
+    }
+
+    IdMap.delete(id);
+
     const db = firebase.firestore();
     const docRef = await db.collection("room").doc(id).get();
+
     if (!docRef.exists) {
       return null;
     }
     const room = docRef.data();
     room.id = id;
+    IdMap.set(id, room);
+
+    return Promise.resolve(room);
+  }
+
+  /**
+   * FSへroomのデータを登録し、id()込みのインスタンスへ整形して返す
+   * @param params
+   * @return {Promise<FSRoom>}
+   */
+  static async Add(params) {
+    const room = new FSRoom(params
+      //   {
+      //   name,
+      //   owner: owner.id, // 部屋作成時に固定
+      //   keepers: [owner.id], // 初期値ownerのみ、追加削除可能
+      //   requests: [],
+      //   kicked: [],
+      //   users: [owner.id], // 初期値ownerのみ、追加可能
+      //   characters: [],
+      //   logs: {
+      //     master: log.id,
+      //     channels: [],
+      //   }
+      //   resources: ["resource_1"], // 共有リソース
+      //   gameSystem: "cthuluhu",
+      //   activeMap: "map_1", // マップセット切り替え
+      //   maps: ["map_1", "map_2"],
+      //   /* watchして再生切り替える必要あり */
+      //   soundEffects: ["soundEffect_1", "soundEffect_2"],
+      //   musics: "music_1"
+      // }
+    );
+    await room.add();
+
     return room;
   }
 
-  static async create({ name, owner }) {
+  async add() {
     const db = firebase.firestore();
+    const docRef = await db.collection("room").add(this.toObj());
+    this.id = docRef.id;
 
+    const { IdMap } = FSRoom;
+    IdMap.set(this.id, this);
+  }
+
+  dispose() {
+    const { id } = this;
+    const { IdMap } = FSRoom;
+    /* hashMapから削除 */
+    IdMap.delete(id);
+    /* snapShotを削除 */
+    FSRoom.RemoveListener(id);
+  }
+
+  constructor(params) {
+    const {
+      // id = null,
+      name = "name",
+      owner = "owner",
+      keepers = [],
+      requests = [],
+      kicked = [],
+      users = [],
+      characters = [],
+      logs = {
+        master: null,
+        channels: []
+      },
+    } = params;
+    // this.id = id;
+    this.name = name;
+    this.owner = owner;
+    this.keepers = keepers;
+    this.requests = requests;
+    this.kicked = kicked;
+    this.users = users;
+    this.characters = characters;
+    this.logs = logs;
+  }
+
+  toObj() {
+    const {
+      id,
+      name,
+      owner,
+      keepers,
+      requests,
+      kicked,
+      users,
+      characters,
+      logs,
+    } = this;
+
+    const o = {
+      name,
+      owner,
+      keepers,
+      requests,
+      kicked,
+      users,
+      characters,
+      logs,
+    };
+    if (id) {
+      o.id = id;
+    }
+
+    return o;
+  }
+
+  static async Create({ name, owner }) {
     const c = {
       type: "text",
       owner: "user_1",
@@ -39,7 +175,7 @@ export class FSRoom {
     };
     const log = await FSLog.create(l);
 
-    const room = {
+    const r = {
       name,
       owner: owner.id, // 部屋作成時に固定
       keepers: [owner.id], // 初期値ownerのみ、追加削除可能
@@ -50,7 +186,7 @@ export class FSRoom {
       logs: {
         master: log.id,
         channels: [],
-      },
+      }
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
       // activeMap: "map_1", // マップセット切り替え
@@ -59,15 +195,18 @@ export class FSRoom {
       // soundEffects: ["soundEffect_1", "soundEffect_2"],
       // musics: "music_1"
     };
-    const roomDocRef = await db.collection("room").add(room);
-    room.id = roomDocRef.id;
-
-    await FSUser.joinRoom(owner.id, room.id);
+    const room = await FSRoom.Add(r);
 
     return room;
   }
 
-  static async grantRequest(userId) {
+  /**
+   * 入室リクエストの承認
+   * @param userId
+   * @return {Promise<boolean>}
+   * @constructor
+   */
+  static async GrantRequest(userId) {
     console.log("Room.grantRequest", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.requests.indexOf(userId) === -1) {
@@ -88,7 +227,13 @@ export class FSRoom {
     FSUser.joinRoom(userId, room.id);
   }
 
-  static async dropUser(userId) {
+  /**
+   * 入室済みユーザを退室させる
+   * @param userId
+   * @return {Promise<void>}
+   * @constructor
+   */
+  static async DropUser(userId) {
     console.log("Room.dropUser", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.users.indexOf(userId) === -1) {
@@ -104,7 +249,12 @@ export class FSRoom {
     await doc.update({ users });
   }
 
-  static async kickUser(userId) {
+  /**
+   * ユーザの追放
+   * @param userId
+   * @return {Promise<void>}
+   */
+  static async KickUser(userId) {
     console.log("Room.kickUser", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.kicked.indexOf(userId) !== -1) {
@@ -123,7 +273,12 @@ export class FSRoom {
     await doc.update({ users, requests, kicked });
   }
 
-  static async makeRequest(userId) {
+  /**
+   * 入室リクエストの作成
+   * @param userId
+   * @return {Promise<void>}
+   */
+  static async MakeRequest(userId) {
     console.log("Room.makeRequest", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.requests.indexOf(userId) !== -1) {
@@ -141,7 +296,7 @@ export class FSRoom {
   }
 
 
-  static setListener(room) {
+  static SetListener(room) {
     const id = room.id;
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(id);
@@ -153,13 +308,12 @@ export class FSRoom {
     FSRoom.listeners.push({ id, unsubscribe });
   }
 
-  static removeListener(room) {
-    const id = room.id;
-    const listeners = FSRoom.listeners.filter(l => l.id === id);
+  static RemoveListener(roomId) {
+    const listeners = FSRoom.listeners.filter(l => l.id === roomId);
     for (let i = 0; i < listeners.length; i++) {
       let listener = listeners[i];
       listener.unsubscribe();
     }
-    FSRoom.listeners = FSRoom.listeners.filter(l => l.id !== id);
+    FSRoom.listeners = FSRoom.listeners.filter(l => l.id !== roomId);
   }
 }

@@ -27,7 +27,9 @@ export default {
       const user = await FSUser.create();
       this.$store.dispatch("auth/logInAs", { user });
 
-      const room = await FSRoom.create({ name: roomName, owner: user });
+      const room = await FSRoom.Create({ name: roomName, owner: user });
+
+      await FSUser.joinRoom(room.owner, room.id);
 
       this.$router.push(`/r/${room.id}`);
     }

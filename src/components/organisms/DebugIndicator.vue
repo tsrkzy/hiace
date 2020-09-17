@@ -94,17 +94,17 @@ export default {
   },
   methods: {
     async grantRequest(userId) {
-      await FSRoom.grantRequest(userId);
+      await FSRoom.GrantRequest(userId);
     },
     async dropUser(userId) {
-      await FSRoom.dropUser(userId);
+      await FSRoom.DropUser(userId);
     },
     async kickUser(userId) {
-      await FSRoom.kickUser(userId);
+      await FSRoom.KickUser(userId);
     },
     async makeRequest() {
       const userId = this.user.id;
-      await FSRoom.makeRequest(userId);
+      await FSRoom.MakeRequest(userId);
     },
     async onClickImagesUploadHandler(e) {
       const { files = [] } = e.currentTarget;
