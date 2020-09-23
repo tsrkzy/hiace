@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { FSChat } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
@@ -24,27 +25,56 @@ export default {
   components: { GoogleAuthorizer, HaButton, DebugIndicator },
   async created() {
     if (this.authenticated) {
-      /* 認証済みのまま入室した場合 */
-      await this.fetchRoomInfo();
+      /* 認証済みのまま入室した場合: 部屋作成後 */
+      const roomId = this.$route.params.room_id;
+      await this.fetchRoomInfo(roomId);
+
+      FSChat.SetListener(roomId);
     }
   },
   beforeDestroy() {
-    FSRoom.RemoveListener(this.room);
+    FSRoom.RemoveListener(this.room.id);
   },
   methods: {
-    async fetchRoomInfo() {
-      const roomId = this.$route.params.room_id;
+    async fetchRoomInfo(roomId) {
       const room = await FSRoom.GetById({ id: roomId });
+
       FSRoom.SetListener(room);
     },
     afterJoined() {
+      /* 申請が許可された直後の入室 */
       const roomId = this.room.id;
       FSUser.setListener(roomId);
+
+      FSChat.SetListener(roomId);
     },
     afterKicked() {
     },
     afterWaiting() {
     },
+    async grantStateControler() {
+      const { state } = this.$store.getters["room/grant"];
+
+      /* URL直(未認証) && kick済み */
+      if (state === KICKED) {
+        console.error("kicked."); // @DELETEME
+        this.afterKicked();
+      }
+      /* URL直(未認証) && 入室申請が未受理 */
+      if (state === WAITING) {
+        console.log("waiting"); // @DELETEME
+        this.afterWaiting();
+      }
+      /* URL直(未認証) && 入室申請が未提出 */
+      if (state === NO_REQUEST) {
+        console.log("send request"); // @DELETEME
+      }
+      /* URL直(未認証) && 入室許可済み */
+      if (state === JOINED) {
+        console.log("joined"); // @DELETEME
+        this.afterJoined();
+      }
+    }
   },
   computed: {
     authenticated() {
@@ -56,39 +86,32 @@ export default {
     joined() {
       return this.authenticated && this.$store.getters["room/grant"].state === JOINED;
     },
+    grantState() {
+      return this.$store.getters["room/grant"].state;
+    }
   },
   watch: {
-    async authenticated(authenticated) {
-      if (authenticated) {
-        /* URL直などで、部屋に遷移 */
-
-        /* 部屋情報の取得 */
-        await this.fetchRoomInfo();
-        /* ユーザ情報の取得 */
-        const user = await FSUser.create();
-        this.$store.dispatch("auth/logInAs", { user });
-
-        const { state } = this.$store.getters["room/grant"];
-        /* kick済みの場合 */
-        if (state === KICKED) {
-          console.error("kicked."); // @DELETEME
-          this.afterKicked();
-        }
-        /* 入室申請が未受理 */
-        if (state === WAITING) {
-          console.log("waiting"); // @DELETEME
-          this.afterWaiting();
-        }
-        /* 入室申請が出されていない */
-        if (state === NO_REQUEST) {
-          console.log("send request"); // @DELETEME
-        }
-        /* 入室済み */
-        if (state === JOINED) {
-          console.log("joined"); // @DELETEME
-          this.afterJoined();
-        }
+    async grantState() {
+      if (!this.authenticated) {
+        /* 未認証の場合は無視 */
+        return false;
       }
+      this.grantStateControler();
+    },
+    async authenticated(authenticated) {
+      console.log("Room.authenticated → ", authenticated); // @DELETEME
+      if (!authenticated) {
+        /* 認証状態が解除されたら @TODO */
+        return false;
+      }
+
+      const roomId = this.$route.params.room_id;
+      await this.fetchRoomInfo(roomId);
+
+      /* FS上にGoogleと対応するユーザを作成 */
+      const user = await FSUser.create();
+      this.$store.dispatch("auth/logInAs", { user });
+
     }
   }
 };

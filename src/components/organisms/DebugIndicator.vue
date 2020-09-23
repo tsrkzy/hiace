@@ -31,14 +31,19 @@
     <div v-if="joined">
       <h5>入室完了</h5>
     </div>
-    <div v-if="$store.getters['auth/loggedIn']">
-      <h5>auth.user</h5>
+    <details v-if="$store.getters['auth/loggedIn']">
+      <summary> auth.user</summary>
+      <img width="25" height="25" :src="$store.getters['auth/photoUrl']" alt="user-icon" style="border: 1px solid lightgray;">
       <pre>{{ user }}</pre>
-    </div>
-    <div v-if="$store.getters['room/info']">
-      <h5>room.info</h5>
+    </details>
+    <details v-if="$store.getters['room/info']">
+      <summary> room.info</summary>
       <pre>{{ room }}</pre>
-    </div>
+    </details>
+    <details v-if="$store.getters['chat/info']">
+      <summary> chat.info</summary>
+      <pre>{{ chats }}</pre>
+    </details>
   </div>
 </template>
 
@@ -67,10 +72,13 @@ export default {
       return this.room.users;
     },
     users() {
-      return this.$store.getters["room/users"]
+      return this.$store.getters["room/users"];
     },
     room() {
       return this.$store.getters["room/info"];
+    },
+    chats() {
+      return this.$store.getters["chat/info"];
     },
     requests() {
       return this.room.requests;

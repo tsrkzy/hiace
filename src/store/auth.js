@@ -65,6 +65,9 @@ export const auth = {
     },
     user(state) {
       return state.user;
+    },
+    photoUrl(state){
+      return state.user.photoUrl;
     }
   },
   modules: {}

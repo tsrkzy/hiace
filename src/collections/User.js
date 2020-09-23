@@ -80,11 +80,11 @@ export class FSUser {
 
   static setListener(roomId) {
     const db = firebase.firestore();
-    const docsRef = db.collection("user").where("joinTo", "array-contains", roomId);
+    const docsRef = db.collection("user")
+      .where("joinTo", "array-contains", roomId);
     const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const users = [];
       querySnapshot.forEach((doc) => {
-        console.log(querySnapshot.size); // @DELETEME
         const user = doc.data();
         user.id = doc.id;
         users.push(user);

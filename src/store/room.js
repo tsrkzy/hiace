@@ -7,13 +7,14 @@ export const room = {
   namespaced: true,
   state: {
     room: {
+      id: null,
       owner: null,
       keepers: [],
       requests: [],
       kicked: [],
       users: [],
       characters: [],
-      logs: [],
+      // logs: {},
       resources: [],
       gameSystem: "cthuluhu",
       initiative: null,
@@ -36,13 +37,14 @@ export const room = {
     leaveRoom({ commit }) {
       console.log("room.leaveRoom"); // @DELETEME
       const room = {
+        id: null,
         owner: null,
         keepers: [],
         requests: [],
         kicked: [],
         users: [],
         characters: [],
-        logs: [],
+        // logs: {},
         resources: [],
         gameSystem: "",
         initiative: null,

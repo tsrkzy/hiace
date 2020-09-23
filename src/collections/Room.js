@@ -1,43 +1,18 @@
 import { FSChat } from "@/collections/Chat";
-import { FSLog } from "@/collections/Log";
 import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
 
 export class FSRoom {
-  static listeners = [];
-  static IdMap = new Map();
-
-  /* instance */
-  id = null;
-  name;
-  owner;
-  keepers = [];
-  requests = [];
-  kicked = [];
-  users = [];
-  characters = [];
-  logs = {
-    master: null,
-    channels: []
-  };
+  static listeners = new Map();
 
   /**
-   * FSまたはMapから該当するidのroomのデータを取得し、インスタンスへ整形して返す
+   * FSから該当するidのroomのデータを取得
    * @param id
-   * @return {Promise<FSRoom>}
+   * @return {Promise<firebase.firestore.DocumentData>}
    */
   static async GetById({ id }) {
-    /* hashMapまたはFSから取得 */
-    const { IdMap } = FSRoom;
-    let fsR = IdMap.get(id);
-    if (fsR) {
-      return fsR;
-    }
-
-    IdMap.delete(id);
-
     const db = firebase.firestore();
     const docRef = await db.collection("room").doc(id).get();
 
@@ -46,135 +21,40 @@ export class FSRoom {
     }
     const room = docRef.data();
     room.id = id;
-    IdMap.set(id, room);
-
-    return Promise.resolve(room);
-  }
-
-  /**
-   * FSへroomのデータを登録し、id()込みのインスタンスへ整形して返す
-   * @param params
-   * @return {Promise<FSRoom>}
-   */
-  static async Add(params) {
-    const room = new FSRoom(params
-      //   {
-      //   name,
-      //   owner: owner.id, // 部屋作成時に固定
-      //   keepers: [owner.id], // 初期値ownerのみ、追加削除可能
-      //   requests: [],
-      //   kicked: [],
-      //   users: [owner.id], // 初期値ownerのみ、追加可能
-      //   characters: [],
-      //   logs: {
-      //     master: log.id,
-      //     channels: [],
-      //   }
-      //   resources: ["resource_1"], // 共有リソース
-      //   gameSystem: "cthuluhu",
-      //   activeMap: "map_1", // マップセット切り替え
-      //   maps: ["map_1", "map_2"],
-      //   /* watchして再生切り替える必要あり */
-      //   soundEffects: ["soundEffect_1", "soundEffect_2"],
-      //   musics: "music_1"
-      // }
-    );
-    await room.add();
 
     return room;
   }
 
-  async add() {
+  /**
+   * FSへroomのデータを登録し、id()込みのインスタンスへ整形して返す
+   * @param r
+   */
+  static async Add(r) {
+    //   {
+    //   name,
+    //   owner: owner.id, // 部屋作成時に固定
+    //   keepers: [owner.id], // 初期値ownerのみ、追加削除可能
+    //   requests: [],
+    //   kicked: [],
+    //   users: [owner.id], // 初期値ownerのみ、追加可能
+    //   characters: [],
+    //   resources: ["resource_1"], // 共有リソース
+    //   gameSystem: "cthuluhu",
+    //   activeMap: "map_1", // マップセット切り替え
+    //   maps: ["map_1", "map_2"],
+    //   /* watchして再生切り替える必要あり */
+    //   soundEffects: ["soundEffect_1", "soundEffect_2"],
+    //   musics: "music_1"
+    // }
+
     const db = firebase.firestore();
-    const docRef = await db.collection("room").add(this.toObj());
-    this.id = docRef.id;
+    const docRef = await db.collection("room").add(r);
+    r.id = docRef.id;
 
-    const { IdMap } = FSRoom;
-    IdMap.set(this.id, this);
-  }
-
-  dispose() {
-    const { id } = this;
-    const { IdMap } = FSRoom;
-    /* hashMapから削除 */
-    IdMap.delete(id);
-    /* snapShotを削除 */
-    FSRoom.RemoveListener(id);
-  }
-
-  constructor(params) {
-    const {
-      // id = null,
-      name = "name",
-      owner = "owner",
-      keepers = [],
-      requests = [],
-      kicked = [],
-      users = [],
-      characters = [],
-      logs = {
-        master: null,
-        channels: []
-      },
-    } = params;
-    // this.id = id;
-    this.name = name;
-    this.owner = owner;
-    this.keepers = keepers;
-    this.requests = requests;
-    this.kicked = kicked;
-    this.users = users;
-    this.characters = characters;
-    this.logs = logs;
-  }
-
-  toObj() {
-    const {
-      id,
-      name,
-      owner,
-      keepers,
-      requests,
-      kicked,
-      users,
-      characters,
-      logs,
-    } = this;
-
-    const o = {
-      name,
-      owner,
-      keepers,
-      requests,
-      kicked,
-      users,
-      characters,
-      logs,
-    };
-    if (id) {
-      o.id = id;
-    }
-
-    return o;
+    return r;
   }
 
   static async Create({ name, owner }) {
-    const c = {
-      type: "text",
-      owner: "user_1",
-      character: "character_1",
-      value: { text: "welcome to hiace!" },
-    };
-    const welcomeChat = await FSChat.create(c);
-
-    /* master logを作成 */
-    const l = {
-      name: "",
-      chats: [welcomeChat.id],
-      subscribers: [],
-    };
-    const log = await FSLog.create(l);
-
     const r = {
       name,
       owner: owner.id, // 部屋作成時に固定
@@ -183,10 +63,6 @@ export class FSRoom {
       kicked: [],
       users: [owner.id], // 初期値ownerのみ、追加可能
       characters: [],
-      logs: {
-        master: log.id,
-        channels: [],
-      }
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
       // activeMap: "map_1", // マップセット切り替え
@@ -196,6 +72,16 @@ export class FSRoom {
       // musics: "music_1"
     };
     const room = await FSRoom.Add(r);
+
+    const c = {
+      type: "text",
+      room: room.id,
+      channel: null, // As SYSTEM
+      owner: owner.id,
+      character: null,
+      value: { text: "welcome to hiace!" },
+    };
+    await FSChat.Create(c);
 
     return room;
   }
@@ -305,15 +191,18 @@ export class FSRoom {
       room.id = doc.id;
       store.dispatch("room/setRoom", { room });
     });
-    FSRoom.listeners.push({ id, unsubscribe });
+    FSRoom.listeners.set(id, { id, unsubscribe });
   }
 
   static RemoveListener(roomId) {
-    const listeners = FSRoom.listeners.filter(l => l.id === roomId);
-    for (let i = 0; i < listeners.length; i++) {
-      let listener = listeners[i];
-      listener.unsubscribe();
+    console.log("Room.RemoveListener", roomId); // @DELETEME
+    const listener = FSRoom.listeners.get(roomId);
+    if(!listener){
+      return false
     }
-    FSRoom.listeners = FSRoom.listeners.filter(l => l.id !== roomId);
+
+    listener.unsubscribe();
+    console.log("unsubscribed"); // @DELETEME
+    FSRoom.listeners.delete(roomId);
   }
 }
