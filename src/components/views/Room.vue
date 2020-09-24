@@ -44,7 +44,7 @@ export default {
     afterJoined() {
       /* 申請が許可された直後の入室 */
       const roomId = this.room.id;
-      FSUser.setListener(roomId);
+      FSUser.SetListener(roomId);
 
       FSChat.SetListener(roomId);
     },
@@ -109,7 +109,7 @@ export default {
       await this.fetchRoomInfo(roomId);
 
       /* FS上にGoogleと対応するユーザを作成 */
-      const user = await FSUser.create();
+      const user = await FSUser.Create();
       this.$store.dispatch("auth/logInAs", { user });
 
     }

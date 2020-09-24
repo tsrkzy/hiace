@@ -5,7 +5,7 @@ import "firebase/firestore";
 import store from "@/store";
 
 export class FSRoom {
-  static listeners = new Map();
+  static unsubscribeMap = new Map();
 
   /**
    * FSから該当するidのroomのデータを取得
@@ -110,7 +110,7 @@ export class FSRoom {
 
     const roomDoc = db.collection("room").doc(room.id);
     await roomDoc.update({ requests, users });
-    FSUser.joinRoom(userId, room.id);
+    FSUser.JoinRoom(userId, room.id);
   }
 
   /**
@@ -191,18 +191,18 @@ export class FSRoom {
       room.id = doc.id;
       store.dispatch("room/setRoom", { room });
     });
-    FSRoom.listeners.set(id, { id, unsubscribe });
+    FSRoom.unsubscribeMap.set(id, { id, unsubscribe });
   }
 
   static RemoveListener(roomId) {
     console.log("Room.RemoveListener", roomId); // @DELETEME
-    const listener = FSRoom.listeners.get(roomId);
+    const listener = FSRoom.unsubscribeMap.get(roomId);
     if(!listener){
       return false
     }
 
     listener.unsubscribe();
     console.log("unsubscribed"); // @DELETEME
-    FSRoom.listeners.delete(roomId);
+    FSRoom.unsubscribeMap.delete(roomId);
   }
 }

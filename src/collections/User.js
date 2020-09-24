@@ -5,9 +5,9 @@ import "firebase/auth";
 import store from "@/store";
 
 export class FSUser {
-  static  listeners = [];
+  static  unsubscribeMap = new Map();
 
-  static async getById({ id }) {
+  static async GetById({ id }) {
     const db = firebase.firestore();
     const docRef = await db.collection("user").doc(id).get();
     if (!docRef.exists) {
@@ -18,7 +18,7 @@ export class FSUser {
     return user;
   }
 
-  static async getByEmail({ email }) {
+  static async GetByEmail({ email }) {
     const db = firebase.firestore();
     return db.collection("user")
       .where("email", "==", email).get()
@@ -35,16 +35,14 @@ export class FSUser {
       });
   }
 
-  /**
-   * get or create
-   */
-  static async create() {
+  /** select or insert */
+  static async Create() {
     const db = firebase.firestore();
     const me = firebase.auth().currentUser;
 
     /* 既に同じメールアドレスでユーザが作成されていたら、それを返却 */
     const email = me.email;
-    const user = await FSUser.getByEmail({ email });
+    const user = await FSUser.GetByEmail({ email });
     if (user) {
       return user;
     }
@@ -63,7 +61,7 @@ export class FSUser {
     return u;
   }
 
-  static async joinRoom(userId, roomId) {
+  static async JoinRoom(userId, roomId) {
     const db = firebase.firestore();
     const userDoc = db.collection("user").doc(userId);
     const userRef = await userDoc.get();
@@ -78,10 +76,16 @@ export class FSUser {
     await userDoc.update({ joinTo });
   }
 
-  static setListener(roomId) {
+  static SetListener(roomId) {
+    const { unsubscribeMap } = FSUser;
+    if (unsubscribeMap.has(roomId)) {
+      FSUser.RemoveListener();
+    }
+
     const db = firebase.firestore();
     const docsRef = db.collection("user")
       .where("joinTo", "array-contains", roomId);
+
     const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const users = [];
       querySnapshot.forEach((doc) => {
@@ -91,13 +95,15 @@ export class FSUser {
       });
       store.dispatch("user/setUsers", { users });
     });
+
     const listener = { id: "user.joinTo", unsubscribe };
-    FSUser.listeners.push(listener);
+    unsubscribeMap.set(roomId, listener);
   }
 
-  static removeListener() {
-    const { listeners } = FSUser;
-    listeners.foreach(l => l.unsubscribe());
-    FSUser.listeners = [];
+  static RemoveListener() {
+    const { unsubscribeMap } = FSUser;
+    unsubscribeMap.values().forEach(l => l.unsubscribe());
+
+    unsubscribeMap.clear();
   }
 }

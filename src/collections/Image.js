@@ -5,9 +5,7 @@ import  "firebase/storage";
 import store from "@/store";
 
 export class FSImage {
-  static listeners = [];
-
-  static async getById({ id }) {
+  static async GetById({ id }) {
     const db = firebase.firestore();
     const docRef = await db.collection("image").doc(id).get();
     if (!docRef.exists) {
@@ -18,7 +16,7 @@ export class FSImage {
     return image;
   }
 
-  static async create(file){
+  static async Create(file){
     if (!(file instanceof File)) {
       throw new Error(`argument must be instance of File()`);
     }

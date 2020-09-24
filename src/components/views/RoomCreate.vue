@@ -24,12 +24,12 @@ export default {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
       const { roomName, } = this;
 
-      const user = await FSUser.create();
+      const user = await FSUser.Create();
       this.$store.dispatch("auth/logInAs", { user });
 
       const room = await FSRoom.Create({ name: roomName, owner: user });
 
-      await FSUser.joinRoom(room.owner, room.id);
+      await FSUser.JoinRoom(room.owner, room.id);
 
       this.$router.push(`/r/${room.id}`);
     }
