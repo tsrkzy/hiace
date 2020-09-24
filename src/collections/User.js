@@ -35,15 +35,17 @@ export class FSUser {
       });
   }
 
-  /** select or insert */
+  /** select&update or insert */
   static async Create() {
     const db = firebase.firestore();
     const me = firebase.auth().currentUser;
 
-    /* 既に同じメールアドレスでユーザが作成されていたら、それを返却 */
+    /* 既に同じメールアドレスでユーザが作成されていたらアイコンURLだけ期限があるので更新 */
     const email = me.email;
     const user = await FSUser.GetByEmail({ email });
     if (user) {
+      await FSUser.Update(user.id, {photoUrl: me.photoURL})
+      user.photoURL = me.photoURL;
       return user;
     }
 
@@ -59,6 +61,12 @@ export class FSUser {
     u.id = ref.id;
 
     return u;
+  }
+
+  static async Update(id, criteria = {}){
+    const db = firebase.firestore();
+    const doc = db.collection("user").doc(id);
+    return await doc.update(criteria);
   }
 
   static async JoinRoom(userId, roomId) {

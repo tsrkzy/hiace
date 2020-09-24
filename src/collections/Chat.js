@@ -18,12 +18,24 @@ export class FSChat {
     return c;
   }
 
+  static async BroadcastLoggedIn({ roomId, user }) {
+    const { id: userId, email } = user;
+    const c = {
+      type: "text",
+      room: roomId,
+      owner: userId,
+      character: null,
+      value: { text: `logged in - - - ${email} - - -` }
+    };
+    return await FSChat.Create(c);
+  }
+
   static SetListener(roomId) {
     console.log("Chat.SetListener", roomId); // @DELETEME
 
     const { unsubscribeMap } = FSChat;
     if (unsubscribeMap.has(roomId)) {
-      FSChat.RemoveListener(roomId)
+      FSChat.RemoveListener(roomId);
     }
 
     const db = firebase.firestore();

@@ -41,12 +41,15 @@ export default {
 
       FSRoom.SetListener(room);
     },
-    afterJoined() {
+    async afterJoined() {
       /* 申請が許可された直後の入室 */
       const roomId = this.room.id;
       FSUser.SetListener(roomId);
 
       FSChat.SetListener(roomId);
+
+      const user = this.$store.getters["auth/user"];
+      await FSChat.BroadcastLoggedIn({ roomId, user });
     },
     afterKicked() {
     },
@@ -72,7 +75,7 @@ export default {
       /* URL直(未認証) && 入室許可済み */
       if (state === JOINED) {
         console.log("joined"); // @DELETEME
-        this.afterJoined();
+        await this.afterJoined();
       }
     }
   },
@@ -96,7 +99,7 @@ export default {
         /* 未認証の場合は無視 */
         return false;
       }
-      this.grantStateControler();
+      await this.grantStateControler();
     },
     async authenticated(authenticated) {
       console.log("Room.authenticated → ", authenticated); // @DELETEME
