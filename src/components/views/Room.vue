@@ -24,25 +24,26 @@ export default {
   name: "Room",
   components: { GoogleAuthorizer, HaButton, DebugIndicator },
   async created() {
-    if (this.authenticated) {
-      /* 認証済みのまま入室した場合: 部屋作成後 */
-      const roomId = this.$route.params.room_id;
-      await this.fetchRoomInfo(roomId);
-
-      FSChat.SetListener(roomId);
-    }
+    const roomId = this.$route.params.room_id;
+    await this.trackRoomInfo(roomId);
   },
   beforeDestroy() {
     FSRoom.RemoveListener(this.room.id);
+    FSUser.RemoveListener();
+    FSChat.RemoveListener(this.room.id);
   },
   methods: {
-    async fetchRoomInfo(roomId) {
-      const room = await FSRoom.GetById({ id: roomId });
+    async trackRoomInfo(roomId) {
+      /* google未認証のユーザには部屋情報を渡さない */
+      if (!this.authenticated) {
+        return false;
+      }
 
+      const room = await FSRoom.GetById({ id: roomId });
       FSRoom.SetListener(room);
     },
     async afterJoined() {
-      /* 申請が許可された直後の入室 */
+      /* google認証、入室申請受理済み */
       const roomId = this.room.id;
       FSUser.SetListener(roomId);
 
@@ -58,21 +59,21 @@ export default {
     async grantStateControler() {
       const { state } = this.$store.getters["room/grant"];
 
-      /* URL直(未認証) && kick済み */
+      /* kick済み */
       if (state === KICKED) {
         console.error("kicked."); // @DELETEME
         this.afterKicked();
       }
-      /* URL直(未認証) && 入室申請が未受理 */
+      /* 入室申請が未受理 */
       if (state === WAITING) {
         console.log("waiting"); // @DELETEME
         this.afterWaiting();
       }
-      /* URL直(未認証) && 入室申請が未提出 */
+      /* 入室申請が未提出 */
       if (state === NO_REQUEST) {
         console.log("send request"); // @DELETEME
       }
-      /* URL直(未認証) && 入室許可済み */
+      /* 入室許可済み */
       if (state === JOINED) {
         console.log("joined"); // @DELETEME
         await this.afterJoined();
@@ -95,23 +96,25 @@ export default {
   },
   watch: {
     async grantState() {
+      /* 入室申請の提出・承認状態の監視 */
       if (!this.authenticated) {
-        /* 未認証の場合は無視 */
+        /* google未認証の場合は無視 */
         return false;
       }
       await this.grantStateControler();
     },
     async authenticated(authenticated) {
+      /* google認証の監視 */
       console.log("Room.authenticated → ", authenticated); // @DELETEME
       if (!authenticated) {
-        /* 認証状態が解除されたら @TODO */
         return false;
       }
 
+      /* google認証に通ったら部屋情報を渡す */
       const roomId = this.$route.params.room_id;
-      await this.fetchRoomInfo(roomId);
+      await this.trackRoomInfo(roomId);
 
-      /* FS上にGoogleと対応するユーザを作成 */
+      /* FS上にGoogle認証と対応するユーザを作成、または取得 */
       const user = await FSUser.Create();
       this.$store.dispatch("auth/logInAs", { user });
 

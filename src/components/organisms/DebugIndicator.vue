@@ -4,12 +4,10 @@
       <h5>Files upload</h5>
       <input type="file" multiple accept="image/*" @change="onClickImagesUploadHandler">
     </div>
-    <div v-if="joined">
-      <h5>Users</h5>
-    </div>
-    <div v-if="joined">
-      <h5>Images</h5>
-    </div>
+    <details v-if="joined">
+      <summary>Images</summary>
+      <pre></pre>
+    </details>
     <div v-if="isOwner">
       <h5>部屋主メニュー</h5>
       <ha-button :key="`grant-${u}`" v-for="u in requests" @click="grantRequest(u)">grant: {{ u }}</ha-button>
@@ -42,7 +40,10 @@
     </details>
     <details v-if="$store.getters['chat/info']">
       <summary> chat.info</summary>
-      <pre>{{ chats }}</pre>
+      <ol>
+        <li v-for="c of chats" :key="c.id" style="margin: 0;">{{ c.value.text }}</li>
+      </ol>
+<!--      <pre>{{ chats }}</pre>-->
     </details>
   </div>
 </template>

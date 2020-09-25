@@ -85,10 +85,8 @@ export class FSUser {
   }
 
   static SetListener(roomId) {
-    const { unsubscribeMap } = FSUser;
-    if (unsubscribeMap.has(roomId)) {
-      FSUser.RemoveListener();
-    }
+    console.log("User.SetListener"); // @DELETEME
+    FSUser.RemoveListener();
 
     const db = firebase.firestore();
     const docsRef = db.collection("user")
@@ -104,13 +102,20 @@ export class FSUser {
       store.dispatch("user/setUsers", { users });
     });
 
-    const listener = { id: "user.joinTo", unsubscribe };
+    const { unsubscribeMap } = FSUser;
+    const listener = { id: roomId, unsubscribe };
     unsubscribeMap.set(roomId, listener);
   }
 
   static RemoveListener() {
+    console.log("User.RemoveListener"); // @DELETEME
     const { unsubscribeMap } = FSUser;
-    unsubscribeMap.values().forEach(l => l.unsubscribe());
+    const listeners = unsubscribeMap.values();
+    for (const l of listeners) {
+      let {id, unsubscribe} = l;
+      unsubscribe?.();
+      console.log(`unsubscribed: ${id}` ); // @DELETEME
+    }
 
     unsubscribeMap.clear();
   }

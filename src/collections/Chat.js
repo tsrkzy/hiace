@@ -7,10 +7,15 @@ export class FSChat {
 
   static async Create({ type, room, owner, character, value = {} }) {
     const db = firebase.firestore();
+    const timestamp = Date.now();
 
     const c = {
-      type, room,
-      owner, character, value
+      type,
+      room,
+      owner,
+      character,
+      value,
+      timestamp
     };
     const chatDocRef = await db.collection("chat").add(c);
     c.id = chatDocRef.id;
@@ -39,7 +44,9 @@ export class FSChat {
     }
 
     const db = firebase.firestore();
-    const docsRef = db.collection("chat").where("room", "==", roomId);
+    const docsRef = db.collection("chat")
+      .where("room", "==", roomId)
+      .orderBy("timestamp", "desc");
 
     const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const chats = [];
