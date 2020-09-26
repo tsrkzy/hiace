@@ -28,7 +28,7 @@ export class FSChat {
   static async BroadcastLoggedIn({ roomId, user }) {
     const { id: userId, email } = user;
     const c = {
-      type: "text",
+      type: "system",
       room: roomId,
       channel: SYSTEM_CHANNEL_ID,
       owner: userId,

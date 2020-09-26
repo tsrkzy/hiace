@@ -75,7 +75,7 @@ export class FSRoom {
     const room = await FSRoom.Add(r);
 
     const c = {
-      type: "text",
+      type: "system",
       room: room.id,
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner.id,
