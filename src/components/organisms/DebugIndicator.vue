@@ -38,11 +38,12 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
-    <details v-if="channels">
+    <details v-if="channels" open>
       <summary>channel.info</summary>
+      <ha-button :disabled="!authenticated" @click="onClickCreateChannel">ADD CHANNEL</ha-button>
       <pre>{{ channels }}</pre>
     </details>
-    <details v-if="chats">
+    <details v-if="chats" open>
       <summary> chat.info</summary>
       <ol>
         <li v-for="c of chats" :key="c.id" style="margin: 0;">{{ c.channel || ("none") }}: {{ c.value.text }}</li>
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import { FSChannel } from "@/collections/Channel";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
@@ -130,6 +132,14 @@ export default {
       });
       await Promise.all(promiseList);
     },
+    async onClickCreateChannel() {
+      const c = {
+        type: "group",
+        name: "新しいチャンネル",
+        room: this.rooms.id
+      };
+      await FSChannel.Create(c);
+    }
   }
 };
 </script>
