@@ -6,7 +6,8 @@ import { room } from "@/store/room";
 import { image } from "@/store/image";
 import { user } from "@/store/user";
 import { chat } from "@/store/chat";
-import {channel} from "@/store/channel";
+import { channel } from "@/store/channel";
+import { character } from "@/store/character";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     image,
     user,
     chat,
-    channel
+    channel,
+    character
   }
 });

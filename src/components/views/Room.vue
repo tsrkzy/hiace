@@ -8,6 +8,7 @@
 
 <script>
 import { FSChannel } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
@@ -33,6 +34,7 @@ export default {
     FSUser.RemoveListener();
     FSChat.RemoveListener(this.roomId);
     FSChannel.RemoveListener();
+    FSCharacter.RemoveListener(this.roomId);
   },
   methods: {
     async trackRoomInfo(roomId) {
@@ -47,11 +49,11 @@ export default {
     async afterJoined() {
       /* google認証、入室申請受理済み */
       const roomId = this.roomId;
+
       FSUser.SetListener(roomId);
-
       FSChat.SetListener(roomId);
-
       FSChannel.SetListener(roomId);
+      FSCharacter.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });

@@ -38,6 +38,11 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
+    <details v-if="characters" open>
+      <summary>character.info</summary>
+      <ha-button :disabled="!authenticated" @click="onClickCreateCharacter">ADD CHARACTER</ha-button>
+      {{ characters }}
+    </details>
     <details v-if="channels" open>
       <summary>channel.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateChannel">ADD CHANNEL</ha-button>
@@ -60,6 +65,7 @@
 import {
   FSChannel,
 } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
@@ -92,6 +98,9 @@ export default {
     },
     channels() {
       return this.$store.getters["channel/info"];
+    },
+    characters() {
+      return this.$store.getters["character/info"];
     },
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({ text: c.name, value: c.id }));
@@ -151,6 +160,17 @@ export default {
         room: this.rooms.id
       };
       await FSChannel.Create(c);
+    },
+    async onClickCreateCharacter() {
+      const userId = this.user.id;
+      const userName = this.user.name;
+      const roomId = this.rooms.id;
+      const c = {
+        owner: userId,
+        name: `${userName}_character`,
+        roomId
+      };
+      await FSCharacter.Create(c);
     }
   }
 };
