@@ -41,8 +41,14 @@
     <details v-if="channels" open>
       <summary>channel.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateChannel">ADD CHANNEL</ha-button>
-      <pre>{{ channels }}</pre>
+      <!--      <pre>{{ channels }}</pre>-->
     </details>
+    <div v-if="joined">
+      <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo"></ha-select>
+      <h5>{{ channelIdChatTo }}</h5>
+      <ha-input-form v-model="chatText"></ha-input-form>
+      <ha-button @click="sendChat">send</ha-button>
+    </div>
     <details v-if="chats" open>
       <summary> chat.info</summary>
       <ol>
@@ -54,10 +60,16 @@
 </template>
 
 <script>
-import { FSChannel } from "@/collections/Channel";
+import {
+  FSChannel,
+  SYSTEM_CHANNEL_ID
+} from "@/collections/Channel";
+import { FSChat } from "@/collections/Chat";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
+import HaInputForm from "@/components/atoms/HaInputForm";
+import HaSelect from "@/components/atoms/HaSelect";
 import {
   JOINED,
   KICKED,
@@ -67,7 +79,7 @@ import {
 
 export default {
   name: "DebugIndicator",
-  components: { HaButton },
+  components: { HaInputForm, HaSelect, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -86,6 +98,9 @@ export default {
     },
     channels() {
       return this.$store.getters["channel/info"];
+    },
+    channelItems() {
+      return this.$store.getters["channel/info"].map(c => ({ text: c.name, value: c.id }));
     },
     chats() {
       return this.$store.getters["chat/info"];
@@ -110,7 +125,34 @@ export default {
       return this.authenticated && this.rooms.owner === userId;
     },
   },
+  data() {
+    return {
+      channelIdChatTo: SYSTEM_CHANNEL_ID,
+      chatText: "",
+    };
+  },
   methods: {
+    async sendChat() {
+      console.log("DebugIndicator.sendChat"); // @DELETEME
+      const { chatText: _chatText = "", channelIdChatTo: channelId } = this;
+      if (!channelId) throw new Error("no channel found");
+
+      const chatText = _chatText.trim();
+      const roomId = this.rooms.id;
+      const userId = this.user.id;
+      const c = {
+        type: "text",
+        room: roomId,
+        channel: channelId,
+        owner: userId,
+        character: null,
+        value: {
+          text: chatText
+        },
+      };
+      await FSChat.Create(c);
+
+    },
     async grantRequest(userId) {
       await FSRoom.GrantRequest(userId);
     },
