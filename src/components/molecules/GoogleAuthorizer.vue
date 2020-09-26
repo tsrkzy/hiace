@@ -51,8 +51,10 @@ export default {
           email: currentUser.email
         };
         this.$store.dispatch("auth/setAuth", { auth });
+        this.$emit("authenticated");
       } else {
         this.$store.dispatch("auth/clearAuth");
+        this.$emit("rejected");
       }
     }
   },

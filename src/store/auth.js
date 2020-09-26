@@ -1,5 +1,3 @@
-import "firebase/firestore";
-
 export const auth = {
   namespaced: true,
   state: {

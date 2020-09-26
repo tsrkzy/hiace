@@ -1,3 +1,4 @@
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
@@ -5,13 +6,14 @@ import store from "@/store";
 export class FSChat {
   static unsubscribeMap = new Map();
 
-  static async Create({ type, room, owner, character, value = {} }) {
+  static async Create({ type, room, channel, owner, character, value = {} }) {
     const db = firebase.firestore();
     const timestamp = Date.now();
 
     const c = {
       type,
       room,
+      channel,
       owner,
       character,
       value,
@@ -28,6 +30,7 @@ export class FSChat {
     const c = {
       type: "text",
       room: roomId,
+      channel: SYSTEM_CHANNEL_ID,
       owner: userId,
       character: null,
       value: { text: `logged in - - - ${email} - - -` }

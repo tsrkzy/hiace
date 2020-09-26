@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { FSChannel } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
@@ -28,9 +29,10 @@ export default {
     await this.trackRoomInfo(roomId);
   },
   beforeDestroy() {
-    FSRoom.RemoveListener(this.room.id);
+    FSRoom.RemoveListener(this.roomId);
     FSUser.RemoveListener();
-    FSChat.RemoveListener(this.room.id);
+    FSChat.RemoveListener(this.roomId);
+    FSChannel.RemoveListener();
   },
   methods: {
     async trackRoomInfo(roomId) {
@@ -44,10 +46,12 @@ export default {
     },
     async afterJoined() {
       /* google認証、入室申請受理済み */
-      const roomId = this.room.id;
+      const roomId = this.roomId;
       FSUser.SetListener(roomId);
 
       FSChat.SetListener(roomId);
+
+      FSChannel.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });
@@ -56,7 +60,7 @@ export default {
     },
     afterWaiting() {
     },
-    async grantStateControler() {
+    async grantStateController() {
       const { state } = this.$store.getters["room/grant"];
 
       /* kick済み */
@@ -84,6 +88,9 @@ export default {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
     },
+    roomId() {
+      return this.$route.params.room_id;
+    },
     room() {
       return this.$store.getters["room/info"];
     },
@@ -101,7 +108,7 @@ export default {
         /* google未認証の場合は無視 */
         return false;
       }
-      await this.grantStateControler();
+      await this.grantStateController();
     },
     async authenticated(authenticated) {
       /* google認証の監視 */
@@ -111,7 +118,7 @@ export default {
       }
 
       /* google認証に通ったら部屋情報を渡す */
-      const roomId = this.$route.params.room_id;
+      const roomId = this.roomId;
       await this.trackRoomInfo(roomId);
 
       /* FS上にGoogle認証と対応するユーザを作成、または取得 */

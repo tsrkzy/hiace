@@ -1,3 +1,4 @@
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
@@ -76,7 +77,7 @@ export class FSRoom {
     const c = {
       type: "text",
       room: room.id,
-      channel: null, // As SYSTEM
+      channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner.id,
       character: null,
       value: { text: "welcome to hiace!" },
@@ -197,8 +198,8 @@ export class FSRoom {
   static RemoveListener(roomId) {
     console.log("Room.RemoveListener", roomId); // @DELETEME
     const listener = FSRoom.unsubscribeMap.get(roomId);
-    if(!listener){
-      return false
+    if (!listener) {
+      return false;
     }
 
     listener.unsubscribe();

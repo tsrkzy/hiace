@@ -34,16 +34,20 @@
       <img width="25" height="25" :src="$store.getters['auth/photoUrl']" alt="user-icon" style="border: 1px solid lightgray;">
       <pre>{{ user }}</pre>
     </details>
-    <details v-if="$store.getters['room/info']">
+    <details v-if="rooms">
       <summary> room.info</summary>
-      <pre>{{ room }}</pre>
+      <pre>{{ rooms }}</pre>
     </details>
-    <details v-if="$store.getters['chat/info']">
+    <details v-if="channels">
+      <summary>channel.info</summary>
+      <pre>{{ channels }}</pre>
+    </details>
+    <details v-if="chats">
       <summary> chat.info</summary>
       <ol>
-        <li v-for="c of chats" :key="c.id" style="margin: 0;">{{ c.value.text }}</li>
+        <li v-for="c of chats" :key="c.id" style="margin: 0;">{{ c.channel || ("none") }}: {{ c.value.text }}</li>
       </ol>
-<!--      <pre>{{ chats }}</pre>-->
+      <!--      <pre>{{ chats }}</pre>-->
     </details>
   </div>
 </template>
@@ -70,19 +74,22 @@ export default {
       return this.$store.getters["auth/user"];
     },
     userIdList() {
-      return this.room.users;
+      return this.rooms.users;
     },
     users() {
       return this.$store.getters["room/users"];
     },
-    room() {
+    rooms() {
       return this.$store.getters["room/info"];
+    },
+    channels() {
+      return this.$store.getters["channel/info"];
     },
     chats() {
       return this.$store.getters["chat/info"];
     },
     requests() {
-      return this.room.requests;
+      return this.rooms.requests;
     },
     youKicked() {
       return this.authenticated && this.$store.getters["room/grant"].state === KICKED;
@@ -98,7 +105,7 @@ export default {
     },
     isOwner() {
       const userId = this.user.id;
-      return this.authenticated && this.room.owner === userId;
+      return this.authenticated && this.rooms.owner === userId;
     },
   },
   methods: {

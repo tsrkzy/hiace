@@ -6,6 +6,7 @@ import { room } from "@/store/room";
 import { image } from "@/store/image";
 import { user } from "@/store/user";
 import { chat } from "@/store/chat";
+import {channel} from "@/store/channel";
 
 Vue.use(Vuex);
 
@@ -19,5 +20,6 @@ export default new Vuex.Store({
     image,
     user,
     chat,
+    channel
   }
 });
