@@ -57,7 +57,7 @@ export class FSCharacter {
   }
 
   static SetListener(roomId) {
-    console.log("Chat.SetListener", roomId); // @DELETEME
+    console.log("Character.SetListener", roomId); // @DELETEME
 
     const { unsubscribeMap } = FSCharacter;
     if (unsubscribeMap.has(roomId)) {

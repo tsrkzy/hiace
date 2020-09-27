@@ -10,7 +10,7 @@ export const character = {
     setCharacters(state, payload) {
       state.characters = payload.characters;
     },
-    select(state, payload){
+    select(state, payload) {
       state.activeCharacterId = payload.characterId;
     }
   },
@@ -19,17 +19,20 @@ export const character = {
       console.log("character.setCharacters", characters); // @DELETEME
       commit("setCharacters", { characters });
     },
-    select({commit}, {characterId}){
+    select({ commit }, { characterId }) {
       console.log("character.select"); // @DELETEME
-      commit("select", {characterId});
+      commit("select", { characterId });
     }
   },
   getters: {
     info(state) {
       return state.characters;
     },
-    active(state){
+    activeId(state) {
       return state.activeCharacterId;
+    },
+    active(state) {
+      return state.characters.find(c => c.id === state.activeCharacterId);
     }
   }
 };
