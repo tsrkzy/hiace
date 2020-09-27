@@ -1,7 +1,7 @@
 export const channel = {
   namespaced: true,
   state: {
-    channels: [],
+    channels: []
   },
   mutations: {
     setChannels(state, payload) {
@@ -25,5 +25,5 @@ export const channel = {
     info(state) {
       return state.channels;
     }
-  },
+  }
 };

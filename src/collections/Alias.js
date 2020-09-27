@@ -5,7 +5,13 @@ export class FSAlias {
   static unsubscribeMap = new Map();
 
   static async Create(params) {
-    const { roomId: room, characterId: character, imageId: image, name, position = 1 } = params;
+    const {
+      roomId: room,
+      characterId: character,
+      imageId: image,
+      name,
+      position = 1
+    } = params;
     const alias = {
       room,
       character,
@@ -29,12 +35,11 @@ export class FSAlias {
     }
 
     const db = firebase.firestore();
-    const docsRef = db.collection("alias")
-      .where("room", "==", roomId);
+    const docsRef = db.collection("alias").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const aliases = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const alias = doc.data();
         alias.id = doc.id;
         aliases.push(alias);

@@ -1,7 +1,7 @@
 export const user = {
   namespaced: true,
   state: {
-    users: [],
+    users: []
   },
   mutations: {
     setUsers(state, payload) {

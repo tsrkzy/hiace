@@ -21,7 +21,7 @@ export const room = {
       activeMap: null,
       maps: [],
       soundEffects: [],
-      musics: null,
+      musics: null
     }
   },
   mutations: {
@@ -51,7 +51,7 @@ export const room = {
         activeMap: null,
         maps: [],
         soundEffects: [],
-        musics: null,
+        musics: null
       };
       commit("setRoom", { room });
     }

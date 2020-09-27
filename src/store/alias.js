@@ -1,12 +1,12 @@
 export const alias = {
   namespaced: true,
   state: {
-    aliases: [],
+    aliases: []
   },
   mutations: {
     setAliases(state, payload) {
       state.aliases = payload.aliases;
-    },
+    }
   },
   actions: {
     setAliases({ commit }, { aliases }) {

@@ -4,10 +4,10 @@
       <span v-if="label">{{ label }}</span>
     </slot>
     <input
-        :value="value"
-        @input="$emit('input',$event.currentTarget.value)"
-        :placeholder="placeholder"
-    >
+      :value="value"
+      @input="$emit('input', $event.currentTarget.value)"
+      :placeholder="placeholder"
+    />
   </label>
 </template>
 
@@ -23,10 +23,7 @@ export default {
     value: { type: String },
     placeholder: { type: String, default: "" }
   }
-
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

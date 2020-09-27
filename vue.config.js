@@ -3,7 +3,7 @@ module.exports = {
     mode: "development",
     devServer: {
       open: true,
-      historyApiFallback: true,
+      historyApiFallback: true
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-<span>terms of service</span>
+  <span>terms of service</span>
 </template>
 
 <script>
@@ -8,6 +8,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,8 +1,10 @@
 <template>
   <div>
-    <ha-select label="Character" :items="characterItems"
-               v-model="activeCharacterId"
-               @change="onChangeCharacterHandler"
+    <ha-select
+      label="Character"
+      :items="characterItems"
+      v-model="activeCharacterId"
+      @change="onChangeCharacterHandler"
     >
       <option selected :value="CHARACTER_NOT_SELECTED">{{ userName }}</option>
     </ha-select>
@@ -18,7 +20,10 @@ export default {
   components: { HaSelect },
   computed: {
     characterItems() {
-      return this.$store.getters["character/info"].map(c => ({ value: c.id, text: c.name }));
+      return this.$store.getters["character/info"].map(c => ({
+        value: c.id,
+        text: c.name
+      }));
     },
     userName() {
       return this.$store.getters["auth/user"].name;
@@ -33,12 +38,10 @@ export default {
   data() {
     return {
       CHARACTER_NOT_SELECTED,
-      activeCharacterId: CHARACTER_NOT_SELECTED,
+      activeCharacterId: CHARACTER_NOT_SELECTED
     };
-  },
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

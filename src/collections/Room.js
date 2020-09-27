@@ -15,7 +15,10 @@ export class FSRoom {
    */
   static async GetById({ id }) {
     const db = firebase.firestore();
-    const docRef = await db.collection("room").doc(id).get();
+    const docRef = await db
+      .collection("room")
+      .doc(id)
+      .get();
 
     if (!docRef.exists) {
       return null;
@@ -63,7 +66,7 @@ export class FSRoom {
       requests: [],
       kicked: [],
       users: [owner.id], // 初期値ownerのみ、追加可能
-      characters: [],
+      characters: []
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
       // activeMap: "map_1", // マップセット切り替え
@@ -80,7 +83,7 @@ export class FSRoom {
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner.id,
       character: null,
-      value: { text: "welcome to hiace!" },
+      value: { text: "welcome to hiace!" }
     };
     await FSChat.Create(c);
 
@@ -182,12 +185,11 @@ export class FSRoom {
     await doc.update({ requests });
   }
 
-
   static SetListener(room) {
     const id = room.id;
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(id);
-    const unsubscribe = docRef.onSnapshot((doc) => {
+    const unsubscribe = docRef.onSnapshot(doc => {
       const room = doc.data();
       room.id = doc.id;
       store.dispatch("room/setRoom", { room });

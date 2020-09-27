@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import  "firebase/firestore";
-import  "firebase/storage";
+import "firebase/firestore";
+import "firebase/storage";
 
 import store from "@/store";
 
@@ -9,7 +9,10 @@ export class FSImage {
 
   static async GetById({ id }) {
     const db = firebase.firestore();
-    const docRef = await db.collection("image").doc(id).get();
+    const docRef = await db
+      .collection("image")
+      .doc(id)
+      .get();
     if (!docRef.exists) {
       return null;
     }
@@ -18,7 +21,7 @@ export class FSImage {
     return image;
   }
 
-  static async Create(file){
+  static async Create(file) {
     if (!(file instanceof File)) {
       throw new Error(`argument must be instance of File()`);
     }
@@ -37,7 +40,6 @@ export class FSImage {
     /* fireStorage.path */
     const path = `${userId}/images/${name}`;
 
-
     const storageRef = firebase.storage().ref();
     const imageRef = storageRef.child(path);
 
@@ -48,19 +50,24 @@ export class FSImage {
     };
     const url = await new Promise((resolve, reject) => {
       /* upload */
-      const uploadTask = imageRef.put(file, metadata)
-      uploadTask.on("state_changed", (snapshot) => {
-        /* progress observer */
-        console.log(`uploading ${name},`,snapshot.state); // @DELETEME
-      }, (e) => {
-        /* on error */
-        reject(e);
-      }, async () => {
-        /* on complete */
-        const url = await uploadTask.snapshot.ref.getDownloadURL();
-        console.log("uploading done: ",name); // @DELETEME
-        resolve(url)
-      });
+      const uploadTask = imageRef.put(file, metadata);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          /* progress observer */
+          console.log(`uploading ${name},`, snapshot.state); // @DELETEME
+        },
+        e => {
+          /* on error */
+          reject(e);
+        },
+        async () => {
+          /* on complete */
+          const url = await uploadTask.snapshot.ref.getDownloadURL();
+          console.log("uploading done: ", name); // @DELETEME
+          resolve(url);
+        }
+      );
     });
 
     const image = {
@@ -75,7 +82,7 @@ export class FSImage {
     const imageDocRef = await db.collection("image").add(image);
     image.id = imageDocRef.id;
     console.log(`+ register done. "${name}" complete!`); // @DELETEME
-    return image
+    return image;
   }
 
   static SetListener(roomId) {
@@ -87,17 +94,16 @@ export class FSImage {
     }
 
     const db = firebase.firestore();
-    const docsRef = db.collection("image")
-      .where("room", "==", roomId);
+    const docsRef = db.collection("image").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const images = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const image = doc.data();
         image.id = doc.id;
         images.push(image);
       });
-      store.dispatch("image/setChats", { images });
+      store.dispatch("image/setImages", { images });
     });
     const listener = { roomId, unsubscribe };
     unsubscribeMap.set(roomId, listener);
@@ -114,5 +120,4 @@ export class FSImage {
 
     unsubscribeMap.delete(roomId);
   }
-
 }

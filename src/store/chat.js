@@ -1,7 +1,7 @@
 export const chat = {
   namespaced: true,
   state: {
-    chats: [],
+    chats: []
   },
   mutations: {
     setChats(state, payload) {

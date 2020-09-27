@@ -18,12 +18,12 @@ import "firebaseui/dist/firebaseui.css";
 
 export default {
   name: "GoogleAuthorizer",
-  created() {
-
-  },
+  created() {},
   mounted() {
     if (!this.authenticated) {
-      const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+      const ui =
+        firebaseui.auth.AuthUI.getInstance() ||
+        new firebaseui.auth.AuthUI(firebase.auth());
       ui.start("#firebaseui-auth-container", {
         callbacks: {
           signInSuccessWithAuthResult: (/*authResult, redirectUrl*/) => {
@@ -32,14 +32,11 @@ export default {
           }
         },
         signInFlow: "popup",
-        signInOptions: [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        ],
+        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
         tosUrl: "/terms-of-service",
         privacyPolicyUrl: "/privacy-policy"
       });
     }
-
   },
   methods: {
     syncAuthInfo() {
@@ -69,6 +66,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

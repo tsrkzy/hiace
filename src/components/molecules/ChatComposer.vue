@@ -20,20 +20,23 @@ export default {
   components: { HaButton, HaInputForm, HaSelect },
   computed: {
     channelItems() {
-      return this.$store.getters["channel/info"].map(c => ({ text: c.name, value: c.id }));
+      return this.$store.getters["channel/info"].map(c => ({
+        text: c.name,
+        value: c.id
+      }));
     },
     room() {
       return this.$store.getters["room/info"];
     },
     user() {
       return this.$store.getters["auth/user"];
-    },
+    }
   },
   data() {
     return {
       SYSTEM_CHANNEL_ID,
       channelIdChatTo: SYSTEM_CHANNEL_ID,
-      chatText: "",
+      chatText: ""
     };
   },
   methods: {
@@ -55,14 +58,12 @@ export default {
         character: characterId,
         value: {
           text: chatText
-        },
+        }
       };
       await FSChat.Create(c);
-    },
+    }
   }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

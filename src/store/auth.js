@@ -58,13 +58,13 @@ export const auth = {
     loggedIn(state) {
       return !!state.user.id;
     },
-    info(state){
+    info(state) {
       return state.auth;
     },
     user(state) {
       return state.user;
     },
-    photoUrl(state){
+    photoUrl(state) {
       return state.user.photoUrl;
     }
   },

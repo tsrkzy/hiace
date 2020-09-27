@@ -2,9 +2,20 @@
   <div class="container">
     <h3>部屋の作成</h3>
     <ha-input-form label="部屋名" v-model="roomName"></ha-input-form>
-    <ha-select label="システム" v-model="system" :items="[{value:'sw2',text:'ソード・ワールド2.0'},{value:'sw2.5',text:'ソード・ワールド2.5'}]"></ha-select>
+    <ha-select
+      label="システム"
+      v-model="system"
+      :items="[
+        { value: 'sw2', text: 'ソード・ワールド2.0' },
+        { value: 'sw2.5', text: 'ソード・ワールド2.5' }
+      ]"
+    ></ha-select>
     <google-authorizer></google-authorizer>
-    <ha-button :disabled="!activateCreateRoomButton" @click="onClickCreateRoomButtonHandler">作成</ha-button>
+    <ha-button
+      :disabled="!activateCreateRoomButton"
+      @click="onClickCreateRoomButtonHandler"
+      >作成</ha-button
+    >
   </div>
 </template>
 
@@ -22,7 +33,7 @@ export default {
   methods: {
     async onClickCreateRoomButtonHandler() {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
-      const { roomName, } = this;
+      const { roomName } = this;
 
       const user = await FSUser.Create();
       this.$store.dispatch("auth/logInAs", { user });
@@ -42,12 +53,10 @@ export default {
   data() {
     return {
       roomName: "",
-      system: "sw2",
+      system: "sw2"
     };
-  },
+  }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

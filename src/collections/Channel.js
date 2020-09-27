@@ -11,7 +11,7 @@ export class FSChannel {
     const c = {
       type,
       name,
-      room,
+      room
     };
     const db = firebase.firestore();
     const docRef = await db.collection("channel").add(c);
@@ -24,9 +24,9 @@ export class FSChannel {
     console.log("Channel.SetListener"); // @DELETEME
     const db = firebase.firestore();
     const docRef = db.collection("channel").where("room", "==", roomId);
-    const unsubscribe = docRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docRef.onSnapshot(querySnapshot => {
       const channels = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const channel = doc.data();
         channel.id = doc.id;
         channels.push(channel);
@@ -51,5 +51,4 @@ export class FSChannel {
 
     unsubscribeMap.clear();
   }
-
 }

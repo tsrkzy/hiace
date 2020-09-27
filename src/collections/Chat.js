@@ -47,13 +47,14 @@ export class FSChat {
     }
 
     const db = firebase.firestore();
-    const docsRef = db.collection("chat")
+    const docsRef = db
+      .collection("chat")
       .where("room", "==", roomId)
       .orderBy("timestamp", "desc");
 
-    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const chats = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const chat = doc.data();
         chat.id = doc.id;
         chats.push(chat);

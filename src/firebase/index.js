@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-console.log('import firebase'); // @DELETEME
+console.log("import firebase"); // @DELETEME
 const {
   VUE_APP_API_KEY: API_KEY,
   VUE_APP_AUTH_DOMAIN: AUTH_DOMAIN,
@@ -10,7 +10,7 @@ const {
   VUE_APP_STORAGE_BUCKET: STORAGE_BUCKET,
   VUE_APP_MESSAGING_SENDER_ID: MESSAGING_SENDER_ID,
   VUE_APP_APP_ID: APP_ID,
-  VUE_APP_MEASUREMENT_ID: MEASUREMENT_ID,
+  VUE_APP_MEASUREMENT_ID: MEASUREMENT_ID
 } = process.env;
 
 /* initialize firebase */

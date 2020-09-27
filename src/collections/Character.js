@@ -39,14 +39,14 @@ export class FSCharacter {
     } = params;
 
     const c = {
-      owner
-      , name
-      , room: roomId
-      , text
-      , activeAlias
-      , showOnInitiative
-      , baseStats
-      , stats
+      owner,
+      name,
+      room: roomId,
+      text,
+      activeAlias,
+      showOnInitiative,
+      baseStats,
+      stats
     };
 
     const db = firebase.firestore();
@@ -65,12 +65,11 @@ export class FSCharacter {
     }
 
     const db = firebase.firestore();
-    const docsRef = db.collection("character")
-      .where("room", "==", roomId);
+    const docsRef = db.collection("character").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const characters = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const character = doc.data();
         character.id = doc.id;
         characters.push(character);

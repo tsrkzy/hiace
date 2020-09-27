@@ -5,11 +5,14 @@ import "firebase/auth";
 import store from "@/store";
 
 export class FSUser {
-  static  unsubscribeMap = new Map();
+  static unsubscribeMap = new Map();
 
   static async GetById({ id }) {
     const db = firebase.firestore();
-    const docRef = await db.collection("user").doc(id).get();
+    const docRef = await db
+      .collection("user")
+      .doc(id)
+      .get();
     if (!docRef.exists) {
       return null;
     }
@@ -20,14 +23,16 @@ export class FSUser {
 
   static async GetByEmail({ email }) {
     const db = firebase.firestore();
-    return db.collection("user")
-      .where("email", "==", email).get()
-      .then((snapshot) => {
+    return db
+      .collection("user")
+      .where("email", "==", email)
+      .get()
+      .then(snapshot => {
         if (snapshot.empty) {
           return null;
         }
         let result = null;
-        snapshot.forEach((d) => {
+        snapshot.forEach(d => {
           result = d.data();
           result.id = d.id;
         });
@@ -44,7 +49,7 @@ export class FSUser {
     const email = me.email;
     const user = await FSUser.GetByEmail({ email });
     if (user) {
-      await FSUser.Update(user.id, {photoUrl: me.photoURL})
+      await FSUser.Update(user.id, { photoUrl: me.photoURL });
       user.photoURL = me.photoURL;
       return user;
     }
@@ -55,7 +60,7 @@ export class FSUser {
       name: me.displayName,
       photoUrl: me.photoURL,
       email: me.email,
-      joinTo: [],
+      joinTo: []
     };
     const ref = await db.collection("user").add(u);
     u.id = ref.id;
@@ -63,7 +68,7 @@ export class FSUser {
     return u;
   }
 
-  static async Update(id, criteria = {}){
+  static async Update(id, criteria = {}) {
     const db = firebase.firestore();
     const doc = db.collection("user").doc(id);
     return await doc.update(criteria);
@@ -89,12 +94,13 @@ export class FSUser {
     FSUser.RemoveListener();
 
     const db = firebase.firestore();
-    const docsRef = db.collection("user")
+    const docsRef = db
+      .collection("user")
       .where("joinTo", "array-contains", roomId);
 
-    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const users = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         const user = doc.data();
         user.id = doc.id;
         users.push(user);
@@ -112,9 +118,9 @@ export class FSUser {
     const { unsubscribeMap } = FSUser;
     const listeners = unsubscribeMap.values();
     for (const l of listeners) {
-      let {id, unsubscribe} = l;
+      const { id, unsubscribe } = l;
       unsubscribe?.();
-      console.log(`unsubscribed: ${id}` ); // @DELETEME
+      console.log(`unsubscribed: ${id}`); // @DELETEME
     }
 
     unsubscribeMap.clear();
