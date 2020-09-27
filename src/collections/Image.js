@@ -5,6 +5,8 @@ import  "firebase/storage";
 import store from "@/store";
 
 export class FSImage {
+  static unsubscribeMap = new Map();
+
   static async GetById({ id }) {
     const db = firebase.firestore();
     const docRef = await db.collection("image").doc(id).get();
@@ -74,6 +76,43 @@ export class FSImage {
     image.id = imageDocRef.id;
     console.log(`+ register done. "${name}" complete!`); // @DELETEME
     return image
+  }
+
+  static SetListener(roomId) {
+    console.log("Image.SetListener", roomId); // @DELETEME
+
+    const { unsubscribeMap } = FSImage;
+    if (unsubscribeMap.has(roomId)) {
+      FSImage.RemoveListener(roomId);
+    }
+
+    const db = firebase.firestore();
+    const docsRef = db.collection("image")
+      .where("room", "==", roomId);
+
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
+      const images = [];
+      querySnapshot.forEach((doc) => {
+        const image = doc.data();
+        image.id = doc.id;
+        images.push(image);
+      });
+      store.dispatch("image/setChats", { images });
+    });
+    const listener = { roomId, unsubscribe };
+    unsubscribeMap.set(roomId, listener);
+  }
+
+  static RemoveListener(roomId) {
+    const { unsubscribeMap } = FSImage;
+    if (!unsubscribeMap.has(roomId)) {
+      console.log("no listener found: ", roomId); // @DELETEME
+      return false;
+    }
+    const listener = unsubscribeMap.get(roomId);
+    listener.unsubscribe();
+
+    unsubscribeMap.delete(roomId);
   }
 
 }

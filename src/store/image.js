@@ -1,6 +1,8 @@
 export const image = {
   namespaced: true,
-  state: {},
+  state: {
+    images: []
+  },
   mutations: {},
   actions: {},
   getters: {}
