@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { FSAlias } from "@/collections/Alias";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
@@ -35,6 +36,7 @@ export default {
     FSChat.RemoveListener(this.roomId);
     FSChannel.RemoveListener();
     FSCharacter.RemoveListener(this.roomId);
+    FSAlias.RemoveListener(this.roomId);
   },
   methods: {
     async trackRoomInfo(roomId) {
@@ -54,6 +56,7 @@ export default {
       FSChat.SetListener(roomId);
       FSChannel.SetListener(roomId);
       FSCharacter.SetListener(roomId);
+      FSAlias.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });

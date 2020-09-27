@@ -43,7 +43,7 @@ export default {
       if (!channelId) {
         throw new Error("no channel found");
       }
-      const characterId = this.$store.getters["character/active"] ?? null;
+      const characterId = this.$store.getters["character/activeId"] ?? null;
       const chatText = _chatText.trim();
       const roomId = this.room.id;
       const userId = this.user.id;

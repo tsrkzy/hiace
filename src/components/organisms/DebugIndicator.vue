@@ -42,9 +42,15 @@
       <ha-button :disabled="!authenticated" @click="onClickCreateCharacter">ADD CHARACTER</ha-button>
       <!--      <pre>      {{ characters }}</pre>-->
     </details>
-    <character-switcher v-if="joined">
-
-    </character-switcher>
+    <details v-if="joined" open>
+      <summary>alias.info</summary>
+      <ha-button :disabled="!authenticated" @click="onClickCreateAlias">ADD Alias</ha-button>
+<!--      <pre>{{ aliases }}</pre>-->
+      <ol>
+        <li v-for="a in aliases" :key="a.id" style="margin: 0;">{{ a.character }}:{{ a.name }}</li>
+      </ol>
+    </details>
+    <character-switcher v-if="joined"></character-switcher>
     <details v-if="channels">
       <summary>channel.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateChannel">ADD CHANNEL</ha-button>
@@ -64,10 +70,14 @@
 </template>
 
 <script>
+import { FSAlias } from "@/collections/Alias";
 import {
   FSChannel,
 } from "@/collections/Channel";
-import { FSCharacter } from "@/collections/Character";
+import {
+  CHARACTER_NOT_SELECTED,
+  FSCharacter
+} from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
@@ -107,6 +117,12 @@ export default {
     },
     characters() {
       return this.$store.getters["character/info"];
+    },
+    characterSelected() {
+      return this.$store.getters["character/activeId"];
+    },
+    aliases() {
+      return this.$store.getters["alias/info"];
     },
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({ text: c.name, value: c.id }));
@@ -166,6 +182,29 @@ export default {
         room: this.rooms.id
       };
       await FSChannel.Create(c);
+    },
+    async onClickCreateAlias() {
+      const { characterSelected: characterId } = this;
+      if (characterId === CHARACTER_NOT_SELECTED) {
+        console.warn("character not selected yet"); // @DELETEME
+        return false;
+      }
+
+      const character = this.characters.find(c => c.id === characterId);
+
+      const roomId = this.rooms.id;
+      const imageId = null;
+      const name = `${character.name}の新しいalias`;
+      const position = 1;
+      const a = {
+        roomId,
+        characterId,
+        imageId,
+        name,
+        position,
+      };
+
+      await FSAlias.Create(a);
     },
     async onClickCreateCharacter() {
       const userId = this.user.id;

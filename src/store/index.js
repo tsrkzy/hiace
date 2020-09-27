@@ -8,6 +8,7 @@ import { user } from "@/store/user";
 import { chat } from "@/store/chat";
 import { channel } from "@/store/channel";
 import { character } from "@/store/character";
+import { alias } from "@/store/alias";
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     user,
     chat,
     channel,
-    character
+    character,
+    alias
   }
 });
