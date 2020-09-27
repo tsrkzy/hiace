@@ -8,26 +8,25 @@
       <summary>Images</summary>
       <pre></pre>
     </details>
-    <div v-if="isOwner">
-      <h5>部屋主メニュー</h5>
+    <details v-if="isOwner">
+      <summary>owner menu</summary>
       <ha-button :key="`grant-${u}`" v-for="u in requests" @click="grantRequest(u)">grant: {{ u }}</ha-button>
       <ha-button :key="`drop-${u}`" v-for="u in userIdList" @click="dropUser(u)">drop: {{ u }}</ha-button>
       <ha-button :key="`kick-u-${u}`" v-for="u in userIdList" @click="kickUser(u)">kick: {{ u }}</ha-button>
       <ha-button :key="`kick-r-${u}`" v-for="u in requests" @click="kickUser(u)">kick: {{ u }}</ha-button>
-    </div>
+    </details>
     <div v-if="youKicked">
-      <h5>キックされました</h5>
+      <span>キックされました</span>
     </div>
     <div v-if="waitForGrant">
-      <h5>入出許可を待っています</h5>
-      <p>このタブを閉じて待つこともできます</p>
+      <span>入出許可を待っています。このタブを閉じて待つこともできます。</span>
     </div>
     <div v-if="needRequest">
-      <h5>入室リクエストを送る</h5>
+      <span>入室リクエストを送る</span>
       <ha-button @click="makeRequest">入室リクエストを送る</ha-button>
     </div>
     <div v-if="joined">
-      <h5>入室完了</h5>
+      <span>入室完了</span>
     </div>
     <details v-if="$store.getters['auth/loggedIn']">
       <summary> auth.user</summary>
@@ -38,23 +37,26 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
-    <details v-if="characters" open>
+    <details v-if="characters">
       <summary>character.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateCharacter">ADD CHARACTER</ha-button>
-      {{ characters }}
+      <!--      <pre>      {{ characters }}</pre>-->
     </details>
-    <details v-if="channels" open>
+    <character-switcher v-if="joined">
+
+    </character-switcher>
+    <details v-if="channels">
       <summary>channel.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateChannel">ADD CHANNEL</ha-button>
       <!--      <pre>{{ channels }}</pre>-->
     </details>
-    <div v-if="joined">
-      <chat-composer></chat-composer>
-    </div>
+    <chat-composer v-if="joined"></chat-composer>
     <details v-if="chats" open>
       <summary> chat.info</summary>
       <ol>
-        <li v-for="c of chats" :key="c.id" style="margin: 0;">{{ c.channel || ("none") }}: {{ c.value.text }}</li>
+        <li v-for="c of chats" :key="c.id" style="margin: 0;">
+          ({{ c.channel || ("none") }}) {{ c.character || userName }}: {{ c.value.text }}
+        </li>
       </ol>
       <!--      <pre>{{ chats }}</pre>-->
     </details>
@@ -69,6 +71,7 @@ import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
+import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import {
   JOINED,
@@ -79,13 +82,16 @@ import {
 
 export default {
   name: "DebugIndicator",
-  components: { ChatComposer, HaButton },
+  components: { CharacterSwitcher, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
     },
     user() {
       return this.$store.getters["auth/user"];
+    },
+    userName() {
+      return this.$store.getters["auth/user"].name;
     },
     userIdList() {
       return this.rooms.users;
@@ -126,7 +132,7 @@ export default {
     isOwner() {
       const userId = this.user.id;
       return this.authenticated && this.rooms.owner === userId;
-    },
+    }
   },
   data() {
     return {};

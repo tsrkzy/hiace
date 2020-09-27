@@ -1,6 +1,8 @@
 import store from "@/store";
 import firebase from "firebase";
 
+export const CHARACTER_NOT_SELECTED = null;
+
 export class FSCharacter {
   static unsubscribeMap = new Map();
 
@@ -29,7 +31,7 @@ export class FSCharacter {
       owner,
       name,
       roomId,
-      text="",
+      text = "",
       activeAlias = "alias_1",
       showOnInitiative = true,
       baseStats = [],
@@ -38,14 +40,14 @@ export class FSCharacter {
 
     const c = {
       owner
-      ,name
-      ,room: roomId
-      ,text
-      ,activeAlias
-      ,showOnInitiative
-      ,baseStats
-      ,stats
-    }
+      , name
+      , room: roomId
+      , text
+      , activeAlias
+      , showOnInitiative
+      , baseStats
+      , stats
+    };
 
     const db = firebase.firestore();
     const characterDocRef = await db.collection("character").add(c);
@@ -64,7 +66,7 @@ export class FSCharacter {
 
     const db = firebase.firestore();
     const docsRef = db.collection("character")
-      .where("room", "==", roomId)
+      .where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const characters = [];

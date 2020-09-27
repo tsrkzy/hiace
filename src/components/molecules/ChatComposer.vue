@@ -1,7 +1,8 @@
 <template>
   <div>
-    <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo"></ha-select>
-    <h5>{{ channelIdChatTo }}</h5>
+    <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo">
+      <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
+    </ha-select>
     <ha-input-form v-model="chatText"></ha-input-form>
     <ha-button @click="sendChat">send</ha-button>
   </div>
@@ -30,6 +31,7 @@ export default {
   },
   data() {
     return {
+      SYSTEM_CHANNEL_ID,
       channelIdChatTo: SYSTEM_CHANNEL_ID,
       chatText: "",
     };
@@ -41,7 +43,7 @@ export default {
       if (!channelId) {
         throw new Error("no channel found");
       }
-
+      const characterId = this.$store.getters["character/active"] ?? null;
       const chatText = _chatText.trim();
       const roomId = this.room.id;
       const userId = this.user.id;
@@ -50,7 +52,7 @@ export default {
         room: roomId,
         channel: channelId,
         owner: userId,
-        character: null,
+        character: characterId,
         value: {
           text: chatText
         },
