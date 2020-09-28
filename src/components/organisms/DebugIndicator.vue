@@ -88,22 +88,21 @@
     </details>
     <details v-if="characters">
       <summary>character.info</summary>
-      <ha-button :disabled="!authenticated" @click="onClickCreateCharacter"
-        >ADD CHARACTER
+      <ha-button :disabled="!authenticated" @click="onClickCreateMyCharacter"
+        >ADD MY CHARACTER
       </ha-button>
       <!--      <pre>      {{ characters }}</pre>-->
     </details>
     <details v-if="joined" open>
       <summary>alias.info</summary>
-      <ha-button :disabled="!authenticated" @click="onClickCreateAlias"
-        >ADD Alias
+      <ha-button
+        :disabled="!authenticated"
+        @click="onClickCreateAliasToCharacter"
+        >ADD CHARACTER'S ALIAS
       </ha-button>
       <!--      <pre>{{ aliases }}</pre>-->
-      <ol>
-        <li v-for="a in aliases" :key="a.id" style="margin: 0;">
-          {{ a.character }}:{{ a.name }}
-        </li>
-      </ol>
+      {{ aliasSelect }}
+      <ha-select label="alias:" :items="aliasItems" v-model="aliasSelect"></ha-select>
     </details>
     <character-switcher v-if="joined"></character-switcher>
     <details v-if="channels">
@@ -134,13 +133,14 @@ import { CHARACTER_NOT_SELECTED, FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
+import HaSelect from "@/components/atoms/HaSelect";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "DebugIndicator",
-  components: { CharacterSwitcher, ChatComposer, HaButton },
+  components: { HaSelect, CharacterSwitcher, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -171,6 +171,15 @@ export default {
     },
     aliases() {
       return this.$store.getters["alias/info"];
+    },
+    myAliases() {
+      return this.$store.getters["alias/mine"];
+    },
+    aliasItems(){
+      return this.$store.getters["alias/mine"].map(a =>({
+        text: a.name,
+        value: a.id
+      }));
     },
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({
@@ -222,7 +231,8 @@ export default {
   },
   data() {
     return {
-      imageSelect: null
+      imageSelect: null,
+      aliasSelect: null,
     };
   },
   methods: {
@@ -255,7 +265,7 @@ export default {
       };
       await FSChannel.Create(c);
     },
-    async onClickCreateAlias() {
+    async onClickCreateAliasToCharacter() {
       const { characterSelected: characterId } = this;
       if (characterId === CHARACTER_NOT_SELECTED) {
         console.warn("character not selected yet"); // @DELETEME
@@ -266,7 +276,8 @@ export default {
 
       const roomId = this.rooms.id;
       const imageId = null;
-      const name = `${character.name}の新しいalias`;
+      const t = Date.now() % 1000;
+      const name = `${character.name}_a${t}`;
       const position = 1;
       const a = {
         roomId,
@@ -278,13 +289,14 @@ export default {
 
       await FSAlias.Create(a);
     },
-    async onClickCreateCharacter() {
+    async onClickCreateMyCharacter() {
       const userId = this.user.id;
       const userName = this.user.name;
       const roomId = this.rooms.id;
+      const t = Date.now() % 1000;
       const c = {
         owner: userId,
-        name: `${userName}_character`,
+        name: `${userName}_c${t}`,
         roomId
       };
       await FSCharacter.Create(c);

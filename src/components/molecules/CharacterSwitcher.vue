@@ -6,7 +6,7 @@
       v-model="activeCharacterId"
       @change="onChangeCharacterHandler"
     >
-      <option selected :value="CHARACTER_NOT_SELECTED">{{ userName }}</option>
+      <option selected :value="CHARACTER_NOT_SELECTED">{{ userName }}(PL)</option>
     </ha-select>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   components: { HaSelect },
   computed: {
     characterItems() {
-      return this.$store.getters["character/info"].map(c => ({
+      return this.$store.getters["character/mine"].map(c => ({
         value: c.id,
         text: c.name
       }));
