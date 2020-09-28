@@ -30,8 +30,9 @@
         <img
           :src="img.url"
           :style="{
-            'max-width': '50px',
-            'max-height': '50px',
+            'max-width': '24px',
+            'max-height': '24px',
+            'border-bottom': imageSelect === img.id ? '1px solid black' : 'none'
           }"
         />
       </label>
