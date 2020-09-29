@@ -1,7 +1,9 @@
+import { FSAlias } from "@/collections/Alias";
 import store from "@/store";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
-export const CHARACTER_NOT_SELECTED = null;
+export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
 export class FSCharacter {
   static unsubscribeMap = new Map();
@@ -53,7 +55,17 @@ export class FSCharacter {
     const characterDocRef = await db.collection("character").add(c);
     c.id = characterDocRef.id;
 
+    /* 初期aliasを作成してactiveに指定 */
+    const alias = await FSAlias.CreateDefault({ roomId, characterId: c.id });
+    await FSCharacter.SetActiveAlias(c.id, alias.id);
+
     return c;
+  }
+
+  static async SetActiveAlias(characterId, aliasId) {
+    const db = firebase.firestore();
+    const characterDocRef = db.collection("character").doc(characterId);
+    await characterDocRef.update({ activeAlias: aliasId });
   }
 
   static SetListener(roomId) {

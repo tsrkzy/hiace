@@ -1,5 +1,8 @@
 import store from "@/store";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+export const ALIAS_NOT_SELECTED = "ALIAS_NOT_SELECTED";
 
 export class FSAlias {
   static unsubscribeMap = new Map();
@@ -10,7 +13,7 @@ export class FSAlias {
       characterId: character,
       imageId: image,
       name,
-      position = 1
+      position = 0
     } = params;
     const alias = {
       room,
@@ -24,6 +27,20 @@ export class FSAlias {
     alias.id = docRef.id;
 
     return alias;
+  }
+
+  static async CreateDefault(params) {
+    const { roomId, characterId } = params;
+    const imageId = null;
+    const name = "基本";
+    const position = 0;
+    return await FSAlias.Create({
+      roomId,
+      characterId,
+      imageId,
+      name,
+      position
+    });
   }
 
   static SetListener(roomId) {

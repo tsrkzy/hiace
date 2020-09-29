@@ -91,7 +91,7 @@
       <ha-button :disabled="!authenticated" @click="onClickCreateMyCharacter"
         >ADD MY CHARACTER
       </ha-button>
-      <!--      <pre>      {{ characters }}</pre>-->
+      <pre>      {{ characters }}</pre>
     </details>
     <details v-if="joined" open>
       <summary>alias.info</summary>
@@ -100,9 +100,8 @@
         @click="onClickCreateAliasToCharacter"
         >ADD CHARACTER'S ALIAS
       </ha-button>
-      <!--      <pre>{{ aliases }}</pre>-->
+      <!-- <pre>{{ aliases }}</pre> -->
       {{ aliasSelect }}
-      <ha-select label="alias:" :items="aliasItems" v-model="aliasSelect"></ha-select>
     </details>
     <character-switcher v-if="joined"></character-switcher>
     <details v-if="channels">
@@ -133,14 +132,13 @@ import { CHARACTER_NOT_SELECTED, FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
-import HaSelect from "@/components/atoms/HaSelect";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "DebugIndicator",
-  components: { HaSelect, CharacterSwitcher, ChatComposer, HaButton },
+  components: { CharacterSwitcher, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -164,7 +162,7 @@ export default {
       return this.$store.getters["channel/info"];
     },
     characters() {
-      return this.$store.getters["character/info"];
+      return this.$store.getters["character/tree"];
     },
     characterSelected() {
       return this.$store.getters["character/activeId"];
@@ -175,8 +173,8 @@ export default {
     myAliases() {
       return this.$store.getters["alias/mine"];
     },
-    aliasItems(){
-      return this.$store.getters["alias/mine"].map(a =>({
+    aliasItems() {
+      return this.$store.getters["alias/mine"].map(a => ({
         text: a.name,
         value: a.id
       }));
@@ -232,7 +230,7 @@ export default {
   data() {
     return {
       imageSelect: null,
-      aliasSelect: null,
+      aliasSelect: null
     };
   },
   methods: {
@@ -272,7 +270,7 @@ export default {
         return false;
       }
 
-      const character = this.characters.find(c => c.id === characterId);
+      const character = this.characters[characterId];
 
       const roomId = this.rooms.id;
       const imageId = null;

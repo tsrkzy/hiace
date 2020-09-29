@@ -21,7 +21,9 @@ export const alias = {
     mine(state, getters, rootState, rootGetters) {
       const myCharacters = rootGetters["character/mine"];
       const myCharacterIds = myCharacters.map(c => c.id);
-      return state.aliases.filter(c => myCharacterIds.indexOf(c.character) !== -1);
+      return state.aliases.filter(
+        c => myCharacterIds.indexOf(c.character) !== -1
+      );
     }
   }
 };

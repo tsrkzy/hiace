@@ -7,9 +7,13 @@
       <slot>
         <option selected :value="null">not selected</option>
       </slot>
-      <option v-for="item in items" :key="item.value" :value="item.value">{{
-        item.text
-      }}</option>
+      <option
+        v-for="item in items"
+        :key="item.value"
+        :value="item.value"
+        :selected="item.value === value"
+        >{{ item.text }}
+      </option>
     </select>
   </label>
 </template>
