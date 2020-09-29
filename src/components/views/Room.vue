@@ -18,7 +18,7 @@
       </label>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
-    <svg style="width: 100%; height: 100%;background-color: lightgray;"></svg>
+    <svg-board></svg-board>
   </div>
 </template>
 
@@ -34,13 +34,14 @@ import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSImage } from "@/collections/Image";
+import SvgBoard from "../organisms/SvgBoard";
 
 const WINDOW_MARGIN = 40;
 const BORDER = 1;
 
 export default {
   name: "Room",
-  components: { GoogleAuthorizer, HaButton, DebugIndicator },
+  components: { SvgBoard, GoogleAuthorizer, HaButton, DebugIndicator },
   async created() {
     this.roomId = this.$route.params.room_id;
     await this.trackRoomInfo(this.roomId);
@@ -111,7 +112,7 @@ export default {
         await this.afterJoined();
       }
     },
-    resizeHandler(e) {
+    resizeHandler() {
       const $el = document.getElementById("floor");
       $el.style.height = `${window.innerHeight -
         2 * WINDOW_MARGIN -
