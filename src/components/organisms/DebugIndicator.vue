@@ -36,6 +36,8 @@
           }"
         />
       </label>
+      <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
+      {{ maps }}
     </div>
     <details v-if="isOwner">
       <summary>owner menu</summary>
@@ -124,6 +126,7 @@ import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
+import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
@@ -161,6 +164,9 @@ export default {
     },
     images() {
       return this.$store.getters["image/info"];
+    },
+    maps() {
+      return this.$store.getters["map/info"];
     },
     imageItems() {
       return this.$store.getters["image/info"].map(img => ({
@@ -216,6 +222,11 @@ export default {
     async makeRequest() {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
+    },
+    async onClickCreateMap() {
+      const userId = this.user.id;
+      const roomId = this.rooms.id;
+      await FSMap.Create({ userId, roomId });
     },
     async onClickImagesUploadHandler(e) {
       const { files = [] } = e.currentTarget;

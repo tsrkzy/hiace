@@ -9,6 +9,7 @@ import { chat } from "@/store/chat";
 import { channel } from "@/store/channel";
 import { character } from "@/store/character";
 import { alias } from "@/store/alias";
+import { map } from "@/store/map";
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     chat,
     channel,
     character,
-    alias
+    alias,
+    map
   }
 });

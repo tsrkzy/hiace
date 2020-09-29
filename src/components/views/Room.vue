@@ -34,7 +34,8 @@ import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSImage } from "@/collections/Image";
-import SvgBoard from "../organisms/SvgBoard";
+import { FSMap } from "@/collections/Map";
+import SvgBoard from "@/components/organisms/SvgBoard";
 
 const WINDOW_MARGIN = 40;
 const BORDER = 1;
@@ -61,6 +62,7 @@ export default {
     FSCharacter.RemoveListener(this.roomId);
     FSAlias.RemoveListener(this.roomId);
     FSImage.RemoveListener(this.roomId);
+    FSMap.RemoveListener(this.roomId);
     this.$store.dispatch("room/leaveRoom");
   },
   methods: {
@@ -83,6 +85,7 @@ export default {
       FSCharacter.SetListener(roomId);
       FSAlias.SetListener(roomId);
       FSImage.SetListener(roomId);
+      FSMap.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });
