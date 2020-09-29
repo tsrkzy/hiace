@@ -94,20 +94,21 @@
       <summary>alias.info</summary>
       <pre>{{ aliases }}</pre>
     </details>
-    <character-switcher v-if="joined"></character-switcher>
     <details v-if="channels">
       <summary>channel.info</summary>
       <ha-button :disabled="!authenticated" @click="onClickCreateChannel"
         >ADD CHANNEL
       </ha-button>
-      <!--      <pre>{{ channels }}</pre>-->
+      <pre>{{ channels }}</pre>
     </details>
+    <chat-composer v-if="joined"></chat-composer>
     <chat-composer v-if="joined"></chat-composer>
     <details v-if="chats" open>
       <summary> chat.info</summary>
       <ol>
         <li v-for="c of chats" :key="c.id" style="margin: 0;">
-          ({{ c.channel || "none" }}) {{ c.character || userName }}:
+          ({{ c.channel || "none" }}) {{ c.character || userName
+          }}{{ c.alias ? `(${c.alias})` : "" }}:
           {{ c.value.text }}
         </li>
       </ol>
@@ -121,13 +122,12 @@ import { FSChannel } from "@/collections/Channel";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
-import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "DebugIndicator",
-  components: { CharacterSwitcher, ChatComposer, HaButton },
+  components: { ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];

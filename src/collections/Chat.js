@@ -6,7 +6,15 @@ import store from "@/store";
 export class FSChat {
   static unsubscribeMap = new Map();
 
-  static async Create({ type, room, channel, owner, character, value = {} }) {
+  static async Create({
+    type,
+    room,
+    channel,
+    owner,
+    character,
+    alias,
+    value = {}
+  }) {
     const db = firebase.firestore();
     const timestamp = Date.now();
 
@@ -16,6 +24,7 @@ export class FSChat {
       channel,
       owner,
       character,
+      alias,
       value,
       timestamp
     };
@@ -33,6 +42,7 @@ export class FSChat {
       channel: SYSTEM_CHANNEL_ID,
       owner: userId,
       character: null,
+      alias: null,
       value: { text: `logged in - - - ${email} - - -` }
     };
     return await FSChat.Create(c);

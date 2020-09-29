@@ -1,5 +1,6 @@
 <template>
   <div>
+    <character-switcher ref="cs"></character-switcher>
     <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo">
       <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
     </ha-select>
@@ -14,10 +15,11 @@ import { FSChat } from "@/collections/Chat";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
+import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 
 export default {
   name: "ChatComposer",
-  components: { HaButton, HaInputForm, HaSelect },
+  components: { CharacterSwitcher, HaButton, HaInputForm, HaSelect },
   computed: {
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({
@@ -40,13 +42,18 @@ export default {
     };
   },
   methods: {
+    getSpeaker() {
+      const { aliasId, characterId } = this.$refs.cs.getIdCharacterAndAlias();
+      return { aliasId, characterId };
+    },
     async sendChat() {
       console.log("DebugIndicator.sendChat"); // @DELETEME
       const { chatText: _chatText = "", channelIdChatTo: channelId } = this;
       if (!channelId) {
         throw new Error("no channel found");
       }
-      const characterId = this.$store.getters["character/activeId"] ?? null;
+
+      const { aliasId, characterId } = this.getSpeaker();
       const chatText = _chatText.trim();
       const roomId = this.room.id;
       const userId = this.user.id;
@@ -56,6 +63,7 @@ export default {
         channel: channelId,
         owner: userId,
         character: characterId,
+        alias: aliasId,
         value: {
           text: chatText
         }

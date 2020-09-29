@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER </ha-button>
+    <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
     <ha-button @click="onClickCreateAliasToCharacter"
       >ADD CHARACTER'S ALIAS
     </ha-button>
@@ -65,11 +65,13 @@ export default {
      * @return {{aliasId:?String , characterId:?String}}
      */
     getIdCharacterAndAlias() {
-      const {
-        characterId = CHARACTER_NOT_SELECTED,
-        aliasId = ALIAS_NOT_SELECTED
-      } = this;
-      return { characterId, aliasId };
+      const { characterId, aliasId } = this;
+
+      return {
+        characterId:
+          characterId === CHARACTER_NOT_SELECTED ? null : characterId,
+        aliasId: aliasId === ALIAS_NOT_SELECTED ? null : aliasId
+      };
     },
     async onChangeCharacterHandler() {
       const { characterId } = this;

@@ -1,8 +1,24 @@
+<!-----------------------------------------------------------------------------
+  - Copyright (c) 2020.                                                       -
+  - @tsrkzy/Github.                                                           -
+  - tsrmix@gmail.com                                                          -
+  - All rights reserved.                                                      -
+  ----------------------------------------------------------------------------->
 <template>
-  <div>
-    <ha-button @click="$router.push('/')">←</ha-button>
-    <google-authorizer></google-authorizer>
-    <debug-indicator></debug-indicator>
+  <div
+    id="floor"
+    style="margin: 40px;border: 1px solid black;overflow: hidden;"
+  >
+    <div style="position: fixed; top: 0;left:0;">
+      <ha-button @click="$router.push('/')">←</ha-button>
+      <google-authorizer></google-authorizer>
+      <label
+        >debug:
+        <input type="checkbox" v-model="debug" />
+      </label>
+      <debug-indicator v-if="debug"></debug-indicator>
+    </div>
+    <svg style="width: 100%; height: 100%;background-color: lightgray;"></svg>
   </div>
 </template>
 
@@ -17,16 +33,26 @@ import HaButton from "@/components/atoms/HaButton";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
-import { FSImage } from "../../collections/Image";
+import { FSImage } from "@/collections/Image";
+
+const WINDOW_MARGIN = 40;
+const BORDER = 1;
 
 export default {
   name: "Room",
   components: { GoogleAuthorizer, HaButton, DebugIndicator },
   async created() {
-    const roomId = this.$route.params.room_id;
-    await this.trackRoomInfo(roomId);
+    this.roomId = this.$route.params.room_id;
+    await this.trackRoomInfo(this.roomId);
+  },
+  mounted() {
+    window.addEventListener("resize", this.resizeHandler);
+    this.resizeHandler();
   },
   beforeDestroy() {
+    console.log("Room.beforeDestroy", this.roomId); // @DELETEME
+    window.removeEventListener("resize", this.resizeHandler);
+
     FSRoom.RemoveListener(this.roomId);
     FSUser.RemoveListener();
     FSChat.RemoveListener(this.roomId);
@@ -34,6 +60,7 @@ export default {
     FSCharacter.RemoveListener(this.roomId);
     FSAlias.RemoveListener(this.roomId);
     FSImage.RemoveListener(this.roomId);
+    this.$store.dispatch("room/leaveRoom");
   },
   methods: {
     async trackRoomInfo(roomId) {
@@ -83,14 +110,20 @@ export default {
         console.log("joined"); // @DELETEME
         await this.afterJoined();
       }
+    },
+    resizeHandler(e) {
+      const $el = document.getElementById("floor");
+      $el.style.height = `${window.innerHeight -
+        2 * WINDOW_MARGIN -
+        2 * BORDER}px`;
+      $el.style.width = `${window.innerWidth -
+        2 * WINDOW_MARGIN -
+        2 * BORDER}px`;
     }
   },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
-    },
-    roomId() {
-      return this.$route.params.room_id;
     },
     room() {
       return this.$store.getters["room/info"];
@@ -103,6 +136,12 @@ export default {
     grantState() {
       return this.$store.getters["room/grant"].state;
     }
+  },
+  data() {
+    return {
+      roomId: null,
+      debug: true
+    };
   },
   watch: {
     async grantState() {
