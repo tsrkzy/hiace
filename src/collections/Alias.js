@@ -43,6 +43,12 @@ export class FSAlias {
     });
   }
 
+  static async SetImageId(aliasId, imageId) {
+    const db = firebase.firestore();
+    const aliasDocRef = db.collection("alias").doc(aliasId);
+    await aliasDocRef.update({ imageId });
+  }
+
   static SetListener(roomId) {
     console.log("Alias.SetListener", roomId); // @DELETEME
 

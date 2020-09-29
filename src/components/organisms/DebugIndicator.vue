@@ -200,7 +200,7 @@ export default {
   },
   data() {
     return {
-      imageSelect: null,
+      imageSelect: null
     };
   },
   methods: {
