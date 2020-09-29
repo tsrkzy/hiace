@@ -10,19 +10,12 @@ export const character = {
   mutations: {
     setCharacters(state, payload) {
       state.characters = payload.characters;
-    },
-    select(state, payload) {
-      state.activeCharacterId = payload.characterId;
     }
   },
   actions: {
     setCharacters({ commit }, { characters }) {
       console.log("character.setCharacters", characters); // @DELETEME
       commit("setCharacters", { characters });
-    },
-    select({ commit }, { characterId }) {
-      console.log("character.select"); // @DELETEME
-      commit("select", { characterId });
     }
   },
   getters: {

@@ -88,20 +88,11 @@
     </details>
     <details v-if="characters">
       <summary>character.info</summary>
-      <ha-button :disabled="!authenticated" @click="onClickCreateMyCharacter"
-        >ADD MY CHARACTER
-      </ha-button>
       <pre>      {{ characters }}</pre>
     </details>
-    <details v-if="joined" open>
+    <details v-if="joined">
       <summary>alias.info</summary>
-      <ha-button
-        :disabled="!authenticated"
-        @click="onClickCreateAliasToCharacter"
-        >ADD CHARACTER'S ALIAS
-      </ha-button>
-      <!-- <pre>{{ aliases }}</pre> -->
-      {{ aliasSelect }}
+      <pre>{{ aliases }}</pre>
     </details>
     <character-switcher v-if="joined"></character-switcher>
     <details v-if="channels">
@@ -126,9 +117,7 @@
 </template>
 
 <script>
-import { FSAlias } from "@/collections/Alias";
 import { FSChannel } from "@/collections/Channel";
-import { CHARACTER_NOT_SELECTED, FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
@@ -164,26 +153,8 @@ export default {
     characters() {
       return this.$store.getters["character/tree"];
     },
-    characterSelected() {
-      return this.$store.getters["character/activeId"];
-    },
     aliases() {
       return this.$store.getters["alias/info"];
-    },
-    myAliases() {
-      return this.$store.getters["alias/mine"];
-    },
-    aliasItems() {
-      return this.$store.getters["alias/mine"].map(a => ({
-        text: a.name,
-        value: a.id
-      }));
-    },
-    channelItems() {
-      return this.$store.getters["channel/info"].map(c => ({
-        text: c.name,
-        value: c.id
-      }));
     },
     chats() {
       return this.$store.getters["chat/info"];
@@ -230,7 +201,6 @@ export default {
   data() {
     return {
       imageSelect: null,
-      aliasSelect: null
     };
   },
   methods: {
@@ -262,42 +232,6 @@ export default {
         room: this.rooms.id
       };
       await FSChannel.Create(c);
-    },
-    async onClickCreateAliasToCharacter() {
-      const { characterSelected: characterId } = this;
-      if (characterId === CHARACTER_NOT_SELECTED) {
-        console.warn("character not selected yet"); // @DELETEME
-        return false;
-      }
-
-      const character = this.characters[characterId];
-
-      const roomId = this.rooms.id;
-      const imageId = null;
-      const t = Date.now() % 1000;
-      const name = `${character.name}_a${t}`;
-      const position = 1;
-      const a = {
-        roomId,
-        characterId,
-        imageId,
-        name,
-        position
-      };
-
-      await FSAlias.Create(a);
-    },
-    async onClickCreateMyCharacter() {
-      const userId = this.user.id;
-      const userName = this.user.name;
-      const roomId = this.rooms.id;
-      const t = Date.now() % 1000;
-      const c = {
-        owner: userId,
-        name: `${userName}_c${t}`,
-        roomId
-      };
-      await FSCharacter.Create(c);
     }
   }
 };
