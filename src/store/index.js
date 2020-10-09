@@ -11,6 +11,7 @@ import { character } from "@/store/character";
 import { alias } from "@/store/alias";
 import { board } from "@/store/board";
 import { map } from "@/store/map";
+import { pawn } from "@/store/pawn";
 
 Vue.use(Vuex);
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     character,
     alias,
     board,
-    map
+    map,
+    pawn
   }
 });

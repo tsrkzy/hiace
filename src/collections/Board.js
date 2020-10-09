@@ -1,4 +1,5 @@
 import { FSMap } from "@/collections/Map";
+import { FSPawn } from "@/collections/Pawn";
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -35,6 +36,9 @@ export class FSBoard {
 
     /* 紐づくMapも削除 */
     await FSMap.DeleteByBoard(boardId);
+
+    /* 紐づくPawnも削除 */
+    await FSPawn.DeleteByBoard(boardId);
 
     return docRef;
   }

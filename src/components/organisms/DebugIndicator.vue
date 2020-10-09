@@ -59,6 +59,7 @@
           }"
         />
       </label>
+      <!-- map -->
       <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
       <details>
         <summary>map.info</summary>
@@ -66,6 +67,18 @@
           >DELETE MAP: {{ m.id }}
         </ha-button>
         <pre>{{ maps }}</pre>
+      </details>
+      <!-- pawn -->
+      <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
+      <details>
+        <summary>pawn.info</summary>
+        <ha-button
+          v-for="p in pawns"
+          :key="p.id"
+          @click="onClickDeletePawn(p.id)"
+          >DELETE PAWN: {{ p.id }}
+        </ha-button>
+        <pre>{{ pawns }}</pre>
       </details>
     </div>
     <details v-if="isOwner">
@@ -152,6 +165,7 @@
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSImage } from "@/collections/Image";
+import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
 import ChatComposer from "@/components/molecules/ChatComposer";
@@ -200,6 +214,9 @@ export default {
     },
     maps() {
       return this.$store.getters["map/info"];
+    },
+    pawns() {
+      return this.$store.getters["pawn/info"];
     },
     imageItems() {
       return this.$store.getters["image/info"].map(img => ({
@@ -263,13 +280,6 @@ export default {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
     },
-    async onClickCreateMap() {
-      const userId = this.user.id;
-      const roomId = this.rooms.id;
-      const boardId = this.boardSelect;
-      const imageId = this.imageSelect;
-      await FSMap.Create({ userId, roomId, boardId, imageId });
-    },
     async onClickCreateBoard() {
       const userId = this.user.id;
       const roomId = this.rooms.id;
@@ -278,9 +288,28 @@ export default {
     async onClickDeleteBoard(boardId) {
       await FSBoard.Delete(boardId);
     },
+    async onClickCreateMap() {
+      const userId = this.user.id;
+      const roomId = this.rooms.id;
+      const boardId = this.boardSelect;
+      const imageId = this.imageSelect;
+      await FSMap.Create({ userId, roomId, boardId, imageId });
+    },
     async onClickDeleteMap(mapId) {
       await FSMap.Delete(mapId);
     },
+    async onClickCreatePawn() {
+      const userId = this.user.id;
+      const roomId = this.rooms.id;
+      const boardId = this.boardSelect;
+      const imageId = this.imageSelect;
+      const characterId = "this.characterId";
+      await FSPawn.Create({ userId, roomId, boardId, imageId, characterId });
+    },
+    async onClickDeletePawn(pawnId) {
+      await FSPawn.Delete(pawnId);
+    },
+
     async onClickImagesUploadHandler(e) {
       const { files = [] } = e.currentTarget;
       const promiseList = [];
