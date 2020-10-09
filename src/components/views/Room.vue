@@ -24,6 +24,7 @@
 
 <script>
 import { FSAlias } from "@/collections/Alias";
+import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
@@ -62,6 +63,7 @@ export default {
     FSCharacter.RemoveListener(this.roomId);
     FSAlias.RemoveListener(this.roomId);
     FSImage.RemoveListener(this.roomId);
+    FSBoard.RemoveListener(this.roomId);
     FSMap.RemoveListener(this.roomId);
     this.$store.dispatch("room/leaveRoom");
   },
@@ -85,6 +87,7 @@ export default {
       FSCharacter.SetListener(roomId);
       FSAlias.SetListener(roomId);
       FSImage.SetListener(roomId);
+      FSBoard.SetListener(roomId);
       FSMap.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];

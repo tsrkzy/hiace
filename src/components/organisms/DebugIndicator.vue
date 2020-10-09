@@ -9,6 +9,29 @@
         @change="onClickImagesUploadHandler"
       />
     </div>
+    {{ boardSelect }}
+    <details v-if="joined">
+      <summary>Boards</summary>
+      <ha-button @click="onClickCreateBoard">ADD BOARD</ha-button>
+      <ul>
+        <li v-for="b in boardItems" :key="b.id">
+          <label>
+            <input
+              type="radio"
+              name="board_select"
+              :value="b.id"
+              v-model="boardSelect"
+              v-show="false"
+            />
+            {{ b.name }}
+          </label>
+          <ha-button @click="onClickDeleteBoard(b.id)"
+            >DELETE: {{ b.id }}
+          </ha-button>
+        </li>
+      </ul>
+      <pre>{{ boards }}</pre>
+    </details>
     {{ imageSelect || "no image" }}
     <details v-if="joined">
       <summary>Images</summary>
@@ -37,7 +60,13 @@
         />
       </label>
       <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
-      {{ maps }}
+      <details>
+        <summary>map.info</summary>
+        <ha-button v-for="m in maps" :key="m.id" @click="onClickDeleteMap(m.id)"
+          >DELETE MAP: {{ m.id }}
+        </ha-button>
+        <pre>{{ maps }}</pre>
+      </details>
     </div>
     <details v-if="isOwner">
       <summary>owner menu</summary>
@@ -120,6 +149,7 @@
 </template>
 
 <script>
+import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSImage } from "@/collections/Image";
 import { FSRoom } from "@/collections/Room";
@@ -165,6 +195,9 @@ export default {
     images() {
       return this.$store.getters["image/info"];
     },
+    boards() {
+      return this.$store.getters["board/info"];
+    },
     maps() {
       return this.$store.getters["map/info"];
     },
@@ -172,6 +205,12 @@ export default {
       return this.$store.getters["image/info"].map(img => ({
         id: img.id,
         url: img.url
+      }));
+    },
+    boardItems() {
+      return this.$store.getters["board/info"].map(b => ({
+        id: b.id,
+        name: `b_${b.id}`
       }));
     },
     requests() {
@@ -206,7 +245,8 @@ export default {
   },
   data() {
     return {
-      imageSelect: null
+      imageSelect: null,
+      boardSelect: null
     };
   },
   methods: {
@@ -226,7 +266,20 @@ export default {
     async onClickCreateMap() {
       const userId = this.user.id;
       const roomId = this.rooms.id;
-      await FSMap.Create({ userId, roomId });
+      const boardId = this.boardSelect;
+      const imageId = this.imageSelect;
+      await FSMap.Create({ userId, roomId, boardId, imageId });
+    },
+    async onClickCreateBoard() {
+      const userId = this.user.id;
+      const roomId = this.rooms.id;
+      await FSBoard.Create({ userId, roomId });
+    },
+    async onClickDeleteBoard(boardId) {
+      await FSBoard.Delete(boardId);
+    },
+    async onClickDeleteMap(mapId) {
+      await FSMap.Delete(mapId);
     },
     async onClickImagesUploadHandler(e) {
       const { files = [] } = e.currentTarget;

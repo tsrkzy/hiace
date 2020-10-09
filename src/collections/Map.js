@@ -6,13 +6,16 @@ export class FSMap {
   static unsubscribeMap = new Map();
 
   static async Create(params) {
-    const { roomId, userId } = params;
+    const { roomId, userId, boardId, imageId } = params;
     const m = {
       room: roomId,
       owner: userId,
-      // デバッグ用マップ
-      image: "HOBcVEBDyENpPg6b2Otc",
-      zoom: 1.0,
+      board: boardId,
+      image: imageId,
+      // scale: 1.0,
+      // offsetX: 0,
+      // offsetY: 0,
+      // zIndex: 0,
       grid: {
         cols: 15,
         rows: 15,
@@ -26,6 +29,35 @@ export class FSMap {
     const docRef = await db.collection("map").add(m);
     m.id = docRef.id;
     return m;
+  }
+
+  static async CreateDefault(params) {
+    const { roomId, userId, boardId } = params;
+    // デバッグ用マップ
+    const imageId = "HOBcVEBDyENpPg6b2Otc";
+    return await FSMap.Create({ roomId, userId, boardId, imageId });
+  }
+
+  static async Delete(mapId) {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("map")
+      .doc(mapId)
+      .delete();
+    return docRef;
+  }
+
+  static async DeleteByBoard(boardId) {
+    const db = firebase.firestore();
+    const querySnapshot = await db
+      .collection("map")
+      .where("board", "==", boardId)
+      .get();
+
+    const batch = db.batch();
+    querySnapshot.forEach(doc => batch.delete(doc.ref));
+
+    await batch.commit();
   }
 
   static SetListener(roomId) {

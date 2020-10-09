@@ -1,3 +1,4 @@
+import { FSBoard } from "@/collections/Board";
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
@@ -76,10 +77,11 @@ export class FSRoom {
       // musics: "music_1"
     };
     const room = await FSRoom.Add(r);
+    r.id = room.id;
 
     const c = {
       type: "system",
-      room: room.id,
+      room: r.id,
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner.id,
       character: null,
@@ -87,7 +89,20 @@ export class FSRoom {
     };
     await FSChat.Create(c);
 
-    return room;
+    /* 開始時デフォルトのBoardを作成してactiveに指定 */
+    const b = await FSBoard.CreateDefault({
+      roomId: r.id,
+      userId: owner.id
+    });
+    await FSRoom.SetActiveBoard(r.id, b.id);
+
+    return r;
+  }
+
+  static async SetActiveBoard(roomId, boardId) {
+    const db = firebase.firestore();
+    const roomDocRef = db.collection("room").doc(roomId);
+    await roomDocRef.update({ activeBoard: boardId });
   }
 
   /**

@@ -12,7 +12,7 @@ export class FSChat {
     channel,
     owner,
     character,
-    alias,
+    alias = null,
     value = {}
   }) {
     const db = firebase.firestore();
