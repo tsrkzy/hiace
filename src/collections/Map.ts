@@ -5,6 +5,21 @@ import "firebase/firestore";
 export class FSMap {
   static unsubscribeMap = new Map();
 
+  static async GetById({ id }: { id: string }) {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("map")
+      .doc(id)
+      .get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+    const map = docRef.data();
+
+    return { id, ...map };
+  }
+
   static async Create(params: {
     roomId: string;
     userId: string;
@@ -24,9 +39,9 @@ export class FSMap {
       owner: userId,
       board: boardId,
       image: imageId,
-      // scale: 1.0,
-      // offsetX: 0,
-      // offsetY: 0,
+      scalePp: 100,
+      offsetX: 0,
+      offsetY: 0,
       // zIndex: 0,
       grid: {
         cols: 15,

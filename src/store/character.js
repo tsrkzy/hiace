@@ -45,14 +45,6 @@ export const character = {
         }
       }
       return tree;
-    },
-    /** @deprecated コンポーネントが保持するべき */
-    activeId(state) {
-      return state.activeCharacterId;
-    },
-    /** @deprecated コンポーネントが保持するべき */
-    active(state) {
-      return state.characters.find(c => c.id === state.activeCharacterId);
     }
   }
 };

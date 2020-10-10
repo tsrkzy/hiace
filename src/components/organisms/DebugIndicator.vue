@@ -63,9 +63,7 @@
       <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
       <details>
         <summary>map.info</summary>
-        <ha-button v-for="m in maps" :key="m.id" @click="onClickDeleteMap(m.id)"
-          >DELETE MAP: {{ m.id }}
-        </ha-button>
+        <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
         <pre>{{ maps }}</pre>
       </details>
       <!-- pawn -->
@@ -169,12 +167,13 @@ import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
 import ChatComposer from "@/components/molecules/ChatComposer";
+import MapEditor from "@/components/molecules/MapEditor";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
-  components: { ChatComposer, HaButton },
+  components: { MapEditor, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -286,6 +285,9 @@ export default {
       await FSBoard.Create({ userId, roomId });
     },
     async onClickDeleteBoard(boardId) {
+      if (boardId === this.boardSelect) {
+        this.boardSelect = null;
+      }
       await FSBoard.Delete(boardId);
     },
     async onClickCreateMap() {
@@ -294,9 +296,6 @@ export default {
       const boardId = this.boardSelect;
       const imageId = this.imageSelect;
       await FSMap.Create({ userId, roomId, boardId, imageId });
-    },
-    async onClickDeleteMap(mapId) {
-      await FSMap.Delete(mapId);
     },
     async onClickCreatePawn() {
       const userId = this.user.id;
