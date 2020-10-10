@@ -28,7 +28,16 @@ export class FSCharacter {
    ],
    }
    */
-  static async Create(params = {}) {
+  static async Create(params: {
+    owner: string;
+    name: string;
+    roomId: string;
+    text: string;
+    activeAlias: string;
+    showOnInitiative: boolean;
+    baseStats: string[];
+    stats: string[];
+  }) {
     const {
       owner,
       name,
@@ -39,6 +48,14 @@ export class FSCharacter {
       baseStats = [],
       stats = []
     } = params;
+
+    if (!owner) {
+      throw new Error("no owner given");
+    }
+
+    if (!roomId) {
+      throw new Error("no owner roomId");
+    }
 
     const c = {
       owner,
@@ -53,22 +70,22 @@ export class FSCharacter {
 
     const db = firebase.firestore();
     const characterDocRef = await db.collection("character").add(c);
-    c.id = characterDocRef.id;
+    const id = characterDocRef.id;
 
     /* 初期aliasを作成してactiveに指定 */
-    const alias = await FSAlias.CreateDefault({ roomId, characterId: c.id });
-    await FSCharacter.SetActiveAlias(c.id, alias.id);
+    const alias = await FSAlias.CreateDefault({ roomId, characterId: id });
+    await FSCharacter.SetActiveAlias(id, alias.id);
 
-    return c;
+    return { id, ...c };
   }
 
-  static async SetActiveAlias(characterId, aliasId) {
+  static async SetActiveAlias(characterId: string, aliasId: string) {
     const db = firebase.firestore();
     const characterDocRef = db.collection("character").doc(characterId);
     await characterDocRef.update({ activeAlias: aliasId });
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Character.SetListener", roomId); // @DELETEME
 
     const { unsubscribeMap } = FSCharacter;
@@ -80,7 +97,7 @@ export class FSCharacter {
     const docsRef = db.collection("character").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const characters = [];
+      const characters: any[] = [];
       querySnapshot.forEach(doc => {
         const character = doc.data();
         character.id = doc.id;
@@ -92,7 +109,7 @@ export class FSCharacter {
     unsubscribeMap.set(roomId, listener);
   }
 
-  static RemoveListener(roomId) {
+  static RemoveListener(roomId: string) {
     const { unsubscribeMap } = FSCharacter;
     if (!unsubscribeMap.has(roomId)) {
       console.log("no listener found: ", roomId); // @DELETEME

@@ -7,27 +7,34 @@ import "firebase/firestore";
 export class FSBoard {
   static unsubscribeMap = new Map();
 
-  static async Create(params) {
+  static async Create(params: { roomId: string; userId: string }) {
     const { roomId, userId } = params;
     const m = {
       room: roomId,
       owner: userId
     };
 
+    if (!roomId) {
+      throw new Error("no roomId given");
+    }
+
+    if (!userId) {
+      throw new Error("no userId given");
+    }
     const db = firebase.firestore();
     const docRef = await db.collection("board").add(m);
-    m.id = docRef.id;
-    return m;
+    const id = docRef.id;
+    return { id, ...m };
   }
 
-  static async CreateDefault(params) {
+  static async CreateDefault(params: { roomId: string; userId: string }) {
     const { roomId, userId } = params;
     const b = await FSBoard.Create({ roomId, userId });
     await FSMap.CreateDefault({ roomId, userId, boardId: b.id });
     return b;
   }
 
-  static async Delete(boardId) {
+  static async Delete(boardId: string) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("board")
@@ -43,7 +50,7 @@ export class FSBoard {
     return docRef;
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Board.SetListener"); // @DELETEME
     FSBoard.RemoveListener();
 
@@ -51,7 +58,7 @@ export class FSBoard {
     const docsRef = db.collection("board").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const boards = [];
+      const boards: any[] = [];
       querySnapshot.forEach(doc => {
         const board = doc.data();
         board.id = doc.id;

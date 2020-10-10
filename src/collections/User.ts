@@ -7,7 +7,7 @@ import store from "@/store";
 export class FSUser {
   static unsubscribeMap = new Map();
 
-  static async GetById({ id }) {
+  static async GetById({ id }: { id: string }) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("user")
@@ -17,27 +17,32 @@ export class FSUser {
       return null;
     }
     const user = docRef.data();
-    user.id = id;
-    return user;
+
+    return { id, ...user };
   }
 
-  static async GetByEmail({ email }) {
+  static async GetByEmail({
+    email
+  }: {
+    email: string;
+  }): Promise<null | { id: string; email: string; photoURL: string | null }> {
     const db = firebase.firestore();
-    return db
+    const snapshot = await db
       .collection("user")
       .where("email", "==", email)
-      .get()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          return null;
-        }
-        let result = null;
-        snapshot.forEach(d => {
-          result = d.data();
-          result.id = d.id;
-        });
-        return result;
-      });
+      .get();
+
+    if (snapshot.empty) {
+      return null;
+    }
+
+    let result: any = null;
+    snapshot.forEach(d => {
+      result = d.data();
+      result.id = d.id;
+    });
+
+    return result;
   }
 
   /** select&update or insert */
@@ -46,39 +51,44 @@ export class FSUser {
     const me = firebase.auth().currentUser;
 
     /* 既に同じメールアドレスでユーザが作成されていたらアイコンURLだけ期限があるので更新 */
-    const email = me.email;
+    const email: string = me?.email ?? "";
     const user = await FSUser.GetByEmail({ email });
     if (user) {
-      await FSUser.Update(user.id, { photoUrl: me.photoURL });
-      user.photoURL = me.photoURL;
+      await FSUser.Update(user.id, { photoUrl: me?.photoURL });
+      user.photoURL = me?.photoURL ?? null;
+
       return user;
     }
 
     /* 新規作成 */
     const u = {
       sys: { created: Date.now() },
-      name: me.displayName,
-      photoUrl: me.photoURL,
-      email: me.email,
+      name: me?.displayName,
+      photoUrl: me?.photoURL,
+      email: me?.email,
       joinTo: []
     };
     const ref = await db.collection("user").add(u);
-    u.id = ref.id;
+    const id = ref.id;
 
-    return u;
+    return { id, ...u };
   }
 
-  static async Update(id, criteria = {}) {
+  static async Update(id: string, criteria: object) {
     const db = firebase.firestore();
     const doc = db.collection("user").doc(id);
     return await doc.update(criteria);
   }
 
-  static async JoinRoom(userId, roomId) {
+  static async JoinRoom(userId: string, roomId: string) {
     const db = firebase.firestore();
     const userDoc = db.collection("user").doc(userId);
     const userRef = await userDoc.get();
     const user = userRef.data();
+
+    if (!user) {
+      throw new Error(`no user found: ${userId} in room: ${roomId}`);
+    }
 
     const { joinTo = [] } = user;
     if (joinTo.indexOf(roomId) !== -1) {
@@ -89,7 +99,7 @@ export class FSUser {
     await userDoc.update({ joinTo });
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("User.SetListener"); // @DELETEME
     FSUser.RemoveListener();
 
@@ -99,7 +109,7 @@ export class FSUser {
       .where("joinTo", "array-contains", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const users = [];
+      const users: any[] = [];
       querySnapshot.forEach(doc => {
         const user = doc.data();
         user.id = doc.id;

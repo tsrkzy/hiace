@@ -7,7 +7,7 @@ import store from "@/store";
 export class FSImage {
   static unsubscribeMap = new Map();
 
-  static async GetById({ id }) {
+  static async GetById({ id }: { id: string }) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("image")
@@ -17,11 +17,11 @@ export class FSImage {
       return null;
     }
     const image = docRef.data();
-    image.id = docRef.id;
-    return image;
+
+    return { id, ...image };
   }
 
-  static async Create(file) {
+  static async Create(file?: File | null) {
     if (!(file instanceof File)) {
       throw new Error(`argument must be instance of File()`);
     }
@@ -80,12 +80,13 @@ export class FSImage {
     };
     const db = firebase.firestore();
     const imageDocRef = await db.collection("image").add(image);
-    image.id = imageDocRef.id;
+    const id = imageDocRef.id;
     console.log(`+ register done. "${name}" complete!`); // @DELETEME
-    return image;
+
+    return { id, ...image };
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Image.SetListener", roomId); // @DELETEME
 
     const { unsubscribeMap } = FSImage;
@@ -97,7 +98,7 @@ export class FSImage {
     const docsRef = db.collection("image").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const images = [];
+      const images: any[] = [];
       querySnapshot.forEach(doc => {
         const image = doc.data();
         image.id = doc.id;
@@ -109,7 +110,7 @@ export class FSImage {
     unsubscribeMap.set(roomId, listener);
   }
 
-  static RemoveListener(roomId) {
+  static RemoveListener(roomId: string) {
     const { unsubscribeMap } = FSImage;
     if (!unsubscribeMap.has(roomId)) {
       console.log("no listener found: ", roomId); // @DELETEME

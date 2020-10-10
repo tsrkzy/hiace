@@ -7,7 +7,16 @@ export const SYSTEM_CHANNEL_ID = "SYSTEM";
 export class FSChannel {
   static unsubscribeMap = new Map();
 
-  static async Create({ type, name, room } = {}) {
+  static async Create(params: {
+    type: string | null;
+    name: string | null;
+    room: string;
+  }) {
+    const { type = null, name = null, room } = params;
+
+    if (!room) {
+      throw new Error("no room given");
+    }
     const c = {
       type,
       name,
@@ -15,17 +24,17 @@ export class FSChannel {
     };
     const db = firebase.firestore();
     const docRef = await db.collection("channel").add(c);
-    c.id = docRef.id;
+    const id = docRef.id;
 
-    return c;
+    return { id, ...c };
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Channel.SetListener"); // @DELETEME
     const db = firebase.firestore();
     const docRef = db.collection("channel").where("room", "==", roomId);
     const unsubscribe = docRef.onSnapshot(querySnapshot => {
-      const channels = [];
+      const channels: any[] = [];
       querySnapshot.forEach(doc => {
         const channel = doc.data();
         channel.id = doc.id;

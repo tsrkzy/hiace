@@ -5,8 +5,20 @@ import "firebase/firestore";
 export class FSMap {
   static unsubscribeMap = new Map();
 
-  static async Create(params) {
+  static async Create(params: {
+    roomId: string;
+    userId: string;
+    boardId: string;
+    imageId: string;
+  }) {
     const { roomId, userId, boardId, imageId } = params;
+
+    if (!roomId) {
+      throw new Error(`no roomId given`);
+    }
+    if (!boardId) {
+      throw new Error(`no boardId given`);
+    }
     const m = {
       room: roomId,
       owner: userId,
@@ -27,18 +39,23 @@ export class FSMap {
 
     const db = firebase.firestore();
     const docRef = await db.collection("map").add(m);
-    m.id = docRef.id;
-    return m;
+    const id = docRef.id;
+
+    return { id, ...m };
   }
 
-  static async CreateDefault(params) {
+  static async CreateDefault(params: {
+    roomId: string;
+    userId: string;
+    boardId: string;
+  }) {
     const { roomId, userId, boardId } = params;
     // デバッグ用マップ
     const imageId = "HOBcVEBDyENpPg6b2Otc";
     return await FSMap.Create({ roomId, userId, boardId, imageId });
   }
 
-  static async Delete(mapId) {
+  static async Delete(mapId: string) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("map")
@@ -47,7 +64,7 @@ export class FSMap {
     return docRef;
   }
 
-  static async DeleteByBoard(boardId) {
+  static async DeleteByBoard(boardId: string) {
     const db = firebase.firestore();
     const querySnapshot = await db
       .collection("map")
@@ -60,7 +77,7 @@ export class FSMap {
     await batch.commit();
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Map.SetListener"); // @DELETEME
     FSMap.RemoveListener();
 
@@ -68,7 +85,7 @@ export class FSMap {
     const docsRef = db.collection("map").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const maps = [];
+      const maps: any[] = [];
       querySnapshot.forEach(doc => {
         const map = doc.data();
         map.id = doc.id;

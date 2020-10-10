@@ -5,8 +5,28 @@ import "firebase/firestore";
 export class FSPawn {
   static unsubscribeMap = new Map();
 
-  static async Create(params) {
+  static async Create(params: {
+    roomId: string;
+    userId: string;
+    boardId: string;
+    imageId: string;
+    characterId: string;
+  }) {
     const { roomId, userId, boardId, imageId, characterId } = params;
+
+    if (!roomId) {
+      throw new Error("no roomId given");
+    }
+    if (!userId) {
+      throw new Error("no userId given");
+    }
+    if (!boardId) {
+      throw new Error("no boardId given");
+    }
+    if (!characterId) {
+      throw new Error("no characterId given");
+    }
+
     const p = {
       room: roomId,
       owner: userId,
@@ -17,23 +37,12 @@ export class FSPawn {
 
     const db = firebase.firestore();
     const docRef = await db.collection("pawn").add(p);
-    p.id = docRef.id;
-    return p;
+    const id = docRef.id;
+
+    return { id, ...p };
   }
 
-  static async CreateDefault(params) {
-    const { roomId, userId, boardId, characterId } = params;
-    const imageId = "1jjkgQXy7J83NAlAkaRm";
-    return await FSPawn.Create({
-      roomId,
-      userId,
-      boardId,
-      imageId,
-      characterId
-    });
-  }
-
-  static async Delete(pawnId) {
+  static async Delete(pawnId: string) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("pawn")
@@ -42,7 +51,7 @@ export class FSPawn {
     return docRef;
   }
 
-  static async DeleteByBoard(boardId) {
+  static async DeleteByBoard(boardId: string) {
     const db = firebase.firestore();
     const querySnapshot = await db
       .collection("pawn")
@@ -55,7 +64,7 @@ export class FSPawn {
     await batch.commit();
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Pawn.SetListener"); // @DELETEME
     FSPawn.RemoveListener();
 
@@ -63,7 +72,7 @@ export class FSPawn {
     const docsRef = db.collection("pawn").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const pawns = [];
+      const pawns: any[] = [];
       querySnapshot.forEach(doc => {
         const pawn = doc.data();
         pawn.id = doc.id;

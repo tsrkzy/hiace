@@ -76,8 +76,8 @@ export default {
         return false;
       }
 
-      const room = await FSRoom.GetById({ id: roomId });
-      FSRoom.SetListener(room);
+      await FSRoom.GetById({ id: roomId });
+      FSRoom.SetListener(roomId);
     },
     async afterJoined() {
       /* google認証、入室申請受理済み */

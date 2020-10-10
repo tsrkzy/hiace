@@ -14,7 +14,7 @@ export class FSRoom {
    * @param id
    * @return {Promise<firebase.firestore.DocumentData>}
    */
-  static async GetById({ id }) {
+  static async GetById({ id }: { id: string }) {
     const db = firebase.firestore();
     const docRef = await db
       .collection("room")
@@ -25,16 +25,23 @@ export class FSRoom {
       return null;
     }
     const room = docRef.data();
-    room.id = id;
 
-    return room;
+    return { id, ...room };
   }
 
   /**
    * FSへroomのデータを登録し、id()込みのインスタンスへ整形して返す
    * @param r
    */
-  static async Add(r) {
+  static async Add(r: {
+    name: string;
+    owner: string;
+    keepers: string[];
+    requests: string[];
+    kicked: string[];
+    users: string[];
+    characters: string[];
+  }) {
     //   {
     //   name,
     //   owner: owner.id, // 部屋作成時に固定
@@ -54,19 +61,23 @@ export class FSRoom {
 
     const db = firebase.firestore();
     const docRef = await db.collection("room").add(r);
-    r.id = docRef.id;
+    const id = docRef.id;
 
-    return r;
+    return { id, ...r };
   }
 
-  static async Create({ name, owner }) {
+  static async Create({ name, owner }: { name: string; owner: string }) {
+    if (!owner) {
+      throw new Error("no owner given");
+    }
+
     const r = {
       name,
-      owner: owner.id, // 部屋作成時に固定
-      keepers: [owner.id], // 初期値ownerのみ、追加削除可能
+      owner: owner, // 部屋作成時に固定
+      keepers: [owner], // 初期値ownerのみ、追加削除可能
       requests: [],
       kicked: [],
-      users: [owner.id], // 初期値ownerのみ、追加可能
+      users: [owner], // 初期値ownerのみ、追加可能
       characters: []
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
@@ -77,29 +88,30 @@ export class FSRoom {
       // musics: "music_1"
     };
     const room = await FSRoom.Add(r);
-    r.id = room.id;
+    const id = room.id;
 
     const c = {
       type: "system",
-      room: r.id,
+      room: id,
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
-      owner: owner.id,
+      owner: owner,
       character: null,
+      alias: null,
       value: { text: "welcome to hiace!" }
     };
     await FSChat.Create(c);
 
     /* 開始時デフォルトのBoardを作成してactiveに指定 */
     const b = await FSBoard.CreateDefault({
-      roomId: r.id,
-      userId: owner.id
+      roomId: id,
+      userId: owner
     });
-    await FSRoom.SetActiveBoard(r.id, b.id);
+    await FSRoom.SetActiveBoard(id, b.id);
 
-    return r;
+    return { id, ...r };
   }
 
-  static async SetActiveBoard(roomId, boardId) {
+  static async SetActiveBoard(roomId: string, boardId: string) {
     const db = firebase.firestore();
     const roomDocRef = db.collection("room").doc(roomId);
     await roomDocRef.update({ activeBoard: boardId });
@@ -111,7 +123,7 @@ export class FSRoom {
    * @return {Promise<boolean>}
    * @constructor
    */
-  static async GrantRequest(userId) {
+  static async GrantRequest(userId: string) {
     console.log("Room.grantRequest", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.requests.indexOf(userId) === -1) {
@@ -121,7 +133,7 @@ export class FSRoom {
       console.log(`already granted: ${userId}`); // @DELETEME
       return false;
     }
-    const requests = room.requests.filter(id => id !== userId);
+    const requests = room.requests.filter((id: string) => id !== userId);
     const users = room.users.slice();
     users.push(userId);
 
@@ -138,7 +150,7 @@ export class FSRoom {
    * @return {Promise<void>}
    * @constructor
    */
-  static async DropUser(userId) {
+  static async DropUser(userId: string) {
     console.log("Room.dropUser", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.users.indexOf(userId) === -1) {
@@ -147,7 +159,7 @@ export class FSRoom {
     if (room.owner === userId) {
       throw new Error(`cannnot drop owner: ${userId}`);
     }
-    const users = room.users.filter(u => u !== userId);
+    const users = room.users.filter((u: string) => u !== userId);
 
     const db = firebase.firestore();
     const doc = db.collection("room").doc(room.id);
@@ -159,7 +171,7 @@ export class FSRoom {
    * @param userId
    * @return {Promise<void>}
    */
-  static async KickUser(userId) {
+  static async KickUser(userId: string) {
     console.log("Room.kickUser", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.kicked.indexOf(userId) !== -1) {
@@ -168,8 +180,8 @@ export class FSRoom {
     if (room.owner === userId) {
       throw new Error("cannot kick owner");
     }
-    const users = room.users.filter(u => u !== userId);
-    const requests = room.requests.filter(u => u !== userId);
+    const users = room.users.filter((u: string) => u !== userId);
+    const requests = room.requests.filter((u: string) => u !== userId);
     const kicked = room.kicked.slice();
     kicked.push(userId);
 
@@ -183,7 +195,7 @@ export class FSRoom {
    * @param userId
    * @return {Promise<void>}
    */
-  static async MakeRequest(userId) {
+  static async MakeRequest(userId: string) {
     console.log("Room.makeRequest", userId); // @DELETEME
     const room = store.getters["room/info"];
     if (room.requests.indexOf(userId) !== -1) {
@@ -200,19 +212,18 @@ export class FSRoom {
     await doc.update({ requests });
   }
 
-  static SetListener(room) {
-    const id = room.id;
+  static SetListener(roomId: string) {
     const db = firebase.firestore();
-    const docRef = db.collection("room").doc(id);
+    const docRef = db.collection("room").doc(roomId);
     const unsubscribe = docRef.onSnapshot(doc => {
       const room = doc.data();
-      room.id = doc.id;
-      store.dispatch("room/setRoom", { room });
+
+      store.dispatch("room/setRoom", { room: { id: roomId, ...room } });
     });
-    FSRoom.unsubscribeMap.set(id, { id, unsubscribe });
+    FSRoom.unsubscribeMap.set(roomId, { id: roomId, unsubscribe });
   }
 
-  static RemoveListener(roomId) {
+  static RemoveListener(roomId: string) {
     console.log("Room.RemoveListener", roomId); // @DELETEME
     const listener = FSRoom.unsubscribeMap.get(roomId);
     if (!listener) {

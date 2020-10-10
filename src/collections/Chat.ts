@@ -6,15 +6,30 @@ import store from "@/store";
 export class FSChat {
   static unsubscribeMap = new Map();
 
-  static async Create({
-    type,
-    room,
-    channel,
-    owner,
-    character,
-    alias = null,
-    value = {}
+  static async Create(params: {
+    type: string;
+    room: string;
+    channel: string;
+    owner: string;
+    character: string | null;
+    alias: string | null;
+    value: any;
   }) {
+    const {
+      type,
+      room,
+      channel,
+      owner,
+      character = null,
+      alias = null,
+      value = {}
+    } = params;
+
+    if (!room) {
+      console.error(room);
+      throw new Error("no roomId given");
+    }
+
     const db = firebase.firestore();
     const timestamp = Date.now();
 
@@ -29,12 +44,17 @@ export class FSChat {
       timestamp
     };
     const chatDocRef = await db.collection("chat").add(c);
-    c.id = chatDocRef.id;
-
-    return c;
+    const id = chatDocRef.id;
+    return { id, ...c };
   }
 
-  static async BroadcastLoggedIn({ roomId, user }) {
+  static async BroadcastLoggedIn({
+    roomId,
+    user
+  }: {
+    roomId: string;
+    user: { id: string; email: string };
+  }) {
     const { id: userId, email } = user;
     const c = {
       type: "system",
@@ -48,7 +68,7 @@ export class FSChat {
     return await FSChat.Create(c);
   }
 
-  static SetListener(roomId) {
+  static SetListener(roomId: string) {
     console.log("Chat.SetListener", roomId); // @DELETEME
 
     const { unsubscribeMap } = FSChat;
@@ -63,7 +83,7 @@ export class FSChat {
       .orderBy("timestamp", "desc");
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
-      const chats = [];
+      const chats: any[] = [];
       querySnapshot.forEach(doc => {
         const chat = doc.data();
         chat.id = doc.id;
@@ -75,7 +95,7 @@ export class FSChat {
     unsubscribeMap.set(roomId, listener);
   }
 
-  static RemoveListener(roomId) {
+  static RemoveListener(roomId: string) {
     const { unsubscribeMap } = FSChat;
     if (!unsubscribeMap.has(roomId)) {
       console.log("no listener found: ", roomId); // @DELETEME
