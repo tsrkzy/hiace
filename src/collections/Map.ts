@@ -70,6 +70,19 @@ export class FSMap {
     return await FSMap.Create({ roomId, userId, boardId, imageId });
   }
 
+  static async Update(
+    mapId: string,
+    params: {
+      scalePp?: Number;
+      offsetX?: Number;
+      offsetY?: Number;
+    }
+  ) {
+    const db = firebase.firestore();
+    const docRef = await db.collection("map").doc(mapId);
+    await docRef.update(params);
+  }
+
   static async Delete(mapId: string) {
     const db = firebase.firestore();
     const docRef = await db

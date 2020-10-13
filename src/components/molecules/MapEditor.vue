@@ -14,7 +14,7 @@
         min="-100"
         max="100"
         step="1"
-        v-model="x"
+        :value="x"
         @change="onChangeOffSetXHandler(mapId, $event)"
       />
     </label>
@@ -25,7 +25,7 @@
         min="-100"
         max="100"
         step="1"
-        v-model="y"
+        :value="y"
         @change="onChangeOffSetYHandler(mapId, $event)"
       />
     </label>
@@ -36,7 +36,7 @@
         min="50"
         max="200"
         step="1"
-        v-model="scale"
+        :value="scale"
         @change="onChangeScaleHandler(mapId, $event)"
       />
     </label>
@@ -60,10 +60,7 @@ export default {
   },
   data() {
     return {
-      image: null,
-      x: 0,
-      y: 0,
-      scale: 100
+      image: null
     };
   },
   async created() {
@@ -82,6 +79,15 @@ export default {
     },
     imageUrl() {
       return this.image ? this.image.url : "";
+    },
+    x() {
+      return this.map?.offsetX ?? 0;
+    },
+    y() {
+      return this.map?.offsetY ?? 0;
+    },
+    scale() {
+      return this.map?.scalePp ?? 0;
     }
   },
   methods: {
@@ -89,13 +95,23 @@ export default {
       await FSMap.Delete(mapId);
     },
     async onChangeOffSetXHandler(mapId, e) {
-      console.log(mapId, e); // @DELETEME
+      const { value } = e.currentTarget;
+      await this.updateMapShape(mapId, "offsetX", value);
     },
     async onChangeOffSetYHandler(mapId, e) {
-      console.log(mapId, e); // @DELETEME
+      const { value } = e.currentTarget;
+      await this.updateMapShape(mapId, "offsetY", value);
     },
     async onChangeScaleHandler(mapId, e) {
-      console.log(mapId, e); // @DELETEME
+      const { value } = e.currentTarget;
+      await this.updateMapShape(mapId, "scalePp", value);
+    },
+    async updateMapShape(mapId, key, value) {
+      const v = parseInt(value, 10);
+      if (isNaN(v)) {
+        throw new Error("value is NaN");
+      }
+      await FSMap.Update(mapId, { [key]: v });
     }
   }
 };

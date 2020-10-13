@@ -3,40 +3,49 @@
     <div style="position:fixed; top:0; right:0;">
       <!-- debug -->
       <div>
-        <label>
-          <span>debug: </span>
-          <input type="checkbox" v-model="debug" />
-        </label>
+        <h5>BOARD</h5>
+        <div>
+          <label>
+            <span>debug: </span>
+            <input type="checkbox" v-model="debug" />
+          </label>
+        </div>
+        <div>
+          <label>
+            <span>Zoom:{{ Zoom }}%</span>
+            <input type="range" min="20" max="300" step="10" v-model="Zoom" />
+          </label>
+        </div>
+        <div>
+          <label>
+            <span>XIntercept:{{ XIntercept }}px</span>
+            <input
+              type="range"
+              min="-300"
+              max="300"
+              step="10"
+              v-model="XIntercept"
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            <span>YIntercept:{{ YIntercept }}px</span>
+            <input
+              type="range"
+              min="-300"
+              max="300"
+              step="10"
+              v-model="YIntercept"
+            />
+          </label>
+        </div>
       </div>
       <div>
-        <label>
-          <span>Zoom:{{ Zoom }}%</span>
-          <input type="range" min="20" max="300" step="10" v-model="Zoom" />
-        </label>
-      </div>
-      <div>
-        <label>
-          <span>XIntercept:{{ XIntercept }}px</span>
-          <input
-            type="range"
-            min="-300"
-            max="300"
-            step="10"
-            v-model="XIntercept"
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          <span>YIntercept:{{ YIntercept }}px</span>
-          <input
-            type="range"
-            min="-300"
-            max="300"
-            step="10"
-            v-model="YIntercept"
-          />
-        </label>
+        <h5>MAPS</h5>
+        <div :key="m.id" v-for="m in maps">
+          {{ m.id }}, {{ m.offsetX }}, {{ m.offsetY }}
+        </div>
       </div>
     </div>
     <svg
@@ -75,6 +84,15 @@ export default {
   computed: {
     activeBoard() {
       return this.$store.getters["board/active"];
+    },
+    maps() {
+      const activeBoardId = this.activeBoard?.id;
+      if (!activeBoardId) {
+        return [];
+      }
+      return this.$store.getters["map/info"].filter(
+        m => m.board === activeBoardId
+      );
     },
     svgSize() {
       const $el = document.getElementById("svg-table");
