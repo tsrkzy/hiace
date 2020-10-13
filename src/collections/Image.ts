@@ -21,10 +21,32 @@ export class FSImage {
     return { id, ...image };
   }
 
+  static async GetImageMetadata(
+    file: File
+  ): Promise<{ width: Number; height: Number }> {
+    const url: string = URL.createObjectURL(file);
+
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => {
+        const { width, height } = image;
+        resolve({ width, height });
+      };
+      image.onerror = e => {
+        reject(e);
+      };
+      image.src = url;
+    });
+  }
+
   static async Create(file?: File | null) {
     if (!(file instanceof File)) {
       throw new Error(`argument must be instance of File()`);
     }
+
+    /* 画像ファイル取得 */
+    const { width, height } = await FSImage.GetImageMetadata(file);
+
     /* 画像ファイル情報 */
     const name = file.name;
     const size = file.size;
@@ -76,7 +98,9 @@ export class FSImage {
       tags: [],
       owner: userId,
       room: roomId,
-      hidden: false
+      hidden: false,
+      width,
+      height
     };
     const db = firebase.firestore();
     const imageDocRef = await db.collection("image").add(image);

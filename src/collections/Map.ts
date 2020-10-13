@@ -66,7 +66,7 @@ export class FSMap {
   }) {
     const { roomId, userId, boardId } = params;
     // デバッグ用マップ
-    const imageId = "HOBcVEBDyENpPg6b2Otc";
+    const imageId = "zuxPiOccHONAVb4WrykN";
     return await FSMap.Create({ roomId, userId, boardId, imageId });
   }
 

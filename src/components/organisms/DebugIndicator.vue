@@ -15,10 +15,7 @@
       <ha-button @click="onClickCreateBoard">ADD BOARD</ha-button>
       <ul>
         <li v-for="b in boardItems" :key="b.id">
-          <ha-button
-            @click="onClickActivateBoard(b.id)"
-            :disabled="activeBoard === b.id"
-          >
+          <ha-button @click="onClickActivateBoard(b.id)">
             {{ activeBoard === b.id ? "*" : "" }}ACTIVATE: {{ b.name }}
           </ha-button>
           <ha-button @click="onClickDeleteBoard(b.id)"
@@ -286,6 +283,7 @@ export default {
     async onClickActivateBoard(boardId) {
       const roomId = this.rooms.id;
       await FSRoom.SetActiveBoard(roomId, boardId);
+      this.boardSelect = boardId;
     },
     async onClickDeleteBoard(boardId) {
       if (boardId === this.boardSelect) {

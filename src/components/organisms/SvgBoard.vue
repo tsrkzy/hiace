@@ -57,24 +57,25 @@
       }"
     >
       <g
+        :id="`board_${activeBoard.id}`"
         v-if="activeBoard"
-        :style="{ transform: `translate(${XIntercept}px, ${YIntercept}px)` }"
+        :style="{
+          transform: `translate(${XIntercept}px, ${YIntercept}px) scale(${Z})`
+        }"
       >
         <text>O. {{ activeBoard.id }}</text>
         <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle>
-        <rect
-          :width="Z * svgWidth"
-          :height="Z * svgHeight"
-          style="fill: aqua; opacity:0.2;"
-        ></rect>
+        <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
       </g>
     </svg>
   </div>
 </template>
 
 <script>
+import SvgMap from "@/components/organisms/SvgMap";
 export default {
   name: "SvgBoard",
+  components: { SvgMap },
   methods: {
     resize(width, height) {
       this.svgWidth = width;
