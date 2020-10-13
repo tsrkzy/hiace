@@ -17,6 +17,13 @@ export const board = {
   getters: {
     info(state) {
       return state.boards;
+    },
+    active(state, getters, rootStore, rootGetters) {
+      const { activeBoard } = rootGetters["room/info"];
+      if (!activeBoard) {
+        return null;
+      }
+      return state.boards.find(b => b.id === activeBoard);
     }
   }
 };

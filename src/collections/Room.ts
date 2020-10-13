@@ -52,7 +52,7 @@ export class FSRoom {
     //   characters: [],
     //   resources: ["resource_1"], // 共有リソース
     //   gameSystem: "cthuluhu",
-    //   activeMap: "map_1", // マップセット切り替え
+    //   activeBoard: "board_1", // マップセット切り替え
     //   maps: ["map_1", "map_2"],
     //   /* watchして再生切り替える必要あり */
     //   soundEffects: ["soundEffect_1", "soundEffect_2"],
@@ -112,6 +112,7 @@ export class FSRoom {
   }
 
   static async SetActiveBoard(roomId: string, boardId: string) {
+    console.log("Room.SetActiveBoard", roomId, boardId); // @DELETEME
     const db = firebase.firestore();
     const roomDocRef = db.collection("room").doc(roomId);
     await roomDocRef.update({ activeBoard: boardId });
@@ -141,7 +142,7 @@ export class FSRoom {
 
     const roomDoc = db.collection("room").doc(room.id);
     await roomDoc.update({ requests, users });
-    FSUser.JoinRoom(userId, room.id);
+    await FSUser.JoinRoom(userId, room.id);
   }
 
   /**
@@ -213,6 +214,7 @@ export class FSRoom {
   }
 
   static SetListener(roomId: string) {
+    console.log("Room.SetListener"); // @DELETEME
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(roomId);
     const unsubscribe = docRef.onSnapshot(doc => {

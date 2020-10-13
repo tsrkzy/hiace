@@ -15,16 +15,12 @@
       <ha-button @click="onClickCreateBoard">ADD BOARD</ha-button>
       <ul>
         <li v-for="b in boardItems" :key="b.id">
-          <label>
-            <input
-              type="radio"
-              name="board_select"
-              :value="b.id"
-              v-model="boardSelect"
-              v-show="false"
-            />
-            {{ b.name }}
-          </label>
+          <ha-button
+            @click="onClickActivateBoard(b.id)"
+            :disabled="activeBoard === b.id"
+          >
+            {{ activeBoard === b.id ? "*" : "" }}ACTIVATE: {{ b.name }}
+          </ha-button>
           <ha-button @click="onClickDeleteBoard(b.id)"
             >DELETE: {{ b.id }}
           </ha-button>
@@ -229,6 +225,9 @@ export default {
         name: `b_${b.id}`
       }));
     },
+    activeBoard() {
+      return this.$store.getters["room/info"]?.activeBoard;
+    },
     requests() {
       return this.rooms.requests;
     },
@@ -283,6 +282,10 @@ export default {
       const userId = this.user.id;
       const roomId = this.rooms.id;
       await FSBoard.Create({ userId, roomId });
+    },
+    async onClickActivateBoard(boardId) {
+      const roomId = this.rooms.id;
+      await FSRoom.SetActiveBoard(roomId, boardId);
     },
     async onClickDeleteBoard(boardId) {
       if (boardId === this.boardSelect) {

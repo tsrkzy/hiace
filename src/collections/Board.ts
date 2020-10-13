@@ -35,6 +35,8 @@ export class FSBoard {
   }
 
   static async Delete(boardId: string) {
+    /* @TODO MapからActiveとして参照されていたらNG */
+
     const db = firebase.firestore();
     const docRef = await db
       .collection("board")

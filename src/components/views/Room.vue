@@ -18,7 +18,7 @@
       </label>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
-    <svg-board></svg-board>
+    <svg-board ref="svgTable"></svg-board>
   </div>
 </template>
 
@@ -123,12 +123,11 @@ export default {
     },
     resizeHandler() {
       const $el = document.getElementById("floor");
-      $el.style.height = `${window.innerHeight -
-        2 * WINDOW_MARGIN -
-        2 * BORDER}px`;
-      $el.style.width = `${window.innerWidth -
-        2 * WINDOW_MARGIN -
-        2 * BORDER}px`;
+      const height = window.innerHeight - 2 * WINDOW_MARGIN - 2 * BORDER;
+      $el.style.height = `${height}px`;
+      const width = window.innerWidth - 2 * WINDOW_MARGIN - 2 * BORDER;
+      $el.style.width = `${width}px`;
+      this.$refs.svgTable.resize(width, height);
     }
   },
   computed: {
@@ -150,7 +149,7 @@ export default {
   data() {
     return {
       roomId: null,
-      debug: true
+      debug: false
     };
   },
   watch: {

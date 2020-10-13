@@ -17,7 +17,7 @@ export const room = {
       resources: [],
       gameSystem: null,
       initiative: null,
-      activeMap: null,
+      activeBoard: null,
       maps: [],
       soundEffects: [],
       musics: null
