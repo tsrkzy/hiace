@@ -35,9 +35,12 @@ export class FSAlias {
     return { id, ...alias };
   }
 
-  static async CreateDefault(params: { roomId: string; characterId: string }) {
-    const { roomId, characterId } = params;
-    const imageId = null;
+  static async CreateDefault(params: {
+    roomId: string;
+    characterId: string;
+    imageId: string;
+  }) {
+    const { roomId, characterId, imageId } = params;
     const name = "基本";
     const position = 0;
     return await FSAlias.Create({

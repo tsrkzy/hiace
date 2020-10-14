@@ -1,7 +1,10 @@
 <template>
   <div>
-    <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
-    <ha-button @click="onClickCreateAliasToCharacter"
+    <image-show-case v-model="imageId"></image-show-case>
+    <ha-button :disabled="!imageId" @click="onClickCreateMyCharacter"
+      >ADD MY CHARACTER</ha-button
+    >
+    <ha-button :disabled="!imageId" @click="onClickCreateAliasToCharacter"
       >ADD CHARACTER'S ALIAS
     </ha-button>
     <ha-select
@@ -30,10 +33,11 @@ import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import { CHARACTER_NOT_SELECTED, FSCharacter } from "@/collections/Character";
 import { ALIAS_NOT_SELECTED, FSAlias } from "@/collections/Alias";
+import ImageShowCase from "@/components/molecules/ImageShowCase";
 
 export default {
   name: "CharacterSwitcher",
-  components: { HaButton, HaSelect },
+  components: { ImageShowCase, HaButton, HaSelect },
   computed: {
     characters() {
       return this.$store.getters["character/tree"];
@@ -105,7 +109,7 @@ export default {
       const character = this.characters[characterId];
 
       const roomId = this.$store.getters["room/info"].id;
-      const imageId = null;
+      const imageId = this.imageId;
       const t = Date.now() % 1000;
       const name = `${character.name}_a${t}`;
       const position = 1;
@@ -122,13 +126,15 @@ export default {
     async onClickCreateMyCharacter() {
       const { id: userId, name: userName } = this.$store.getters["auth/user"];
       const roomId = this.$store.getters["room/info"].id;
+      const { imageId } = this;
 
       const t = Date.now() % 1000;
 
       const c = {
         owner: userId,
         name: `${userName}_c${t}`,
-        roomId
+        roomId,
+        imageId
       };
       await FSCharacter.Create(c);
     }
@@ -138,6 +144,7 @@ export default {
       CHARACTER_NOT_SELECTED,
       ALIAS_NOT_SELECTED,
       characterId: CHARACTER_NOT_SELECTED,
+      imageId: null,
       aliasId: ALIAS_NOT_SELECTED
     };
   }

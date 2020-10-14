@@ -35,7 +35,11 @@ export class FSBoard {
   }
 
   static async Delete(boardId: string) {
-    /* @TODO MapからActiveとして参照されていたらNG */
+    const activeBoard = store.getters["board/active"];
+    if (boardId === activeBoard) {
+      console.warn("cannot delete active board"); // @DELETEME
+      return null;
+    }
 
     const db = firebase.firestore();
     const docRef = await db

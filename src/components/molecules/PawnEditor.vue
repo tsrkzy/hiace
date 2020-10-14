@@ -68,6 +68,10 @@ export default {
   },
   async created() {
     if (this.pawn) {
+      if (!this.pawn.image) {
+        console.warn(`pawn ${this.pawnId} has no image`);
+        return false;
+      }
       console.log("load image"); // @DELETEME
       this.image = await FSImage.GetById({ id: this.pawn.image });
     } else {

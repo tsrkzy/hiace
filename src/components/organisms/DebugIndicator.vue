@@ -28,30 +28,10 @@
     {{ imageSelect || "no image" }}
     <details v-if="joined">
       <summary>Images</summary>
+      <image-show-case v-model="imageSelect"></image-show-case>
       <pre>{{ images }}</pre>
     </details>
     <div v-if="joined">
-      <label
-        v-for="img of imageItems"
-        :key="img.id"
-        style="display: inline-block;"
-      >
-        <input
-          type="radio"
-          name="image_select"
-          :value="img.id"
-          v-model="imageSelect"
-          v-show="false"
-        />
-        <img
-          :src="img.url"
-          :style="{
-            'max-width': '24px',
-            'max-height': '24px',
-            'border-bottom': imageSelect === img.id ? '1px solid black' : 'none'
-          }"
-        />
-      </label>
       <!-- map -->
       <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
       <details>
@@ -120,8 +100,15 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
+    {{ characterSelect }}
     <details v-if="characters">
       <summary>character.info</summary>
+      <ul>
+        <li v-for="c in characters" :key="c.id">
+          {{ c.id }}
+          <ha-button @click="onClickSelectCharacter(c.id)">CHOOSE</ha-button>
+        </li>
+      </ul>
       <pre>      {{ characters }}</pre>
     </details>
     <details v-if="joined">
@@ -159,6 +146,7 @@ import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
 import ChatComposer from "@/components/molecules/ChatComposer";
+import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
 import PawnEditor from "@/components/molecules/PawnEditor";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
@@ -166,7 +154,7 @@ import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
-  components: { PawnEditor, MapEditor, ChatComposer, HaButton },
+  components: { ImageShowCase, PawnEditor, MapEditor, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -190,7 +178,7 @@ export default {
       return this.$store.getters["channel/info"];
     },
     characters() {
-      return this.$store.getters["character/tree"];
+      return this.$store.getters["character/info"];
     },
     aliases() {
       return this.$store.getters["alias/info"];
@@ -209,12 +197,6 @@ export default {
     },
     pawns() {
       return this.$store.getters["pawn/info"];
-    },
-    imageItems() {
-      return this.$store.getters["image/info"].map(img => ({
-        id: img.id,
-        url: img.url
-      }));
     },
     boardItems() {
       return this.$store.getters["board/info"].map(b => ({
@@ -257,7 +239,8 @@ export default {
   },
   data() {
     return {
-      imageSelect: null
+      imageSelect: null,
+      characterSelect: null
     };
   },
   methods: {
@@ -304,7 +287,9 @@ export default {
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
     },
-
+    async onClickSelectCharacter(characterId) {
+      this.characterSelect = characterId;
+    },
     async onClickImagesUploadHandler(e) {
       const { files = [] } = e.currentTarget;
       const promiseList = [];

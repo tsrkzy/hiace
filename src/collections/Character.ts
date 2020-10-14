@@ -5,6 +5,12 @@ import "firebase/firestore";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
+interface IStats {
+  key: string;
+  value: string | number | boolean;
+  option: object;
+}
+
 export class FSCharacter {
   static unsubscribeMap = new Map();
 
@@ -34,9 +40,10 @@ export class FSCharacter {
     roomId: string;
     text: string;
     activeAlias: string;
+    imageId: string;
     showOnInitiative: boolean;
-    baseStats: string[];
-    stats: string[];
+    baseStats: IStats[];
+    stats: IStats[];
   }) {
     const {
       owner,
@@ -44,6 +51,7 @@ export class FSCharacter {
       roomId,
       text = "",
       activeAlias = "alias_1",
+      imageId,
       showOnInitiative = true,
       baseStats = [],
       stats = []
@@ -54,7 +62,11 @@ export class FSCharacter {
     }
 
     if (!roomId) {
-      throw new Error("no owner roomId");
+      throw new Error("no roomId given");
+    }
+
+    if (!imageId) {
+      throw new Error("no imageId given");
     }
 
     const c = {
@@ -73,10 +85,30 @@ export class FSCharacter {
     const id = characterDocRef.id;
 
     /* 初期aliasを作成してactiveに指定 */
-    const alias = await FSAlias.CreateDefault({ roomId, characterId: id });
+    const alias = await FSAlias.CreateDefault({
+      roomId,
+      characterId: id,
+      imageId
+    });
     await FSCharacter.SetActiveAlias(id, alias.id);
 
     return { id, ...c };
+  }
+
+  static async Delete(characterId: string) {
+    /* @FIXME CharacterはDeleteよりArchiveの方が良さそう？ */
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("character")
+      .doc(characterId)
+      .delete();
+
+    /* 紐づくPawnも削除 */
+    // await FSPawn.DeleteByCharacter(characterId);
+
+    /* 紐づくChatは？ */
+
+    return docRef;
   }
 
   static async SetActiveAlias(characterId: string, aliasId: string) {

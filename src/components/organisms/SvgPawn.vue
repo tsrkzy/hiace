@@ -76,7 +76,8 @@ export default {
     });
 
     if (!image) {
-      throw new Error(`pawn ${this.pawnId} has no image`);
+      console.warn(`pawn ${this.pawnId} has no image`);
+      return false;
     }
     const { url, width, height } = await FSImage.GetById({ id: image });
 
