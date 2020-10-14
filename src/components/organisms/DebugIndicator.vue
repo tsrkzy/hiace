@@ -9,7 +9,7 @@
         @change="onClickImagesUploadHandler"
       />
     </div>
-    {{ boardSelect }}
+    {{ activeBoard }}
     <details v-if="joined">
       <summary>Boards</summary>
       <ha-button @click="onClickCreateBoard">ADD BOARD</ha-button>
@@ -63,12 +63,11 @@
       <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
       <details>
         <summary>pawn.info</summary>
-        <ha-button
+        <pawn-editor
           v-for="p in pawns"
           :key="p.id"
-          @click="onClickDeletePawn(p.id)"
-          >DELETE PAWN: {{ p.id }}
-        </ha-button>
+          :pawn-id="p.id"
+        ></pawn-editor>
         <pre>{{ pawns }}</pre>
       </details>
     </div>
@@ -161,12 +160,13 @@ import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import MapEditor from "@/components/molecules/MapEditor";
+import PawnEditor from "@/components/molecules/PawnEditor";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
-  components: { MapEditor, ChatComposer, HaButton },
+  components: { PawnEditor, MapEditor, ChatComposer, HaButton },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -257,8 +257,7 @@ export default {
   },
   data() {
     return {
-      imageSelect: null,
-      boardSelect: null
+      imageSelect: null
     };
   },
   methods: {
@@ -283,25 +282,21 @@ export default {
     async onClickActivateBoard(boardId) {
       const roomId = this.rooms.id;
       await FSRoom.SetActiveBoard(roomId, boardId);
-      this.boardSelect = boardId;
     },
     async onClickDeleteBoard(boardId) {
-      if (boardId === this.boardSelect) {
-        this.boardSelect = null;
-      }
       await FSBoard.Delete(boardId);
     },
     async onClickCreateMap() {
       const userId = this.user.id;
       const roomId = this.rooms.id;
-      const boardId = this.boardSelect;
+      const boardId = this.activeBoard;
       const imageId = this.imageSelect;
       await FSMap.Create({ userId, roomId, boardId, imageId });
     },
     async onClickCreatePawn() {
       const userId = this.user.id;
       const roomId = this.rooms.id;
-      const boardId = this.boardSelect;
+      const boardId = this.activeBoard;
       const imageId = this.imageSelect;
       const characterId = "this.characterId";
       await FSPawn.Create({ userId, roomId, boardId, imageId, characterId });

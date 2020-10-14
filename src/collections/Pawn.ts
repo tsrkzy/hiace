@@ -5,6 +5,21 @@ import "firebase/firestore";
 export class FSPawn {
   static unsubscribeMap = new Map();
 
+  static async GetById({ id }: { id: string }) {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("pawn")
+      .doc(id)
+      .get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+    const pawn = docRef.data();
+
+    return { id, ...pawn };
+  }
+
   static async Create(params: {
     roomId: string;
     userId: string;
@@ -23,6 +38,9 @@ export class FSPawn {
     if (!boardId) {
       throw new Error("no boardId given");
     }
+    if (!imageId) {
+      throw new Error("no imageId given");
+    }
     if (!characterId) {
       throw new Error("no characterId given");
     }
@@ -32,7 +50,10 @@ export class FSPawn {
       owner: userId,
       board: boardId,
       image: imageId,
-      character: characterId
+      character: characterId,
+      scalePp: 100,
+      offsetX: 0,
+      offsetY: 0
     };
 
     const db = firebase.firestore();
@@ -40,6 +61,19 @@ export class FSPawn {
     const id = docRef.id;
 
     return { id, ...p };
+  }
+
+  static async Update(
+    pawnId: string,
+    params: {
+      scalePp?: Number;
+      offsetX?: Number;
+      offsetY?: Number;
+    }
+  ) {
+    const db = firebase.firestore();
+    const docRef = await db.collection("pawn").doc(pawnId);
+    await docRef.update(params);
   }
 
   static async Delete(pawnId: string) {

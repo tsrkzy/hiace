@@ -47,6 +47,12 @@
           {{ m.id }}, {{ m.offsetX }}, {{ m.offsetY }}
         </div>
       </div>
+      <div>
+        <h5>PAWNS</h5>
+        <div :key="p.id" v-for="p in pawns">
+          {{ p.id }}, {{ p.offsetX }}, {{ p.offsetY }}
+        </div>
+      </div>
     </div>
     <svg
       id="svg-table"
@@ -63,9 +69,10 @@
           transform: `translate(${XIntercept}px, ${YIntercept}px) scale(${Z})`
         }"
       >
-        <text>O. {{ activeBoard.id }}</text>
-        <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle>
         <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
+        <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
+        <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle>
+        <text>O. {{ activeBoard.id }}</text>
       </g>
     </svg>
   </div>
@@ -73,9 +80,10 @@
 
 <script>
 import SvgMap from "@/components/organisms/SvgMap";
+import SvgPawn from "@/components/organisms/SvgPawn";
 export default {
   name: "SvgBoard",
-  components: { SvgMap },
+  components: { SvgPawn, SvgMap },
   methods: {
     resize(width, height) {
       this.svgWidth = width;
@@ -93,6 +101,15 @@ export default {
       }
       return this.$store.getters["map/info"].filter(
         m => m.board === activeBoardId
+      );
+    },
+    pawns() {
+      const activeBoardId = this.activeBoard?.id;
+      if (!activeBoardId) {
+        return [];
+      }
+      return this.$store.getters["pawn/info"].filter(
+        p => p.board === activeBoardId
       );
     },
     svgSize() {

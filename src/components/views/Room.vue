@@ -149,7 +149,7 @@ export default {
   data() {
     return {
       roomId: null,
-      debug: false
+      debug: true
     };
   },
   watch: {

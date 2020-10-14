@@ -7,7 +7,7 @@
 
 <template>
   <g
-    :id="`map_${this.mapId}`"
+    :id="`pawn_${this.pawnId}`"
     v-if="loaded"
     :style="{
       transform: `translate(${offsetX}px, ${offsetY}px) scale(${z})`
@@ -26,12 +26,12 @@
 
 <script>
 import { FSImage } from "@/collections/Image";
-import { FSMap } from "@/collections/Map";
+import { FSPawn } from "@/collections/Pawn";
 
 export default {
-  name: "SvgMap",
+  name: "SvgPawn",
   props: {
-    mapId: { type: String, require: true }
+    pawnId: { type: String, require: true }
   },
   computed: {
     z() {
@@ -41,18 +41,18 @@ export default {
       const id = this.imageId;
       return this.$store.getters["image/info"].find(img => img.id === id);
     },
-    map() {
-      const id = this.mapId;
-      return this.$store.getters["map/info"].find(m => m.id === id);
+    pawn() {
+      const id = this.pawnId;
+      return this.$store.getters["pawn/info"].find(m => m.id === id);
     },
     offsetX() {
-      return this.map.offsetX;
+      return this.pawn.offsetX;
     },
     offsetY() {
-      return this.map.offsetY;
+      return this.pawn.offsetY;
     },
     scalePp() {
-      return this.map.scalePp;
+      return this.pawn.scalePp;
     }
   },
   data() {
@@ -67,13 +67,17 @@ export default {
     };
   },
   async created() {
-    if (!this.mapId) {
+    if (!this.pawnId) {
       return false;
     }
 
-    const { image } = await FSMap.GetById({
-      id: this.mapId
+    const { image } = await FSPawn.GetById({
+      id: this.pawnId
     });
+
+    if (!image) {
+      throw new Error(`pawn ${this.pawnId} has no image`);
+    }
     const { url, width, height } = await FSImage.GetById({ id: image });
 
     /* image */
