@@ -23,9 +23,9 @@
         :alt="img.id"
         :src="img.url"
         :style="{
-          'max-width': '24px',
-          'max-height': '24px',
-          'border-bottom': imageId === img.id ? '1px solid red' : 'none'
+          maxWidth: '24px',
+          maxHeight: '24px',
+          border: imageId === img.id ? '1px dashed red' : 'none'
         }"
       />
     </label>

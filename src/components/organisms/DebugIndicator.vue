@@ -28,28 +28,25 @@
     {{ imageSelect || "no image" }}
     <details v-if="joined">
       <summary>Images</summary>
-      <image-show-case v-model="imageSelect"></image-show-case>
       <pre>{{ images }}</pre>
     </details>
+    <image-show-case v-model="imageSelect"></image-show-case>
     <div v-if="joined">
       <!-- map -->
-      <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
       <details>
         <summary>map.info</summary>
-        <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
         <pre>{{ maps }}</pre>
       </details>
+      <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
+      <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
       <!-- pawn -->
       <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
+      <character-show-case v-model="characterSelect"></character-show-case>
       <details>
         <summary>pawn.info</summary>
-        <pawn-editor
-          v-for="p in pawns"
-          :key="p.id"
-          :pawn-id="p.id"
-        ></pawn-editor>
         <pre>{{ pawns }}</pre>
       </details>
+      <pawn-editor v-for="p in pawns" :key="p.id" :pawn-id="p.id"></pawn-editor>
     </div>
     <details v-if="isOwner">
       <summary>owner menu</summary>
@@ -103,12 +100,6 @@
     {{ characterSelect }}
     <details v-if="characters">
       <summary>character.info</summary>
-      <ul>
-        <li v-for="c in characters" :key="c.id">
-          {{ c.id }}
-          <ha-button @click="onClickSelectCharacter(c.id)">CHOOSE</ha-button>
-        </li>
-      </ul>
       <pre>      {{ characters }}</pre>
     </details>
     <details v-if="joined">
@@ -133,7 +124,6 @@
           {{ c.value.text }}
         </li>
       </ol>
-      <!--      <pre>{{ chats }}</pre>-->
     </details>
   </div>
 </template>
@@ -145,6 +135,7 @@ import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import HaButton from "@/components/atoms/HaButton";
+import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
@@ -154,7 +145,14 @@ import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
-  components: { ImageShowCase, PawnEditor, MapEditor, ChatComposer, HaButton },
+  components: {
+    CharacterShowCase,
+    ImageShowCase,
+    PawnEditor,
+    MapEditor,
+    ChatComposer,
+    HaButton
+  },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -281,7 +279,7 @@ export default {
       const roomId = this.rooms.id;
       const boardId = this.activeBoard;
       const imageId = this.imageSelect;
-      const characterId = "this.characterId";
+      const characterId = this.characterSelect;
       await FSPawn.Create({ userId, roomId, boardId, imageId, characterId });
     },
     async onClickDeletePawn(pawnId) {
