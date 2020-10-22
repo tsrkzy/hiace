@@ -30,6 +30,7 @@ import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
+import { FSTable } from "@/collections/Table";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
@@ -67,6 +68,7 @@ export default {
     FSBoard.RemoveListener(this.roomId);
     FSMap.RemoveListener(this.roomId);
     FSPawn.RemoveListener(this.roomId);
+    FSTable.RemoveListener(this.roomId);
     this.$store.dispatch("room/leaveRoom");
   },
   methods: {
@@ -92,6 +94,7 @@ export default {
       FSBoard.SetListener(roomId);
       FSMap.SetListener(roomId);
       FSPawn.SetListener(roomId);
+      FSTable.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });

@@ -1,11 +1,7 @@
-import { CHARACTER_NOT_SELECTED } from "@/collections/Character";
-
 export const character = {
   namespaced: true,
   state: {
-    characters: [],
-    /** @deprecated コンポーネントが保持するべき */
-    activeCharacterId: CHARACTER_NOT_SELECTED
+    characters: []
   },
   mutations: {
     setCharacters(state, payload) {
@@ -40,7 +36,6 @@ export const character = {
             c.aliases[a.id] = a;
             aliases.splice(j, 1);
             j--;
-            continue;
           }
         }
       }

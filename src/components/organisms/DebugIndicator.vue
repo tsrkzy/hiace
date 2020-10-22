@@ -97,6 +97,11 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
+    <details v-if="tables" open>
+      <summary>table.info</summary>
+      <pre>{{ tables }}</pre>
+    </details>
+    <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
     {{ characterSelect }}
     <details v-if="characters">
       <summary>character.info</summary>
@@ -134,6 +139,7 @@ import { FSChannel } from "@/collections/Channel";
 import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
+import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
@@ -195,6 +201,9 @@ export default {
     },
     pawns() {
       return this.$store.getters["pawn/info"];
+    },
+    tables() {
+      return this.$store.getters["table/info"];
     },
     boardItems() {
       return this.$store.getters["board/info"].map(b => ({
@@ -303,6 +312,12 @@ export default {
         room: this.rooms.id
       };
       await FSChannel.Create(c);
+    },
+    async onClickCreateTable() {
+      const t = {
+        roomId: this.rooms.id
+      };
+      await FSTable.CreateDefault(t);
     }
   }
 };
