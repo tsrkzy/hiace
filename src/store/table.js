@@ -1,4 +1,9 @@
-import { REF } from "@/collections/Column";
+import {
+  BOOL,
+  INT,
+  REF,
+  STR
+} from "@/collections/Column";
 
 export const table = {
   namespaced: true,
@@ -72,21 +77,41 @@ export const table = {
           /* 列要素を作成 */
           for (let j = 0; j < m.columns.length; j++) {
             const character = characters[k];
-            const { label, dataType, refPath, dataMap } = m.columns[j];
+            const { id, dataType, refPath, dataMap } = m.columns[j];
 
+            const inputType = {
+              [REF]: "form",
+              [STR]: "form",
+              [INT]: "number",
+              [BOOL]: "checkbox",
+            };
+
+            const cell = {
+              columnId: id,
+              value: null,
+              dataType,
+              inputType: inputType[dataType],
+              refPath
+            };
             if (dataType === REF) {
               /* characterの参照 */
               const [collection, field] = refPath.split(".");
               const infoList = rootGetters[`${collection}/info`];
               /* 今の所characterのみ */
               const info = infoList.find(i => i.id === character.id);
-              const v = info[field];
-              row.push(v);
+              cell.value = info[field];
             } else {
               /**/
-              const v = dataMap[character.id];
-              row.push(v);
+              const _v = dataMap[character.id];
+              if (dataType === INT) {
+                cell.value = parseInt(_v ?? 0, 10);
+              } else if (dataType === STR) {
+                cell.value = _v ?? "";
+              } else if (dataType === BOOL) {
+                cell.value = !!_v;
+              }
             }
+            row.push(cell);
           }
           m.characters.push(row);
         }

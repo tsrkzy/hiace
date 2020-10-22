@@ -105,8 +105,17 @@
     <ul>
       <li :key="t.id" v-for="t in tableItems">
         <ha-button @click="onClickDeleteTable(t.id)"
-          >DELETE: {{ t.id }}</ha-button
-        >
+          >DELETE: {{ t.id }}
+        </ha-button>
+        <ha-button @click="onClickAddColumn(t.id, 'int')"
+          >ADD INT COLUMN
+        </ha-button>
+        <ha-button @click="onClickAddColumn(t.id, 'str')"
+          >ADD STR COLUMN
+        </ha-button>
+        <ha-button @click="onClickAddColumn(t.id, 'bool')"
+          >ADD BOOL COLUMN
+        </ha-button>
         <table>
           <thead>
             <tr>
@@ -117,10 +126,20 @@
           </thead>
           <tbody>
             <tr v-for="(character, i) in t.characters" :key="i">
-              <td v-for="(r, j) in character" :key="j">{{ r }}</td>
+              <td v-for="(r, j) in character" :key="j">
+                <label>
+                  <input :type="r.inputType" :value="r.value" />
+                </label>
+              </td>
             </tr>
           </tbody>
         </table>
+        <ha-button
+          v-for="c in t.columns.filter(c => !c.id.startsWith('system'))"
+          :key="c.id"
+          @click="onClickDeleteColumn(c.id)"
+          >DROP COLUMN: {{ c.id }}:{{ c.label }}</ha-button
+        >
       </li>
     </ul>
     <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
@@ -158,6 +177,7 @@
 <script>
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
+import { FSColumn } from "@/collections/Column";
 import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
@@ -346,6 +366,19 @@ export default {
     },
     async onClickDeleteTable(tableId) {
       await FSTable.Delete(tableId);
+    },
+    async onClickAddColumn(tableId, dataType) {
+      const roomId = this.rooms.id;
+      await FSColumn.Create({
+        roomId,
+        tableId,
+        dataType,
+        refPath: null,
+        dataMap: {}
+      });
+    },
+    async onClickDeleteColumn(columnId) {
+      await FSColumn.Delete(columnId);
     }
   }
 };

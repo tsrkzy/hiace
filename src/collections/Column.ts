@@ -63,6 +63,11 @@ export class FSColumn {
     return await FSColumn.Create(c);
   }
 
+  static async Delete(columnId: string) {
+    const db = firebase.firestore();
+    return await db.collection("column").doc(columnId).delete();
+  }
+
   static async DeleteByTable(tableId: string) {
     const db = firebase.firestore();
     const querySnapshot = await db

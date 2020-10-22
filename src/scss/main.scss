@@ -12,11 +12,19 @@ html {
       }
     }
   }
+
   table {
     thead > tr > th, tbody > tr > td {
       border: 1px solid gray;
+
+      input {
+        &[type="form"], &[type="number"] {
+          border: none;
+        }
+      }
     }
   }
+
   pre {
     font-size: 1rem;
     font-family: monospace;
