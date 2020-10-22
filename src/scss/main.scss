@@ -12,7 +12,11 @@ html {
       }
     }
   }
-
+  table {
+    thead > tr > th, tbody > tr > td {
+      border: 1px solid gray;
+    }
+  }
   pre {
     font-size: 1rem;
     font-family: monospace;

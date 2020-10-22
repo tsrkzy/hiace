@@ -13,6 +13,7 @@ import { board } from "@/store/board";
 import { map } from "@/store/map";
 import { pawn } from "@/store/pawn";
 import { table } from "@/store/table";
+import { column } from "@/store/column";
 
 Vue.use(Vuex);
 
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     board,
     map,
     pawn,
-    table
+    table,
+    column
   }
 });

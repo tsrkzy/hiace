@@ -1,35 +1,24 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
-
-type INT = "int";
-type STR = "str";
-type BOOL = "bool";
-type REF = "ref";
-
-interface IColumn {
-  label: string; //
-  type: INT|STR|BOOL|REF; // // int, str, bool, ref:  !=refならstatを探しに行く、refなら参照先で表示
-  refPath: string[]; //: "character.name", "owner.name" → readonly
-  defaultValue?: any; //
-}
+import { FSColumn } from "@/collections/Column";
 
 export class FSTable {
   static unsubscribeMap = new Map();
 
   static async Create(params: {
     roomId: string;
-    columns: IColumn[];
-    characters: string[];
+    filterColumns: string[];
+    filterCharacters: string[];
   }) {
-    const { roomId, columns = [], characters = [] } = params;
+    const { roomId, filterColumns = [], filterCharacters = [] } = params;
     if (!roomId) {
       throw new Error("no roomId given");
     }
     const t = {
       room: roomId,
-      columns,
-      characters
+      filterColumns,
+      filterCharacters
     };
 
     const db = firebase.firestore();
@@ -41,22 +30,28 @@ export class FSTable {
 
   static async CreateDefault(params: { roomId: string }) {
     const { roomId } = params;
-    const columns: IColumn[] = [];
-    const c: IColumn = {
-      label: "#",
-      type: "ref",
-      refPath: ["character", "id"]
-    };
-    columns.push(c);
-    const characters = store.getters["character/info"].map(
-      (c: { id: string }) => c.id
-    );
     const t = {
       roomId,
-      columns,
-      characters
+      filterColumns: [],
+      filterCharacters: []
     };
-    await FSTable.Create(t);
+    const table = await FSTable.Create(t);
+    await FSColumn.CreateDefault({ roomId, tableId: table.id });
+    await FSColumn.CreateDefault({ roomId, tableId: table.id });
+
+    return table;
+  }
+
+  static async Delete(tableId: string) {
+    const db = firebase.firestore();
+    const docRef = db
+      .collection("table")
+      .doc(tableId)
+      .delete();
+    /* 紐づくcolumnを削除 */
+    await FSColumn.DeleteByTable(tableId);
+
+    return docRef;
   }
 
   static SetListener(roomId: string) {

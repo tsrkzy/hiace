@@ -28,6 +28,7 @@ import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
+import { FSColumn } from "@/collections/Column";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import { FSTable } from "@/collections/Table";
@@ -69,6 +70,7 @@ export default {
     FSMap.RemoveListener(this.roomId);
     FSPawn.RemoveListener(this.roomId);
     FSTable.RemoveListener(this.roomId);
+    FSColumn.RemoveListener(this.roomId);
     this.$store.dispatch("room/leaveRoom");
   },
   methods: {
@@ -95,6 +97,7 @@ export default {
       FSMap.SetListener(roomId);
       FSPawn.SetListener(roomId);
       FSTable.SetListener(roomId);
+      FSColumn.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });

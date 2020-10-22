@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 90vh;overflow-y: scroll;">
     <div v-if="joined">
       <h5>Files upload</h5>
       <input
@@ -97,10 +97,32 @@
       <summary> room.info</summary>
       <pre>{{ rooms }}</pre>
     </details>
-    <details v-if="tables" open>
+    <details v-if="tables">
       <summary>table.info</summary>
-      <pre>{{ tables }}</pre>
+      <pre>{{ $store.getters["table/matrixList"] }}</pre>
+      <!--      <pre>{{ tables }}</pre>-->
     </details>
+    <ul>
+      <li :key="t.id" v-for="t in tableItems">
+        <ha-button @click="onClickDeleteTable(t.id)"
+          >DELETE: {{ t.id }}</ha-button
+        >
+        <table>
+          <thead>
+            <tr>
+              <th v-for="c in t.columns" :key="c.id">
+                {{ c.id }}:{{ c.label }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(character, i) in t.characters" :key="i">
+              <td v-for="(r, j) in character" :key="j">{{ r }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
     <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
     {{ characterSelect }}
     <details v-if="characters">
@@ -204,6 +226,9 @@ export default {
     },
     tables() {
       return this.$store.getters["table/info"];
+    },
+    tableItems() {
+      return this.$store.getters["table/matrixList"];
     },
     boardItems() {
       return this.$store.getters["board/info"].map(b => ({
@@ -318,6 +343,9 @@ export default {
         roomId: this.rooms.id
       };
       await FSTable.CreateDefault(t);
+    },
+    async onClickDeleteTable(tableId) {
+      await FSTable.Delete(tableId);
     }
   }
 };
