@@ -7,11 +7,16 @@
 
 <template>
   <g
-    :id="`pawn_${this.pawnId}`"
+    :id="`pawn_${pawnId}`"
     v-if="loaded"
     :style="{
       transform: `translate(${offsetX}px, ${offsetY}px) scale(${z})`
     }"
+    @mousedown="onMouseDown(pawnId, $event)"
+    @mousemove="onMousemove(pawnId, $event)"
+    @mouseup="onMouseUp(pawnId, $event)"
+    @mouseenter="onMouseEnter(pawnId, $event)"
+    @mouseleave="onMouseLeave(pawnId, $event)"
   >
     <text>{{ imageId }}, {{ width }}, {{ height }}</text>
     <image :width="width" :height="height" :href="href"></image>
@@ -53,6 +58,23 @@ export default {
     },
     scalePp() {
       return this.pawn.scalePp;
+    }
+  },
+  methods: {
+    onMouseDown(pawnId, e) {
+      console.log("mousedown", pawnId, e); // @DELETEME
+    },
+    onMousemove(pawnId, e) {
+      // console.log("mousemove", pawnId, e); // @DELETEME
+    },
+    onMouseUp(pawnId, e) {
+      console.log("mouseup", pawnId, e); // @DELETEME
+    },
+    onMouseEnter(pawnId, e) {
+      console.log("mouseenter", pawnId, e); // @DELETEME
+    },
+    onMouseLeave(pawnId, e) {
+      console.log("mouseleave", pawnId, e); // @DELETEME
     }
   },
   data() {

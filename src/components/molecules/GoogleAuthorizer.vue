@@ -1,10 +1,6 @@
 <template>
   <div>
     <div v-if="!authenticated" id="firebaseui-auth-container"></div>
-    <!--    <div v-if="authenticated">-->
-    <!--      <h5>auth.info</h5>-->
-    <!--      <pre>{{ $store.getters["auth/info"] }}</pre>-->
-    <!--    </div>-->
   </div>
 </template>
 
