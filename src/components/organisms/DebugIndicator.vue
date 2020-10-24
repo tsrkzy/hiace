@@ -93,9 +93,9 @@
       />
       <pre>{{ user }}</pre>
     </details>
-    <details v-if="rooms">
+    <details v-if="room">
       <summary> room.info</summary>
-      <pre>{{ rooms }}</pre>
+      <pre>{{ room }}</pre>
     </details>
     <details v-if="tables">
       <summary>table.info</summary>
@@ -104,42 +104,7 @@
     </details>
     <ul>
       <li :key="t.id" v-for="t in tableItems">
-        <ha-button @click="onClickDeleteTable(t.id)"
-          >DELETE: {{ t.id }}
-        </ha-button>
-        <ha-button @click="onClickAddColumn(t.id, 'int')"
-          >ADD INT COLUMN
-        </ha-button>
-        <ha-button @click="onClickAddColumn(t.id, 'str')"
-          >ADD STR COLUMN
-        </ha-button>
-        <ha-button @click="onClickAddColumn(t.id, 'bool')"
-          >ADD BOOL COLUMN
-        </ha-button>
-        <table>
-          <thead>
-            <tr>
-              <th v-for="c in t.columns" :key="c.id">
-                {{ c.id }}:{{ c.label }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(character, i) in t.characters" :key="i">
-              <td v-for="(r, j) in character" :key="j">
-                <label>
-                  <input :type="r.inputType" :value="r.value" />
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <ha-button
-          v-for="c in t.columns.filter(c => !c.id.startsWith('system'))"
-          :key="c.id"
-          @click="onClickDeleteColumn(c.id)"
-          >DROP COLUMN: {{ c.id }}:{{ c.label }}</ha-button
-        >
+        <table-view :table-id="t.id" />
       </li>
     </ul>
     <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
@@ -177,8 +142,8 @@
 <script>
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
-import { FSColumn } from "@/collections/Column";
 import { FSImage } from "@/collections/Image";
+import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import { FSTable } from "@/collections/Table";
@@ -188,12 +153,13 @@ import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
 import PawnEditor from "@/components/molecules/PawnEditor";
+import TableView from "@/components/organisms/TableView";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
-import { FSMap } from "@/collections/Map";
 
 export default {
   name: "DebugIndicator",
   components: {
+    TableView,
     CharacterShowCase,
     ImageShowCase,
     PawnEditor,
@@ -212,12 +178,12 @@ export default {
       return this.$store.getters["auth/user"].name;
     },
     userIdList() {
-      return this.rooms.users;
+      return this.room.users;
     },
     users() {
       return this.$store.getters["room/users"];
     },
-    rooms() {
+    room() {
       return this.$store.getters["room/info"];
     },
     channels() {
@@ -260,7 +226,7 @@ export default {
       return this.$store.getters["room/info"]?.activeBoard;
     },
     requests() {
-      return this.rooms.requests;
+      return this.room.requests;
     },
     youKicked() {
       return (
@@ -286,7 +252,7 @@ export default {
     },
     isOwner() {
       const userId = this.user.id;
-      return this.authenticated && this.rooms.owner === userId;
+      return this.authenticated && this.room.owner === userId;
     }
   },
   data() {
@@ -311,11 +277,11 @@ export default {
     },
     async onClickCreateBoard() {
       const userId = this.user.id;
-      const roomId = this.rooms.id;
+      const roomId = this.room.id;
       await FSBoard.Create({ userId, roomId });
     },
     async onClickActivateBoard(boardId) {
-      const roomId = this.rooms.id;
+      const roomId = this.room.id;
       await FSRoom.SetActiveBoard(roomId, boardId);
     },
     async onClickDeleteBoard(boardId) {
@@ -323,14 +289,14 @@ export default {
     },
     async onClickCreateMap() {
       const userId = this.user.id;
-      const roomId = this.rooms.id;
+      const roomId = this.room.id;
       const boardId = this.activeBoard;
       const imageId = this.imageSelect;
       await FSMap.Create({ userId, roomId, boardId, imageId });
     },
     async onClickCreatePawn() {
       const userId = this.user.id;
-      const roomId = this.rooms.id;
+      const roomId = this.room.id;
       const boardId = this.activeBoard;
       const imageId = this.imageSelect;
       const characterId = this.characterSelect;
@@ -354,34 +320,16 @@ export default {
       const c = {
         type: "group",
         name: "新しいチャンネル",
-        room: this.rooms.id
+        room: this.room.id
       };
       await FSChannel.Create(c);
     },
     async onClickCreateTable() {
       const t = {
-        roomId: this.rooms.id
+        roomId: this.room.id
       };
       await FSTable.CreateDefault(t);
-    },
-    async onClickDeleteTable(tableId) {
-      await FSTable.Delete(tableId);
-    },
-    async onClickAddColumn(tableId, dataType) {
-      const roomId = this.rooms.id;
-      await FSColumn.Create({
-        roomId,
-        tableId,
-        dataType,
-        refPath: null,
-        dataMap: {}
-      });
-    },
-    async onClickDeleteColumn(columnId) {
-      await FSColumn.Delete(columnId);
     }
   }
 };
 </script>
-
-<style scoped></style>
