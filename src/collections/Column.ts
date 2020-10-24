@@ -10,6 +10,41 @@ export const REF = "ref";
 export class FSColumn {
   static unsubscribeMap = new Map();
 
+  static async GetById({
+    id
+  }: {
+    id: string;
+  }): Promise<{
+    id: string;
+    room: string;
+    table: string;
+    label: string;
+    dataType: string;
+    refPath: string;
+    dataMap: object;
+  } | null> {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("column")
+      .doc(id)
+      .get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+    const column = docRef.data();
+
+    return {
+      id,
+      room: column?.room,
+      table: column?.table,
+      label: column?.label,
+      dataType: column?.dataType,
+      refPath: column?.refPath,
+      dataMap: column?.dataMap ?? {}
+    };
+  }
+
   static async Create(params: {
     roomId: string;
     tableId: string;
@@ -61,6 +96,25 @@ export class FSColumn {
       dataMap: {}
     };
     return await FSColumn.Create(c);
+  }
+
+  static async UpdateDataMap(
+    columnId: string,
+    updates: { characterId: string; value: any }[]
+  ) {
+    const column = await FSColumn.GetById({ id: columnId });
+    const dataMap: { [key: string]: any } = column?.dataMap ?? {};
+    for (let i = 0; i < updates.length; i++) {
+      const { characterId, value } = updates[i];
+      dataMap[characterId] = value;
+      console.log("Column.UpdateDataMap", columnId, characterId, value); // @DELETEME
+    }
+
+    const db = firebase.firestore();
+    await db
+      .collection("column")
+      .doc(columnId)
+      .update({ dataMap });
   }
 
   static async Delete(columnId: string) {

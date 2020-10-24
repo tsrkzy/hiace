@@ -25,7 +25,6 @@ export const table = {
       const columns = rootGetters["column/info"];
       const characters = rootGetters["character/info"];
       const roomId = rootGetters["room/info"].id;
-
       /* テーブルデータの配列を作成 */
       const matrixList = [];
       for (let i = 0; i < tables.length; i++) {
@@ -74,18 +73,11 @@ export const table = {
             const character = characters[k];
             const { id, dataType, refPath, dataMap } = m.columns[j];
 
-            const inputType = {
-              [REF]: "form",
-              [STR]: "form",
-              [INT]: "number",
-              [BOOL]: "checkbox"
-            };
-
             const cell = {
               columnId: id,
+              characterId: character.id,
               value: null,
               dataType,
-              inputType: inputType[dataType],
               refPath
             };
             if (dataType === REF) {
@@ -96,7 +88,6 @@ export const table = {
               const info = infoList.find(i => i.id === character.id);
               cell.value = info[field];
             } else {
-              /**/
               const _v = dataMap[character.id];
               if (dataType === INT) {
                 cell.value = parseInt(_v ?? 0, 10);

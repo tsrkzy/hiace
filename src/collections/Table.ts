@@ -35,11 +35,7 @@ export class FSTable {
       filterColumns: [],
       filterCharacters: []
     };
-    const table = await FSTable.Create(t);
-    await FSColumn.CreateDefault({ roomId, tableId: table.id });
-    await FSColumn.CreateDefault({ roomId, tableId: table.id });
-
-    return table;
+    return await FSTable.Create(t);
   }
 
   static async Delete(tableId: string) {
