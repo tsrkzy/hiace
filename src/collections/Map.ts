@@ -1,6 +1,7 @@
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { DEFAULT_MAP_IMAGE } from "@/collections/Image";
 
 export class FSMap {
   static unsubscribeMap = new Map();
@@ -66,7 +67,7 @@ export class FSMap {
   }) {
     const { roomId, userId, boardId } = params;
     // デバッグ用マップ
-    const imageId = "3xAeZFAnozZsODuCs9XC";
+    const imageId = DEFAULT_MAP_IMAGE;
     return await FSMap.Create({ roomId, userId, boardId, imageId });
   }
 

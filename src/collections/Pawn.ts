@@ -1,6 +1,7 @@
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 
 export class FSPawn {
   static unsubscribeMap = new Map();
@@ -38,9 +39,6 @@ export class FSPawn {
     if (!boardId) {
       throw new Error("no boardId given");
     }
-    if (!imageId) {
-      throw new Error("no imageId given");
-    }
     if (!characterId) {
       throw new Error("no characterId given");
     }
@@ -49,7 +47,7 @@ export class FSPawn {
       room: roomId,
       owner: userId,
       board: boardId,
-      image: imageId,
+      image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
       scalePp: 100,
       offsetX: 0,

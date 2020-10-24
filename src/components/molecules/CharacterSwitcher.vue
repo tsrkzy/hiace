@@ -1,10 +1,8 @@
 <template>
   <div>
     <image-show-case v-model="imageId"></image-show-case>
-    <ha-button :disabled="!imageId" @click="onClickCreateMyCharacter"
-      >ADD MY CHARACTER</ha-button
-    >
-    <ha-button :disabled="!imageId" @click="onClickCreateAliasToCharacter"
+    <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
+    <ha-button @click="onClickCreateAliasToCharacter"
       >ADD CHARACTER'S ALIAS
     </ha-button>
     <ha-select

@@ -4,6 +4,9 @@ import "firebase/storage";
 
 import store from "@/store";
 
+export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
+export const DEFAULT_CHARACTER_IMAGE = "wG5tOfKAW3trnsApUNRy";
+
 export class FSImage {
   static unsubscribeMap = new Map();
 

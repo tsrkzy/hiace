@@ -65,7 +65,10 @@ export class FSColumn {
 
   static async Delete(columnId: string) {
     const db = firebase.firestore();
-    return await db.collection("column").doc(columnId).delete();
+    return await db
+      .collection("column")
+      .doc(columnId)
+      .delete();
   }
 
   static async DeleteByTable(tableId: string) {

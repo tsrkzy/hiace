@@ -1,9 +1,4 @@
-import {
-  BOOL,
-  INT,
-  REF,
-  STR
-} from "@/collections/Column";
+import { BOOL, INT, REF, STR } from "@/collections/Column";
 
 export const table = {
   namespaced: true,
@@ -83,7 +78,7 @@ export const table = {
               [REF]: "form",
               [STR]: "form",
               [INT]: "number",
-              [BOOL]: "checkbox",
+              [BOOL]: "checkbox"
             };
 
             const cell = {

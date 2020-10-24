@@ -2,6 +2,7 @@ import { FSAlias } from "@/collections/Alias";
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
@@ -65,10 +66,6 @@ export class FSCharacter {
       throw new Error("no roomId given");
     }
 
-    if (!imageId) {
-      throw new Error("no imageId given");
-    }
-
     const c = {
       owner,
       name,
@@ -88,7 +85,7 @@ export class FSCharacter {
     const alias = await FSAlias.CreateDefault({
       roomId,
       characterId: id,
-      imageId
+      imageId: imageId ?? DEFAULT_CHARACTER_IMAGE
     });
     await FSCharacter.SetActiveAlias(id, alias.id);
 
