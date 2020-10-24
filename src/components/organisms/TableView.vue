@@ -11,8 +11,8 @@
     <ha-button v-if="table" @click="onClickAddColumn">ADD INT COLUMN</ha-button>
     <ha-button v-if="table" @click="onClickAddColumn">ADD STR COLUMN</ha-button>
     <ha-button v-if="table" @click="onClickAddColumn"
-      >ADD BOOL COLUMN</ha-button
-    >
+      >ADD BOOL COLUMN
+    </ha-button>
     <table v-if="table">
       <thead>
         <tr>
@@ -25,7 +25,11 @@
         <tr v-for="(character, i) in table.characters" :key="i">
           <td v-for="(r, j) in character" :key="j">
             <label>
-              <input :type="r.inputType" :value="r.value" />
+              <input
+                :type="r.inputType"
+                :value="r.value"
+                :disabled="r.columnId.startsWith('system')"
+              />
             </label>
           </td>
         </tr>
