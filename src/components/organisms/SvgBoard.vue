@@ -20,7 +20,7 @@
               <span>XIntercept:{{ XIntercept }}px</span>
               <input
                 type="range"
-                min="-300"
+                min="0"
                 max="300"
                 step="10"
                 v-model="XIntercept"
@@ -32,7 +32,7 @@
               <span>YIntercept:{{ YIntercept }}px</span>
               <input
                 type="range"
-                min="-300"
+                min="0"
                 max="300"
                 step="10"
                 v-model="YIntercept"
@@ -68,11 +68,19 @@
         :style="{
           transform: `translate(${XIntercept}px, ${YIntercept}px) scale(${Z})`
         }"
+        @mousedown="onMouseDown(activeBoard.id, $event)"
       >
+        <rect
+          width="3000"
+          height="3000"
+          x="0"
+          y="0"
+          style="fill: rosybrown;"
+        ></rect>
         <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
         <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle>
-        <text>O. {{ activeBoard.id }}</text>
+        <text>O: {{ XIntercept }},{{ YIntercept }} - {{ activeBoard.id }}</text>
       </g>
     </svg>
   </div>
@@ -88,6 +96,44 @@ export default {
     resize(width, height) {
       this.svgWidth = width;
       this.svgHeight = height;
+    },
+    onMouseDown(boardId, e) {
+      const idString = `board_${this.activeBoard.id}`;
+      const $el = document.getElementById(idString);
+      $el.classList.add("drag");
+
+      const $svg = document.getElementById("svg-table");
+      const { x: svgX, y: svgY } = $svg.getBoundingClientRect();
+
+      /* オフセット: $elの左上を0とした時のクリックした点の座標
+       * 画面左上 - $elの左上 */
+      const { left, top } = e.currentTarget.getBoundingClientRect();
+      const { x: _x, y: _y } = e.currentTarget.getBBox();
+      const { Z } = this;
+      const x = _x * Z;
+      const y = _y * Z;
+      const oX = e.clientX - left + x;
+      const oY = e.clientY - top + y;
+
+      const onMove = e => {
+        e.stopPropagation();
+        this.XIntercept = e.clientX - svgX - oX;
+        this.YIntercept = e.clientY - svgY - oY;
+      };
+
+      const onMouseUp = e => {
+        e.stopPropagation();
+        console.log("SvgBoard.onMouseUp"); // @DELETEME
+        /* 新しいpawnの座標 === 画面マウス位置 - オフセット */
+        this.XIntercept = e.clientX - svgX - oX;
+        this.YIntercept = e.clientY - svgY - oY;
+        $el.removeEventListener("mousemove", onMove);
+        $el.removeEventListener("mouseup", onMouseUp);
+        $el.removeEventListener("mouseleave", onMouseUp);
+      };
+      $el.addEventListener("mousemove", onMove, false);
+      $el.addEventListener("mouseup", onMouseUp, false);
+      $el.addEventListener("mouseleave", onMouseUp, false);
     }
   },
   computed: {
