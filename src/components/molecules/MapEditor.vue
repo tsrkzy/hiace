@@ -13,7 +13,7 @@
         type="range"
         min="-100"
         max="100"
-        step="1"
+        step="10"
         :value="x"
         @change="onChangeOffSetXHandler(mapId, $event)"
       />
@@ -24,7 +24,7 @@
         type="range"
         min="-100"
         max="100"
-        step="1"
+        step="10"
         :value="y"
         @change="onChangeOffSetYHandler(mapId, $event)"
       />
@@ -35,7 +35,7 @@
         type="range"
         min="50"
         max="200"
-        step="1"
+        step="10"
         :value="scale"
         @change="onChangeScaleHandler(mapId, $event)"
       />

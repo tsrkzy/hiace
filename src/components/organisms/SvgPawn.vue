@@ -62,19 +62,19 @@ export default {
   },
   methods: {
     onMouseDown(pawnId, e) {
-      console.log("mousedown", pawnId, e); // @DELETEME
+      // console.log("mousedown", pawnId, e); // @DELETEME
     },
     onMousemove(pawnId, e) {
       // console.log("mousemove", pawnId, e); // @DELETEME
     },
     onMouseUp(pawnId, e) {
-      console.log("mouseup", pawnId, e); // @DELETEME
+      // console.log("mouseup", pawnId, e); // @DELETEME
     },
     onMouseEnter(pawnId, e) {
-      console.log("mouseenter", pawnId, e); // @DELETEME
+      // console.log("mouseenter", pawnId, e); // @DELETEME
     },
     onMouseLeave(pawnId, e) {
-      console.log("mouseleave", pawnId, e); // @DELETEME
+      // console.log("mouseleave", pawnId, e); // @DELETEME
     }
   },
   data() {

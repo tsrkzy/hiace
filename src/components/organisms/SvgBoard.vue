@@ -66,7 +66,7 @@
         :id="`board_${activeBoard.id}`"
         v-if="activeBoard"
         :style="{
-          transform: `translate(${XIntercept}px, ${YIntercept}px) scale(${Z})`
+          transform: `scale(${Z}) translate(${XIntercept}px, ${YIntercept}px)`
         }"
         @mousedown="onMouseDown(activeBoard.id, $event)"
       >
@@ -102,31 +102,30 @@ export default {
       const $el = document.getElementById(idString);
       $el.classList.add("drag");
 
-      const $svg = document.getElementById("svg-table");
-      const { x: svgX, y: svgY } = $svg.getBoundingClientRect();
+      const downX = e.clientX;
+      const downY = e.clientY;
 
-      /* オフセット: $elの左上を0とした時のクリックした点の座標
-       * 画面左上 - $elの左上 */
-      const { left, top } = e.currentTarget.getBoundingClientRect();
-      const { x: _x, y: _y } = e.currentTarget.getBBox();
-      const { Z } = this;
-      const x = _x * Z;
-      const y = _y * Z;
-      const oX = e.clientX - left + x;
-      const oY = e.clientY - top + y;
+      const ix = parseFloat(this.XIntercept);
+      const iy = parseFloat(this.YIntercept);
 
       const onMove = e => {
         e.stopPropagation();
-        this.XIntercept = e.clientX - svgX - oX;
-        this.YIntercept = e.clientY - svgY - oY;
+        const dx = e.clientX - downX;
+        const dy = e.clientY - downY;
+
+        this.XIntercept = ix + dx / this.Z;
+        this.YIntercept = iy + dy / this.Z;
       };
 
       const onMouseUp = e => {
         e.stopPropagation();
         console.log("SvgBoard.onMouseUp"); // @DELETEME
         /* 新しいpawnの座標 === 画面マウス位置 - オフセット */
-        this.XIntercept = e.clientX - svgX - oX;
-        this.YIntercept = e.clientY - svgY - oY;
+        const dx = e.clientX - downX;
+        const dy = e.clientY - downY;
+
+        this.XIntercept = ix + dx / this.Z;
+        this.YIntercept = iy + dy / this.Z;
         $el.removeEventListener("mousemove", onMove);
         $el.removeEventListener("mouseup", onMouseUp);
         $el.removeEventListener("mouseleave", onMouseUp);
@@ -177,7 +176,8 @@ export default {
       svgHeight: 0,
       XIntercept: 0,
       YIntercept: 0,
-      Zoom: 100
+      Zoom: [50, 100, 200][Math.floor(Math.random() * 3)]
+      // Zoom: 100
     };
   }
 };
