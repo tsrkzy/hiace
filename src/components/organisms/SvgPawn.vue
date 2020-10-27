@@ -10,13 +10,9 @@
     :id="`pawn_${pawnId}`"
     v-if="loaded"
     :style="{
-      transform: `translate(${offsetX}px, ${offsetY}px) scale(${z})`
+      transform: `${transform}`
     }"
-    @mousedown="onMouseDown(pawnId, $event)"
-    @mousemove="onMousemove(pawnId, $event)"
-    @mouseup="onMouseUp(pawnId, $event)"
-    @mouseenter="onMouseEnter(pawnId, $event)"
-    @mouseleave="onMouseLeave(pawnId, $event)"
+    @mousedown="onMouseDown($event)"
   >
     <text>{{ imageId }}, {{ width }}, {{ height }}</text>
     <image :width="width" :height="height" :href="href"></image>
@@ -37,56 +33,6 @@ export default {
   name: "SvgPawn",
   props: {
     pawnId: { type: String, require: true }
-  },
-  computed: {
-    z() {
-      return this.scalePp / 100;
-    },
-    image() {
-      const id = this.imageId;
-      return this.$store.getters["image/info"].find(img => img.id === id);
-    },
-    pawn() {
-      const id = this.pawnId;
-      return this.$store.getters["pawn/info"].find(m => m.id === id);
-    },
-    offsetX() {
-      return this.pawn.offsetX;
-    },
-    offsetY() {
-      return this.pawn.offsetY;
-    },
-    scalePp() {
-      return this.pawn.scalePp;
-    }
-  },
-  methods: {
-    onMouseDown(pawnId, e) {
-      // console.log("mousedown", pawnId, e); // @DELETEME
-    },
-    onMousemove(pawnId, e) {
-      // console.log("mousemove", pawnId, e); // @DELETEME
-    },
-    onMouseUp(pawnId, e) {
-      // console.log("mouseup", pawnId, e); // @DELETEME
-    },
-    onMouseEnter(pawnId, e) {
-      // console.log("mouseenter", pawnId, e); // @DELETEME
-    },
-    onMouseLeave(pawnId, e) {
-      // console.log("mouseleave", pawnId, e); // @DELETEME
-    }
-  },
-  data() {
-    return {
-      /* image */
-      imageId: null,
-      width: 0,
-      height: 0,
-      href: null,
-
-      loaded: false
-    };
   },
   async created() {
     if (!this.pawnId) {
@@ -110,8 +56,87 @@ export default {
     this.href = url;
 
     this.loaded = true;
+  },
+  computed: {
+    image() {
+      const id = this.imageId;
+      return this.$store.getters["image/info"].find(img => img.id === id);
+    },
+    pawn() {
+      const id = this.pawnId;
+      return this.$store.getters["pawn/info"].find(m => m.id === id);
+    },
+    activeBoard() {
+      return this.$store.getters["board/active"];
+    },
+    transformStore() {
+      return this?.pawn.transform;
+    }
+  },
+  methods: {
+    onMouseDown(e) {
+      e.stopPropagation();
+
+      const $p = document.getElementById(`pawn_${this.pawnId}`);
+
+      const downX = e.clientX;
+      const downY = e.clientY;
+
+      /* globalの座標系をboard,pawnの座標系へ変換する行列 */
+      const $b = document.getElementById(`board_${this.activeBoard.id}`);
+      const $$b = $b.getCTM(); // global -> board
+      const $$p = $p.getCTM(); // global -> pawn
+      const $$bp = $$b.inverse().multiply($$p); // board -> pawn
+
+      function globalToLocal(dx, dy /*, ctm*/) {
+        /* 変位をglobalからDOMローカルの座標系へ変換 */
+        return new DOMMatrix([1, 0, 0, 1, dx / $$p.a, dy / $$p.a]).translate(
+          $$bp.e,
+          $$bp.f
+        );
+      }
+
+      const onMove = e => {
+        e.stopPropagation();
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY /*, $$*/);
+        this.transform = `${t}`;
+      };
+
+      const onMouseUp = e => {
+        e.stopPropagation();
+        console.log("SvgPawn.onMouseUp"); // @DELETEME
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY /*, $$*/);
+        this.transform = `${t}`;
+        $p.removeEventListener("mousemove", onMove);
+        $p.removeEventListener("mouseup", onMouseUp);
+        $p.removeEventListener("mouseleave", onMouseUp);
+      };
+
+      $p.addEventListener("mousemove", onMove, false);
+      $p.addEventListener("mouseup", onMouseUp, false);
+      $p.addEventListener("mouseleave", onMouseUp, false);
+    }
+  },
+  data() {
+    return {
+      transform: `${new DOMMatrix()}`,
+
+      /* image */
+      imageId: null,
+      width: 0,
+      height: 0,
+      href: null,
+
+      loaded: false
+    };
+  },
+  watch: {
+    transformStore(transform) {
+      console.log("update store.pawn.transform", transform); // @DELETEME
+      this.transform = transform;
+    }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div style="position:fixed; top:0; right:0;">
+    <div
+      style="position:fixed; top:0; right:0;background-color: lightgray; opacity: 0.2;"
+    >
       <!-- debug -->
       <label>
         <span>debug: </span>
@@ -62,17 +64,23 @@ export default {
       this.svgHeight = height;
     },
     onMouseDown(e) {
+      if (!this.activeBoard) {
+        return false;
+      }
+
+      e.stopPropagation();
+
       const $el = document.getElementById("svg-table");
       $el.classList.add("drag");
 
       const downX = e.clientX;
       const downY = e.clientY;
 
-      /* boardの座標系へ変換する行列 */
+      /* boardの座標系をglobalへ変換する行列 */
       const $ = document.getElementById(`board_${this.activeBoard.id}`);
       const $$ = $.getCTM();
 
-      function globalToLocal(dx, dy, ctm) {
+      function globalToLocal(dx, dy, ctm = new DOMMatrix()) {
         /* 変位をglobalからDOMローカルの座標系へ変換 */
         return new DOMMatrix([1, 0, 0, 1, dx, dy]).multiply(ctm);
       }
@@ -134,11 +142,12 @@ export default {
   },
   data() {
     const zoom = [50, 100, 200][Math.floor(Math.random() * 3)];
+    // const zoom = 100;
     const z = zoom / 100;
     const m = new DOMMatrix([z, 0, 0, z, 0, 0]).inverse();
     const defaultTransform = `${m}`;
     return {
-      debug: false,
+      debug: true,
       svgWidth: 0,
       svgHeight: 0,
       transform: defaultTransform

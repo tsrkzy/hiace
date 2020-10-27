@@ -49,9 +49,10 @@ export class FSPawn {
       board: boardId,
       image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
-      scalePp: 100,
-      offsetX: 0,
-      offsetY: 0
+      transform: `${new DOMMatrix()}`
+      // scalePp: 100,
+      // offsetX: 0,
+      // offsetY: 0
     };
 
     const db = firebase.firestore();
@@ -64,9 +65,10 @@ export class FSPawn {
   static async Update(
     pawnId: string,
     params: {
-      scalePp?: Number;
-      offsetX?: Number;
-      offsetY?: Number;
+      transform: string;
+      // scalePp?: Number;
+      // offsetX?: Number;
+      // offsetY?: Number;
     }
   ) {
     const db = firebase.firestore();

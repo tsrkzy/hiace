@@ -1,5 +1,7 @@
 <template>
-  <div style="height: 90vh;overflow-y: scroll;">
+  <div
+    style="height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
+  >
     <div v-if="joined">
       <h5>Files upload</h5>
       <input
@@ -46,7 +48,6 @@
         <summary>pawn.info</summary>
         <pre>{{ pawns }}</pre>
       </details>
-      <pawn-editor v-for="p in pawns" :key="p.id" :pawn-id="p.id"></pawn-editor>
     </div>
     <details v-if="isOwner">
       <summary>owner menu</summary>
@@ -152,7 +153,6 @@ import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
-import PawnEditor from "@/components/molecules/PawnEditor";
 import TableView from "@/components/organisms/TableView";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
@@ -162,7 +162,6 @@ export default {
     TableView,
     CharacterShowCase,
     ImageShowCase,
-    PawnEditor,
     MapEditor,
     ChatComposer,
     HaButton
