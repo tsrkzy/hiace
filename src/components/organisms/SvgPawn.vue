@@ -7,19 +7,32 @@
 
 <template>
   <g
-    :id="`pawn_${pawnId}`"
-    v-if="loaded"
+    :id="shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`"
+    v-if="loaded && shadowHandler"
     :style="{
       transform: `${transform}`
     }"
     @mousedown="onMouseDown($event)"
+    :filter="shadow ? `url(#shadow_filter_${pawnId})` : ''"
   >
+    <filter :id="`shadow_filter_${pawnId}`">
+      <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
+    </filter>
     <text>{{ imageId }}, {{ width }}, {{ height }}</text>
     <image :width="width" :height="height" :href="href"></image>
     <rect
       :width="width"
       :height="height"
       stroke="red"
+      fill="transparent"
+    ></rect>
+    <rect
+      v-if="$store.getters['pawn/dragging'] === pawnId"
+      :x="-(width + 1000) / 2"
+      :y="-(height + 1000) / 2"
+      :width="width + 1000"
+      :height="height + 1000"
+      stroke="transparent"
       fill="transparent"
     ></rect>
   </g>
@@ -32,7 +45,8 @@ import { FSPawn } from "@/collections/Pawn";
 export default {
   name: "SvgPawn",
   props: {
-    pawnId: { type: String, require: true }
+    pawnId: { type: String, require: true },
+    shadow: { type: Boolean, default: false }
   },
   async created() {
     if (!this.pawnId) {
@@ -73,12 +87,31 @@ export default {
     },
     transformStore() {
       return this?.pawn.transform;
+    },
+    shadowHandler() {
+      const drag = this.$store.getters["pawn/dragging"];
+      const { shadow, pawnId } = this;
+      if (!!drag && drag !== pawnId) {
+        /* 他pawnをドラッグ中はshadowのみ表示 */
+        return shadow;
+      } else if (!!drag && drag === pawnId) {
+        /* このpawnをドラッグ中はshadowに関わらず表示 */
+        return true;
+      } else {
+        /* 基本的にshadowは表示しない */
+        return !shadow;
+      }
     }
   },
   methods: {
     onMouseDown(e) {
+      if (this.shadow) {
+        return;
+      }
       console.log("SvgPawn.onMouseDown"); // @DELETEME
       e.stopPropagation();
+
+      this.$store.dispatch("pawn/dragStart", { pawnId: this.pawnId });
 
       const $p = document.getElementById(`pawn_${this.pawnId}`);
 
@@ -108,6 +141,7 @@ export default {
       const onMouseUp = async e => {
         e.stopPropagation();
         console.log("SvgPawn.onMouseUp"); // @DELETEME
+        await this.$store.dispatch("pawn/dragFinish");
         $p.removeEventListener("mousemove", onMove);
         $p.removeEventListener("mouseup", onMouseUp);
         $p.removeEventListener("mouseleave", onMouseUp);

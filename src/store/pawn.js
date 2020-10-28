@@ -1,11 +1,15 @@
 export const pawn = {
   namespaced: true,
   state: {
-    pawns: []
+    pawns: [],
+    drag: null
   },
   mutations: {
     setPawns(state, payload) {
       state.pawns = payload.pawns;
+    },
+    setDrag(state, payload) {
+      state.drag = payload.drag;
     },
     setTransform(state, { pawnId, transform }) {
       const pawn = state.pawns.find(p => p.id === pawnId);
@@ -20,6 +24,12 @@ export const pawn = {
       console.log("pawn.setPawns", pawns); // @DELETEME
       commit("setPawns", { pawns });
     },
+    dragStart({ commit }, { pawnId }) {
+      commit("setDrag", { drag: pawnId });
+    },
+    dragFinish({ commit }) {
+      commit("setDrag", { drag: null });
+    },
     updateTransform({ commit }, { pawnId, transform }) {
       console.log("pawn.updateTransform", pawnId, transform); // @DELETEME
       commit("setTransform", { pawnId, transform });
@@ -32,6 +42,9 @@ export const pawn = {
   getters: {
     info(state) {
       return state.pawns;
+    },
+    dragging(state){
+      return state.drag;
     }
   }
 };

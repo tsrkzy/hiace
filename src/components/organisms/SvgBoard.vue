@@ -41,9 +41,16 @@
         :style="{ transform: `${transform}` }"
       >
         <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
+        <svg-pawn
+          shadow
+          v-for="p in pawns"
+          :key="`shadow_${p.id}`"
+          :pawn-id="p.id"
+        ></svg-pawn>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
-        <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle>
-        <text>O: {{ transform }} - {{ activeBoard.id }}</text>
+        <!-- boardの座標原点 -->
+        <!-- <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle> -->
+        <!-- <text>O: {{ transform }} - {{ activeBoard.id }}</text> -->
       </g>
     </svg>
   </div>
