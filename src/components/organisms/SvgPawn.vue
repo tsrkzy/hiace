@@ -27,12 +27,12 @@
       fill="transparent"
     ></rect>
     <rect
-      v-if="$store.getters['pawn/dragging'] === pawnId"
-      :x="-(width + 1000) / 2"
-      :y="-(height + 1000) / 2"
+      v-if="dragged"
+      :x="-1000 / 2"
+      :y="-1000 / 2"
       :width="width + 1000"
       :height="height + 1000"
-      stroke="transparent"
+      stroke="red"
       fill="transparent"
     ></rect>
   </g>
@@ -91,16 +91,19 @@ export default {
     shadowHandler() {
       const drag = this.$store.getters["pawn/dragging"];
       const { shadow, pawnId } = this;
-      if (!!drag && drag !== pawnId) {
-        /* 他pawnをドラッグ中はshadowのみ表示 */
-        return shadow;
-      } else if (!!drag && drag === pawnId) {
-        /* このpawnをドラッグ中はshadowに関わらず表示 */
-        return true;
-      } else {
-        /* 基本的にshadowは表示しない */
+
+      if (!drag) {
+        /* ドラッグ中でなければshadowは表示しない */
         return !shadow;
       }
+
+      /* ドラッグ中 かつ
+       * 他pawnをドラッグ中: shadowのみ表示
+       * このpawnをドラッグ中: shadowも表示 */
+      return drag !== pawnId ? shadow : true;
+    },
+    dragged() {
+      return this.$store.getters["pawn/dragging"] === this.pawnId;
     }
   },
   methods: {

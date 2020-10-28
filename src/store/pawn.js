@@ -43,7 +43,7 @@ export const pawn = {
     info(state) {
       return state.pawns;
     },
-    dragging(state){
+    dragging(state) {
       return state.drag;
     }
   }
