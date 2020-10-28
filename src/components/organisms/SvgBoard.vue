@@ -19,7 +19,9 @@
           </div>
           <h5>PAWNS</h5>
           <div :key="p.id" v-for="p in pawns">
-            {{ p.id }}, {{ p.offsetX }}, {{ p.offsetY }}
+            <ha-button @click="onResetPawn(p.id)"
+              >RESET PAWN: {{ p.id }}</ha-button
+            >
           </div>
         </div>
       </div>
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import SvgMap from "@/components/organisms/SvgMap";
 import SvgPawn from "@/components/organisms/SvgPawn";
@@ -58,6 +61,9 @@ export default {
   methods: {
     onResetBoard(z) {
       this.transform = `matrix(${z}, 0, 0, ${z}, 0, 0)`;
+    },
+    async onResetPawn(pawnId) {
+      await FSPawn.ResetTransform([pawnId]);
     },
     resize(width, height) {
       this.svgWidth = width;

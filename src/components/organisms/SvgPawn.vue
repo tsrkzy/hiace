@@ -39,9 +39,11 @@ export default {
       return false;
     }
 
-    const { image } = await FSPawn.GetById({
+    const { image, transform } = await FSPawn.GetById({
       id: this.pawnId
     });
+
+    this.transform = transform;
 
     if (!image) {
       console.warn(`pawn ${this.pawnId} has no image`);
@@ -75,6 +77,7 @@ export default {
   },
   methods: {
     onMouseDown(e) {
+      console.log("SvgPawn.onMouseDown"); // @DELETEME
       e.stopPropagation();
 
       const $p = document.getElementById(`pawn_${this.pawnId}`);
@@ -88,7 +91,7 @@ export default {
       const $$p = $p.getCTM(); // global -> pawn
       const $$bp = $$b.inverse().multiply($$p); // board -> pawn
 
-      function globalToLocal(dx, dy /*, ctm*/) {
+      function globalToLocal(dx, dy) {
         /* 変位をglobalからDOMローカルの座標系へ変換 */
         return new DOMMatrix([1, 0, 0, 1, dx / $$p.a, dy / $$p.a]).translate(
           $$bp.e,
@@ -98,23 +101,28 @@ export default {
 
       const onMove = e => {
         e.stopPropagation();
-        const t = globalToLocal(e.clientX - downX, e.clientY - downY /*, $$*/);
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         this.transform = `${t}`;
       };
 
-      const onMouseUp = e => {
+      const onMouseUp = async e => {
         e.stopPropagation();
         console.log("SvgPawn.onMouseUp"); // @DELETEME
-        const t = globalToLocal(e.clientX - downX, e.clientY - downY /*, $$*/);
-        this.transform = `${t}`;
         $p.removeEventListener("mousemove", onMove);
         $p.removeEventListener("mouseup", onMouseUp);
         $p.removeEventListener("mouseleave", onMouseUp);
+
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY);
+        const transform = `${t}`;
+        this.transform = transform;
+        await FSPawn.Update(this.pawnId, { transform });
       };
 
       $p.addEventListener("mousemove", onMove, false);
       $p.addEventListener("mouseup", onMouseUp, false);
       $p.addEventListener("mouseleave", onMouseUp, false);
+
+      return false;
     }
   },
   data() {

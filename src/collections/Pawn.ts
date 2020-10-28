@@ -50,9 +50,6 @@ export class FSPawn {
       image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
       transform: `${new DOMMatrix()}`
-      // scalePp: 100,
-      // offsetX: 0,
-      // offsetY: 0
     };
 
     const db = firebase.firestore();
@@ -66,14 +63,23 @@ export class FSPawn {
     pawnId: string,
     params: {
       transform: string;
-      // scalePp?: Number;
-      // offsetX?: Number;
-      // offsetY?: Number;
     }
   ) {
     const db = firebase.firestore();
     const docRef = await db.collection("pawn").doc(pawnId);
     await docRef.update(params);
+  }
+
+  static async ResetTransform(pawnIdList: string[]) {
+    const db = firebase.firestore();
+    const batch = db.batch();
+    for (let i = 0; i < pawnIdList.length; i++) {
+      const pawnId = pawnIdList[i];
+      const docRef = await db.collection("pawn").doc(pawnId);
+      batch.update(docRef, { transform: `${new DOMMatrix()}` });
+    }
+
+    await batch.commit();
   }
 
   static async Delete(pawnId: string) {
