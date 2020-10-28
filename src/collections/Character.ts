@@ -92,6 +92,17 @@ export class FSCharacter {
     return { id, ...c };
   }
 
+  static async Update(characterId: string, criteria: object) {
+    const db = firebase.firestore();
+    const doc = db.collection("character").doc(characterId);
+    return await doc.update(criteria);
+  }
+
+  static async UpdateLastPostDatetime(characterId: string, datetime?: number) {
+    const lastPostDatetime = datetime ?? Date.now();
+    await FSCharacter.Update(characterId, { lastPostDatetime });
+  }
+
   static async Delete(characterId: string) {
     /* @FIXME CharacterはDeleteよりArchiveの方が良さそう？ */
     const db = firebase.firestore();

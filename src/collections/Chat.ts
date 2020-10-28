@@ -2,6 +2,7 @@ import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
+import { FSCharacter } from "@/collections/Character";
 
 export class FSChat {
   static unsubscribeMap = new Map();
@@ -45,6 +46,12 @@ export class FSChat {
     };
     const chatDocRef = await db.collection("chat").add(c);
     const id = chatDocRef.id;
+
+    /* キャラクタの最終発言日時を更新 */
+    if (character) {
+      await FSCharacter.UpdateLastPostDatetime(character);
+    }
+
     return { id, ...c };
   }
 
