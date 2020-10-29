@@ -30,23 +30,31 @@
     {{ imageSelect || "no image" }}
     <details v-if="joined">
       <summary>Images</summary>
-      <pre>{{ images }}</pre>
+      <image-show-case v-model="imageSelect"></image-show-case>
+      <!--      <pre>{{ images }}</pre>-->
     </details>
-    <image-show-case v-model="imageSelect"></image-show-case>
+    <details v-if="joined">
+      <summary>sounds</summary>
+      <ul>
+        <li v-for="s in sounds" :key="s.id">
+          <sound-editor :sound-id="s.id"></sound-editor>
+        </li>
+      </ul>
+    </details>
     <div v-if="joined">
       <!-- map -->
       <details>
         <summary>map.info</summary>
-        <pre>{{ maps }}</pre>
+        <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
+        <!-- <pre>{{ maps }}</pre>-->
+        <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
       </details>
-      <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
-      <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
       <!-- pawn -->
-      <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
-      <character-show-case v-model="characterSelect"></character-show-case>
       <details>
         <summary>pawn.info</summary>
-        <pre>{{ pawns }}</pre>
+        <character-show-case v-model="characterSelect"></character-show-case>
+        <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
+        <!--        <pre>{{ pawns }}</pre>-->
       </details>
     </div>
     <details v-if="isOwner">
@@ -102,13 +110,13 @@
       <summary>table.info</summary>
       <pre>{{ $store.getters["table/matrixList"] }}</pre>
       <!--      <pre>{{ tables }}</pre>-->
+      <ul>
+        <li :key="t.id" v-for="t in tableItems">
+          <table-view :table-id="t.id" />
+        </li>
+      </ul>
+      <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
     </details>
-    <ul>
-      <li :key="t.id" v-for="t in tableItems">
-        <table-view :table-id="t.id" />
-      </li>
-    </ul>
-    <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
     {{ characterSelect }}
     <details v-if="characters">
       <summary>character.info</summary>
@@ -125,10 +133,10 @@
       </ha-button>
       <pre>{{ channels }}</pre>
     </details>
-    <chat-composer v-if="joined"></chat-composer>
-    <chat-composer v-if="joined"></chat-composer>
-    <details v-if="chats" open>
+    <details v-if="chats">
       <summary> chat.info</summary>
+      <chat-composer v-if="joined"></chat-composer>
+      <chat-composer v-if="joined"></chat-composer>
       <ol>
         <li v-for="c of chats" :key="c.id" style="margin: 0;">
           ({{ c.channel || "none" }}) {{ c.character || userName
@@ -154,12 +162,14 @@ import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
+import SoundEditor from "@/components/molecules/SoundEditor";
 import TableView from "@/components/organisms/TableView";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "DebugIndicator",
   components: {
+    SoundEditor,
     TableView,
     CharacterShowCase,
     ImageShowCase,
@@ -200,6 +210,9 @@ export default {
     },
     images() {
       return this.$store.getters["image/info"];
+    },
+    sounds() {
+      return this.$store.getters["sound/info"];
     },
     boards() {
       return this.$store.getters["board/info"];
