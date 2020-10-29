@@ -154,13 +154,13 @@ export default {
     }
   },
   data() {
-    const zoom = [50, 100, 200][Math.floor(Math.random() * 3)];
-    // const zoom = 100;
+    // const zoom = [50, 100, 200][Math.floor(Math.random() * 3)];
+    const zoom = 100;
     const z = zoom / 100;
     const m = new DOMMatrix([z, 0, 0, z, 0, 0]).inverse();
     const defaultTransform = `${m}`;
     return {
-      debug: true,
+      debug: false,
       svgWidth: 0,
       svgHeight: 0,
       transform: defaultTransform

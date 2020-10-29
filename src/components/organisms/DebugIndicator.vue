@@ -3,12 +3,12 @@
     style="height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
   >
     <div v-if="joined">
-      <h5>Files upload</h5>
+      <h5>File upload</h5>
       <input
         type="file"
         multiple
-        accept="image/*"
-        @change="onClickImagesUploadHandler"
+        accept="*/*"
+        @change="onClickFileUploadHandler"
       />
     </div>
     {{ activeBoard }}
@@ -147,6 +147,7 @@ import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
+import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import CharacterShowCase from "@/components/molecules/CharacterShowCase";
@@ -307,11 +308,21 @@ export default {
     async onClickSelectCharacter(characterId) {
       this.characterSelect = characterId;
     },
-    async onClickImagesUploadHandler(e) {
+    async onClickFileUploadHandler(e) {
       const { files = [] } = e.currentTarget;
+
       const promiseList = [];
       files.forEach(f => {
-        promiseList.push(FSImage.Create(f));
+        const { type = "" } = f;
+        if (type.indexOf("image") !== -1) {
+          promiseList.push(FSImage.Create(f));
+        } else if (type.indexOf("video") !== -1) {
+          promiseList.push(FSSound.Create(f));
+        } else if (type.indexOf("audio") !== -1) {
+          promiseList.push(FSSound.Create(f));
+        } else {
+          console.error(`cannot upload file type: ${type}`); // @DELETEME
+        }
       });
       await Promise.all(promiseList);
     },

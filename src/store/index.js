@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import { auth } from "@/store/auth";
 import { room } from "@/store/room";
 import { image } from "@/store/image";
+import { sound } from "@/store/sound";
 import { user } from "@/store/user";
 import { chat } from "@/store/chat";
 import { channel } from "@/store/channel";
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     auth,
     room,
     image,
+    sound,
     user,
     chat,
     channel,

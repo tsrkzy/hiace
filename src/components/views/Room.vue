@@ -31,6 +31,7 @@ import { FSChat } from "@/collections/Chat";
 import { FSColumn } from "@/collections/Column";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
+import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
@@ -66,6 +67,7 @@ export default {
     FSCharacter.RemoveListener(this.roomId);
     FSAlias.RemoveListener(this.roomId);
     FSImage.RemoveListener(this.roomId);
+    FSSound.RemoveListener(this.roomId);
     FSBoard.RemoveListener(this.roomId);
     FSMap.RemoveListener(this.roomId);
     FSPawn.RemoveListener(this.roomId);
@@ -93,6 +95,7 @@ export default {
       FSCharacter.SetListener(roomId);
       FSAlias.SetListener(roomId);
       FSImage.SetListener(roomId);
+      FSSound.SetListener(roomId);
       FSBoard.SetListener(roomId);
       FSMap.SetListener(roomId);
       FSPawn.SetListener(roomId);
