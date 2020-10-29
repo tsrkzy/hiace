@@ -90,7 +90,30 @@ export class FSChat {
       .orderBy("timestamp", "desc");
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+      /* リスナ付与後、初回にハンドラはクエリに対する全ドキュメントをsnapshotとして受け取る
+       * それらはchange.type==="added"のため、type==="added"のHookは画面呼出直後にバーストする
+       * 対策として、changesが2個/回以上の場合は画面呼出直後として扱い、Hook側で迂回可能にする */
+      const changes = querySnapshot.docChanges();
+      const asInitializing = changes.length >= 2;
+
       const chats: any[] = [];
+      changes.forEach(async change => {
+        const { type } = change;
+        switch (type) {
+          case "added": {
+            if (!asInitializing) {
+              console.log("chat added: ", change.doc.data()); // @DELETEME
+              // await FSChat.Hook(change.doc.data());
+            }
+            break;
+          }
+          // case "modified" : {}
+          // case "removed" : {}
+          default:
+            break;
+        }
+      });
+
       querySnapshot.forEach(doc => {
         const chat = doc.data();
         chat.id = doc.id;
