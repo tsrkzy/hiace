@@ -20,7 +20,7 @@ export const room = {
       activeBoard: null,
       maps: [],
       soundEffects: [],
-      musics: null
+      music: null
     }
   },
   mutations: {
@@ -49,7 +49,7 @@ export const room = {
         activeMap: null,
         maps: [],
         soundEffects: [],
-        musics: null
+        music: null
       };
       commit("setRoom", { room });
     }
@@ -74,6 +74,9 @@ export const room = {
         return { state: WAITING };
       }
       return { state: NO_REQUEST };
+    },
+    music(state) {
+      return state.room?.music ?? null;
     }
   },
   modules: {}

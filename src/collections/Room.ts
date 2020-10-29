@@ -41,6 +41,7 @@ export class FSRoom {
     kicked: string[];
     users: string[];
     characters: string[];
+    music: null;
   }) {
     //   {
     //   name,
@@ -78,7 +79,7 @@ export class FSRoom {
       requests: [],
       kicked: [],
       users: [owner], // 初期値ownerのみ、追加可能
-      characters: []
+      characters: [],
       // resources: ["resource_1"], // 共有リソース
       // gameSystem: "cthuluhu",
       // activeMap: "map_1", // マップセット切り替え
@@ -86,6 +87,7 @@ export class FSRoom {
       /* watchして再生切り替える必要あり */
       // soundEffects: ["soundEffect_1", "soundEffect_2"],
       // musics: "music_1"
+      music: null
     };
     const room = await FSRoom.Add(r);
     const id = room.id;
@@ -109,6 +111,16 @@ export class FSRoom {
     await FSRoom.SetActiveBoard(id, b.id);
 
     return { id, ...r };
+  }
+
+  static async SoundBroadcast(roomId: string, soundId: string) {
+    const db = firebase.firestore();
+    const docRef = db.collection("room").doc(roomId);
+
+    /* @TODO システムチャットを経由するか、システムチャットをpostする */
+
+    await docRef.update({ music: null });
+    await docRef.update({ music: soundId });
   }
 
   static async SetActiveBoard(roomId: string, boardId: string) {

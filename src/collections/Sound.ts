@@ -120,6 +120,16 @@ export class FSSound {
     return { id, ...sound };
   }
 
+  static async Delete(soundId: string) {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("sound")
+      .doc(soundId)
+      .delete();
+
+    return docRef;
+  }
+
   static SetListener(roomId: string) {
     console.log("Sound.SetListener", roomId); // @DELETEME
 

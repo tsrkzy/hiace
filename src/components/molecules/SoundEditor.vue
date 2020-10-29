@@ -7,14 +7,19 @@
 
 <template>
   <div>
-    {{ playing }}
+    {{ playing ? "PLAYING!" : "" }}
     <label><span>mute</span><input v-model="muted" type="checkbox"/></label>
     <label v-if="loaded"
       ><span>loop</span><input :value="sound.loop" type="checkbox"
     /></label>
     <label v-if="loaded"><span>hook</span><input type="checkbox"/></label>
+    {{ soundId }}
     <ha-button v-if="sound" :disabled="!loaded" @click="onClickPlay"
-      >play</ha-button
+      >PLAY</ha-button
+    >
+    <ha-button v-if="sound" @click="onClickBroadcast">BROADCAST</ha-button>
+    <ha-button v-if="sound" @click="onClickDelete"
+      >DELETE: {{ this.soundId }}</ha-button
     >
     <audio
       :id="`audio_sound_${soundId}`"
@@ -28,6 +33,7 @@
 </template>
 
 <script>
+import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import HaButton from "@/components/atoms/HaButton";
 
@@ -86,8 +92,26 @@ export default {
       muted: false
     };
   },
+  computed: {
+    roomMusic() {
+      return this.$store.getters["room/music"];
+    },
+    room() {
+      return this.$store.getters["room/info"];
+    }
+  },
   methods: {
-    onClickPlay() {
+    async onClickBroadcast() {
+      await FSRoom.SoundBroadcast(this.room.id, this.soundId);
+    },
+    async onClickDelete() {
+      await FSSound.Delete(this.soundId);
+    },
+    async onClickPlay() {
+      await this.play();
+    },
+    async play() {
+      console.log("SoundEditor.play", this.soundId); // @DELETEME
       const $a = audioEl(this.soundId);
       if (!$a) {
         throw new Error("cannot found audio element");
@@ -100,7 +124,7 @@ export default {
       }
 
       /* 再生開始 */
-      $a.play();
+      await $a.play();
       this.playing = true;
 
       $a.onpause = () => {
@@ -112,6 +136,29 @@ export default {
         this.playing = false;
         $a.onended = null;
       };
+    },
+    pause() {
+      console.log("SoundEditor.pause", this.soundId); // @DELETEME
+      const $a = audioEl(this.soundId);
+      if (!$a) {
+        throw new Error("cannot found audio element");
+      }
+
+      /* すでに停止している場合は何もしない */
+      if ($a.paused) {
+        return false;
+      }
+
+      $a.pause();
+    }
+  },
+  watch: {
+    async roomMusic(music) {
+      if (this.soundId === music) {
+        await this.play();
+      } else if (this.playing) {
+        this.pause();
+      }
     }
   }
 };
