@@ -123,6 +123,13 @@ export class FSRoom {
     await docRef.update({ music: soundId });
   }
 
+  static async SoundStop(roomId: string) {
+    const db = firebase.firestore();
+    const docRef = db.collection("room").doc(roomId);
+
+    await docRef.update({ music: null });
+  }
+
   static async SetActiveBoard(roomId: string, boardId: string) {
     console.log("Room.SetActiveBoard", roomId, boardId); // @DELETEME
     const db = firebase.firestore();

@@ -8,11 +8,24 @@
 <template>
   <div>
     {{ playing ? "PLAYING!" : "" }}
-    <label><span>mute</span><input v-model="muted" type="checkbox"/></label>
-    <label v-if="loaded"
-      ><span>loop</span><input :value="sound.loop" type="checkbox"
+    <label
+      ><span>mute</span><input @input="onInputMute" type="checkbox"
     /></label>
-    <label v-if="loaded"><span>hook</span><input type="checkbox"/></label>
+    <label v-if="loaded"
+      ><span>loop</span
+      ><input @input="onInputLoop" :checked="sound.loop" type="checkbox"
+    /></label>
+    <label>
+      <span>volume: </span>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.1"
+        value="0.5"
+        @change="onInputVolume"
+      />
+    </label>
     {{ soundId }}
     <ha-button v-if="sound" :disabled="!loaded" @click="onClickPlay"
       >PLAY</ha-button
@@ -24,7 +37,6 @@
     <audio
       :id="`audio_sound_${soundId}`"
       :loop="sound && sound.loop"
-      :muted="muted"
       preload="auto"
     >
       <source :src="url" />
@@ -52,14 +64,8 @@ export default {
     soundId: { type: String, require: true }
   },
   async mounted() {
-    const sound = await FSSound.GetById({ id: this.soundId });
-
-    if (!sound) {
-      throw new Error(`failed to fetch sound: ${this.soundId}`);
-    }
-
-    this.sound = sound;
     const $a = audioEl(this.soundId);
+    $a.volume = 0.1;
 
     $a.oncanplaythrough = () => {
       /* 読み込みし、再生準備完了 */
@@ -79,20 +85,19 @@ export default {
   },
   data() {
     return {
-      sound: null,
-
       /* srcから<audio>が音声ファイルのロードを正常に完了し、再生準備が整ったらtrue */
       loaded: false,
 
       /* 再生中はtrue、loopせず止まったりpauseした場合はfalse */
       playing: false,
 
-      url: null,
-
-      muted: false
+      url: null
     };
   },
   computed: {
+    sound() {
+      return this.$store.getters["sound/info"].find(s => s.id === this.soundId);
+    },
     roomMusic() {
       return this.$store.getters["room/music"];
     },
@@ -109,6 +114,19 @@ export default {
     },
     async onClickPlay() {
       await this.play();
+    },
+    onInputVolume(e) {
+      const v = e.currentTarget.value;
+      const $a = audioEl(this.soundId);
+      $a.volume = parseFloat(v);
+    },
+    onInputMute(e) {
+      const $a = audioEl(this.soundId);
+      $a.muted = e.currentTarget.checked;
+    },
+    async onInputLoop(e) {
+      const loop = e.currentTarget.checked;
+      await FSSound.Update(this.soundId, { loop });
     },
     async play() {
       console.log("SoundEditor.play", this.soundId); // @DELETEME

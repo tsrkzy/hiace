@@ -120,6 +120,12 @@ export class FSSound {
     return { id, ...sound };
   }
 
+  static async Update(soundId: string, params: object) {
+    const db = firebase.firestore();
+    const docRef = db.collection("sound").doc(soundId);
+    return await docRef.update(params);
+  }
+
   static async Delete(soundId: string) {
     const db = firebase.firestore();
     const docRef = await db

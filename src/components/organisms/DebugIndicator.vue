@@ -40,6 +40,7 @@
           <sound-editor :sound-id="s.id"></sound-editor>
         </li>
       </ul>
+      <ha-button @click="onClickStopMusic">STOP</ha-button>
     </details>
     <div v-if="joined">
       <!-- map -->
@@ -287,6 +288,9 @@ export default {
     async makeRequest() {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
+    },
+    async onClickStopMusic() {
+      await FSRoom.SoundStop(this.room.id);
     },
     async onClickCreateBoard() {
       const userId = this.user.id;
