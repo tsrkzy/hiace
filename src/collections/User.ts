@@ -66,6 +66,7 @@ export class FSUser {
       name: me?.displayName,
       photoUrl: me?.photoURL,
       email: me?.email,
+      lastPing: Date.now(),
       joinTo: []
     };
     const ref = await db.collection("user").add(u);
@@ -78,6 +79,12 @@ export class FSUser {
     const db = firebase.firestore();
     const doc = db.collection("user").doc(id);
     return await doc.update(criteria);
+  }
+
+  static async Ping(id: string) {
+    const db = firebase.firestore();
+    const doc = db.collection("user").doc(id);
+    return await doc.update({ lastPing: Date.now() });
   }
 
   static async JoinRoom(userId: string, roomId: string) {

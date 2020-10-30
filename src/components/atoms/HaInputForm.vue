@@ -6,6 +6,7 @@
     <input
       :value="value"
       @input="$emit('input', $event.currentTarget.value)"
+      @keydown="$emit('keydown', $event)"
       :placeholder="placeholder"
     />
   </label>

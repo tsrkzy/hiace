@@ -6,7 +6,7 @@
     </ha-select>
     <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
     </ha-select>
-    <ha-input-form v-model="chatText"></ha-input-form>
+    <ha-input-form @keydown="onKeydown" v-model="chatText"></ha-input-form>
     <ha-button @click="sendChat">send</ha-button>
   </div>
 </template>
@@ -14,12 +14,15 @@
 <script>
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
+import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
-import { GAME_SYSTEMS } from "@/diceBot";
+import { GAME_SYSTEMS } from "@/scripts/diceBot";
+import { Throttle } from "@/scripts/Throttle";
 
+const throttle = new Throttle(1000);
 export default {
   name: "ChatComposer",
   components: { CharacterSwitcher, HaButton, HaInputForm, HaSelect },
@@ -75,6 +78,14 @@ export default {
         }
       };
       await FSChat.Chat(c, this.diceSystem);
+    },
+    onKeydown() {
+      throttle
+        .do()
+        .then(() => {
+          FSUser.Ping(this.user.id);
+        })
+        .catch();
     }
   }
 };

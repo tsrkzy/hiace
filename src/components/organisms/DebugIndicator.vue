@@ -103,6 +103,16 @@
       />
       <pre>{{ user }}</pre>
     </details>
+    <details>
+      <summary>user.info</summary>
+      <ul>
+        <li :key="u.id" v-for="u in users">
+          <span>{{ u.id }}</span>
+          {{ maybeActive(u.lastPing) ? "●" : "" }}
+          <ha-button @click="onClickPing(u.id)">PING</ha-button>
+        </li>
+      </ul>
+    </details>
     <details v-if="room">
       <summary> room.info</summary>
       <pre>{{ room }}</pre>
@@ -158,6 +168,7 @@ import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
+import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
@@ -178,6 +189,16 @@ export default {
     ChatComposer,
     HaButton
   },
+  created() {
+    this.milliSecond = null;
+    const clock = () => {
+      this.milliSecond = Date.now();
+    };
+    this.clock_id = window.setInterval(clock, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.clock_id);
+  },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
@@ -192,7 +213,7 @@ export default {
       return this.room.users;
     },
     users() {
-      return this.$store.getters["room/users"];
+      return this.$store.getters["user/info"];
     },
     room() {
       return this.$store.getters["room/info"];
@@ -271,6 +292,8 @@ export default {
   },
   data() {
     return {
+      milliSecond: null,
+      clock_id: null,
       imageSelect: null,
       characterSelect: null
     };
@@ -288,6 +311,12 @@ export default {
     async makeRequest() {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
+    },
+    async onClickPing(userId) {
+      await FSUser.Ping(userId);
+    },
+    maybeActive(lastPing) {
+      return this.milliSecond - lastPing < 2 * 1000;
     },
     async onClickStopMusic() {
       await FSRoom.SoundStop(this.room.id);

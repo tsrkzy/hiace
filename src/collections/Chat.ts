@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
-import { callDiceBot } from "@/diceBot";
+import { callDiceBot } from "@/scripts/diceBot";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";

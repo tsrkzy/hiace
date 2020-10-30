@@ -23,7 +23,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
-import { GAME_SYSTEMS } from "@/diceBot";
+import { GAME_SYSTEMS } from "@/scripts/diceBot";
 
 export default {
   name: "Room",

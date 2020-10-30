@@ -14,5 +14,9 @@ export const user = {
       commit("setUsers", { users });
     }
   },
-  getters: {}
+  getters: {
+    info(state) {
+      return state.users;
+    }
+  }
 };
