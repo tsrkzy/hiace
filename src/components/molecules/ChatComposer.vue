@@ -18,6 +18,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
+import { GAME_SYSTEMS } from "@/diceBot";
 
 export default {
   name: "ChatComposer",
@@ -30,14 +31,7 @@ export default {
       }));
     },
     diceBotItems() {
-      return [
-        { system: "Cthulhu", name: "クトゥルフ神話TRPG" },
-        { system: "Cthulhu7th", name: "新クトゥルフ神話TRPG" },
-        { system: "Kamigakari", name: "神我狩" },
-        { system: "SwordWorld", name: "ソードワールドRPG" },
-        { system: "SwordWorld2.0", name: "ソードワールド2.0" },
-        { system: "SwordWorld2.5", name: "ソードワールド2.5" }
-      ].map(s => ({ value: s.system, text: s.name }));
+      return GAME_SYSTEMS;
     },
     room() {
       return this.$store.getters["room/info"];

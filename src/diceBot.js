@@ -7,6 +7,15 @@
 import axios from "axios";
 import qs from "qs";
 
+export const GAME_SYSTEMS = [
+  { system: "Cthulhu", name: "クトゥルフ神話TRPG" },
+  { system: "Cthulhu7th", name: "新クトゥルフ神話TRPG" },
+  { system: "Kamigakari", name: "神我狩" },
+  { system: "SwordWorld", name: "ソードワールドRPG" },
+  { system: "SwordWorld2.0", name: "ソードワールド2.0" },
+  { system: "SwordWorld2.5", name: "ソードワールド2.5" }
+].map(g => ({ value: g.system, text: g.name }));
+
 const config = {
   baseURL: "https://bcdice.onlinesession.app/v1/",
   timeout: 1000

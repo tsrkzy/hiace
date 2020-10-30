@@ -41,24 +41,10 @@ export class FSRoom {
     kicked: string[];
     users: string[];
     characters: string[];
+    system: string;
+    activeBoard: null;
     music: null;
   }) {
-    //   {
-    //   name,
-    //   owner: owner.id, // 部屋作成時に固定
-    //   keepers: [owner.id], // 初期値ownerのみ、追加削除可能
-    //   requests: [],
-    //   kicked: [],
-    //   users: [owner.id], // 初期値ownerのみ、追加可能
-    //   characters: [],
-    //   resources: ["resource_1"], // 共有リソース
-    //   gameSystem: "cthuluhu",
-    //   activeBoard: "board_1", // マップセット切り替え
-    //   maps: ["map_1", "map_2"],
-    //   /* watchして再生切り替える必要あり */
-    //   soundEffects: ["soundEffect_1", "soundEffect_2"],
-    //   musics: "music_1"
-    // }
 
     const db = firebase.firestore();
     const docRef = await db.collection("room").add(r);
@@ -67,7 +53,15 @@ export class FSRoom {
     return { id, ...r };
   }
 
-  static async Create({ name, owner }: { name: string; owner: string }) {
+  static async Create({
+    name,
+    owner,
+    system
+  }: {
+    name: string;
+    owner: string;
+    system: string;
+  }) {
     if (!owner) {
       throw new Error("no owner given");
     }
@@ -80,13 +74,8 @@ export class FSRoom {
       kicked: [],
       users: [owner], // 初期値ownerのみ、追加可能
       characters: [],
-      // resources: ["resource_1"], // 共有リソース
-      // gameSystem: "cthuluhu",
-      // activeMap: "map_1", // マップセット切り替え
-      // maps: ["map_1", "map_2"],
-      /* watchして再生切り替える必要あり */
-      // soundEffects: ["soundEffect_1", "soundEffect_2"],
-      // musics: "music_1"
+      system,
+      activeBoard: null,
       music: null
     };
     const room = await FSRoom.Add(r);
