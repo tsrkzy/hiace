@@ -3,8 +3,10 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
+import { callDiceBot } from "@/diceBot";
 
 export const TEXT = "TEXT";
+export const DICE = "DICE";
 export const SYSTEM = "SYSTEM";
 
 export class FSChat {
@@ -79,6 +81,65 @@ export class FSChat {
       value: { text: `logged in - - - ${email} - - -` }
     };
     return await FSChat.Create(c);
+  }
+
+  static async Chat(
+    params: {
+      room: string;
+      channel: string;
+      owner: string;
+      character: string | null;
+      alias: string | null;
+      value: any;
+    },
+    system?: string
+  ) {
+    /* trim済みの文字列を渡す */
+    const { text = "" } = params.value;
+
+    /* 内容が空文字または空白文字のみ */
+    const emptyText = text.trim().length === 0;
+    if (emptyText) {
+      return;
+    }
+
+    /* TRPGシステムを指定しない */
+    const noSystem = typeof system !== "string" || !system;
+
+    /* 簡易DiceBotコマンド判定: 任意の半角英数字記号の2文字以上の繰り返しで始まる文字列 */
+    const diceBotRegex = /^[a-zA-Z0-9!-/:-@¥[-`{-~]{2,}/;
+    const isCommand = diceBotRegex.test(text);
+
+    let type = TEXT;
+    if (noSystem || !isCommand) {
+      /* 通常チャットとして扱う */
+      const c = {
+        type,
+        ...params
+      };
+      return await FSChat.Create(c);
+    }
+
+    try {
+      if (!system || !text) {
+        throw new Error("game system or command is empty");
+      }
+
+      const { ok, result, reason } = await callDiceBot(system, text);
+      if (!ok) {
+        throw new Error(`diceBot: ${reason}`);
+      }
+
+      /* diceBotが正常にコマンドを実行した */
+      params.value.command = text;
+      params.value.result = result;
+      type = DICE;
+    } catch (e) {
+      /* diceBotがコマンドとして解釈しなかった */
+      console.warn(e);
+    }
+
+    return await FSChat.Create({ type, ...params });
   }
 
   static SetListener(roomId: string) {

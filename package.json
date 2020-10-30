@@ -10,10 +10,12 @@
     "build-watch": "vue-cli-service build --watch"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
     "firebase": "^7.21.1",
     "firebaseui": "^4.6.1",
+    "qs": "^6.9.4",
     "skeleton-css": "^2.0.4",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",

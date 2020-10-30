@@ -134,7 +134,7 @@
       </ha-button>
       <pre>{{ channels }}</pre>
     </details>
-    <details v-if="chats">
+    <details v-if="chats" open>
       <summary> chat.info</summary>
       <chat-composer v-if="joined"></chat-composer>
       <chat-composer v-if="joined"></chat-composer>
@@ -142,7 +142,7 @@
         <li v-for="c of chats" :key="c.id" style="margin: 0;">
           ({{ c.channel || "none" }}) {{ c.character || userName
           }}{{ c.alias ? `(${c.alias})` : "" }}:
-          {{ c.value.text }}
+          {{ c.type === "DICE" ? c.value.result : c.value.text }}
         </li>
       </ol>
     </details>

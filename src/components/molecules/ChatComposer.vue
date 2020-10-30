@@ -4,6 +4,8 @@
     <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo">
       <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
     </ha-select>
+    <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
+    </ha-select>
     <ha-input-form v-model="chatText"></ha-input-form>
     <ha-button @click="sendChat">send</ha-button>
   </div>
@@ -11,7 +13,7 @@
 
 <script>
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import { FSChat, TEXT } from "@/collections/Chat";
+import { FSChat } from "@/collections/Chat";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
@@ -27,6 +29,16 @@ export default {
         value: c.id
       }));
     },
+    diceBotItems() {
+      return [
+        { system: "Cthulhu", name: "クトゥルフ神話TRPG" },
+        { system: "Cthulhu7th", name: "新クトゥルフ神話TRPG" },
+        { system: "Kamigakari", name: "神我狩" },
+        { system: "SwordWorld", name: "ソードワールドRPG" },
+        { system: "SwordWorld2.0", name: "ソードワールド2.0" },
+        { system: "SwordWorld2.5", name: "ソードワールド2.5" }
+      ].map(s => ({ value: s.system, text: s.name }));
+    },
     room() {
       return this.$store.getters["room/info"];
     },
@@ -38,6 +50,7 @@ export default {
     return {
       SYSTEM_CHANNEL_ID,
       channelIdChatTo: SYSTEM_CHANNEL_ID,
+      diceSystem: null,
       chatText: ""
     };
   },
@@ -58,7 +71,6 @@ export default {
       const roomId = this.room.id;
       const userId = this.user.id;
       const c = {
-        type: TEXT,
         room: roomId,
         channel: channelId,
         owner: userId,
@@ -68,7 +80,7 @@ export default {
           text: chatText
         }
       };
-      await FSChat.Create(c);
+      await FSChat.Chat(c, this.diceSystem);
     }
   }
 };
