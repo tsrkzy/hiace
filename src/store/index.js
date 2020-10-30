@@ -15,6 +15,7 @@ import { map } from "@/store/map";
 import { pawn } from "@/store/pawn";
 import { table } from "@/store/table";
 import { column } from "@/store/column";
+import { notice } from "@/store/notice";
 
 Vue.use(Vuex);
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     map,
     pawn,
     table,
-    column
+    column,
+    notice
   }
 });

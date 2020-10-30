@@ -9,6 +9,7 @@
     id="floor"
     style="margin: 40px;border: 1px solid black;overflow: hidden;"
   >
+    <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
       <google-authorizer></google-authorizer>
@@ -37,6 +38,7 @@ import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
+import Notice from "@/components/organisms/Notice";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
@@ -47,7 +49,7 @@ const BORDER = 1;
 
 export default {
   name: "Room",
-  components: { SvgBoard, GoogleAuthorizer, HaButton, DebugIndicator },
+  components: { Notice, SvgBoard, GoogleAuthorizer, HaButton, DebugIndicator },
   async created() {
     this.roomId = this.$route.params.room_id;
     await this.trackRoomInfo(this.roomId);
