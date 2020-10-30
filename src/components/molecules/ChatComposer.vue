@@ -11,7 +11,7 @@
 
 <script>
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import { FSChat } from "@/collections/Chat";
+import { FSChat, TEXT } from "@/collections/Chat";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
@@ -58,7 +58,7 @@ export default {
       const roomId = this.room.id;
       const userId = this.user.id;
       const c = {
-        type: "text",
+        type: TEXT,
         room: roomId,
         channel: channelId,
         owner: userId,

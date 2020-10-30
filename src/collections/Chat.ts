@@ -4,6 +4,9 @@ import "firebase/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
 
+export const TEXT = "TEXT";
+export const SYSTEM = "SYSTEM";
+
 export class FSChat {
   static unsubscribeMap = new Map();
 
@@ -30,6 +33,9 @@ export class FSChat {
       console.error(room);
       throw new Error("no roomId given");
     }
+
+    /* チャット送信時のキーワードトリガー */
+    // onSendingChat(type, value);
 
     const db = firebase.firestore();
     const timestamp = Date.now();
@@ -64,7 +70,7 @@ export class FSChat {
   }) {
     const { id: userId, email } = user;
     const c = {
-      type: "system",
+      type: SYSTEM,
       room: roomId,
       channel: SYSTEM_CHANNEL_ID,
       owner: userId,
@@ -102,8 +108,8 @@ export class FSChat {
         switch (type) {
           case "added": {
             if (!asInitializing) {
-              console.log("chat added: ", change.doc.data()); // @DELETEME
-              // await FSChat.Hook(change.doc.data());
+              // const chat = change.doc.data();
+              // onReceiveChat(chat.type, chat.value);
             }
             break;
           }
@@ -137,3 +143,6 @@ export class FSChat {
     unsubscribeMap.delete(roomId);
   }
 }
+
+// function onSendingChat(chatType: string, chatValue?: any) {}
+// function onReceiveChat(chatType: string, chatValue?: any) {}

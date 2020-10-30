@@ -1,6 +1,6 @@
 import { FSBoard } from "@/collections/Board";
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import { FSChat } from "@/collections/Chat";
+import { FSChat, SYSTEM } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -93,7 +93,7 @@ export class FSRoom {
     const id = room.id;
 
     const c = {
-      type: "system",
+      type: SYSTEM,
       room: id,
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner,
