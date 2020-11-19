@@ -23,7 +23,8 @@ export default {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(0,0,0,0.2)"
+        backgroundColor: "rgba(0,0,0,0.2)",
+        backdropFilter: "blur(0.5px)"
       };
     }
   }

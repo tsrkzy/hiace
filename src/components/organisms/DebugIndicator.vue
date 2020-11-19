@@ -2,6 +2,7 @@
   <div
     style="height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
   >
+    <ha-button @click="onClickSmoke">smoke</ha-button>
     <div v-if="joined">
       <h5>File upload</h5>
       <input
@@ -176,6 +177,7 @@ import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
 import SoundEditor from "@/components/molecules/SoundEditor";
 import TableView from "@/components/organisms/TableView";
+import { Smoke } from "@/scripts/Smoke";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
@@ -385,6 +387,13 @@ export default {
         roomId: this.room.id
       };
       await FSTable.CreateDefault(t);
+    },
+    async onClickSmoke() {
+      await Smoke.on();
+      const cancelId = window.setTimeout(async () => {
+        await Smoke.off();
+        window.clearTimeout(cancelId);
+      }, 2000);
     }
   }
 };

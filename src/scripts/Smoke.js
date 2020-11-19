@@ -11,7 +11,7 @@ export class Smoke {
     await store.dispatch("smoke/on");
   }
 
-  static async off(){
+  static async off() {
     await store.dispatch("smoke/off");
   }
 }
