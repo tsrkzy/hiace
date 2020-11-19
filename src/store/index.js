@@ -16,6 +16,7 @@ import { pawn } from "@/store/pawn";
 import { table } from "@/store/table";
 import { column } from "@/store/column";
 import { notice } from "@/store/notice";
+import { smoke } from "@/store/smoke";
 
 Vue.use(Vuex);
 
@@ -38,6 +39,7 @@ export default new Vuex.Store({
     pawn,
     table,
     column,
-    notice
+    notice,
+    smoke
   }
 });
