@@ -74,6 +74,9 @@ export default {
     const { image } = await FSMap.GetById({
       id: this.mapId
     });
+    if (!image) {
+      throw new Error(`map has no image: ${this.mapId}`);
+    }
     const { url, width, height } = await FSImage.GetById({ id: image });
 
     /* image */

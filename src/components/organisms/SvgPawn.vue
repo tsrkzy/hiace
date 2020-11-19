@@ -60,7 +60,7 @@ export default {
     this.transform = transform;
 
     if (!image) {
-      console.warn(`pawn ${this.pawnId} has no image`);
+      console.warn(`pawn has no image: ${this.pawnId}`);
       return false;
     }
     const { url, width, height } = await FSImage.GetById({ id: image });

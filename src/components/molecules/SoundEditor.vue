@@ -80,7 +80,9 @@ export default {
     };
 
     /* srcを設定した後、明示的にloadする */
-    this.url = this.sound.url;
+    const sound = await FSSound.GetById({ id: this.soundId });
+    this.url = sound.url;
+
     $a.load();
   },
   data() {

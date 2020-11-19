@@ -4,10 +4,20 @@ import "firebase/storage";
 
 import store from "@/store";
 
+async function validateAudioUrl(url: string) {
+  return await new Promise(resolve => {
+    const $aud = new Audio();
+    $aud.onloadedmetadata = () => resolve(true);
+    $aud.onerror = () => resolve(false);
+    $aud.src = url;
+  });
+}
+
 export class FSSound {
   static unsubscribeMap = new Map();
 
   static async GetById({ id }: { id: string }) {
+    console.log("Sound.GetById", id); // @DELETEME
     const db = firebase.firestore();
     const docRef = await db
       .collection("sound")
@@ -18,7 +28,31 @@ export class FSSound {
     }
     const sound = docRef.data();
 
+    if (!sound) {
+      throw new Error(`sound does not exist: ${id}`);
+    }
+
+    /* urlが消費期限切れなら更新 */
+    const url = sound.url;
+    const urlIsOk = await validateAudioUrl(url);
+    if (!urlIsOk) {
+      const path = sound.path;
+      sound.url = await FSSound.RenewSoundUrl(path, id);
+    }
+
     return { id, ...sound };
+  }
+
+  static async RenewSoundUrl(path: string, id: string) {
+    console.log("Sound.RenewSoundUrl");
+    const storageRef = firebase.storage().ref();
+    const soundRef = storageRef.child(path);
+    const url = await soundRef.getDownloadURL();
+
+    const db = firebase.firestore();
+    const docRef = db.collection("sound").doc(id);
+    await docRef.update({ url });
+    return url;
   }
 
   static async GetSoundMetadata(file: File): Promise<{ duration: number }> {

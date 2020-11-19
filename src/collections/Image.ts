@@ -7,10 +7,20 @@ import store from "@/store";
 export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
 export const DEFAULT_CHARACTER_IMAGE = "wG5tOfKAW3trnsApUNRy";
 
+async function validateImageUrl(url: string) {
+  return await new Promise(resolve => {
+    const $img = new Image();
+    $img.onload = () => resolve(true);
+    $img.onerror = () => resolve(false);
+    $img.src = url;
+  });
+}
+
 export class FSImage {
   static unsubscribeMap = new Map();
 
   static async GetById({ id }: { id: string }) {
+    console.log("Image.GetById", id); // @DELETEME
     const db = firebase.firestore();
     const docRef = await db
       .collection("image")
@@ -21,7 +31,31 @@ export class FSImage {
     }
     const image = docRef.data();
 
+    if (!image) {
+      throw new Error(`image does not exist: ${id}`);
+    }
+
+    /* urlが消費期限切れなら更新 */
+    const url = image.url;
+    const urlIsOk = await validateImageUrl(url);
+    if (!urlIsOk) {
+      const path = image.path;
+      image.url = await FSImage.RenewImageUrl(path, id);
+    }
+
     return { id, ...image };
+  }
+
+  static async RenewImageUrl(path: string, id: string) {
+    console.log("renew image url");
+    const storageRef = firebase.storage().ref();
+    const imageRef = storageRef.child(path);
+    const url = await imageRef.getDownloadURL();
+
+    const db = firebase.firestore();
+    const docRef = db.collection("image").doc(id);
+    await docRef.update({ url });
+    return url;
   }
 
   static async GetImageMetadata(

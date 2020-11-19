@@ -45,7 +45,6 @@ export class FSRoom {
     activeBoard: null;
     music: null;
   }) {
-
     const db = firebase.firestore();
     const docRef = await db.collection("room").add(r);
     const id = docRef.id;
