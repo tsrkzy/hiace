@@ -51,9 +51,10 @@ export default {
     };
   },
   methods: {
-    onHandleMouseDown(e) {
+    async onHandleMouseDown(e) {
       console.log("FloatGroup.onHandleMouseDown"); // @DELETEME
       e.stopPropagation();
+      await this.$store.dispatch("float/pop", { id: this.floatId });
       const { x: x0, y: y0 } = this.float;
 
       const downX = e.clientX;
@@ -74,7 +75,7 @@ export default {
 
       const onHandleMouseUp = async e => {
         e.stopPropagation();
-        this.$store.dispatch("float/move", {
+        await this.$store.dispatch("float/move", {
           id: this.floatId,
           x: this.xt,
           y: this.yt
@@ -94,12 +95,13 @@ export default {
 
       return false;
     },
-    onScaleMouseDown(e, direction = "sw") {
+    async onScaleMouseDown(e, direction = "sw") {
       console.log("Float.onScaleMouseDown", direction); // @DELETEME
       const isSw = direction === "sw";
       const isSe = direction === "se";
 
       e.stopPropagation();
+      await this.$store.dispatch("float/pop", { id: this.floatId });
       const { x: x0, y: y0, w: w0, h: h0 } = this.float;
 
       const downX = e.clientX;

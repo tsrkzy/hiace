@@ -37,6 +37,13 @@ export const float = {
       }
       float.w = w;
       float.h = h;
+    },
+    pop(state, payload) {
+      const { id } = payload;
+      const floats = state.floats.slice();
+      const index = floats.findIndex(f => f.id === id);
+      const pop = floats.splice(index, 1);
+      state.floats = [].concat(floats, pop);
     }
   },
   actions: {
@@ -49,6 +56,9 @@ export const float = {
     },
     scale({ commit }, { id, w, h }) {
       commit("scale", { id, w, h });
+    },
+    pop({ commit }, { id }) {
+      commit("pop", { id });
     }
   },
   getters: {
