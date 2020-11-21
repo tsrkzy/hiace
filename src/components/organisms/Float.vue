@@ -6,15 +6,16 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div :style="floatStyle">
+  <div v-if="float.show" :style="floatStyle">
     <div
       :id="`move_handle_${floatId}`"
       class="move-handle"
       @mousedown="onHandleMouseDown($event)"
     >
-      handle
+      <span>{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
     </div>
+    <button class="button__close" @click="onClickClose($event)">-</button>
     <!-- scale diagonal -->
     <div
       :id="`scale_se_handle_${floatId}`"
@@ -29,6 +30,9 @@
       @mousedown="onScaleMouseDown($event, 'sw')"
     >
       <div v-if="scaleSw" class="scale-hit-box__sw"></div>
+    </div>
+    <div class="content-slot">
+      <slot name="content">failed to load content: {{ floatId }}</slot>
     </div>
   </div>
 </template>
@@ -51,6 +55,10 @@ export default {
     };
   },
   methods: {
+    async onClickClose(e) {
+      e.stopPropagation();
+      this.$store.dispatch("float/close", { id: this.floatId });
+    },
     async onHandleMouseDown(e) {
       console.log("FloatGroup.onHandleMouseDown"); // @DELETEME
       e.stopPropagation();
@@ -186,7 +194,7 @@ export default {
         width: `${wt ?? w}px`,
         height: `${ht ?? h}px`,
         border: "1px solid dimgray",
-        backgroundColor: "ghostwhite"
+        backgroundColor: "transparent"
       };
     }
   }
@@ -194,15 +202,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$handle-height: 2rem;
+$control-size: 10px;
 $ww: 200vw;
 $hh: 200vh;
 
+button.button__close {
+  top: 0;
+  right: 0;
+  position: absolute;
+  border: none;
+  height: $handle-height;
+}
 .move-handle {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 2em;
+  height: $handle-height;
   background-color: lightgray;
   cursor: move;
 }
@@ -229,8 +246,8 @@ $hh: 200vh;
 }
 .scale-handle__se {
   background-color: red;
-  width: 10px;
-  height: 10px;
+  width: $control-size;
+  height: $control-size;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -238,11 +255,17 @@ $hh: 200vh;
 }
 .scale-handle__sw {
   background-color: red;
-  width: 10px;
-  height: 10px;
+  width: $control-size;
+  height: $control-size;
   position: absolute;
   bottom: 0;
   left: 0;
   cursor: nesw-resize;
+}
+.content-slot {
+  width: 100%;
+  height: calc(100% - 2em);
+  background-color: ghostwhite;
+  margin-top: 2em;
 }
 </style>

@@ -6,24 +6,22 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div>
-    <float v-for="f in floats" :key="f.id" :float-id="f.id">
-      <slot #content>
-        <float-content :content-id="f.contentId"></float-content>
-      </slot>
-    </float>
+  <div style="width: 100%; height:100%;">
+    <div v-if="contentId === 1">1</div>
+    <div v-else-if="contentId === 2">2</div>
+    <div v-else-if="contentId === 3">3</div>
+    <div v-else-if="contentId === 4">4</div>
+    <div v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
 
 <script>
-import Float from "@/components/organisms/Float";
-import FloatContent from "@/components/organisms/FloatContent";
 export default {
-  name: "FloatGroup",
-  components: { FloatContent, Float },
-  computed: {
-    floats() {
-      return this.$store.getters["float/info"];
+  name: "FloatContent",
+  props: {
+    contentId: {
+      type: Number,
+      require: true
     }
   }
 };
