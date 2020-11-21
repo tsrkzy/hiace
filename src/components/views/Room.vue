@@ -20,6 +20,8 @@
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
     <svg-board ref="svgTable"></svg-board>
+    <float-group></float-group>
+    <context-menu></context-menu>
   </div>
 </template>
 
@@ -37,7 +39,9 @@ import { FSTable } from "@/collections/Table";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
+import ContextMenu from "@/components/organisms/ContextMenu";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
+import FloatGroup from "@/components/organisms/FloatGroup";
 import Notice from "@/components/organisms/Notice";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSImage } from "@/collections/Image";
@@ -49,7 +53,15 @@ const BORDER = 1;
 
 export default {
   name: "Room",
-  components: { Notice, SvgBoard, GoogleAuthorizer, HaButton, DebugIndicator },
+  components: {
+    FloatGroup,
+    ContextMenu,
+    Notice,
+    SvgBoard,
+    GoogleAuthorizer,
+    HaButton,
+    DebugIndicator
+  },
   async created() {
     this.roomId = this.$route.params.room_id;
     await this.trackRoomInfo(this.roomId);

@@ -19,11 +19,9 @@
         ></div>
         <div v-else :style="parentItemStyle">
           {{ item.text
-          }}{{
-            hasChild(item) ? (selected === item.value ? " = " : " + ") : ""
-          }}
+          }}{{ hasChild(item) ? (open === item.value ? " = " : " + ") : "" }}
         </div>
-        <div v-if="selected === item.value" :style="childAccordionStyle">
+        <div v-if="open === item.value" :style="childAccordionStyle">
           <div
             v-for="child in item.children"
             :key="child.value"
@@ -42,26 +40,20 @@
 <script>
 export default {
   name: "ContextMenu",
-  data() {
-    return {
-      show: false,
-      selected: null
-    };
-  },
   methods: {
     onClickOverlay() {
-      this.show = false;
+      this.$store.dispatch("contextmenu/off");
     },
     onClickParent(item) {
       console.log(item); // @DELETEME
       if (item.divider) {
         return false;
       }
-      this.selected = item.value;
+      this.open = item.value;
       console.log(item.value); // @DELETEME
     },
     onClickChild(child) {
-      this.selected = child.value;
+      this.open = child.value;
       console.log(child.value); // @DELETEME
     },
     hasChild(item) {
@@ -69,6 +61,17 @@ export default {
     }
   },
   computed: {
+    show() {
+      return this.$store.getters["contextmenu/show"];
+    },
+    open: {
+      get() {
+        return this.$store.getters["contextmenu/open"];
+      },
+      set(open) {
+        this.$store.dispatch("contextmenu/open", { open });
+      }
+    },
     overlayStyle() {
       return {
         position: "fixed",

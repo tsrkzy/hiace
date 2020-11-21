@@ -17,6 +17,8 @@ import { table } from "@/store/table";
 import { column } from "@/store/column";
 import { notice } from "@/store/notice";
 import { smoke } from "@/store/smoke";
+import { contextmenu } from "@/store/contextmenu";
+import { float } from "@/store/float";
 
 Vue.use(Vuex);
 
@@ -40,6 +42,8 @@ export default new Vuex.Store({
     table,
     column,
     notice,
-    smoke
+    smoke,
+    contextmenu,
+    float
   }
 });

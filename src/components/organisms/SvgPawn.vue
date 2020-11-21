@@ -19,7 +19,7 @@
       <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
     </filter>
     <text>{{ imageId }}, {{ width }}, {{ height }}</text>
-    <image :width="width" :height="height" :href="href"></image>
+    <image v-if="!shadow" :width="width" :height="height" :href="href"></image>
     <rect
       :width="width"
       :height="height"

@@ -1,8 +1,10 @@
 <template>
   <div
     style="height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
+    @contextmenu="onContextmenu"
   >
     <ha-button @click="onClickSmoke">smoke</ha-button>
+    <ha-button @click="onClickContext">context</ha-button>
     <div v-if="joined">
       <h5>File upload</h5>
       <input
@@ -42,6 +44,14 @@
         </li>
       </ul>
       <ha-button @click="onClickStopMusic">STOP</ha-button>
+    </details>
+    <details>
+      <summary>float.info</summary>
+      <ul>
+        <li v-for="f in $store.getters['float/info']" :key="f.id">
+          {{ f.id }}, {{ f.x }}, {{ f.y }}, {{ f.w }}, {{ f.h }}
+        </li>
+      </ul>
     </details>
     <div v-if="joined">
       <!-- map -->
@@ -394,6 +404,12 @@ export default {
         await Smoke.off();
         window.clearTimeout(cancelId);
       }, 2000);
+    },
+    async onClickContext() {
+      this.$store.dispatch("contextmenu/on");
+    },
+    async onContextmenu() {
+      this.$store.dispatch("contextmenu/on");
     }
   }
 };
