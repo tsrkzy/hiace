@@ -14,7 +14,7 @@
     <div
       :id="`handle_${floatId}`"
       :style="handleStyle"
-      @mousedown="onMouseDown($event)"
+      @mousedown="onHandleMouseDown($event)"
     >
       handle
       <div v-if="dragged" :style="dragStyle"></div>
@@ -37,8 +37,8 @@ export default {
     };
   },
   methods: {
-    onMouseDown(e) {
-      console.log("FloatGroup.onMouseDown"); // @DELETEME
+    onHandleMouseDown(e) {
+      console.log("FloatGroup.onHandleMouseDown"); // @DELETEME
       e.stopPropagation();
       const { x: x0, y: y0 } = this.float;
 
@@ -48,7 +48,7 @@ export default {
 
       const $el = document.getElementById(`handle_${this.floatId}`);
 
-      const onMove = e => {
+      const onHandleMouseMove = e => {
         e.stopPropagation();
         const dx = e.clientX - downX;
         const dy = e.clientY - downY;
@@ -57,17 +57,17 @@ export default {
         this.$store.dispatch("float/move", { id: this.floatId, x, y });
       };
 
-      const onMouseUp = async e => {
+      const onHandleMouseUp = async e => {
         e.stopPropagation();
         this.dragged = false;
-        $el.removeEventListener("mousemove", onMove);
-        $el.removeEventListener("mouseup", onMouseUp);
-        $el.removeEventListener("mouseleave", onMouseUp);
+        $el.removeEventListener("mousemove", onHandleMouseMove);
+        $el.removeEventListener("mouseup", onHandleMouseUp);
+        $el.removeEventListener("mouseleave", onHandleMouseUp);
       };
 
-      $el.addEventListener("mousemove", onMove, false);
-      $el.addEventListener("mouseup", onMouseUp, false);
-      $el.addEventListener("mouseleave", onMouseUp, false);
+      $el.addEventListener("mousemove", onHandleMouseMove, false);
+      $el.addEventListener("mouseup", onHandleMouseUp, false);
+      $el.addEventListener("mouseleave", onHandleMouseUp, false);
 
       return false;
     }
