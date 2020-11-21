@@ -9,7 +9,9 @@ export const float = {
   namespaced: true,
   state: {
     floats: [
-      { id: 1, x: 100, y: 100, w: 100, h: 100 }
+      { id: 1, x: 100, y: 100, w: 200, h: 100 },
+      { id: 2, x: 100, y: 100, w: 200, h: 100 },
+      { id: 3, x: 100, y: 100, w: 200, h: 100 }
       // { id: 2, x: 0, y: 0, w: 100, h: 100 },
       // { id: 3, x: 0, y: 0, w: 100, h: 100 }
     ]
