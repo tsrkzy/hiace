@@ -7,21 +7,29 @@
 
 <template>
   <div :style="floatStyle">
-    <!-- scale horizontal / vertical -->
-    <div :style="eHandleStyle">e</div>
-    <div :style="sHandleStyle">s</div>
-    <div :style="wHandleStyle">w</div>
     <div
-      :id="`handle_${floatId}`"
+      :id="`move_handle_${floatId}`"
       :style="handleStyle"
       @mousedown="onHandleMouseDown($event)"
     >
       handle
-      <div v-if="dragged" :style="dragStyle"></div>
+      <div v-if="dragMove" :style="dragStyle"></div>
     </div>
     <!-- scale diagonal -->
-    <div :style="seHandleStyle">se</div>
-    <div :style="swHandleStyle">sw</div>
+    <div
+      :id="`scale_se_handle_${floatId}`"
+      :style="seHandleStyle"
+      @mousedown="onScaleMouseDown($event, 'se')"
+    >
+      <div v-if="scaleSe" :style="scaleStyle"></div>
+    </div>
+    <div
+      :id="`scale_sw_handle_${floatId}`"
+      :style="swHandleStyle"
+      @mousedown="onScaleMouseDown($event, 'sw')"
+    >
+      <div v-if="scaleSw" :style="scaleStyle"></div>
+    </div>
   </div>
 </template>
 
@@ -33,7 +41,9 @@ export default {
   },
   data() {
     return {
-      dragged: false
+      dragMove: false,
+      scaleSe: false,
+      scaleSw: false
     };
   },
   methods: {
@@ -44,9 +54,9 @@ export default {
 
       const downX = e.clientX;
       const downY = e.clientY;
-      this.dragged = true;
+      this.dragMove = true;
 
-      const $el = document.getElementById(`handle_${this.floatId}`);
+      const $el = document.getElementById(`move_handle_${this.floatId}`);
 
       const onHandleMouseMove = e => {
         e.stopPropagation();
@@ -59,7 +69,65 @@ export default {
 
       const onHandleMouseUp = async e => {
         e.stopPropagation();
-        this.dragged = false;
+        this.dragMove = false;
+        $el.removeEventListener("mousemove", onHandleMouseMove);
+        $el.removeEventListener("mouseup", onHandleMouseUp);
+        $el.removeEventListener("mouseleave", onHandleMouseUp);
+      };
+
+      $el.addEventListener("mousemove", onHandleMouseMove, false);
+      $el.addEventListener("mouseup", onHandleMouseUp, false);
+      $el.addEventListener("mouseleave", onHandleMouseUp, false);
+
+      return false;
+    },
+    onScaleMouseDown(e, direction = "sw") {
+      console.log("Float.onScaleMouseDown", direction); // @DELETEME
+      const isSw = direction === "sw";
+      const isSe = direction === "se";
+
+      e.stopPropagation();
+      const { x: x0, y: y0, w: w0, h: h0 } = this.float;
+
+      const downX = e.clientX;
+      const downY = e.clientY;
+      this.scaleSw = isSw;
+      this.scaleSe = isSe;
+
+      const $el = document.getElementById(
+        `scale_${direction}_handle_${this.floatId}`
+      );
+
+      const onHandleMouseMove = e => {
+        e.stopPropagation();
+        const dx = e.clientX - downX;
+        const dy = e.clientY - downY;
+        /* 最小幅または最小高さを下回る場合は、最小幅または最小高さをセット */
+        const _w = isSe ? w0 + dx : w0 - dx;
+        const _h = h0 + dy;
+
+        const tooSmallW = _w < 200;
+        const tooSmallH = _h < 100;
+
+        /* swの場合はxとwを変更、seの場合はwのみ */
+        const _x = isSe ? x0 : x0 + dx;
+        const _y = y0;
+
+        const w = tooSmallW ? 200 : _w;
+        const h = tooSmallH ? 100 : _h;
+
+        const x = tooSmallW ? x0 : _x;
+        const y = tooSmallH ? y0 : _y;
+
+        this.$store.dispatch("float/scale", { id: this.floatId, w, h });
+        this.$store.dispatch("float/move", { id: this.floatId, x, y });
+      };
+
+      const onHandleMouseUp = async e => {
+        console.log("Float.onHandleMouseUp"); // @DELETEME
+        e.stopPropagation();
+        this.scaleSw = false;
+        this.scaleSe = false;
         $el.removeEventListener("mousemove", onHandleMouseMove);
         $el.removeEventListener("mouseup", onHandleMouseUp);
         $el.removeEventListener("mouseleave", onHandleMouseUp);
@@ -95,20 +163,36 @@ export default {
         left: 0,
         width: "100%",
         height: "2.0em",
-        backgroundColor: "lightgray"
+        backgroundColor: "lightgray",
+        cursor: "move"
       };
     },
     dragStyle() {
       const { w = 0, h = 0 } = this.float;
-      const a = 1000;
+      const a = 3000;
       return {
         border: "1px red dashed",
-        backgroundColor: "salmon",
+        backgroundColor: "transparent",
         width: `${a + w}px`,
         height: `${a + h}px`,
         position: "absolute",
         left: `${-a / 2}px`,
-        top: `${-a / 2}px`
+        top: `${-a / 2}px`,
+        cursor: "move"
+      };
+    },
+    scaleStyle() {
+      const { w = 0, h = 0 } = this.float;
+      const a = 3000;
+      return {
+        border: "1px red dashed",
+        backgroundColor: "transparent",
+        width: `${a + w}px`,
+        height: `${a + h}px`,
+        position: "absolute",
+        left: `${-a / 2}px`,
+        top: `${-a / 2}px`,
+        cursor: "grabbing"
       };
     },
     seHandleStyle() {
@@ -118,7 +202,8 @@ export default {
         height: "10px",
         position: "absolute",
         bottom: 0,
-        right: 0
+        right: 0,
+        cursor: "nwse-resize"
       };
     },
     swHandleStyle() {
@@ -128,37 +213,8 @@ export default {
         height: "10px",
         position: "absolute",
         bottom: 0,
-        left: 0
-      };
-    },
-    eHandleStyle() {
-      return {
-        backgroundColor: "blue",
-        width: "10px",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        right: 0
-      };
-    },
-    sHandleStyle() {
-      return {
-        backgroundColor: "blue",
-        width: "100%",
-        height: "10px",
-        position: "absolute",
-        bottom: 0,
-        left: 0
-      };
-    },
-    wHandleStyle() {
-      return {
-        backgroundColor: "blue",
-        width: "10px",
-        height: "100%",
-        position: "absolute",
-        bottom: 0,
-        left: 0
+        left: 0,
+        cursor: "nesw-resize"
       };
     }
   }
