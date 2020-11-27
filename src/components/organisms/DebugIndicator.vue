@@ -30,6 +30,7 @@
       </ul>
       <pre>{{ boards }}</pre>
     </details>
+    <h5>imageSelect</h5>
     {{ imageSelect || "no image" }}
     <details v-if="joined">
       <summary>Images</summary>
@@ -142,6 +143,18 @@
     {{ characterSelect }}
     <details v-if="characters">
       <summary>character.info</summary>
+      <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
+      <ul>
+        <li :key="c.id" v-for="c in characters">
+          {{ c.id }}
+          <ul>
+            <li :key="a.id" v-for="a in c.aliases">{{ a.id }}, {{ a.name }}</li>
+          </ul>
+          <ha-button @click="onClickCreateAliasToCharacter(c.id)"
+            >ADD ALIAS</ha-button
+          >
+        </li>
+      </ul>
       <pre>      {{ characters }}</pre>
     </details>
     <details v-if="joined">
@@ -171,8 +184,10 @@
 </template>
 
 <script>
+import { FSAlias } from "@/collections/Alias";
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
@@ -351,6 +366,40 @@ export default {
       const boardId = this.activeBoard;
       const imageId = this.imageSelect;
       await FSMap.Create({ userId, roomId, boardId, imageId });
+    },
+    async onClickCreateMyCharacter() {
+      const { id: userId, name: userName } = this.$store.getters["auth/user"];
+      const roomId = this.$store.getters["room/info"].id;
+      const { imageSelect } = this;
+
+      const t = Date.now() % 1000;
+
+      const c = {
+        owner: userId,
+        name: `${userName}_c${t}`,
+        roomId,
+        imageId: imageSelect
+      };
+      await FSCharacter.Create(c);
+    },
+    async onClickCreateAliasToCharacter(characterId) {
+      console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
+      const character = this.$store.getters["character/tree"][characterId];
+
+      const roomId = this.$store.getters["room/info"].id;
+      const imageId = this.imageSelect;
+      const t = Date.now() % 1000;
+      const name = `${character.name}_a${t}`;
+      const position = 1;
+      const a = {
+        roomId,
+        characterId,
+        imageId,
+        name,
+        position
+      };
+
+      await FSAlias.Create(a);
     },
     async onClickCreatePawn() {
       const userId = this.user.id;

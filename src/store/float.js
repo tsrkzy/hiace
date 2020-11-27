@@ -11,33 +11,43 @@ export const float = {
     floats: [
       {
         id: 1,
-        show: true,
+        show: false,
         contentId: 1,
-        contentTitle: "content_1",
+        contentTitle: "character list",
         x: 100,
         y: 100,
-        w: 200,
-        h: 100
+        w: 300,
+        h: 200
       },
       {
         id: 2,
-        show: true,
+        show: false,
         contentId: 2,
-        contentTitle: "content_2",
+        contentTitle: "board list",
         x: 100,
         y: 100,
-        w: 200,
-        h: 100
+        w: 300,
+        h: 200
       },
       {
         id: 3,
         show: true,
         contentId: 3,
-        contentTitle: "content_3",
+        contentTitle: "chat list",
         x: 100,
         y: 100,
-        w: 200,
-        h: 100
+        w: 300,
+        h: 200
+      },
+      {
+        id: 4,
+        show: true,
+        contentId: 3,
+        contentTitle: "chat list",
+        x: 100,
+        y: 100,
+        w: 300,
+        h: 200
       }
       // { id: 2, x: 0, y: 0, w: 100, h: 100 },
       // { id: 3, x: 0, y: 0, w: 100, h: 100 }

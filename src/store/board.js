@@ -18,6 +18,20 @@ export const board = {
     info(state) {
       return state.boards;
     },
+    divisions(state, getters, rootState, rootGetters) {
+      const boards = state.boards;
+      const mapList = rootGetters["map/info"];
+      const pawnList = rootGetters["pawn/info"];
+      const divisions = [];
+      for (let i = 0; i < boards.length; i++) {
+        const b = boards[i];
+        const pawns = pawnList.filter(p => p.board === b.id);
+        const maps = mapList.filter(m => m.board === b.id);
+        divisions.push({ id: b.id, pawns, maps });
+      }
+
+      return divisions;
+    },
     active(state, getters, rootStore, rootGetters) {
       const { activeBoard } = rootGetters["room/info"];
       if (!activeBoard) {

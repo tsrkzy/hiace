@@ -129,15 +129,15 @@ export default {
         const _w = isSe ? w0 + dx : w0 - dx;
         const _h = h0 + dy;
 
-        const tooSmallW = _w < 200;
-        const tooSmallH = _h < 100;
+        const tooSmallW = _w < 300;
+        const tooSmallH = _h < 200;
 
         /* swの場合はxとwを変更、seの場合はwのみ */
         const _x = isSe ? x0 : x0 + dx;
         const _y = y0;
 
-        const w = tooSmallW ? 200 : _w;
-        const h = tooSmallH ? 100 : _h;
+        const w = tooSmallW ? 300 : _w;
+        const h = tooSmallH ? 200 : _h;
 
         const x = Math.max(0, tooSmallW ? x0 : _x);
         const y = Math.max(0, tooSmallH ? y0 : _y);

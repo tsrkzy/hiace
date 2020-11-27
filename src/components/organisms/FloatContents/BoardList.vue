@@ -6,30 +6,34 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div>
-    <float v-for="f in floats" :key="f.id" :float-id="f.id">
-      <template #content>
-        <float-content
-          :float-id="f.id"
-          :content-id="f.contentId"
-        ></float-content>
-      </template>
-    </float>
+  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+    <ul>
+      <li v-for="b in boardItems" :key="b.id">
+        <span>Board: {{ b.id }}</span>
+        <ol>
+          <li v-for="m in b.maps" :key="m.id">Map: {{ m.id }}</li>
+        </ol>
+        <ol>
+          <li v-for="p in b.pawns" :key="p.id">Pawn: {{ p.id }}</li>
+        </ol>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import Float from "@/components/organisms/Float";
-import FloatContent from "@/components/organisms/FloatContent";
 export default {
-  name: "FloatGroup",
-  components: { FloatContent, Float },
+  name: "BoardList",
   computed: {
-    floats() {
-      return this.$store.getters["float/info"];
+    boardItems() {
+      return this.$store.getters["board/divisions"];
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+li {
+  list-style: none;
+}
+</style>

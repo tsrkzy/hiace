@@ -85,7 +85,7 @@ export default {
         .then(() => {
           FSUser.Ping(this.user.id);
         })
-        .catch();
+        .catch(() => {});
     }
   }
 };

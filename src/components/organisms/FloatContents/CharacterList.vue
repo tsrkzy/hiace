@@ -7,26 +7,26 @@
 
 <template>
   <div>
-    <float v-for="f in floats" :key="f.id" :float-id="f.id">
-      <template #content>
-        <float-content
-          :float-id="f.id"
-          :content-id="f.contentId"
-        ></float-content>
-      </template>
-    </float>
+    <ul>
+      <li v-for="c in characterItems" :key="c.id">
+        <span>{{ c.name }}</span
+        ><ha-button>edit</ha-button>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import Float from "@/components/organisms/Float";
-import FloatContent from "@/components/organisms/FloatContent";
+import HaButton from "@/components/atoms/HaButton";
 export default {
-  name: "FloatGroup",
-  components: { FloatContent, Float },
+  name: "CharacterList",
+  components: { HaButton },
   computed: {
-    floats() {
-      return this.$store.getters["float/info"];
+    characterItems() {
+      return this.$store.getters["character/info"].map(c => ({
+        id: c.id,
+        name: c.name
+      }));
     }
   }
 };
