@@ -113,6 +113,13 @@ export const float = {
   getters: {
     info(state) {
       return state.floats;
+    },
+    top(state) {
+      const { floats = [] } = state;
+      if (floats.length === 0) {
+        return null;
+      }
+      return floats[floats.length - 1];
     }
   }
 };

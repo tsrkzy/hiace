@@ -9,18 +9,26 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <div
       :id="`chat-list--scroll-parent__${floatId}`"
-      style="width: 100%;height: calc( 100% - 60px );background-color: tan; overflow: scroll;"
+      style="width: 100%;height: calc( 100% - 60px );background-color: tan; overflow-y: scroll;overflow-x: hidden;"
     >
-      <ol :id="`chat-list--scroll-content__${floatId}`" style="margin:0;">
+      <ol
+        :id="`chat-list--scroll-content__${floatId}`"
+        style="margin:0;padding: 0;"
+      >
         <li
           v-for="c of chatItems"
           :key="c.id"
-          style="margin: 0;    word-break: break-all;
-    white-space: nowrap;"
+          style="margin: 0;    word-break: break-word;"
         >
-          ({{ c.channel || "none" }}) {{ c.character || userName
-          }}{{ c.alias ? `(${c.alias})` : "" }}:
-          {{ c.type === "DICE" ? c.value.result : c.value.text }}
+          <span
+            >({{ c.channel || "none" }}) {{ c.character || userName
+            }}{{ c.alias ? `(${c.alias})` : "" }}:
+            {{
+              c.type === "DICE"
+                ? c.value.result
+                : c.value.text.replace("\n", "\\n") /* @TODO */
+            }}</span
+          >
         </li>
       </ol>
     </div>
@@ -31,7 +39,13 @@
       </ha-select>
       <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
       </ha-select>
-      <ha-input-form @keydown="onKeydown" v-model="chatText"></ha-input-form>
+      <ha-textarea
+        @keydown="onKeydown"
+        v-model="chatText"
+        rows="2"
+        :resizeable="false"
+        placeholder="enter: send / shift+enter: new line"
+      ></ha-textarea>
       <ha-button @click="sendChat">send</ha-button>
     </div>
   </div>
@@ -42,8 +56,8 @@ import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
-import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
+import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Throttle } from "@/scripts/Throttle";
@@ -51,7 +65,12 @@ import { Throttle } from "@/scripts/Throttle";
 const throttle = new Throttle(1000);
 export default {
   name: "ChatList",
-  components: { HaButton, HaInputForm, HaSelect, CharacterSwitcher },
+  components: {
+    HaTextarea,
+    HaButton,
+    HaSelect,
+    CharacterSwitcher
+  },
   props: {
     floatId: {
       type: Number,
@@ -127,8 +146,16 @@ export default {
         }
       };
       await FSChat.Chat(c, this.diceSystem);
+
+      this.chatText = "";
     },
-    onKeydown() {
+    async onKeydown(e) {
+      const { code, isComposing, shiftKey } = e;
+      if (!isComposing && !shiftKey && code.toLowerCase() === "enter") {
+        /* 変換中でない場合のEnter */
+        await this.sendChat();
+      }
+
       throttle
         .do()
         .then(() => {

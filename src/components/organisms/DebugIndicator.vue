@@ -1,6 +1,6 @@
 <template>
   <div
-    style="height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
+    style="width:40vw;height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
     @contextmenu="onContextmenu"
   >
     <ha-button @click="onClickSmoke">smoke</ha-button>

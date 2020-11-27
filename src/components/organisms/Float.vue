@@ -12,7 +12,7 @@
       class="move-handle"
       @mousedown="onHandleMouseDown($event)"
     >
-      <span>{{ float.contentTitle }}</span>
+      <span>{{ top ? "*" : "" }}{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
     </div>
     <button class="button__close" @click="onClickClose($event)">-</button>
@@ -31,6 +31,11 @@
     >
       <div v-if="scaleSw" class="scale-hit-box__sw"></div>
     </div>
+    <div
+      v-if="!top"
+      @click="onClickShroud"
+      style="background-color: rgba(0,0,0,0.5);position: absolute;top: 0;left:0;width: 100%;height: 100%;"
+    ></div>
     <div class="content-slot">
       <slot name="content">failed to load content: {{ floatId }}</slot>
     </div>
@@ -48,6 +53,9 @@ export default {
       dragMove: false,
       scaleSe: false,
       scaleSw: false,
+
+      /* originの座標はstoreで管理する。
+       * transition -- インタラクション中の座標はコンポーネントで保持し、originより優先して読み込む */
       xt: null,
       yt: null,
       wt: null,
@@ -55,15 +63,22 @@ export default {
     };
   },
   methods: {
+    async onClickShroud() {
+      await this.$store.dispatch("float/pop", { id: this.floatId });
+    },
     async onClickClose(e) {
       e.stopPropagation();
-      this.$store.dispatch("float/close", { id: this.floatId });
+      await this.$store.dispatch("float/close", { id: this.floatId });
     },
     async onHandleMouseDown(e) {
       console.log("FloatGroup.onHandleMouseDown"); // @DELETEME
       e.stopPropagation();
       await this.$store.dispatch("float/pop", { id: this.floatId });
       const { x: x0, y: y0 } = this.float;
+
+      /* copy origin to transition */
+      this.xt = x0;
+      this.yt = y0;
 
       const downX = e.clientX;
       const downY = e.clientY;
@@ -111,6 +126,12 @@ export default {
       e.stopPropagation();
       await this.$store.dispatch("float/pop", { id: this.floatId });
       const { x: x0, y: y0, w: w0, h: h0 } = this.float;
+
+      /* copy origin to transition */
+      this.xt = x0;
+      this.yt = y0;
+      this.wt = w0;
+      this.ht = h0;
 
       const downX = e.clientX;
       const downY = e.clientY;
@@ -183,6 +204,9 @@ export default {
   computed: {
     float() {
       return this.$store.getters["float/info"].find(f => f.id === this.floatId);
+    },
+    top() {
+      return this.$store.getters["float/top"]?.id === this.floatId;
     },
     floatStyle() {
       const { xt, yt, wt, ht } = this;
