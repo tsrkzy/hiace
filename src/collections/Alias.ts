@@ -1,11 +1,30 @@
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 
 export const ALIAS_NOT_SELECTED = "ALIAS_NOT_SELECTED";
 
+type TAlias = {
+  id: string;
+  image?: string;
+};
+
 export class FSAlias {
   static unsubscribeMap = new Map();
+
+  static async GetById({ id }: { id: string }): Promise<TAlias | null> {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("alias")
+      .doc(id)
+      .get();
+    if (!docRef.exists) {
+      return null;
+    }
+    const alias = docRef.data();
+    return { id, ...alias };
+  }
 
   static async Create(params: {
     roomId: string;
@@ -21,10 +40,11 @@ export class FSAlias {
       name,
       position = 0
     } = params;
+
     const alias = {
       room,
       character,
-      image,
+      image: image ?? DEFAULT_CHARACTER_IMAGE,
       name,
       position
     };

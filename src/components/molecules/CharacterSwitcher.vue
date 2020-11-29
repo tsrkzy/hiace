@@ -30,9 +30,6 @@ export default {
   name: "CharacterSwitcher",
   components: { HaSelect },
   computed: {
-    characters() {
-      return this.$store.getters["character/tree"];
-    },
     characterItems() {
       return this.$store.getters["character/mine"].map(c => ({
         value: c.id,
@@ -45,11 +42,13 @@ export default {
         return [];
       }
 
-      const character = this.characters[characterId];
-      const { aliases = {} } = character;
-      return Object.entries(aliases).map(([id, a]) => {
-        return { value: id, text: a.name };
-      });
+      const aliases = this.$store.getters["alias/info"].filter(
+        a => a.character === characterId
+      );
+      return aliases.map(a => ({
+        value: a.id,
+        text: a.name
+      }));
     },
     userName() {
       return this.$store.getters["auth/user"].name;
@@ -76,10 +75,10 @@ export default {
         return false;
       }
 
-      const character = this.characters[characterId];
-      const { activeAlias } = character;
+      const { activeAlias } = this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
 
-      console.log("activeAlias", activeAlias); // @DELETEME
       this.aliasId = activeAlias;
     },
     async onChangeAliasHandler() {

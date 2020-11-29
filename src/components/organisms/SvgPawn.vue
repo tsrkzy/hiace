@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 
@@ -53,9 +54,10 @@ export default {
       return false;
     }
 
-    const { image, transform } = await FSPawn.GetById({
+    const { character, transform } = await FSPawn.GetById({
       id: this.pawnId
     });
+    const image = await FSCharacter.GetAliasImage(character);
 
     this.transform = transform;
 

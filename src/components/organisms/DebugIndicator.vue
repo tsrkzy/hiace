@@ -384,7 +384,9 @@ export default {
     },
     async onClickCreateAliasToCharacter(characterId) {
       console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
-      const character = this.$store.getters["character/tree"][characterId];
+      const character = this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
 
       const roomId = this.$store.getters["room/info"].id;
       const imageId = this.imageSelect;

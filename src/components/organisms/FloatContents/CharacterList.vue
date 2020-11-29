@@ -16,6 +16,9 @@
         <ul>
           <li :key="a.id" v-for="a in item.aliases">
             <span>{{ a.name }}({{ a.id }})</span>
+            <ha-button @click="onClickActivateAlias(item.character.id, a.id)"
+              >ACTIVATE</ha-button
+            >
           </li>
         </ul>
         <ul>
@@ -23,7 +26,7 @@
             <span>{{ p.id }} on ({{ p.transform }}) / {{ p.board }}</span>
           </li>
         </ul>
-        <ha-button @click="onClickCreateAliasToCharacter(item.characterId)"
+        <ha-button @click="onClickCreateAliasToCharacter(item.id)"
           >ADD ALIAS(→ OPEN ADD ALIAS WINDOW)
         </ha-button>
       </li>
@@ -109,7 +112,9 @@ export default {
     },
     async onClickCreateAliasToCharacter(characterId) {
       console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
-      const character = this.$store.getters["character/tree"][characterId];
+      const character = this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
 
       const roomId = this.$store.getters["room/info"].id;
       const imageId = this.imageSelect;
@@ -125,6 +130,9 @@ export default {
       };
 
       await FSAlias.Create(a);
+    },
+    async onClickActivateAlias(characterId, aliasId) {
+      await FSCharacter.SetActiveAlias(characterId, aliasId);
     }
   }
 };

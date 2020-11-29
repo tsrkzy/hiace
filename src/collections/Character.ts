@@ -12,8 +12,28 @@ interface IStats {
   option: object;
 }
 
+type TCharacter = {
+  id: string;
+  activeAlias?: string;
+};
+
 export class FSCharacter {
   static unsubscribeMap = new Map();
+
+  static async GetById({ id }: { id: string }): Promise<TCharacter | null> {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("character")
+      .doc(id)
+      .get();
+
+    if (!docRef.exists) {
+      return null;
+    }
+    const character = docRef.data();
+
+    return { id, ...character };
+  }
 
   /*
    character_1: {
@@ -85,7 +105,7 @@ export class FSCharacter {
     const alias = await FSAlias.CreateDefault({
       roomId,
       characterId: id,
-      imageId: imageId ?? DEFAULT_CHARACTER_IMAGE
+      imageId: imageId
     });
     await FSCharacter.SetActiveAlias(id, alias.id);
 
@@ -123,6 +143,18 @@ export class FSCharacter {
     const db = firebase.firestore();
     const characterDocRef = db.collection("character").doc(characterId);
     await characterDocRef.update({ activeAlias: aliasId });
+  }
+
+  static async GetAliasImage(characterId: string) {
+    const character = await FSCharacter.GetById({ id: characterId });
+    if (!character || !character.activeAlias) {
+      return null;
+    }
+    const activeAlias = character.activeAlias;
+
+    const alias = await FSAlias.GetById({ id: activeAlias });
+
+    return alias?.image;
   }
 
   static SetListener(roomId: string) {
