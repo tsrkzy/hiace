@@ -40,7 +40,6 @@ export class FSRoom {
     requests: string[];
     kicked: string[];
     users: string[];
-    characters: string[];
     system: string;
     activeBoard: null;
     music: null;
@@ -72,7 +71,6 @@ export class FSRoom {
       requests: [],
       kicked: [],
       users: [owner], // 初期値ownerのみ、追加可能
-      characters: [],
       system,
       activeBoard: null,
       music: null

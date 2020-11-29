@@ -411,12 +411,6 @@ export default {
       const characterId = this.characterSelect;
       await FSPawn.Create({ userId, roomId, boardId, imageId, characterId });
     },
-    async onClickDeletePawn(pawnId) {
-      await FSPawn.Delete(pawnId);
-    },
-    async onClickSelectCharacter(characterId) {
-      this.characterSelect = characterId;
-    },
     async onClickFileUploadHandler(e) {
       const { files = [] } = e.currentTarget;
 

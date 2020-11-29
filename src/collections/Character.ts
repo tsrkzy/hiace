@@ -3,6 +3,7 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
+import { FSPawn } from "@/collections/Pawn";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
@@ -35,26 +36,6 @@ export class FSCharacter {
     return { id, ...character };
   }
 
-  /*
-   character_1: {
-   sys: { version: 1.0, created: "ISO8601" },
-   owner: "user_1", // 作成時に固定
-   pawns: ["pawn_1", "pawn_2"], // character:pawn=1:n
-   name: "夜神月",
-   text: "",
-   activeAlias: "alias_1",
-   aliases: ["alias_1", "alias_2"],
-   showOnInitiative: true,
-   baseStats: [
-   { key: "index", type: "number", value: 0 },
-   { key: "initiative", type: "number", value: 0 },
-   ],
-   stats: [
-   { key: "hp", type: "number", value: 10, max: 20 },
-   { key: "stun", type: "boolean", value: false },
-   ],
-   }
-   */
   static async Create(params: {
     owner: string;
     name: string;
@@ -63,6 +44,7 @@ export class FSCharacter {
     activeAlias: string;
     imageId: string;
     showOnInitiative: boolean;
+    chatPosition: number;
     baseStats: IStats[];
     stats: IStats[];
   }) {
@@ -72,8 +54,9 @@ export class FSCharacter {
       roomId,
       text = "",
       activeAlias = "alias_1",
-      imageId,
+      imageId = DEFAULT_CHARACTER_IMAGE,
       showOnInitiative = true,
+      chatPosition = 1,
       baseStats = [],
       stats = []
     } = params;
@@ -93,6 +76,7 @@ export class FSCharacter {
       text,
       activeAlias,
       showOnInitiative,
+      chatPosition,
       baseStats,
       stats
     };
@@ -105,7 +89,7 @@ export class FSCharacter {
     const alias = await FSAlias.CreateDefault({
       roomId,
       characterId: id,
-      imageId: imageId
+      imageId
     });
     await FSCharacter.SetActiveAlias(id, alias.id);
 
@@ -131,8 +115,11 @@ export class FSCharacter {
       .doc(characterId)
       .delete();
 
+    /* 紐づくAliasも削除 */
+    await FSAlias.DeleteByCharacter(characterId);
+
     /* 紐づくPawnも削除 */
-    // await FSPawn.DeleteByCharacter(characterId);
+    await FSPawn.DeleteByCharacter(characterId);
 
     /* 紐づくChatは？ */
 

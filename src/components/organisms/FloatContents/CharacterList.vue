@@ -8,27 +8,32 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
+    <ha-input-form v-model="characterName"></ha-input-form>
     <ha-select :items="characterItems"></ha-select>
-    <ul>
+    <ul style="padding: 0;">
       <li :key="item.id" v-for="item in characters">
         <span>{{ item.character.name }}({{ item.character.id }})</span>
         <ha-button>EDIT</ha-button>
+        <ha-button @click="onClickDeleteCharacter(item.character.id)"
+          >DELETE</ha-button
+        >
         <ul>
           <li :key="a.id" v-for="a in item.aliases">
-            <span>{{ a.name }}({{ a.id }})</span>
+            <span>a: {{ a.name }}({{ a.id }})</span>
             <ha-button @click="onClickActivateAlias(item.character.id, a.id)"
               >ACTIVATE</ha-button
             >
           </li>
         </ul>
-        <ul>
-          <li :key="p.id" v-for="p in item.pawns">
-            <span>{{ p.id }} on ({{ p.transform }}) / {{ p.board }}</span>
-          </li>
-        </ul>
         <ha-button @click="onClickCreateAliasToCharacter(item.id)"
           >ADD ALIAS(→ OPEN ADD ALIAS WINDOW)
         </ha-button>
+        <ul>
+          <li :key="p.id" v-for="p in item.pawns">
+            <span>p: {{ p.id }}</span
+            ><ha-button @click="onClickDeletePawn(p.id)">DELETE</ha-button>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>
@@ -37,15 +42,17 @@
 <script>
 import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
+import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
+import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 
 export default {
   name: "CharacterList",
-  components: { HaSelect, HaButton },
+  components: { HaInputForm, HaSelect, HaButton },
   data() {
     return {
-      imageSelect: null
+      characterName: ""
     };
   },
   computed: {
@@ -96,19 +103,22 @@ export default {
   },
   methods: {
     async onClickCreateMyCharacter() {
+      const characterName = this.characterName;
       const { id: userId, name: userName } = this.$store.getters["auth/user"];
       const roomId = this.$store.getters["room/info"].id;
-      const { imageSelect } = this;
 
       const t = Date.now() % 1000;
 
       const c = {
         owner: userId,
-        name: `${userName}_c${t}`,
+        name: characterName ?? `${userName}_c${t}`,
         roomId,
-        imageId: imageSelect
+        imageId: null
       };
       await FSCharacter.Create(c);
+    },
+    async onClickDeleteCharacter(characterId) {
+      await FSCharacter.Delete(characterId);
     },
     async onClickCreateAliasToCharacter(characterId) {
       console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
@@ -117,14 +127,13 @@ export default {
       );
 
       const roomId = this.$store.getters["room/info"].id;
-      const imageId = this.imageSelect;
       const t = Date.now() % 1000;
       const name = `${character.name}_a${t}`;
       const position = 1;
       const a = {
         roomId,
         characterId,
-        imageId,
+        imageId: null,
         name,
         position
       };
@@ -133,6 +142,9 @@ export default {
     },
     async onClickActivateAlias(characterId, aliasId) {
       await FSCharacter.SetActiveAlias(characterId, aliasId);
+    },
+    async onClickDeletePawn(pawnId) {
+      await FSPawn.Delete(pawnId);
     }
   }
 };

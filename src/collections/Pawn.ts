@@ -104,6 +104,19 @@ export class FSPawn {
     await batch.commit();
   }
 
+  static async DeleteByCharacter(characterId: string) {
+    const db = firebase.firestore();
+    const querySnapshot = await db
+      .collection("pawn")
+      .where("character", "==", characterId)
+      .get();
+
+    const batch = db.batch();
+    querySnapshot.forEach(doc => batch.delete(doc.ref));
+
+    await batch.commit();
+  }
+
   static SetListener(roomId: string) {
     console.log("Pawn.SetListener"); // @DELETEME
     FSPawn.RemoveListener();

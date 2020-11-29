@@ -31,22 +31,19 @@ export class FSAlias {
     characterId: string;
     imageId: string | null;
     name: string;
-    position: Number;
   }) {
     const {
       roomId: room,
       characterId: character,
-      imageId: image,
-      name,
-      position = 0
+      imageId: image = DEFAULT_CHARACTER_IMAGE,
+      name
     } = params;
 
     const alias = {
       room,
       character,
-      image: image ?? DEFAULT_CHARACTER_IMAGE,
-      name,
-      position
+      image,
+      name
     };
     const db = firebase.firestore();
     const docRef = await db.collection("alias").add(alias);
@@ -62,14 +59,25 @@ export class FSAlias {
   }) {
     const { roomId, characterId, imageId } = params;
     const name = "基本";
-    const position = 0;
     return await FSAlias.Create({
       roomId,
       characterId,
       imageId,
-      name,
-      position
+      name
     });
+  }
+
+  static async DeleteByCharacter(characterId: string) {
+    const db = firebase.firestore();
+    const querySnapshot = await db
+      .collection("alias")
+      .where("character", "==", characterId)
+      .get();
+
+    const batch = db.batch();
+    querySnapshot.forEach(doc => batch.delete(doc.ref));
+
+    await batch.commit();
   }
 
   static async SetImageId(aliasId: string, imageId: string) {
