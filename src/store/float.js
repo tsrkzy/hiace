@@ -5,52 +5,16 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+import { FloatContent, IFFloat } from "@/interfaces/IFFloat";
+
 export const float = {
   namespaced: true,
   state: {
     floats: [
-      {
-        id: 1,
-        show: false,
-        contentId: 1,
-        contentTitle: "character list",
-        x: 100,
-        y: 100,
-        w: 300,
-        h: 200
-      },
-      {
-        id: 2,
-        show: false,
-        contentId: 2,
-        contentTitle: "board list",
-        x: 100,
-        y: 100,
-        w: 300,
-        h: 200
-      },
-      {
-        id: 3,
-        show: true,
-        contentId: 3,
-        contentTitle: "chat list",
-        x: 100,
-        y: 100,
-        w: 300,
-        h: 200
-      },
-      {
-        id: 4,
-        show: true,
-        contentId: 3,
-        contentTitle: "chat list",
-        x: 100,
-        y: 100,
-        w: 300,
-        h: 200
-      }
-      // { id: 2, x: 0, y: 0, w: 100, h: 100 },
-      // { id: 3, x: 0, y: 0, w: 100, h: 100 }
+      new IFFloat(FloatContent.CHAT_LIST),
+      new IFFloat(FloatContent.CHAT_LIST),
+      new IFFloat(FloatContent.CHARACTER_LIST, true),
+      new IFFloat(FloatContent.ERROR, true)
     ]
   },
   mutations: {
@@ -82,6 +46,11 @@ export const float = {
       const pop = floats.splice(index, 1);
       state.floats = [].concat(floats, pop);
     },
+    create(state, payload) {
+      const { contentId = 0, show = false } = payload;
+      const float = new IFFloat(contentId, show);
+      state.floats.push(float);
+    },
     setShow(state, payload) {
       const { id, show } = payload;
       console.log("float.setShow", id, show); // @DELETEME
@@ -102,6 +71,9 @@ export const float = {
     },
     pop({ commit }, { id }) {
       commit("pop", { id });
+    },
+    create({ commit }, { contentId, show }) {
+      commit("create", { contentId, show });
     },
     open({ commit }, { id }) {
       commit("setShow", { id, show: true });
