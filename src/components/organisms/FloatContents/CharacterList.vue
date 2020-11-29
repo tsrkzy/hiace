@@ -13,7 +13,9 @@
     <ul style="padding: 0;">
       <li :key="item.id" v-for="item in characters">
         <span>{{ item.character.name }}({{ item.character.id }})</span>
-        <ha-button>EDIT</ha-button>
+        <ha-button @click="onClickEditCharacter(item.character.id)"
+          >EDIT</ha-button
+        >
         <ha-button @click="onClickDeleteCharacter(item.character.id)"
           >DELETE</ha-button
         >
@@ -46,6 +48,7 @@ import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
+import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
 
 export default {
   name: "CharacterList",
@@ -116,6 +119,12 @@ export default {
         imageId: null
       };
       await FSCharacter.Create(c);
+    },
+    async onClickEditCharacter(characterId) {
+      const contentId = CHARACTER_EDIT;
+      const show = true;
+      const args = { characterId };
+      await this.$store.dispatch("float/create", { contentId, show, args });
     },
     async onClickDeleteCharacter(characterId) {
       await FSCharacter.Delete(characterId);

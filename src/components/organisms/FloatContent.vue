@@ -7,28 +7,56 @@
 
 <template>
   <div class="float-content">
-    <character-list :float-id="floatId" v-if="contentId === 1"></character-list>
-    <board-list :float-id="floatId" v-else-if="contentId === 2"></board-list>
-    <chat-list :float-id="floatId" v-else-if="contentId === 3"></chat-list>
-    <div :float-id="floatId" v-else-if="contentId === 4">4</div>
+    <character-list
+      :float-id="floatId"
+      v-if="contentId === CHARACTER_LIST"
+    ></character-list>
+    <character-edit
+      :float-id="floatId"
+      v-else-if="contentId === CHARACTER_EDIT"
+    ></character-edit>
+    <board-list
+      :float-id="floatId"
+      v-else-if="contentId === BOARD_LIST"
+    ></board-list>
+    <chat-list
+      :float-id="floatId"
+      v-else-if="contentId === CHAT_LIST"
+    ></chat-list>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
 
 <script>
 import BoardList from "@/components/organisms/FloatContents/BoardList";
+import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
 import CharacterList from "@/components/organisms/FloatContents/CharacterList";
 import ChatList from "@/components/organisms/FloatContents/ChatList";
+import {
+  CHARACTER_LIST,
+  CHARACTER_EDIT,
+  BOARD_LIST,
+  CHAT_LIST
+} from "@/interfaces/IFFloat";
+
 export default {
   name: "FloatContent",
-  components: { ChatList, BoardList, CharacterList },
+  components: { CharacterEdit, ChatList, BoardList, CharacterList },
+  data() {
+    return {
+      CHARACTER_LIST,
+      CHARACTER_EDIT,
+      BOARD_LIST,
+      CHAT_LIST
+    };
+  },
   props: {
     floatId: {
       type: Number,
       require: true
     },
     contentId: {
-      type: Number,
+      type: String,
       require: true
     }
   }

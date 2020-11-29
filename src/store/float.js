@@ -5,16 +5,21 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { FloatContent, IFFloat } from "@/interfaces/IFFloat";
+import {
+  IFFloat,
+  CHAT_LIST,
+  CHARACTER_LIST,
+  UNSET
+} from "@/interfaces/IFFloat";
 
 export const float = {
   namespaced: true,
   state: {
     floats: [
-      new IFFloat(FloatContent.CHAT_LIST),
-      new IFFloat(FloatContent.CHAT_LIST),
-      new IFFloat(FloatContent.CHARACTER_LIST, true),
-      new IFFloat(FloatContent.ERROR, true)
+      new IFFloat(CHAT_LIST),
+      new IFFloat(CHAT_LIST),
+      new IFFloat(CHARACTER_LIST, true),
+      new IFFloat(UNSET, true)
     ]
   },
   mutations: {
@@ -46,9 +51,16 @@ export const float = {
       const pop = floats.splice(index, 1);
       state.floats = [].concat(floats, pop);
     },
+    sink(state, payload) {
+      const { id } = payload;
+      const floats = state.floats.slice();
+      const index = floats.findIndex(f => f.id === id);
+      const sink = floats.splice(index, 1);
+      state.floats = [].concat(sink, floats);
+    },
     create(state, payload) {
-      const { contentId = 0, show = false } = payload;
-      const float = new IFFloat(contentId, show);
+      const { contentId = UNSET, show = false, args } = payload;
+      const float = new IFFloat(contentId, show, args);
       state.floats.push(float);
     },
     setShow(state, payload) {
@@ -72,14 +84,18 @@ export const float = {
     pop({ commit }, { id }) {
       commit("pop", { id });
     },
-    create({ commit }, { contentId, show }) {
-      commit("create", { contentId, show });
+    sink({ commit }, { id }) {
+      commit("sink", { id });
+    },
+    create({ commit }, { contentId, show, args }) {
+      commit("create", { contentId, show, args });
     },
     open({ commit }, { id }) {
       commit("setShow", { id, show: true });
     },
     close({ commit }, { id }) {
       commit("setShow", { id, show: false });
+      commit("sink", { id });
     }
   },
   getters: {
@@ -88,10 +104,11 @@ export const float = {
     },
     top(state) {
       const { floats = [] } = state;
-      if (floats.length === 0) {
+      const shownFloats = floats.filter(f => f.show);
+      if (shownFloats.length === 0) {
         return null;
       }
-      return floats[floats.length - 1];
+      return shownFloats[shownFloats.length - 1];
     }
   }
 };
