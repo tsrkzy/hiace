@@ -91,6 +91,10 @@ export default {
       a => a.id === activeAlias
     );
 
+    if (!image) {
+      console.warn(`no image on alias: ${activeAlias}`);
+      return false;
+    }
     const { url } = await FSImage.GetById({ id: image });
     this.srcUrl = url;
   },
@@ -115,7 +119,6 @@ export default {
 
       const { url } = await FSImage.GetById({ id: imageId });
       this.srcUrl = url;
-      /* aliasの<img>を更新 コマに反映するためにFSImage.Renew使わないとかも その場合は要一般化 */
     }
   },
   computed: {

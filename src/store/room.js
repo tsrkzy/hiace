@@ -77,6 +77,9 @@ export const room = {
     },
     music(state) {
       return state.room?.music ?? null;
+    },
+    activeBoard(state, getters) {
+      return getters["info"]?.activeBoard;
     }
   },
   modules: {}

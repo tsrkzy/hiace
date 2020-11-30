@@ -46,17 +46,11 @@ export const float = {
     },
     pop(state, payload) {
       const { id } = payload;
-      const floats = state.floats.slice();
-      const index = floats.findIndex(f => f.id === id);
-      const pop = floats.splice(index, 1);
-      state.floats = [].concat(floats, pop);
+      IFFloat.Pop(id);
     },
     sink(state, payload) {
       const { id } = payload;
-      const floats = state.floats.slice();
-      const index = floats.findIndex(f => f.id === id);
-      const sink = floats.splice(index, 1);
-      state.floats = [].concat(sink, floats);
+      IFFloat.Sink(id);
     },
     create(state, payload) {
       const { contentId = UNSET, show = false, args } = payload;
@@ -108,7 +102,7 @@ export const float = {
       if (shownFloats.length === 0) {
         return null;
       }
-      return shownFloats[shownFloats.length - 1];
+      return shownFloats.reduce((a, b) => (a.z > b.z ? a : b));
     }
   }
 };

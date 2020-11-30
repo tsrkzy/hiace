@@ -7,7 +7,13 @@
 
 <template>
   <div>
-    <float v-for="f in floats" :key="f.id" :float-id="f.id">
+    <float
+      class="float"
+      v-for="f in floats"
+      :key="f.id"
+      :float-id="f.id"
+      :style="floatStyle(f)"
+    >
       <template #content>
         <float-content
           :float-id="f.id"
@@ -27,6 +33,13 @@ export default {
   computed: {
     floats() {
       return this.$store.getters["float/info"];
+    }
+  },
+  methods: {
+    floatStyle(f) {
+      return {
+        zIndex: f.z
+      };
     }
   }
 };

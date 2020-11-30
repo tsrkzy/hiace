@@ -19,6 +19,7 @@
         <ha-button @click="onClickDeleteCharacter(item.character.id)"
           >DELETE</ha-button
         >
+        <ha-button @click="onClickAddPawn(item.character.id)">+PAWN</ha-button>
         <ul>
           <li :key="a.id" v-for="a in item.aliases">
             <span
@@ -131,6 +132,25 @@ export default {
     },
     async onClickDeleteCharacter(characterId) {
       await FSCharacter.Delete(characterId);
+    },
+    async onClickAddPawn(characterId) {
+      console.log("CharacterList.onClickAddPawn", characterId); // @DELETEME
+      const userId = this.$store.getters["auth/user"].id;
+      const roomId = this.$store.getters["room/info"].id;
+      const boardId = this.$store.getters["room/activeBoard"];
+      const { activeAlias } = this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
+      const { image } = this.$store.getters["alias/info"].find(
+        a => a.id === activeAlias
+      );
+      await FSPawn.Create({
+        userId,
+        roomId,
+        boardId,
+        imageId: image,
+        characterId
+      });
     },
     async onClickCreateAliasToCharacter(characterId) {
       console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME

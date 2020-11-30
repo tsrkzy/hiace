@@ -12,6 +12,7 @@ interface IIFloat {
   contentTitle: string;
   x: number;
   y: number;
+  z: number;
   h: number;
   w: number;
 }
@@ -44,7 +45,8 @@ function title(id: string) {
 }
 
 export class IFFloat implements IIFloat {
-  static Id = 1;
+  static Id: number = 1;
+  static instances: IFFloat[] = [];
 
   id = 0;
   show = false;
@@ -52,6 +54,7 @@ export class IFFloat implements IIFloat {
   contentTitle = "";
   x = 100;
   y = 100;
+  z = 1;
   w = 300;
   h = 200;
   args = null;
@@ -62,10 +65,37 @@ export class IFFloat implements IIFloat {
     this.args = args;
     this.show = show ?? false;
     IFFloat.AssignId(this);
+    IFFloat.instances.push(this);
   }
 
   static AssignId(f: IFFloat) {
     f.id = IFFloat.Id;
     IFFloat.Id++;
+  }
+
+  static Pop(floatId: number) {
+    const { instances = [] } = IFFloat;
+    const MAX_Z = instances.length;
+    const floatList = instances.slice().sort((a, b) =>
+      /* zの降順かつ対象を最前列に */
+      a.id === floatId ? -1 : b.id === floatId ? 1 : a.z < b.z ? 1 : -1
+    );
+    for (let i = 0; i < floatList.length; i++) {
+      const f = floatList[i];
+      f.z = MAX_Z - i;
+    }
+  }
+
+  static Sink(floatId: number) {
+    const { instances = [] } = IFFloat;
+    const MAX_Z = instances.length;
+    const floatList = instances.slice().sort((a, b) =>
+      /* zの降順かつ対象を最後尾に */
+      a.id === floatId ? 1 : b.id === floatId ? -1 : a.z < b.z ? 1 : -1
+    );
+    for (let i = 0; i < floatList.length; i++) {
+      const f = floatList[i];
+      f.z = MAX_Z - i;
+    }
   }
 }
