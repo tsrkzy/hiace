@@ -3,6 +3,7 @@
     <textarea
       :value="value"
       @input="$emit('input', $event.currentTarget.value)"
+      @change="$emit('change', $event.currentTarget.value)"
       @keydown="$emit('keydown', $event)"
       :placeholder="placeholder"
       :rows="rows"

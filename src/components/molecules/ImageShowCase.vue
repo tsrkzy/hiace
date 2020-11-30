@@ -7,8 +7,9 @@
 
 <template>
   <div>
+    {{ imageId }}
     <label
-      v-for="img of imageItems"
+      v-for="img in imageItems"
       :key="img.id"
       style="display: inline-block;"
     >
@@ -20,11 +21,12 @@
         @change="onChangeSelectImage"
       />
       <img
+        @click="onClickImage(img.id)"
         :alt="img.id"
         :src="img.url"
         :style="{
-          maxWidth: '24px',
-          maxHeight: '24px',
+          maxWidth: '64px',
+          maxHeight: '64px',
           border: imageId === img.id ? '1px dashed red' : 'none'
         }"
       />
@@ -46,6 +48,9 @@ export default {
     onChangeSelectImage(e) {
       const { value } = e.currentTarget;
       this.$emit("selectImage", value);
+    },
+    onClickImage(imageId) {
+      this.$emit("selectImage", imageId);
     }
   },
   computed: {

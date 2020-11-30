@@ -83,7 +83,7 @@ export class FSAlias {
   static async SetImageId(aliasId: string, imageId: string) {
     const db = firebase.firestore();
     const aliasDocRef = db.collection("alias").doc(aliasId);
-    await aliasDocRef.update({ imageId });
+    await aliasDocRef.update({ image: imageId });
   }
 
   static SetListener(roomId: string) {
