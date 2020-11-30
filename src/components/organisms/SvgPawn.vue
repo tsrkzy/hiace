@@ -84,16 +84,17 @@ export default {
   computed: {
     image() {
       const id = this.imageId;
-      return this.$store.getters["image/info"].find(img => img.id === id);
+      return this.$store.getters["image/info"].find(img => img.id === id) || {};
     },
     pawn() {
       const id = this.pawnId;
-      return this.$store.getters["pawn/info"].find(p => p.id === id);
+      return this.$store.getters["pawn/info"].find(p => p.id === id) || {};
     },
     character() {
       const { character: characterId } = this.pawn;
-      return this.$store.getters["character/info"].find(
-        c => c.id === characterId
+      return (
+        this.$store.getters["character/info"].find(c => c.id === characterId) ||
+        {}
       );
     },
     pawnSize() {
@@ -107,7 +108,11 @@ export default {
       );
     },
     imgSrc() {
-      const { image = "" } = this.alias;
+      const { image } = this.alias;
+      if (!image) {
+        return null;
+      }
+
       const { url = "" } = this.$store.getters["image/info"].find(
         i => i.id === image
       );

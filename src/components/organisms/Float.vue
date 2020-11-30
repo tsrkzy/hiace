@@ -15,7 +15,13 @@
       <span>{{ top ? "*" : "" }}{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
     </div>
-    <button class="button__close" @click="onClickClose($event)">-</button>
+    <button
+      v-if="!dragMove"
+      class="button__close"
+      @click="onClickClose($event)"
+    >
+      -
+    </button>
     <!-- scale diagonal -->
     <div
       :id="`scale_se_handle_${floatId}`"
