@@ -18,8 +18,15 @@
     <filter :id="`shadow_filter_${pawnId}`">
       <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
     </filter>
-    <text>{{ imageId }}, {{ width }}, {{ height }}</text>
-    <image v-if="!shadow" :width="width" :height="height" :href="href"></image>
+    <text
+      >{{ character.name }} - {{ alias.name }}, {{ width }}, {{ height }}</text
+    >
+    <image
+      v-if="!shadow"
+      :width="width"
+      :height="height"
+      :href="imgSrc"
+    ></image>
     <rect
       :width="width"
       :height="height"
@@ -82,7 +89,26 @@ export default {
     },
     pawn() {
       const id = this.pawnId;
-      return this.$store.getters["pawn/info"].find(m => m.id === id);
+      return this.$store.getters["pawn/info"].find(p => p.id === id);
+    },
+    character() {
+      const { character: characterId } = this.pawn;
+      return this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
+    },
+    alias() {
+      const { activeAlias = "" } = this.character;
+      return (
+        this.$store.getters["alias/info"].find(a => a.id === activeAlias) || {}
+      );
+    },
+    imgSrc() {
+      const { image = "" } = this.alias;
+      const { url = "" } = this.$store.getters["image/info"].find(
+        i => i.id === image
+      );
+      return url || this.href;
     },
     activeBoard() {
       return this.$store.getters["board/active"];

@@ -21,7 +21,10 @@
         >
         <ul>
           <li :key="a.id" v-for="a in item.aliases">
-            <span>a: {{ a.name }}({{ a.id }})</span>
+            <span
+              >a{{ a.id === item.character.activeAlias ? "*" : "" }}:
+              {{ a.name }}({{ a.id }})</span
+            >
             <ha-button @click="onClickActivateAlias(item.character.id, a.id)"
               >ACTIVATE</ha-button
             >

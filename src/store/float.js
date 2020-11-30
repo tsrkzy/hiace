@@ -17,9 +17,9 @@ export const float = {
   state: {
     floats: [
       new IFFloat(CHAT_LIST),
-      new IFFloat(CHAT_LIST),
       new IFFloat(CHARACTER_LIST, true),
-      new IFFloat(UNSET, true)
+      new IFFloat(CHAT_LIST, true)
+      // new IFFloat(UNSET, true)
     ]
   },
   mutations: {
