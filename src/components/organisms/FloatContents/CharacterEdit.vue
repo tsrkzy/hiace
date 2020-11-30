@@ -26,6 +26,15 @@
       ></ha-textarea>
     </div>
     <div>
+      <ha-select
+        :items="pawnSizeItems"
+        v-model="pawnSizeStr"
+        @change="onChangePawnSize"
+      >
+        <option disabled :value="null">select pawn size</option>
+      </ha-select>
+    </div>
+    <div>
       <ha-select :items="aliasItems" v-model="aliasId" @change="onChangeAlias">
         <option disabled :value="null">select alias</option>
       </ha-select>
@@ -73,7 +82,8 @@ export default {
       characterId: null,
       imageId: null,
       aliasId: null,
-      srcUrl: null
+      srcUrl: null,
+      pawnSizeStr: "1"
     };
   },
   async created() {
@@ -82,10 +92,11 @@ export default {
     );
     this.characterId = float?.args?.characterId ?? CHARACTER_NOT_SELECTED;
 
-    const { activeAlias } = this.$store.getters["character/info"].find(
-      c => c.id === this.characterId
-    );
+    const { activeAlias, pawnSize } = this.$store.getters[
+      "character/info"
+    ].find(c => c.id === this.characterId);
     this.aliasId = activeAlias;
+    this.pawnSizeStr = `${pawnSize}`;
 
     const { image } = this.$store.getters["alias/info"].find(
       a => a.id === activeAlias
@@ -105,6 +116,11 @@ export default {
     onCharacterTextInput(value) {
       FSCharacter.Update(this.characterId, { text: value });
     },
+    onChangePawnSize(pawnSizeStr) {
+      FSCharacter.Update(this.characterId, {
+        pawnSize: parseInt(pawnSizeStr, 10)
+      });
+    },
     async onChangeAlias(aliasId) {
       const { image } = this.$store.getters["alias/info"].find(
         a => a.id === aliasId
@@ -123,13 +139,17 @@ export default {
   },
   computed: {
     character() {
-      return this.$store.getters["character/info"].find(
-        c => c.id === this.characterId
+      return (
+        this.$store.getters["character/info"].find(
+          c => c.id === this.characterId
+        ) || {}
       );
     },
     aliases() {
-      return this.$store.getters["alias/info"].filter(
-        a => a.character === this.characterId
+      return (
+        this.$store.getters["alias/info"].filter(
+          a => a.character === this.characterId
+        ) || {}
       );
     },
     aliasItems() {
@@ -139,6 +159,12 @@ export default {
           value: a.id,
           text: a.name
         }));
+    },
+    pawnSizeItems() {
+      const size = Array(10)
+        .fill(0)
+        .map((_, i) => i + 1);
+      return size.map(i => ({ value: `${i}`, text: `x${i}` }));
     }
   }
 };

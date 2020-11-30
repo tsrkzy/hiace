@@ -45,6 +45,7 @@ export class FSCharacter {
     imageId: string;
     showOnInitiative: boolean;
     chatPosition: number;
+    pawnSize: number;
     baseStats: IStats[];
     stats: IStats[];
   }) {
@@ -57,6 +58,7 @@ export class FSCharacter {
       imageId = DEFAULT_CHARACTER_IMAGE,
       showOnInitiative = true,
       chatPosition = 1,
+      pawnSize = 1,
       baseStats = [],
       stats = []
     } = params;
@@ -77,6 +79,7 @@ export class FSCharacter {
       activeAlias,
       showOnInitiative,
       chatPosition,
+      pawnSize,
       baseStats,
       stats
     };

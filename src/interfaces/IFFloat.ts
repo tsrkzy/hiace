@@ -66,6 +66,10 @@ export class IFFloat implements IIFloat {
     this.show = show ?? false;
     IFFloat.AssignId(this);
     IFFloat.instances.push(this);
+    /* 表示状態で作成 → 最前列へ */
+    if (show) {
+      IFFloat.Pop(this.id);
+    }
   }
 
   static AssignId(f: IFFloat) {

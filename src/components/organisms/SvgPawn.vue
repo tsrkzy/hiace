@@ -18,18 +18,17 @@
     <filter :id="`shadow_filter_${pawnId}`">
       <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
     </filter>
-    <text
-      >{{ character.name }} - {{ alias.name }}, {{ width }}, {{ height }}</text
-    >
+    <text>{{ character.name }} - {{ alias.name }}, {{ pawnSize }}</text>
     <image
       v-if="!shadow"
-      :width="width"
-      :height="height"
+      preserveAspectRatio="xMidYMid meet"
+      :width="pawnSize"
+      :height="pawnSize"
       :href="imgSrc"
     ></image>
     <rect
-      :width="width"
-      :height="height"
+      :width="pawnSize"
+      :height="pawnSize"
       stroke="red"
       fill="transparent"
     ></rect>
@@ -37,8 +36,8 @@
       v-if="dragged"
       :x="-1000 / 2"
       :y="-1000 / 2"
-      :width="width + 1000"
-      :height="height + 1000"
+      :width="pawnSize + 1000"
+      :height="pawnSize + 1000"
       stroke="red"
       fill="transparent"
     ></rect>
@@ -96,6 +95,10 @@ export default {
       return this.$store.getters["character/info"].find(
         c => c.id === characterId
       );
+    },
+    pawnSize() {
+      const size = this.character?.pawnSize ?? 1;
+      return 120 * size;
     },
     alias() {
       const { activeAlias = "" } = this.character;
