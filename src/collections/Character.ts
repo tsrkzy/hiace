@@ -124,7 +124,7 @@ export class FSCharacter {
     /* 紐づくPawnも削除 */
     await FSPawn.DeleteByCharacter(characterId);
 
-    /* 紐づくChatは？ */
+    /* 紐づくChat？ */
 
     return docRef;
   }

@@ -26,6 +26,13 @@
       ></ha-textarea>
     </div>
     <div>
+      <ha-checkbox
+        label="show on initiative"
+        v-model="showOnInitiative"
+        @change="onCharacterShowOnInitiative"
+      ></ha-checkbox>
+    </div>
+    <div>
       <ha-select
         :items="pawnSizeItems"
         v-model="pawnSizeStr"
@@ -61,6 +68,7 @@
 import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
@@ -70,7 +78,7 @@ const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
 export default {
   name: "CharacterEdit",
-  components: { HaSelect, ImageShowCase, HaTextarea, HaInputForm },
+  components: { HaCheckbox, HaSelect, ImageShowCase, HaTextarea, HaInputForm },
   props: {
     floatId: {
       type: Number,
@@ -83,7 +91,8 @@ export default {
       imageId: null,
       aliasId: null,
       srcUrl: null,
-      pawnSizeStr: "1"
+      pawnSizeStr: "1",
+      showOnInitiative: false
     };
   },
   async created() {
@@ -92,11 +101,16 @@ export default {
     );
     this.characterId = float?.args?.characterId ?? CHARACTER_NOT_SELECTED;
 
-    const { activeAlias, pawnSize } = this.$store.getters[
-      "character/info"
-    ].find(c => c.id === this.characterId);
+    const {
+      activeAlias,
+      pawnSize = 1,
+      showOnInitiative = false
+    } = this.$store.getters["character/info"].find(
+      c => c.id === this.characterId
+    );
     this.aliasId = activeAlias;
     this.pawnSizeStr = `${pawnSize}`;
+    this.showOnInitiative = showOnInitiative;
 
     const { image } = this.$store.getters["alias/info"].find(
       a => a.id === activeAlias
@@ -111,12 +125,19 @@ export default {
   },
   methods: {
     onCharacterNameInput(value) {
+      console.log("CharacterEdit.onCharacterNameInput", value); // @DELETEME
       FSCharacter.Update(this.characterId, { name: value });
     },
     onCharacterTextInput(value) {
+      console.log("CharacterEdit.onCharacterTextInput", value); // @DELETEME
       FSCharacter.Update(this.characterId, { text: value });
     },
+    onCharacterShowOnInitiative(value) {
+      console.log("CharacterEdit.onCharacterShowOnInitiative", value); // @DELETEME
+      FSCharacter.Update(this.characterId, { showOnInitiative: value });
+    },
     onChangePawnSize(pawnSizeStr) {
+      console.log("CharacterEdit.onChangePawnSize", pawnSizeStr); // @DELETEME
       FSCharacter.Update(this.characterId, {
         pawnSize: parseInt(pawnSizeStr, 10)
       });
