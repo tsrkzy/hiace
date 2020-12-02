@@ -22,6 +22,7 @@ export const CHARACTER_LIST = "CHARACTER_LIST";
 export const CHARACTER_EDIT = "CHARACTER_EDIT";
 export const BOARD_LIST = "BOARD_LIST";
 export const CHAT_LIST = "CHAT_LIST";
+export const TABLE_VIEW = "TABLE_VIEW";
 
 function title(id: string) {
   switch (id) {
@@ -39,6 +40,9 @@ function title(id: string) {
     }
     case CHAT_LIST: {
       return "chat list";
+    }
+    case TABLE_VIEW: {
+      return "table view";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);
@@ -74,6 +78,8 @@ export class IFFloat implements IIFloat {
 
   static AssignId(f: IFFloat) {
     f.id = IFFloat.Id;
+    f.x += 20 * (f.id % 10);
+    f.y += 20 * (f.id % 5);
     IFFloat.Id++;
   }
 

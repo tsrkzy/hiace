@@ -23,6 +23,8 @@
       :float-id="floatId"
       v-else-if="contentId === CHAT_LIST"
     ></chat-list>
+    <table-view :float-id="floatId" v-else-if="contentId === TABLE_VIEW">
+    </table-view>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
@@ -32,22 +34,25 @@ import BoardList from "@/components/organisms/FloatContents/BoardList";
 import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
 import CharacterList from "@/components/organisms/FloatContents/CharacterList";
 import ChatList from "@/components/organisms/FloatContents/ChatList";
+import TableView from "@/components/organisms/FloatContents/TableView";
 import {
   CHARACTER_LIST,
   CHARACTER_EDIT,
   BOARD_LIST,
-  CHAT_LIST
+  CHAT_LIST,
+  TABLE_VIEW
 } from "@/interfaces/IFFloat";
 
 export default {
   name: "FloatContent",
-  components: { CharacterEdit, ChatList, BoardList, CharacterList },
+  components: { TableView, CharacterEdit, ChatList, BoardList, CharacterList },
   data() {
     return {
       CHARACTER_LIST,
       CHARACTER_EDIT,
       BOARD_LIST,
-      CHAT_LIST
+      CHAT_LIST,
+      TABLE_VIEW
     };
   },
   props: {

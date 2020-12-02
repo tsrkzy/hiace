@@ -8,15 +8,22 @@ export class FSTable {
 
   static async Create(params: {
     roomId: string;
+    name: string;
     filterColumns: string[];
     filterCharacters: string[];
   }) {
-    const { roomId, filterColumns = [], filterCharacters = [] } = params;
+    const {
+      roomId,
+      filterColumns = [],
+      filterCharacters = [],
+      name = "table_name"
+    } = params;
     if (!roomId) {
       throw new Error("no roomId given");
     }
     const t = {
       room: roomId,
+      name,
       filterColumns,
       filterCharacters
     };
@@ -32,6 +39,7 @@ export class FSTable {
     const { roomId } = params;
     const t = {
       roomId,
+      name: "default",
       filterColumns: [],
       filterCharacters: []
     };

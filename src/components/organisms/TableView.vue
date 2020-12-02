@@ -86,6 +86,7 @@ export default {
       await FSColumn.Create({
         roomId,
         tableId: this.tableId,
+        label: dataType,
         dataType,
         refPath: dataType === REF ? "character.id" : null,
         dataMap: {}

@@ -9,7 +9,8 @@ import {
   IFFloat,
   CHAT_LIST,
   CHARACTER_LIST,
-  UNSET
+  UNSET,
+  TABLE_VIEW
 } from "@/interfaces/IFFloat";
 
 export const float = {
@@ -18,8 +19,8 @@ export const float = {
     floats: [
       new IFFloat(CHAT_LIST),
       new IFFloat(CHARACTER_LIST, true),
-      new IFFloat(CHAT_LIST, true)
-      // new IFFloat(UNSET, true)
+      new IFFloat(CHAT_LIST, true),
+      new IFFloat(TABLE_VIEW, true)
     ]
   },
   mutations: {

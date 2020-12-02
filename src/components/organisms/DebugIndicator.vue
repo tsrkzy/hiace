@@ -168,7 +168,7 @@
       </ha-button>
       <pre>{{ channels }}</pre>
     </details>
-    <details v-if="chats" open>
+    <details v-if="chats">
       <summary> chat.info</summary>
       <chat-composer v-if="joined"></chat-composer>
       <chat-composer v-if="joined"></chat-composer>
