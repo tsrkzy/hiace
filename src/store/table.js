@@ -32,7 +32,7 @@ export const table = {
         const m = {
           id: t.id,
           columns: [],
-          characters: []
+          rows: []
         };
 
         /* ヘッダの作成 */
@@ -40,6 +40,7 @@ export const table = {
         /* デフォルト列: character.idとcharacter.name */
         const idColumn = {
           id: "system_id",
+          system: true,
           roomId,
           tableId: t.id,
           label: "#id",
@@ -49,6 +50,7 @@ export const table = {
         };
         const nameColumn = {
           id: "system_name",
+          system: true,
           roomId,
           tableId: t.id,
           label: "#name",
@@ -67,14 +69,25 @@ export const table = {
 
         /* キャラクタごとに行を作成 */
         for (let k = 0; k < characters.length; k++) {
-          const row = [];
+          const character = characters[k];
+          const row = {
+            characterId: character.id,
+            show: character.showOnInitiative,
+            cells: []
+          };
           /* 列要素を作成 */
           for (let j = 0; j < m.columns.length; j++) {
-            const character = characters[k];
-            const { id, dataType, refPath, dataMap } = m.columns[j];
+            const {
+              id,
+              system = false,
+              dataType,
+              refPath,
+              dataMap
+            } = m.columns[j];
 
             const cell = {
               columnId: id,
+              system,
               characterId: character.id,
               value: null,
               dataType,
@@ -97,9 +110,9 @@ export const table = {
                 cell.value = !!_v;
               }
             }
-            row.push(cell);
+            row.cells.push(cell);
           }
-          m.characters.push(row);
+          m.rows.push(row);
         }
         matrixList.push(m);
       }

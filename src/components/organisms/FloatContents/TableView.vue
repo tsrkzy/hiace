@@ -15,26 +15,29 @@
     <div v-if="tableMatrix">
       <details
         ><summary>config</summary>
-        <!-- 各characterのIStatを集計した配列 -->
-        <ha-checkbox
-          v-for="c in tableMatrix.columns"
-          :key="c.id"
-          :label="c.label"
-        ></ha-checkbox>
+        <ol>
+          <li v-for="c in togglableColumns" :key="c.id">
+            <ha-checkbox
+              :label="c.label"
+              :value="c.show"
+              @change="onChangeColumnShow(c.id, $event)"
+            ></ha-checkbox>
+          </li>
+        </ol>
       </details>
     </div>
-    <div>
-      <table v-if="tableMatrix">
+    <div v-if="tableMatrix">
+      <table style="width: 100%;">
         <thead>
           <tr>
-            <th v-for="c in tableMatrix.columns" :key="c.id">
+            <th v-for="c in columns" :key="c.id">
               {{ c.label }}
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(character, i) in tableMatrix.characters" :key="i">
-            <td v-for="(cell, j) in character" :key="j">
+          <tr v-for="(row, i) in rows" :key="i">
+            <td v-for="(cell, j) in filterWithHeader(row.cells)" :key="j">
               <label>
                 <input
                   v-if="cell.dataType === 'int'"
@@ -42,6 +45,7 @@
                   :value="cell.value"
                   :disabled="cell.columnId.startsWith('system')"
                   @change="onInputCell($event, cell)"
+                  style="width: calc(100% - 4px);"
                 />
                 <input
                   v-else-if="cell.dataType === 'bool'"
@@ -56,6 +60,7 @@
                   :value="cell.value"
                   :disabled="cell.columnId.startsWith('system')"
                   @change="onInputCell($event, cell)"
+                  style="width: calc(100% - 4px);"
                 />
               </label>
             </td>
@@ -70,6 +75,7 @@
 import { BOOL, FSColumn, INT, STR } from "@/collections/Column";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
+import { Notice } from "@/scripts/Notice";
 export default {
   name: "TableView",
   components: { HaCheckbox, HaSelect },
@@ -95,6 +101,7 @@ export default {
         const inputValue = e.currentTarget.value;
 
         if (refPath) {
+          /* ステータス参照タイプのセルは変更不可 */
           throw new Error(`cannot modify cell w/refPath: ${refPath}`);
         }
 
@@ -103,6 +110,12 @@ export default {
           value = parseInt(inputValue, 10);
           if (Number.isNaN(value)) {
             throw new Error(`${inputValue} is not a number`);
+          }
+          if (
+            value < Number.MIN_SAFE_INTEGER ||
+            Number.MAX_SAFE_INTEGER <= value
+          ) {
+            throw new Error(`out of number range: ${value}`);
           }
         }
 
@@ -115,22 +128,30 @@ export default {
         }
 
         // dataMap のkey:characterId な valueを変更
-        await FSColumn.UpdateDataMap(columnId, [
-          {
-            characterId,
-            value
-          }
-        ]);
+        await FSColumn.UpdateDataMap(columnId, [{ characterId, value }]);
       } catch (error) {
         /* ロールバック */
         e.currentTarget.value = cell.value;
 
         console.error(error);
+        Notice.Log(error);
       }
+    },
+    async onChangeColumnShow(columnId, show = false) {
+      console.log("TableView.onChangeColumnShow", columnId, show); // @DELETEME
+      await FSColumn.Update(columnId, { show });
+    },
+    filterWithHeader(cells) {
+      const dispColumnIdList = this.columns
+        .filter(c => c.system || c.show)
+        .map(c => c.id);
+      return cells.filter(c => dispColumnIdList.indexOf(c.columnId) !== -1);
     }
   },
-  async created() {},
   computed: {
+    characters() {
+      return this.$store.getters["character/info"];
+    },
     tableItems() {
       const matrixList = this.$store.getters["table/info"];
       return matrixList.map(t => ({ value: t.id, text: t.name }));
@@ -142,6 +163,21 @@ export default {
       }
       const matrixList = this.$store.getters["table/matrixList"];
       return matrixList.find(t => t.id === tableId);
+    },
+    columns() {
+      return (this.tableMatrix?.columns ?? []).filter(c => c.system || c.show);
+    },
+    allColumns() {
+      return this.tableMatrix?.columns ?? [];
+    },
+    togglableColumns() {
+      return this.allColumns.filter(c => !c.system);
+    },
+    rows() {
+      return (this.tableMatrix?.rows ?? []).filter(r => r.show);
+    },
+    allRows() {
+      return this.tableMatrix?.rows ?? [];
     }
   }
 };

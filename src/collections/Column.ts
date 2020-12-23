@@ -19,6 +19,7 @@ export class FSColumn {
     room: string;
     table: string;
     label: string;
+    show: boolean;
     dataType: string;
     refPath: string;
     dataMap: object;
@@ -39,6 +40,7 @@ export class FSColumn {
       room: column?.room,
       table: column?.table,
       label: column?.label,
+      show: column?.show,
       dataType: column?.dataType,
       refPath: column?.refPath,
       dataMap: column?.dataMap ?? {}
@@ -49,6 +51,7 @@ export class FSColumn {
     roomId: string;
     tableId: string;
     label: string;
+    show: boolean;
     dataType: string;
     refPath: string;
     dataMap: object;
@@ -57,6 +60,7 @@ export class FSColumn {
       roomId,
       tableId,
       label = "",
+      show = true,
       dataType,
       refPath,
       dataMap = {}
@@ -73,6 +77,7 @@ export class FSColumn {
       room: roomId,
       table: tableId,
       label,
+      show,
       dataType,
       refPath,
       dataMap
@@ -91,11 +96,18 @@ export class FSColumn {
       roomId,
       tableId,
       label: "#",
+      show: true,
       dataType: REF,
       refPath: "character.id",
       dataMap: {}
     };
     return await FSColumn.Create(c);
+  }
+
+  static async Update(columnId: string, criteria: object) {
+    const db = firebase.firestore();
+    const doc = db.collection("column").doc(columnId);
+    return await doc.update(criteria);
   }
 
   static async UpdateDataMap(

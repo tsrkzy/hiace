@@ -1,6 +1,5 @@
 <template>
   <label>
-    <span>{{ label }}</span>
     <input
       type="checkbox"
       :value="value"
@@ -8,6 +7,7 @@
       @input="$emit('input', $event.currentTarget.checked)"
       @change="$emit('change', $event.currentTarget.checked)"
     />
+    <span>{{ label }}</span>
   </label>
 </template>
 
