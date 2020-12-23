@@ -13,8 +13,20 @@
       </ha-select>
     </div>
     <div v-if="tableMatrix">
-      <details
-        ><summary>config</summary>
+      <details>
+        <summary>config</summary>
+        <ha-button v-if="tableId" @click="onClickAddColumn('int')"
+          >INT
+        </ha-button>
+        <ha-button v-if="tableId" @click="onClickAddColumn('str')"
+          >STR
+        </ha-button>
+        <ha-button v-if="tableId" @click="onClickAddColumn('ref')"
+          >REF
+        </ha-button>
+        <ha-button v-if="tableId" @click="onClickAddColumn('bool')"
+          >BOOL
+        </ha-button>
         <ol>
           <li v-for="c in togglableColumns" :key="c.id">
             <ha-checkbox
@@ -31,7 +43,15 @@
         <thead>
           <tr>
             <th v-for="c in columns" :key="c.id">
-              {{ c.label }}
+              <label>
+                <input
+                  type="text"
+                  :value="c.label"
+                  :disabled="c.system"
+                  @change="onInputHeader($event, c)"
+                  style="width: calc(100% - 4px);font-weight: bold;"
+                />
+              </label>
             </th>
           </tr>
         </thead>
@@ -72,13 +92,15 @@
 </template>
 
 <script>
-import { BOOL, FSColumn, INT, STR } from "@/collections/Column";
+import { BOOL, FSColumn, INT, REF, STR } from "@/collections/Column";
+import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
 import { Notice } from "@/scripts/Notice";
+
 export default {
   name: "TableView",
-  components: { HaCheckbox, HaSelect },
+  components: { HaButton, HaCheckbox, HaSelect },
   props: {
     floatId: {
       type: Number,
@@ -137,6 +159,18 @@ export default {
         Notice.Log(error);
       }
     },
+    async onInputHeader(e, column) {
+      console.log("TableView.onInputHeader"); // @DELETEME
+      const newLabel = e.currentTarget.value.trim();
+      if (!newLabel) {
+        e.currentTarget.value = column.label;
+        e.currentTarget.blur();
+        return false;
+      }
+
+      e.currentTarget.blur();
+      await FSColumn.Update(column.id, { label: newLabel });
+    },
     async onChangeColumnShow(columnId, show = false) {
       console.log("TableView.onChangeColumnShow", columnId, show); // @DELETEME
       await FSColumn.Update(columnId, { show });
@@ -146,6 +180,17 @@ export default {
         .filter(c => c.system || c.show)
         .map(c => c.id);
       return cells.filter(c => dispColumnIdList.indexOf(c.columnId) !== -1);
+    },
+    async onClickAddColumn(dataType) {
+      const roomId = this.room.id;
+      await FSColumn.Create({
+        roomId,
+        tableId: this.tableId,
+        label: dataType,
+        dataType,
+        refPath: dataType === REF ? "character.id" : null,
+        dataMap: {}
+      });
     }
   },
   computed: {
@@ -178,6 +223,9 @@ export default {
     },
     allRows() {
       return this.tableMatrix?.rows ?? [];
+    },
+    room() {
+      return this.$store.getters["room/info"];
     }
   }
 };
