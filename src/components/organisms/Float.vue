@@ -40,7 +40,7 @@
     <div
       v-if="!top"
       @click="onClickShroud"
-      style="background-color: rgba(0,0,0,0.5);position: absolute;top: 0;left:0;width: 100%;height: 100%;"
+      style="background-color: rgba(0,0,0,0.5);position: absolute;top: 2rem;left:0;width: 100%;height: calc(100% - 2rem);"
     ></div>
     <div class="content-slot">
       <slot name="content">failed to load content: {{ floatId }}</slot>
