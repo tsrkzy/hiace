@@ -7,37 +7,44 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
-    <ha-input-form v-model="characterName"></ha-input-form>
-    <ha-select :items="characterItems"></ha-select>
+    <ha-button @click="onClickCreateMyCharacter">キャラクタ追加</ha-button>
+    <ha-input-form
+      v-model="characterName"
+      placeholder="キャラクタ名"
+    ></ha-input-form>
     <ul style="padding: 0;">
       <li :key="item.id" v-for="item in characters">
-        <span>{{ item.character.name }}({{ item.character.id }})</span>
+        <span>{{ item.character.name }}</span>
         <ha-button @click="onClickEditCharacter(item.character.id)"
-          >EDIT</ha-button
-        >
+          >キャラクタ編集
+        </ha-button>
         <ha-button @click="onClickDeleteCharacter(item.character.id)"
-          >DELETE</ha-button
-        >
-        <ha-button @click="onClickAddPawn(item.character.id)">+PAWN</ha-button>
+          >キャラクタ削除
+        </ha-button>
+        <ha-button @click="onClickCreateAliasToCharacter(item.id)"
+          >立ち絵を追加する
+        </ha-button>
+        <ha-button @click="onClickAddPawn(item.character.id)"
+          >コマ追加
+        </ha-button>
         <ul>
           <li :key="a.id" v-for="a in item.aliases">
             <span
-              >a{{ a.id === item.character.activeAlias ? "*" : "" }}:
-              {{ a.name }}({{ a.id }})</span
+              >{{ a.id === item.character.activeAlias ? "*" : "" }}:
+              {{ a.name }}</span
             >
-            <ha-button @click="onClickActivateAlias(item.character.id, a.id)"
-              >ACTIVATE</ha-button
-            >
+            <ha-button
+              v-if="a.id !== item.character.activeAlias"
+              @click="onClickActivateAlias(item.character.id, a.id)"
+              >この立ち絵を使う
+            </ha-button>
           </li>
         </ul>
-        <ha-button @click="onClickCreateAliasToCharacter(item.id)"
-          >ADD ALIAS(→ OPEN ADD ALIAS WINDOW)
-        </ha-button>
         <ul>
           <li :key="p.id" v-for="p in item.pawns">
-            <span>p: {{ p.id }}</span
-            ><ha-button @click="onClickDeletePawn(p.id)">DELETE</ha-button>
+            <ha-button @click="onClickDeletePawn(p.id)"
+              >コマを削除する
+            </ha-button>
           </li>
         </ul>
       </li>
@@ -51,12 +58,11 @@ import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
-import HaSelect from "@/components/atoms/HaSelect";
 import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
 
 export default {
   name: "CharacterList",
-  components: { HaInputForm, HaSelect, HaButton },
+  components: { HaInputForm, HaButton },
   data() {
     return {
       characterName: ""
