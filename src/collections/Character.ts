@@ -8,12 +8,6 @@ import { getName } from "@/scripts/helper";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
-interface IStats {
-  key: string;
-  value: string | number | boolean;
-  option: object;
-}
-
 type TCharacter = {
   id: string;
   activeAlias?: string;
@@ -51,8 +45,6 @@ export class FSCharacter {
     showOnInitiative: boolean;
     chatPosition: number;
     pawnSize: number;
-    baseStats: IStats[];
-    stats: IStats[];
   }) {
     const {
       owner,
@@ -63,9 +55,7 @@ export class FSCharacter {
       imageId = DEFAULT_CHARACTER_IMAGE,
       showOnInitiative = true,
       chatPosition = 1,
-      pawnSize = 1,
-      baseStats = [],
-      stats = []
+      pawnSize = 1
     } = params;
 
     if (!owner) {
@@ -84,9 +74,7 @@ export class FSCharacter {
       activeAlias,
       showOnInitiative,
       chatPosition,
-      pawnSize,
-      baseStats,
-      stats
+      pawnSize
     };
 
     const db = firebase.firestore();
