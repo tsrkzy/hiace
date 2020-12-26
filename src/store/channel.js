@@ -24,6 +24,14 @@ export const channel = {
   getters: {
     info(state) {
       return state.channels;
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.channels.length; i++) {
+        const id = state.channels[i].id;
+        nameMap[id] = state.channels[i].name;
+      }
+      return nameMap;
     }
   }
 };

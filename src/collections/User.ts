@@ -3,9 +3,14 @@ import "firebase/firestore";
 import "firebase/auth";
 
 import store from "@/store";
+import { getName } from "@/scripts/helper";
 
 export class FSUser {
   static unsubscribeMap = new Map();
+
+  static Who(id: string) {
+    return getName("user", id);
+  }
 
   static async GetById({ id }: { id: string }) {
     const db = firebase.firestore();

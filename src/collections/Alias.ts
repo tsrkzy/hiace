@@ -2,6 +2,7 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
+import { getName } from "@/scripts/helper";
 
 export const ALIAS_NOT_SELECTED = "ALIAS_NOT_SELECTED";
 
@@ -12,6 +13,10 @@ type TAlias = {
 
 export class FSAlias {
   static unsubscribeMap = new Map();
+
+  static Who(id: string) {
+    return getName("alias", id);
+  }
 
   static async GetById({ id }: { id: string }): Promise<TAlias | null> {
     const db = firebase.firestore();

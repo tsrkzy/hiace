@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
+import { getName } from "@/scripts/helper";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
@@ -20,6 +21,10 @@ type TCharacter = {
 
 export class FSCharacter {
   static unsubscribeMap = new Map();
+
+  static Who(id: string) {
+    return getName("character", id);
+  }
 
   static async GetById({ id }: { id: string }): Promise<TCharacter | null> {
     const db = firebase.firestore();

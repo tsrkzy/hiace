@@ -1,11 +1,16 @@
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { getName } from "@/scripts/helper";
 
 export const SYSTEM_CHANNEL_ID = "SYSTEM";
 
 export class FSChannel {
   static unsubscribeMap = new Map();
+
+  static Who(id: string) {
+    return getName("channel", id);
+  }
 
   static async Create(params: {
     type: string | null;

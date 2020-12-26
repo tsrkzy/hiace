@@ -9,6 +9,7 @@
       @change="$emit('change', $event.currentTarget.value)"
       @keydown="$emit('keydown', $event)"
       :placeholder="placeholder"
+      :disabled="disabled"
     />
   </label>
 </template>
@@ -23,6 +24,7 @@ export default {
   props: {
     label: { type: String },
     value: { type: String },
+    disabled: { type: Boolean },
     placeholder: { type: String, default: "" }
   }
 };

@@ -18,11 +18,12 @@
         <li
           v-for="c of chatItems"
           :key="c.id"
-          style="margin: 0;    word-break: break-word;"
+          style="margin: 0;word-break: break-word;"
         >
           <span
-            >({{ c.channel || "none" }}) {{ c.character || userName
-            }}{{ c.alias ? `(${c.alias})` : "" }}:
+            >({{ getChannelName(c) || "none" }})
+            {{ getCharacterName(c) || getUserName(c)
+            }}{{ c.alias ? `(${getAliasName(c)})` : "" }}:
             {{
               c.type === "DICE"
                 ? c.value.result
@@ -52,7 +53,9 @@
 </template>
 
 <script>
-import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSAlias } from "@/collections/Alias";
+import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
@@ -78,9 +81,6 @@ export default {
     }
   },
   computed: {
-    userName() {
-      return this.$store.getters["auth/user"].name;
-    },
     chatItems() {
       const chatList = this.$store.getters["chat/info"].slice();
       return chatList.reverse();
@@ -162,6 +162,22 @@ export default {
           FSUser.Ping(this.user.id);
         })
         .catch(() => {});
+    },
+    getChannelName(chatItem) {
+      const { channel } = chatItem;
+      return FSChannel.Who(channel) || "全体";
+    },
+    getCharacterName(chatItem) {
+      const { character } = chatItem;
+      return FSCharacter.Who(character);
+    },
+    getAliasName(chatItem) {
+      const { alias } = chatItem;
+      return FSAlias.Who(alias);
+    },
+    getUserName(chatItem) {
+      const { owner } = chatItem;
+      return FSUser.Who(owner);
     }
   },
   watch: {

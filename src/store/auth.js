@@ -1,3 +1,5 @@
+import { getMaskedAccountFromEmail } from "@/scripts/helper";
+
 export const auth = {
   namespaced: true,
   state: {
@@ -63,6 +65,10 @@ export const auth = {
     },
     user(state) {
       return state.user;
+    },
+    whoAmI(state) {
+      const email = state.auth?.email ?? ".!error@gmail.com";
+      return getMaskedAccountFromEmail(email);
     },
     photoUrl(state) {
       return state.user.photoUrl;

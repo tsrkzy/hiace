@@ -24,6 +24,14 @@ export const alias = {
       return state.aliases.filter(
         c => myCharacterIds.indexOf(c.character) !== -1
       );
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.aliases.length; i++) {
+        const id = state.aliases[i].id;
+        nameMap[id] = state.aliases[i].name;
+      }
+      return nameMap;
     }
   }
 };
