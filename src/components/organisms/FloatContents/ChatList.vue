@@ -9,28 +9,19 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <div
       :id="`chat-list--scroll-parent__${floatId}`"
-      style="width: 100%;height: calc( 100% - 60px );background-color: tan; overflow-y: scroll;overflow-x: hidden;"
+      style="width: 100%;height: calc( 100% - 60px );background-color: white; overflow-y: scroll;overflow-x: hidden;"
     >
       <ol
         :id="`chat-list--scroll-content__${floatId}`"
         style="margin:0;padding: 0;"
       >
-        <li
-          v-for="c of chatItems"
-          :key="c.id"
-          style="margin: 0;word-break: break-word;"
+        <chat-row
+          :float-id="floatId"
+          :chat-id="c"
+          v-for="c of chatIdList"
+          :key="c"
         >
-          <span
-            >({{ getChannelName(c) || "none" }})
-            {{ getCharacterName(c) || getUserName(c)
-            }}{{ c.alias ? `(${getAliasName(c)})` : "" }}:
-            {{
-              c.type === "DICE"
-                ? c.value.result
-                : c.value.text.replace("\n", "\\n") /* @TODO */
-            }}</span
-          >
-        </li>
+        </chat-row>
       </ol>
     </div>
     <div style="width: 100%;height: 60px;">
@@ -53,15 +44,14 @@
 </template>
 
 <script>
-import { FSAlias } from "@/collections/Alias";
-import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import { FSCharacter } from "@/collections/Character";
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
+import ChatRow from "@/components/organisms/ChatRow";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Throttle } from "@/scripts/Throttle";
 
@@ -69,6 +59,7 @@ const throttle = new Throttle(1000);
 export default {
   name: "ChatList",
   components: {
+    ChatRow,
     HaTextarea,
     HaButton,
     HaSelect,
@@ -81,8 +72,8 @@ export default {
     }
   },
   computed: {
-    chatItems() {
-      const chatList = this.$store.getters["chat/info"].slice();
+    chatIdList() {
+      const chatList = this.$store.getters["chat/info"].map(c => c.id);
       return chatList.reverse();
     },
     channelItems() {
@@ -121,6 +112,7 @@ export default {
       });
     },
     getSpeaker() {
+      /* 子コンポーネントから選択中のcharacterとaliasを取得 */
       const { aliasId, characterId } = this.$refs.cs.getIdCharacterAndAlias();
       return { aliasId, characterId };
     },
@@ -162,26 +154,10 @@ export default {
           FSUser.Ping(this.user.id);
         })
         .catch(() => {});
-    },
-    getChannelName(chatItem) {
-      const { channel } = chatItem;
-      return FSChannel.Who(channel) || "全体";
-    },
-    getCharacterName(chatItem) {
-      const { character } = chatItem;
-      return FSCharacter.Who(character);
-    },
-    getAliasName(chatItem) {
-      const { alias } = chatItem;
-      return FSAlias.Who(alias);
-    },
-    getUserName(chatItem) {
-      const { owner } = chatItem;
-      return FSUser.Who(owner);
     }
   },
   watch: {
-    async chatItems() {
+    async chatIdList() {
       /* チャットが作成されるまで待機 */
       await this.$nextTick();
       this.showNew();
