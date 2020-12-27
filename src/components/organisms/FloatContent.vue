@@ -8,23 +8,29 @@
 <template>
   <div class="float-content">
     <character-list
-      :float-id="floatId"
       v-if="contentId === CHARACTER_LIST"
+      :float-id="floatId"
     ></character-list>
     <character-edit
-      :float-id="floatId"
       v-else-if="contentId === CHARACTER_EDIT"
+      :float-id="floatId"
     ></character-edit>
     <board-list
-      :float-id="floatId"
       v-else-if="contentId === BOARD_LIST"
+      :float-id="floatId"
     ></board-list>
     <chat-list
-      :float-id="floatId"
       v-else-if="contentId === CHAT_LIST"
+      :float-id="floatId"
     ></chat-list>
-    <table-view :float-id="floatId" v-else-if="contentId === TABLE_VIEW">
+    <table-view v-else-if="contentId === TABLE_VIEW" :float-id="floatId">
     </table-view>
+    <image-manager
+      v-else-if="contentId === IMAGE_MANAGER"
+      :float-id="floatId"
+    ></image-manager>
+    <sound-manager v-else-if="contentId === SOUND_MANAGER" :float-id="floatId">
+    </sound-manager>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
@@ -34,25 +40,39 @@ import BoardList from "@/components/organisms/FloatContents/BoardList";
 import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
 import CharacterList from "@/components/organisms/FloatContents/CharacterList";
 import ChatList from "@/components/organisms/FloatContents/ChatList";
+import ImageManager from "@/components/organisms/FloatContents/ImageManager";
+import SoundManager from "@/components/organisms/FloatContents/SoundManager";
 import TableView from "@/components/organisms/FloatContents/TableView";
 import {
   CHARACTER_LIST,
   CHARACTER_EDIT,
   BOARD_LIST,
   CHAT_LIST,
-  TABLE_VIEW
+  TABLE_VIEW,
+  IMAGE_MANAGER,
+  SOUND_MANAGER
 } from "@/interfaces/IFFloat";
 
 export default {
   name: "FloatContent",
-  components: { TableView, CharacterEdit, ChatList, BoardList, CharacterList },
+  components: {
+    SoundManager,
+    ImageManager,
+    TableView,
+    CharacterEdit,
+    ChatList,
+    BoardList,
+    CharacterList
+  },
   data() {
     return {
       CHARACTER_LIST,
       CHARACTER_EDIT,
       BOARD_LIST,
       CHAT_LIST,
-      TABLE_VIEW
+      TABLE_VIEW,
+      IMAGE_MANAGER,
+      SOUND_MANAGER
     };
   },
   props: {

@@ -23,6 +23,8 @@ export const CHARACTER_EDIT = "CHARACTER_EDIT";
 export const BOARD_LIST = "BOARD_LIST";
 export const CHAT_LIST = "CHAT_LIST";
 export const TABLE_VIEW = "TABLE_VIEW";
+export const IMAGE_MANAGER = "IMAGE_MANAGER";
+export const SOUND_MANAGER = "SOUND_MANAGER";
 
 function title(id: string) {
   switch (id) {
