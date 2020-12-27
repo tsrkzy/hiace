@@ -7,7 +7,6 @@
 
 <template>
   <div>
-    {{ imageId }}
     <label
       v-for="img in imageItems"
       :key="img.id"

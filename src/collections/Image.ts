@@ -3,6 +3,7 @@ import "firebase/firestore";
 import "firebase/storage";
 
 import store from "@/store";
+import { getName } from "@/scripts/helper";
 
 export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
 export const DEFAULT_CHARACTER_IMAGE = "wG5tOfKAW3trnsApUNRy";
@@ -18,6 +19,11 @@ async function validateImageUrl(url: string) {
 
 export class FSImage {
   static unsubscribeMap = new Map();
+
+  static Whose(id: string) {
+    const owner = getName("image", id);
+    return getName("user", owner);
+  }
 
   static async GetById({ id }: { id: string }) {
     console.log("Image.GetById", id); // @DELETEME

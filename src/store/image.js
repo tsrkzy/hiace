@@ -17,6 +17,15 @@ export const image = {
   getters: {
     info(state) {
       return state.images;
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.images.length; i++) {
+        const id = state.images[i].id;
+        const { owner = null } = state.images[i];
+        nameMap[id] = owner;
+      }
+      return nameMap;
     }
   }
 };

@@ -46,6 +46,12 @@ function title(id: string) {
     case TABLE_VIEW: {
       return "table view";
     }
+    case IMAGE_MANAGER: {
+      return "image manager";
+    }
+    case SOUND_MANAGER: {
+      return "sound manager";
+    }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);
 }
