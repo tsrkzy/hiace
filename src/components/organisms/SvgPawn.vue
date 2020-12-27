@@ -19,6 +19,13 @@
       <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
     </filter>
     <text>{{ character.name }} - {{ alias.name }}, {{ pawnSize }}</text>
+    <!-- 外枠 -->
+    <rect
+      :width="pawnSize"
+      :height="pawnSize"
+      stroke="red"
+      fill="rgba(0,0,0,0.2)"
+    ></rect>
     <image
       v-if="!shadow"
       preserveAspectRatio="xMidYMid meet"
@@ -26,12 +33,6 @@
       :height="pawnSize"
       :href="imgSrc"
     ></image>
-    <rect
-      :width="pawnSize"
-      :height="pawnSize"
-      stroke="red"
-      fill="transparent"
-    ></rect>
     <rect
       v-if="dragged"
       :x="-1000 / 2"

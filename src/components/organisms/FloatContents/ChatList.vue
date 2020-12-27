@@ -7,23 +7,7 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <div
-      :id="`chat-list--scroll-parent__${floatId}`"
-      style="width: 100%;height: calc( 100% - 60px );background-color: white; overflow-y: scroll;overflow-x: hidden;"
-    >
-      <ol
-        :id="`chat-list--scroll-content__${floatId}`"
-        style="margin:0;padding: 0;"
-      >
-        <chat-row
-          :float-id="floatId"
-          :chat-id="c"
-          v-for="c of chatIdList"
-          :key="c"
-        >
-        </chat-row>
-      </ol>
-    </div>
+    <chat-log-viewer :float-id="floatId" />
     <div style="width: 100%;height: 60px;">
       <character-switcher ref="cs"></character-switcher>
       <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo">
@@ -51,7 +35,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
-import ChatRow from "@/components/organisms/ChatRow";
+import ChatLogViewer from "@/components/organisms/ChatLogViewer";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Throttle } from "@/scripts/Throttle";
 
@@ -59,7 +43,7 @@ const throttle = new Throttle(1000);
 export default {
   name: "ChatList",
   components: {
-    ChatRow,
+    ChatLogViewer,
     HaTextarea,
     HaButton,
     HaSelect,
@@ -72,10 +56,6 @@ export default {
     }
   },
   computed: {
-    chatIdList() {
-      const chatList = this.$store.getters["chat/info"].map(c => c.id);
-      return chatList.reverse();
-    },
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({
         text: c.name,
@@ -101,16 +81,6 @@ export default {
     };
   },
   methods: {
-    showNew() {
-      const $parent = document.getElementById(
-        `chat-list--scroll-parent__${this.floatId}`
-      );
-      $parent.scrollTo({
-        top: $parent.scrollHeight - $parent.clientHeight,
-        left: 0,
-        behavior: "smooth"
-      });
-    },
     getSpeaker() {
       /* 子コンポーネントから選択中のcharacterとaliasを取得 */
       const { aliasId, characterId } = this.$refs.cs.getIdCharacterAndAlias();
@@ -155,15 +125,6 @@ export default {
         })
         .catch(() => {});
     }
-  },
-  watch: {
-    async chatIdList() {
-      /* チャットが作成されるまで待機 */
-      await this.$nextTick();
-      this.showNew();
-    }
   }
 };
 </script>
-
-<style scoped></style>

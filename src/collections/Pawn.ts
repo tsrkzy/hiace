@@ -49,7 +49,8 @@ export class FSPawn {
       board: boardId,
       image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
-      transform: `${new DOMMatrix()}`
+      transform: `${new DOMMatrix()}`,
+      updatedAt: Date.now()
     };
 
     const db = firebase.firestore();
@@ -61,12 +62,17 @@ export class FSPawn {
 
   static async Update(
     pawnId: string,
-    params: {
+    p: {
       transform: string;
     }
   ) {
     const db = firebase.firestore();
     const docRef = await db.collection("pawn").doc(pawnId);
+    const params = {
+      transform: p.transform,
+      updatedAt: Date.now()
+    };
+
     await docRef.update(params);
   }
 
@@ -76,7 +82,10 @@ export class FSPawn {
     for (let i = 0; i < pawnIdList.length; i++) {
       const pawnId = pawnIdList[i];
       const docRef = await db.collection("pawn").doc(pawnId);
-      batch.update(docRef, { transform: `${new DOMMatrix()}` });
+      batch.update(docRef, {
+        transform: `${new DOMMatrix()}`,
+        updatedAt: Date.now()
+      });
     }
 
     await batch.commit();
@@ -122,7 +131,10 @@ export class FSPawn {
     FSPawn.RemoveListener();
 
     const db = firebase.firestore();
-    const docsRef = db.collection("pawn").where("room", "==", roomId);
+    const docsRef = db
+      .collection("pawn")
+      .where("room", "==", roomId)
+      .orderBy("updatedAt", "desc");
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const pawns: any[] = [];

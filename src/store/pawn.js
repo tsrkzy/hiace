@@ -1,7 +1,11 @@
 export const pawn = {
   namespaced: true,
   state: {
-    pawns: [],
+    pawns: [
+      /* order by descendant of pawns.`updatedAt`.
+       * @SEE collections/Pawn.ts#SetListener
+       *  */
+    ],
     drag: null
   },
   mutations: {

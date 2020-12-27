@@ -140,9 +140,12 @@ export default {
       if (!activeBoardId) {
         return [];
       }
-      return this.$store.getters["pawn/info"].filter(
-        p => p.board === activeBoardId
-      );
+      /* store.pawn/info はupdatedAtの降順
+       * HTMLの兄弟要素の重ね順は後勝ちなので、
+       * filterで新しい配列を作った後にreverse()する */
+      return this.$store.getters["pawn/info"]
+        .filter(p => p.board === activeBoardId)
+        .reverse();
     },
     svgSize() {
       const $el = document.getElementById("svg-table");

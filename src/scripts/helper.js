@@ -23,7 +23,7 @@ export const getMaskedAccountFromEmail = email => {
   const account = email.substring(0, email.indexOf("@"));
   return Array.from(account)
     .map((s, i) => {
-      return i % 4 < 2 ? s : "_";
+      return i % 4 < 2 ? s : "#";
     })
     .join("");
 };
