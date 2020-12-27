@@ -13,24 +13,22 @@
         <ha-checkbox
           :disabled="!image"
           label="他のユーザから隠す"
-        ></ha-checkbox>
-      </li>
-      <li>
-        <ha-checkbox
-          :disabled="!image"
-          label="自分の画像だけ表示"
+          :v-model="makeHidden"
+          @input="onMakeHidden(image, $event)"
         ></ha-checkbox>
       </li>
       <li>
         <ha-checkbox
           :disabled="!image"
           label="マップとしてタグ付け"
+          :v-model="toMap"
         ></ha-checkbox>
       </li>
       <li>
         <ha-checkbox
           :disabled="!image"
           label="キャラクタとしてタグ付け"
+          :v-model="toCharacter"
         ></ha-checkbox>
       </li>
     </ol>
@@ -41,7 +39,17 @@
       accept="image/*"
       @change="onClickFileUploadHandler"
     />
-    <image-show-case v-model="image"></image-show-case>
+    <div>
+      <ha-checkbox
+        :disabled="!image"
+        label="自分の画像だけ表示"
+        :v-model="onlyMine"
+      ></ha-checkbox>
+    </div>
+    <image-show-case
+      v-model="image"
+      @selectImage="onChangeSelectedImage"
+    ></image-show-case>
   </div>
 </template>
 
@@ -60,7 +68,11 @@ export default {
   },
   data() {
     return {
-      image: null
+      image: null,
+      onlyMine: false,
+      makeHidden: false,
+      toMap: false,
+      toCharacter: false
     };
   },
   computed: {
@@ -84,6 +96,17 @@ export default {
 
       /* アップロードに成功したら空にする */
       e.currentTarget.value = "";
+    },
+    onChangeSelectedImage(imageId) {
+      const image = this.$store.getters["image/info"].find(
+        i => i.id === imageId
+      );
+      const { hidden } = image;
+      this.makeHidden = hidden;
+    },
+    async onMakeHidden(imageId, value) {
+      console.log("ImageManager.onMakeHidden", imageId, value); // @DELETEME
+      await FSImage.Update(imageId, { hidden: value });
     }
   }
 };

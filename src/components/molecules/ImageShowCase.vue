@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { FSImage } from "@/collections/Image";
+
 export default {
   name: "ImageShowCase",
   props: {
@@ -58,6 +60,15 @@ export default {
         id: img.id,
         url: img.url
       }));
+    }
+  },
+  watch: {
+    imageItems() {
+      const images = this.imageItems;
+      for (let i = 0; i < images.length; i++) {
+        const { id } = images[i];
+        FSImage.SafeReloadUrl(id);
+      }
     }
   }
 };

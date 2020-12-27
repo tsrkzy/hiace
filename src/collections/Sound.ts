@@ -18,6 +18,9 @@ export class FSSound {
 
   static async GetById({ id }: { id: string }) {
     console.log("Sound.GetById", id); // @DELETEME
+    if (!id) {
+      return null;
+    }
     const db = firebase.firestore();
     const docRef = await db
       .collection("sound")

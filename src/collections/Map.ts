@@ -7,6 +7,9 @@ export class FSMap {
   static unsubscribeMap = new Map();
 
   static async GetById({ id }: { id: string }) {
+    if (!id) {
+      return null;
+    }
     const db = firebase.firestore();
     const docRef = await db
       .collection("map")

@@ -27,6 +27,9 @@ export class FSImage {
 
   static async GetById({ id }: { id: string }) {
     console.log("Image.GetById", id); // @DELETEME
+    if (!id) {
+      return null;
+    }
     const db = firebase.firestore();
     const docRef = await db
       .collection("image")
@@ -50,6 +53,21 @@ export class FSImage {
     }
 
     return { id, ...image };
+  }
+
+  static async SafeReloadUrl(id: string) {
+    const image = store.getters["image/info"].find(
+      (img: { id: string; url: string; path: string }) => img.id === id
+    );
+    if (!image) {
+      console.warn(`image not found: ${id}`);
+      return false;
+    }
+    const { url, path } = image;
+    const urlIsOk = await validateImageUrl(url);
+    if (!urlIsOk) {
+      image.url = await FSImage.RenewImageUrl(path, id);
+    }
   }
 
   static async RenewImageUrl(path: string, id: string) {
@@ -151,6 +169,12 @@ export class FSImage {
     console.log(`+ register done. "${name}" complete!`); // @DELETEME
 
     return { id, ...image };
+  }
+
+  static async Update(id: string, criteria: object) {
+    const db = firebase.firestore();
+    const doc = db.collection("image").doc(id);
+    return await doc.update(criteria);
   }
 
   static SetListener(roomId: string) {

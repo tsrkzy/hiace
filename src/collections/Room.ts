@@ -15,6 +15,9 @@ export class FSRoom {
    * @return {Promise<firebase.firestore.DocumentData>}
    */
   static async GetById({ id }: { id: string }) {
+    if (!id) {
+      return null;
+    }
     const db = firebase.firestore();
     const docRef = await db
       .collection("room")
