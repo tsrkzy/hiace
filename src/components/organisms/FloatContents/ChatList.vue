@@ -107,14 +107,19 @@ export default {
           text: chatText
         }
       };
-      await FSChat.Chat(c, this.diceSystem);
-
       this.chatText = "";
+      try {
+        await FSChat.Chat(c, this.diceSystem);
+      } catch (e) {
+        this.chatText = _chatText;
+        console.error(e);
+      }
     },
     async onKeydown(e) {
       const { code, isComposing, shiftKey } = e;
       if (!isComposing && !shiftKey && code.toLowerCase() === "enter") {
         /* 変換中でない場合のEnter */
+        e.preventDefault();
         await this.sendChat();
       }
 

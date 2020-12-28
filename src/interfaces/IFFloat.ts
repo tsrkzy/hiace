@@ -26,31 +26,28 @@ export const TABLE_VIEW = "TABLE_VIEW";
 export const IMAGE_MANAGER = "IMAGE_MANAGER";
 export const SOUND_MANAGER = "SOUND_MANAGER";
 
-function title(id: string) {
+export function title(id: string) {
   switch (id) {
-    case UNSET: {
-      return "content has not set yet";
-    }
     case CHARACTER_LIST: {
-      return "character list";
+      return "キャラクタ一覧";
     }
     case CHARACTER_EDIT: {
-      return "character edit";
+      return "キャラクタ編集";
     }
     case BOARD_LIST: {
-      return "board list";
+      return "ボード一覧";
     }
     case CHAT_LIST: {
-      return "chat list";
+      return "チャット";
     }
     case TABLE_VIEW: {
-      return "table view";
+      return "データテーブル";
     }
     case IMAGE_MANAGER: {
-      return "image manager";
+      return "画像管理";
     }
     case SOUND_MANAGER: {
-      return "sound manager";
+      return "サウンド管理";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);

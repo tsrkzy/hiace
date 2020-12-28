@@ -12,6 +12,7 @@
     <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
+      <window-opener></window-opener>
       <google-authorizer></google-authorizer>
       <label
         >debug:
@@ -43,6 +44,7 @@ import ContextMenu from "@/components/organisms/ContextMenu";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
 import FloatGroup from "@/components/organisms/FloatGroup";
 import Notice from "@/components/organisms/Notice";
+import WindowOpener from "@/components/organisms/WindowOpener";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
@@ -54,6 +56,7 @@ const BORDER = 1;
 export default {
   name: "Room",
   components: {
+    WindowOpener,
     FloatGroup,
     ContextMenu,
     Notice,
