@@ -12,7 +12,7 @@
       v-model="characterName"
       placeholder="キャラクタ名"
     ></ha-input-form>
-    <ul style="padding: 0;">
+    <ul>
       <li :key="item.id" v-for="item in characters">
         <span>{{ item.character.name }}</span>
         <ha-button @click="onClickEditCharacter(item.character.id)"

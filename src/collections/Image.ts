@@ -159,7 +159,7 @@ export class FSImage {
       tags: [],
       owner: userId,
       room: roomId,
-      hidden: false,
+      hidden: true,
       width,
       height
     };
@@ -175,6 +175,24 @@ export class FSImage {
     const db = firebase.firestore();
     const doc = db.collection("image").doc(id);
     return await doc.update(criteria);
+  }
+
+  static async Tag(id: string, tagName: string, toggle: boolean) {
+    const image = store.getters["image/info"].find(
+      (img: { id: string; tags: string[] }) => img.id === id
+    );
+    if (!image) {
+      console.error(`no image found: ${id}`); // @DELETEME
+    }
+    const { tags = [] } = image;
+    if (toggle && tags.indexOf(tagName) === -1) {
+      tags.push(tagName);
+      await FSImage.Update(id, { tags });
+    } else if (!toggle && tags.indexOf(tagName) !== -1) {
+      const index = tags.indexOf(tagName);
+      tags.splice(index, 1);
+      await FSImage.Update(id, { tags });
+    }
   }
 
   static SetListener(roomId: string) {

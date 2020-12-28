@@ -8,27 +8,45 @@
 <template>
   <div>
     <label
-      v-for="img in imageItems"
-      :key="img.id"
+      v-for="image in images"
+      :key="image.id"
       style="display: inline-block;"
     >
-      <input
-        v-show="false"
-        :value="img.id"
-        name="image_select"
-        type="radio"
-        @change="onChangeSelectImage"
-      />
-      <img
-        @click="onClickImage(img.id)"
-        :alt="img.id"
-        :src="img.url"
+      <!-- 外枠 -->
+      <div
         :style="{
-          maxWidth: '64px',
-          maxHeight: '64px',
-          border: imageId === img.id ? '1px dashed red' : 'none'
+          position: 'relative',
+          width: '64px',
+          height: '64px',
+          margin: '0 1px',
+          border:
+            imageId === image.id ? '1px dotted red' : '1px solid lightgray'
         }"
-      />
+      >
+        <input
+          v-show="false"
+          :value="image.id"
+          name="image_select"
+          type="radio"
+          @change="onChangeSelectImage"
+        />
+        <img
+          :alt="image.id"
+          :src="image.url"
+          :style="{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            maxWidth: '64px',
+            maxHeight: '64px'
+          }"
+        />
+        <span
+          v-if="isHidden(image)"
+          style="position:absolute;left:0;top:0;color:white;background-color: red;"
+          >private</span
+        >
+      </div>
     </label>
   </div>
 </template>
@@ -39,7 +57,8 @@ import { FSImage } from "@/collections/Image";
 export default {
   name: "ImageShowCase",
   props: {
-    imageId: { type: String }
+    imageId: { type: String },
+    onlyMine: { type: Boolean, default: false }
   },
   model: {
     prop: "imageId",
@@ -50,21 +69,29 @@ export default {
       const { value } = e.currentTarget;
       this.$emit("selectImage", value);
     },
-    onClickImage(imageId) {
-      this.$emit("selectImage", imageId);
+    isHidden(image) {
+      return image && image.hidden && image.owner === this.me;
     }
   },
   computed: {
-    imageItems() {
-      return this.$store.getters["image/info"].map(img => ({
-        id: img.id,
-        url: img.url
-      }));
+    me() {
+      return this.$store.getters["auth/user"].id;
+    },
+    images() {
+      const images = this.$store.getters["image/info"].filter(img => {
+        /* 自分の所有しないhidden属性付きの画像は表示しない */
+        return !(img.owner !== this.me && img.hidden);
+      });
+
+      /* 「自分の画像だけ表示」オプション */
+      return this.onlyMine
+        ? images.filter(img => img.owner === this.me)
+        : images;
     }
   },
   watch: {
     imageItems() {
-      const images = this.imageItems;
+      const images = this.images;
       for (let i = 0; i < images.length; i++) {
         const { id } = images[i];
         FSImage.SafeReloadUrl(id);
