@@ -21,6 +21,7 @@ export const UNSET = "UNSET";
 export const CHARACTER_LIST = "CHARACTER_LIST";
 export const CHARACTER_EDIT = "CHARACTER_EDIT";
 export const BOARD_LIST = "BOARD_LIST";
+export const MAP_EDIT = "MAP_EDIT";
 export const CHAT_LIST = "CHAT_LIST";
 export const TABLE_VIEW = "TABLE_VIEW";
 export const IMAGE_MANAGER = "IMAGE_MANAGER";
@@ -36,6 +37,9 @@ export function title(id: string) {
     }
     case BOARD_LIST: {
       return "ボード一覧";
+    }
+    case MAP_EDIT: {
+      return "マップ編集";
     }
     case CHAT_LIST: {
       return "チャット";

@@ -19,6 +19,7 @@
       v-else-if="contentId === BOARD_LIST"
       :float-id="floatId"
     ></board-list>
+    <map-edit v-else-if="contentId === MAP_EDIT" :float-id="floatId"></map-edit>
     <chat-list
       v-else-if="contentId === CHAT_LIST"
       :float-id="floatId"
@@ -36,6 +37,7 @@
 </template>
 
 <script>
+import MapEdit from "@/components/organisms/MapEdit";
 import BoardList from "@/components/organisms/FloatContents/BoardList";
 import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
 import CharacterList from "@/components/organisms/FloatContents/CharacterList";
@@ -47,6 +49,7 @@ import {
   CHARACTER_LIST,
   CHARACTER_EDIT,
   BOARD_LIST,
+  MAP_EDIT,
   CHAT_LIST,
   TABLE_VIEW,
   IMAGE_MANAGER,
@@ -56,6 +59,7 @@ import {
 export default {
   name: "FloatContent",
   components: {
+    MapEdit,
     SoundManager,
     ImageManager,
     TableView,
@@ -69,6 +73,7 @@ export default {
       CHARACTER_LIST,
       CHARACTER_EDIT,
       BOARD_LIST,
+      MAP_EDIT,
       CHAT_LIST,
       TABLE_VIEW,
       IMAGE_MANAGER,

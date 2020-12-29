@@ -18,8 +18,8 @@
 <script>
 import {
   BOARD_LIST,
-  CHARACTER_EDIT,
   CHARACTER_LIST,
+  MAP_EDIT,
   CHAT_LIST,
   IMAGE_MANAGER,
   SOUND_MANAGER,
@@ -42,8 +42,8 @@ export default {
     contents() {
       const contentList = [
         CHARACTER_LIST,
-        CHARACTER_EDIT,
         BOARD_LIST,
+        MAP_EDIT,
         CHAT_LIST,
         TABLE_VIEW,
         IMAGE_MANAGER,

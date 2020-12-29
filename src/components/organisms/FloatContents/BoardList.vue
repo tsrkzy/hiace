@@ -16,7 +16,6 @@
         <ul>
           <li v-for="m in b.maps" :key="m.id">
             <span>マップ: {{ m.id }}{{ m.image ? "" : "(no image)" }}</span>
-            <ha-checkbox label="座標をロック"></ha-checkbox>
             <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
             <ha-button @click="onClickDeleteMap(m.id)">削除</ha-button>
           </li>
@@ -38,11 +37,11 @@ import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
-import HaCheckbox from "@/components/atoms/HaCheckbox";
+import { MAP_EDIT } from "@/interfaces/IFFloat";
 
 export default {
   name: "BoardList",
-  components: { HaCheckbox, HaButton },
+  components: { HaButton },
   computed: {
     boardItems() {
       return this.$store.getters["board/divisions"];
@@ -74,6 +73,10 @@ export default {
     },
     async onClickMapEdit(mapId) {
       console.log("BoardList.onClickMapEdit", mapId); // @DELETEME
+      const contentId = MAP_EDIT;
+      const show = true;
+      const args = { mapId };
+      await this.$store.dispatch("float/create", { contentId, show, args });
     },
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
