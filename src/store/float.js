@@ -11,18 +11,17 @@ import {
   CHARACTER_LIST,
   UNSET,
   TABLE_VIEW,
-  IMAGE_MANAGER
+  IMAGE_MANAGER,
+  BOARD_LIST
 } from "@/interfaces/IFFloat";
 
 export const float = {
   namespaced: true,
   state: {
     floats: [
-      // new IFFloat(CHAT_LIST),
+      new IFFloat(BOARD_LIST, true),
       new IFFloat(CHARACTER_LIST, true),
-      new IFFloat(CHAT_LIST, true),
-      new IFFloat(TABLE_VIEW, true),
-      new IFFloat(IMAGE_MANAGER, true)
+      new IFFloat(CHAT_LIST, true)
     ]
   },
   mutations: {

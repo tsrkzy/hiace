@@ -2,9 +2,14 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
+import { getName } from "@/scripts/helper";
 
 export class FSPawn {
   static unsubscribeMap = new Map();
+
+  static Who(id: string) {
+    return getName("pawn", id);
+  }
 
   static async GetById({ id }: { id: string }) {
     if (!id) {

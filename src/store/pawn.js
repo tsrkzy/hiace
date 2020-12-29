@@ -1,3 +1,5 @@
+import { FSCharacter } from "@/collections/Character";
+
 export const pawn = {
   namespaced: true,
   state: {
@@ -49,6 +51,15 @@ export const pawn = {
     },
     dragging(state) {
       return state.drag;
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.pawns.length; i++) {
+        const id = state.pawns[i].id;
+        const character = state.pawns[i].character;
+        nameMap[id] = FSCharacter.Who(character);
+      }
+      return nameMap;
     }
   }
 };
