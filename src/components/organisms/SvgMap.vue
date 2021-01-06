@@ -33,6 +33,21 @@ export default {
   props: {
     mapId: { type: String, require: true }
   },
+  async created() {
+    if (!this.mapId) {
+      return false;
+    }
+
+    const { image } = await FSMap.GetById({
+      id: this.mapId
+    });
+    if (!image) {
+      throw new Error(`map has no image: ${this.mapId}`);
+    }
+    await this.fetchImage(image);
+
+    this.loaded = true;
+  },
   computed: {
     z() {
       return this.scalePp / 100;
@@ -55,6 +70,18 @@ export default {
       return this.map.scalePp;
     }
   },
+  methods: {
+    async fetchImage(image) {
+      this.imageId = image;
+      const { url, width, height } = await FSImage.GetById({
+        id: this.imageId
+      });
+
+      this.width = width;
+      this.height = height;
+      this.href = url;
+    }
+  },
   data() {
     return {
       /* image */
@@ -66,26 +93,11 @@ export default {
       loaded: false
     };
   },
-  async created() {
-    if (!this.mapId) {
-      return false;
+  watch: {
+    map(map) {
+      const { image } = map;
+      this.fetchImage(image);
     }
-
-    const { image } = await FSMap.GetById({
-      id: this.mapId
-    });
-    if (!image) {
-      throw new Error(`map has no image: ${this.mapId}`);
-    }
-    const { url, width, height } = await FSImage.GetById({ id: image });
-
-    /* image */
-    this.imageId = image;
-    this.width = width;
-    this.height = height;
-    this.href = url;
-
-    this.loaded = true;
   }
 };
 </script>

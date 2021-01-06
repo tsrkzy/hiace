@@ -51,15 +51,12 @@
         alt="character.activeAlias.image"
         style="max-width: 128px;max-height: 128px;"
       />
-      <details
-        ><summary>choose image</summary>
-        <div style="width: 100%;max-height:192px;overflow-y: scroll;">
-          <image-show-case
-            v-model="imageId"
-            @selectImage="onAliasImageChange"
-          ></image-show-case>
-        </div>
-      </details>
+      <scroll-summary>
+        <image-show-case
+          v-model="imageId"
+          @selectImage="onAliasImageChange"
+        ></image-show-case>
+      </scroll-summary>
     </div>
   </div>
 </template>
@@ -73,12 +70,20 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
+import ScrollSummary from "@/components/organisms/ScrollSummary";
 
 const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
 export default {
   name: "CharacterEdit",
-  components: { HaCheckbox, HaSelect, ImageShowCase, HaTextarea, HaInputForm },
+  components: {
+    ScrollSummary,
+    HaCheckbox,
+    HaSelect,
+    ImageShowCase,
+    HaTextarea,
+    HaInputForm
+  },
   props: {
     floatId: {
       type: Number,

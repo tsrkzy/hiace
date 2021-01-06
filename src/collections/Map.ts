@@ -109,6 +109,12 @@ export class FSMap {
     await batch.commit();
   }
 
+  static async SetImageId(mapId: string, imageId: string) {
+    const db = firebase.firestore();
+    const mapDocRef = db.collection("map").doc(mapId);
+    await mapDocRef.update({ image: imageId });
+  }
+
   static SetListener(roomId: string) {
     console.log("Map.SetListener"); // @DELETEME
     FSMap.RemoveListener();
