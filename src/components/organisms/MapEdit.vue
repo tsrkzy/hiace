@@ -7,19 +7,36 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-checkbox label="ドラッグ操作での移動を許可する"></ha-checkbox>
-    <label>
-      <input type="radio" name="grid_type" value="none" />
-      <span>グリッドなし</span>
-    </label>
-    <label>
-      <input type="radio" name="grid_type" value="square" />
-      <span>直交グリッド</span>
-    </label>
-    <label>
-      <input type="radio" name="grid_type" value="hex" />
-      <span>六角グリッド</span>
-    </label>
+    <ha-checkbox label="ドラッグで位置変更する"></ha-checkbox>
+    <fieldset>
+      <legend>サイズの拡縮</legend>
+      <label>
+        <input
+          type="range"
+          min="25"
+          max="300"
+          step="10"
+          :value="scalePp"
+          @change="onChangeScaleHandler"
+        />
+        <span></span>
+      </label>
+    </fieldset>
+    <fieldset>
+      <legend>グリッドタイプ</legend>
+      <label>
+        <input type="radio" name="grid_type" value="none" />
+        <span>なし</span>
+      </label>
+      <label>
+        <input type="radio" name="grid_type" value="square" />
+        <span>直交</span>
+      </label>
+      <label>
+        <input type="radio" name="grid_type" value="hex" />
+        <span>六角</span>
+      </label>
+    </fieldset>
     <img
       :alt="imageId"
       :src="srcUrl"
@@ -63,7 +80,8 @@ export default {
       throw new Error(`no map found: ${mapId}`);
     }
 
-    const { image: imageId } = map;
+    const { image: imageId, scalePp = 100 } = map;
+    this.scalePp = scalePp;
     this.imageId = imageId;
     const { url } = await FSImage.GetById({ id: imageId });
     this.srcUrl = url;
@@ -72,10 +90,22 @@ export default {
     return {
       mapId: null,
       imageId: null,
-      srcUrl: null
+      srcUrl: null,
+      scalePp: 1.0
     };
   },
   methods: {
+    async onChangeScaleHandler(e) {
+      const { value } = e.currentTarget;
+      await this.updateMapShape(this.mapId, "scalePp", value);
+    },
+    async updateMapShape(mapId, key, value) {
+      const v = parseInt(value, 10);
+      if (isNaN(v)) {
+        throw new Error("value is NaN");
+      }
+      await FSMap.Update(mapId, { [key]: v });
+    },
     async onMapImageChange(imageId) {
       console.log("MapEdit.onMapImageChange", imageId); // @DELETEME
       const { mapId } = this;
