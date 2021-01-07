@@ -83,16 +83,7 @@ export default {
       throw new Error(`no map found: ${mapId}`);
     }
 
-    const { image: imageId, transform } = map;
-    const t = new DOMMatrix(transform);
-    this.originTransform = t;
-
-    const scale = t.a * t.d - t.b * t.c;
-    this.scaleValue = scale * 100;
-
-    this.imageId = imageId;
-    const { url } = await FSImage.GetById({ id: imageId });
-    this.srcUrl = url;
+    await this.reloadMap(map);
   },
   data() {
     return {
@@ -126,11 +117,32 @@ export default {
       const { url } = await FSImage.GetById({ id: imageId });
       this.srcUrl = url;
       this.imageId = imageId;
+    },
+    async reloadMap(map) {
+      if (!map) {
+        throw new Error(`no map found: ${this.mapId}`);
+      }
+
+      const { image: imageId, transform } = map;
+      const t = new DOMMatrix(transform);
+      this.originTransform = t;
+
+      const scale = t.a;
+      this.scaleValue = scale * 100;
+
+      this.imageId = imageId;
+      const { url } = await FSImage.GetById({ id: imageId });
+      this.srcUrl = url;
     }
   },
   computed: {
     map() {
       return this.$store.getters["map/info"].find(m => m.id === this.mapId);
+    }
+  },
+  watch: {
+    map(map) {
+      this.reloadMap(map);
     }
   }
 };
