@@ -10,14 +10,25 @@
     :id="`map_${this.mapId}`"
     v-if="loaded"
     :style="{
-      transform: `translate(${offsetX}px, ${offsetY}px) scale(${z})`
+      transform: `${transform}`
     }"
+    @mousedown="onMouseDown($event)"
   >
-    <text>{{ imageId }}, {{ width }}, {{ height }}</text>
-    <image :width="width" :height="height" :href="href"></image>
+    <text>{{ imageId }} {{ transform }}</text>
     <rect
       :width="width"
       :height="height"
+      stroke="red"
+      fill="transparent"
+    ></rect>
+    <image :width="width" :height="height" :href="href"></image>
+    <!-- ドラッグ中の当たり判定拡張 -->
+    <rect
+      v-if="dragged"
+      :x="-1000 / 2"
+      :y="-1000 / 2"
+      :width="width + 1000"
+      :height="height + 1000"
       stroke="red"
       fill="transparent"
     ></rect>
@@ -38,9 +49,12 @@ export default {
       return false;
     }
 
-    const { image } = await FSMap.GetById({
+    const { image, transform = new DOMMatrix() } = await FSMap.GetById({
       id: this.mapId
     });
+
+    this.transform = transform;
+
     if (!image) {
       throw new Error(`map has no image: ${this.mapId}`);
     }
@@ -60,14 +74,14 @@ export default {
       const id = this.mapId;
       return this.$store.getters["map/info"].find(m => m.id === id);
     },
-    offsetX() {
-      return this.map.offsetX;
+    activeBoard() {
+      return this.$store.getters["board/active"];
     },
-    offsetY() {
-      return this.map.offsetY;
+    transformStore() {
+      return this?.map.transform || new DOMMatrix();
     },
-    scalePp() {
-      return this.map.scalePp;
+    dragged() {
+      return this.$store.getters["map/dragging"] === this.mapId;
     }
   },
   methods: {
@@ -80,10 +94,63 @@ export default {
       this.width = width;
       this.height = height;
       this.href = url;
+    },
+    onMouseDown(e) {
+      console.log("SvgMap.onMouseDown"); // @DELETEME
+      e.stopPropagation();
+
+      this.$store.dispatch("map/dragStart", { mapId: this.mapId });
+
+      const $p = document.getElementById(`map_${this.mapId}`);
+
+      const downX = e.clientX;
+      const downY = e.clientY;
+
+      /* globalの座標系をboard,mapの座標系へ変換する行列 */
+      const $b = document.getElementById(`board_${this.activeBoard.id}`);
+      const $$b = $b.getCTM(); // global -> board
+      const $$p = $p.getCTM(); // global -> map
+      const $$bp = $$b.inverse().multiply($$p); // board -> map
+
+      function globalToLocal(dx, dy) {
+        /* 変位をglobalからDOMローカルの座標系へ変換 */
+        return new DOMMatrix([1, 0, 0, 1, dx / $$p.a, dy / $$p.a]).translate(
+          $$bp.e,
+          $$bp.f
+        );
+      }
+
+      const onMove = e => {
+        e.stopPropagation();
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY);
+        this.transform = `${t}`;
+      };
+
+      const onMouseUp = async e => {
+        e.stopPropagation();
+        console.log("SvgMap.onMouseUp"); // @DELETEME
+        await this.$store.dispatch("map/dragFinish");
+        $p.removeEventListener("mousemove", onMove);
+        $p.removeEventListener("mouseup", onMouseUp);
+        $p.removeEventListener("mouseleave", onMouseUp);
+
+        const t = globalToLocal(e.clientX - downX, e.clientY - downY);
+        const transform = `${t}`;
+        this.transform = transform;
+        await FSMap.Update(this.mapId, { transform });
+      };
+
+      $p.addEventListener("mousemove", onMove, false);
+      $p.addEventListener("mouseup", onMouseUp, false);
+      $p.addEventListener("mouseleave", onMouseUp, false);
+
+      return false;
     }
   },
   data() {
     return {
+      transform: `${new DOMMatrix()}`,
+
       /* image */
       imageId: null,
       width: 0,
@@ -97,6 +164,10 @@ export default {
     map(map) {
       const { image } = map;
       this.fetchImage(image);
+    },
+    transformStore(transform) {
+      console.log("update store.map.transform", transform); // @DELETEME
+      this.transform = transform;
     }
   }
 };

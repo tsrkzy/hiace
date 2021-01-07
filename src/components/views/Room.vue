@@ -7,7 +7,7 @@
 <template>
   <div
     id="floor"
-    style="margin: 40px;border: 1px solid black;overflow: hidden;"
+    style="margin: 40px;border: 1px solid black;overflow: hidden;width: calc(100vw - 80px); height:calc(100vh - 80px);"
   >
     <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
@@ -69,13 +69,9 @@ export default {
     this.roomId = this.$route.params.room_id;
     await this.trackRoomInfo(this.roomId);
   },
-  mounted() {
-    window.addEventListener("resize", this.resizeHandler);
-    this.resizeHandler();
-  },
+  mounted() {},
   beforeDestroy() {
     console.log("Room.beforeDestroy", this.roomId); // @DELETEME
-    window.removeEventListener("resize", this.resizeHandler);
 
     FSRoom.RemoveListener(this.roomId);
     FSUser.RemoveListener();
@@ -146,14 +142,6 @@ export default {
         console.log("joined"); // @DELETEME
         await this.afterJoined();
       }
-    },
-    resizeHandler() {
-      const $el = document.getElementById("floor");
-      const height = window.innerHeight - 2 * WINDOW_MARGIN - 2 * BORDER;
-      $el.style.height = `${height}px`;
-      const width = window.innerWidth - 2 * WINDOW_MARGIN - 2 * BORDER;
-      $el.style.width = `${width}px`;
-      this.$refs.svgTable.resize(width, height);
     }
   },
   computed: {

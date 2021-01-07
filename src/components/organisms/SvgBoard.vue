@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width:100%; height: 100%;">
     <div
       style="position:fixed; top:0; right:0;background-color: lightgray; opacity: 0.2;"
     >
@@ -30,8 +30,8 @@
       id="svg-table"
       :style="{
         backgroundColor: 'ghostwhite',
-        width: svgWidth,
-        height: svgHeight
+        width: '100%',
+        height: '100%'
       }"
       @mousedown="onMouseDown($event)"
     >
@@ -40,6 +40,11 @@
         v-if="activeBoard"
         :style="{ transform: `${transform}` }"
       >
+        <text x="0" y="-3" style="fill: black;">O</text>
+        <path
+          :d="crossHair"
+          style="fill: none;stroke: dimgray; stroke-width: 1px;"
+        />
         <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
         <svg-pawn
           shadow
@@ -71,10 +76,6 @@ export default {
     },
     async onResetPawn(pawnId) {
       await FSPawn.ResetTransform([pawnId]);
-    },
-    resize(width, height) {
-      this.svgWidth = width;
-      this.svgHeight = height;
     },
     onMouseDown(e) {
       if (!this.activeBoard) {
@@ -154,6 +155,19 @@ export default {
       }
       const { width, height } = $el.getBoundingClientRect();
       return { width, height };
+    },
+    crossHair() {
+      const g = 10;
+      const l = 200;
+      const m = 50;
+      return `
+      M ${l},0
+      L 0,0
+      L 0,${l}
+      M 0,${-m}
+      L 0,${-g}
+      M ${-m},0
+      L ${-g}, 0`;
     }
   },
   data() {
@@ -164,8 +178,6 @@ export default {
     const defaultTransform = `${m}`;
     return {
       debug: false,
-      svgWidth: 0,
-      svgHeight: 0,
       transform: defaultTransform
     };
   }

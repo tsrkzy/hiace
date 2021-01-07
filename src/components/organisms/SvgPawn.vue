@@ -33,6 +33,7 @@
       :height="pawnSize"
       :href="imgSrc"
     ></image>
+    <!-- ドラッグ中の当たり判定拡張 -->
     <rect
       v-if="dragged"
       :x="-1000 / 2"
@@ -123,7 +124,7 @@ export default {
       return this.$store.getters["board/active"];
     },
     transformStore() {
-      return this?.pawn.transform;
+      return this?.pawn.transform || new DOMMatrix();
     },
     shadowHandler() {
       const drag = this.$store.getters["pawn/dragging"];

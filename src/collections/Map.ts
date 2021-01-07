@@ -45,6 +45,9 @@ export class FSMap {
       image: imageId,
       scalePp: 100,
       offsetLock: true,
+
+      transform: `${new DOMMatrix()}`,
+
       offsetX: 0,
       offsetY: 0,
       // zIndex: 0,
@@ -82,6 +85,7 @@ export class FSMap {
       offsetX?: Number;
       offsetY?: Number;
       offsetLock?: boolean;
+      transform?: string;
     }
   ) {
     const db = firebase.firestore();
