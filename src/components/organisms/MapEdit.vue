@@ -12,14 +12,14 @@
       @input="onChangeOffsetLock"
     ></ha-checkbox>
     <fieldset>
-      <legend>サイズの拡縮</legend>
+      <legend>サイズの拡縮: {{ scaleValue }}%</legend>
       <label>
         <input
           type="range"
           min="25"
           max="300"
           step="10"
-          :value="scalePp"
+          :value="scaleValue"
           @change="onChangeScaleHandler"
         />
         <span></span>
@@ -83,8 +83,13 @@ export default {
       throw new Error(`no map found: ${mapId}`);
     }
 
-    const { image: imageId, scalePp = 100 } = map;
-    this.scalePp = scalePp;
+    const { image: imageId, transform } = map;
+    const t = new DOMMatrix(transform);
+    this.originTransform = t;
+
+    const scale = t.a * t.d - t.b * t.c;
+    this.scaleValue = scale * 100;
+
     this.imageId = imageId;
     const { url } = await FSImage.GetById({ id: imageId });
     this.srcUrl = url;
@@ -94,20 +99,20 @@ export default {
       mapId: null,
       imageId: null,
       srcUrl: null,
-      scalePp: 1.0
+      originTransform: new DOMMatrix(),
+      /* 拡大率(%) */
+      scaleValue: 100
     };
   },
   methods: {
     async onChangeScaleHandler(e) {
       const { value } = e.currentTarget;
-      await this.updateMapShape(this.mapId, "scalePp", value);
-    },
-    async updateMapShape(mapId, key, value) {
-      const v = parseInt(value, 10);
-      if (isNaN(v)) {
-        throw new Error("value is NaN");
-      }
-      await FSMap.Update(mapId, { [key]: v });
+      const scale = value / 100;
+      const ot = this.originTransform;
+      /* マップの回転は想定していない */
+      const transform = new DOMMatrix([scale, 0, 0, scale, ot.e, ot.f]);
+
+      await FSMap.Update(this.mapId, { transform: `${transform}` });
     },
     onChangeOffsetLock(checked) {
       const offsetLock = !!checked;
