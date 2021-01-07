@@ -8,24 +8,28 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <div>
-      <ha-select :items="tableItems" @change="onChangeTable($event)">
-        <option :value="null" disabled selected>choose table</option>
+      {{ tableId }}
+      <ha-select
+        :value="tableId"
+        :items="tableItems"
+        @change="onChangeTable($event)"
+      >
+        <option :value="null" disabled selected>テーブル選択</option>
       </ha-select>
+      <ha-button @click="onCreateTable">作成</ha-button>
+      <ha-button @click="onDeleteTable">削除</ha-button>
     </div>
     <div v-if="tableMatrix">
       <details>
         <summary>config</summary>
         <ha-button v-if="tableId" @click="onClickAddColumn('int')"
-          >INT
+          >数値
         </ha-button>
         <ha-button v-if="tableId" @click="onClickAddColumn('str')"
-          >STR
-        </ha-button>
-        <ha-button v-if="tableId" @click="onClickAddColumn('ref')"
-          >REF
+          >テキスト
         </ha-button>
         <ha-button v-if="tableId" @click="onClickAddColumn('bool')"
-          >BOOL
+          >チェック
         </ha-button>
         <ol>
           <li v-for="c in togglableColumns" :key="c.id">
@@ -93,6 +97,7 @@
 
 <script>
 import { BOOL, FSColumn, INT, REF, STR } from "@/collections/Column";
+import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
@@ -115,6 +120,16 @@ export default {
   methods: {
     onChangeTable(tableId) {
       this.tableId = tableId;
+    },
+    async onCreateTable() {
+      const roomId = this.room.id;
+      const table = await FSTable.CreateDefault({ roomId });
+      this.tableId = table.id;
+    },
+    async onDeleteTable() {
+      const tableId = this.tableId;
+      await FSTable.Delete(tableId);
+      this.tableId = null;
     },
     async onInputCell(e, cell) {
       const { columnId, characterId, dataType, refPath } = cell;
@@ -226,6 +241,13 @@ export default {
     },
     room() {
       return this.$store.getters["room/info"];
+    }
+  },
+  watch: {
+    tableItems(tableItems) {
+      if (tableItems.indexOf(this.tableId) === -1) {
+        this.tableId = null;
+      }
     }
   }
 };
