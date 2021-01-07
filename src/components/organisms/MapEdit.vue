@@ -7,7 +7,10 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-checkbox label="ドラッグで位置変更する"></ha-checkbox>
+    <ha-checkbox
+      label="ドラッグで位置変更する"
+      @input="onChangeOffsetLock"
+    ></ha-checkbox>
     <fieldset>
       <legend>サイズの拡縮</legend>
       <label>
@@ -22,8 +25,8 @@
         <span></span>
       </label>
     </fieldset>
-    <fieldset>
-      <legend>グリッドタイプ</legend>
+    <fieldset disabled>
+      <legend>グリッドタイプ(未実装)</legend>
       <label>
         <input type="radio" name="grid_type" value="none" />
         <span>なし</span>
@@ -105,6 +108,10 @@ export default {
         throw new Error("value is NaN");
       }
       await FSMap.Update(mapId, { [key]: v });
+    },
+    onChangeOffsetLock(checked) {
+      const offsetLock = !!checked;
+      FSMap.Update(this.mapId, { offsetLock });
     },
     async onMapImageChange(imageId) {
       console.log("MapEdit.onMapImageChange", imageId); // @DELETEME

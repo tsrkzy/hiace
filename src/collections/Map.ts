@@ -44,6 +44,7 @@ export class FSMap {
       board: boardId,
       image: imageId,
       scalePp: 100,
+      offsetLock: true,
       offsetX: 0,
       offsetY: 0,
       // zIndex: 0,
@@ -80,6 +81,7 @@ export class FSMap {
       scalePp?: Number;
       offsetX?: Number;
       offsetY?: Number;
+      offsetLock?: boolean;
     }
   ) {
     const db = firebase.firestore();
