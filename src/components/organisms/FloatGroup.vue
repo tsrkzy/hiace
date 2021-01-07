@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div>
+  <div v-if="!nowDragging">
     <float
       class="float"
       v-for="f in floats"
@@ -33,6 +33,11 @@ export default {
   computed: {
     floats() {
       return this.$store.getters["float/info"];
+    },
+    nowDragging() {
+      const m = !!this.$store.getters["map/dragging"];
+      const p = !!this.$store.getters["pawn/dragging"];
+      return m || p;
     }
   },
   methods: {

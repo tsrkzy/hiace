@@ -48,9 +48,6 @@ export class FSMap {
 
       transform: `${new DOMMatrix()}`,
 
-      offsetX: 0,
-      offsetY: 0,
-      // zIndex: 0,
       grid: {
         cols: 15,
         rows: 15,
@@ -82,8 +79,6 @@ export class FSMap {
     mapId: string,
     params: {
       scalePp?: Number;
-      offsetX?: Number;
-      offsetY?: Number;
       offsetLock?: boolean;
       transform?: string;
     }

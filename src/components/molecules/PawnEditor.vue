@@ -7,39 +7,6 @@
 
 <template>
   <div>
-    <label>
-      x:{{ x }}
-      <input
-        type="range"
-        min="-100"
-        max="100"
-        step="10"
-        :value="x"
-        @change="onChangeOffSetXHandler(pawnId, $event)"
-      />
-    </label>
-    <label>
-      y:{{ y }}
-      <input
-        type="range"
-        min="-100"
-        max="100"
-        step="10"
-        :value="y"
-        @change="onChangeOffSetYHandler(pawnId, $event)"
-      />
-    </label>
-    <label>
-      scale:{{ scale }}
-      <input
-        type="range"
-        min="50"
-        max="200"
-        step="10"
-        :value="scale"
-        @change="onChangeScaleHandler(pawnId, $event)"
-      />
-    </label>
     <img :src="imageUrl" :alt="pawnId" :width="24" :height="24" />
     <ha-button @click="onClickDeletePawn(pawnId)"
       >DELETE PAWN: {{ pawnId }}
@@ -87,38 +54,10 @@ export default {
     imageUrl() {
       return this.image ? this.image.url : "";
     },
-    x() {
-      return this.pawn?.offsetX ?? 0;
-    },
-    y() {
-      return this.pawn?.offsetY ?? 0;
-    },
-    scale() {
-      return this.pawn?.scalePp ?? 0;
-    }
   },
   methods: {
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
-    },
-    async onChangeOffSetXHandler(pawnId, e) {
-      const { value } = e.currentTarget;
-      await this.updatePawnShape(pawnId, "offsetX", value);
-    },
-    async onChangeOffSetYHandler(pawnId, e) {
-      const { value } = e.currentTarget;
-      await this.updatePawnShape(pawnId, "offsetY", value);
-    },
-    async onChangeScaleHandler(pawnId, e) {
-      const { value } = e.currentTarget;
-      await this.updatePawnShape(pawnId, "scalePp", value);
-    },
-    async updatePawnShape(pawnId, key, value) {
-      const v = parseInt(value, 10);
-      if (isNaN(v)) {
-        throw new Error("value is NaN");
-      }
-      await FSPawn.Update(pawnId, { [key]: v });
     }
   }
 };

@@ -7,39 +7,6 @@
 
 <template>
   <div>
-    <label>
-      x:{{ x }}
-      <input
-        type="range"
-        min="-100"
-        max="100"
-        step="10"
-        :value="x"
-        @change="onChangeOffSetXHandler(mapId, $event)"
-      />
-    </label>
-    <label>
-      y:{{ y }}
-      <input
-        type="range"
-        min="-100"
-        max="100"
-        step="10"
-        :value="y"
-        @change="onChangeOffSetYHandler(mapId, $event)"
-      />
-    </label>
-    <label>
-      scale:{{ scale }}
-      <input
-        type="range"
-        min="50"
-        max="200"
-        step="10"
-        :value="scale"
-        @change="onChangeScaleHandler(mapId, $event)"
-      />
-    </label>
     <img :src="imageUrl" :alt="mapId" :width="24" :height="24" />
     <ha-button @click="onClickDeleteMap(mapId)"
       >DELETE MAP: {{ mapId }}
@@ -79,32 +46,11 @@ export default {
     },
     imageUrl() {
       return this.image ? this.image.url : "";
-    },
-    x() {
-      return this.map?.offsetX ?? 0;
-    },
-    y() {
-      return this.map?.offsetY ?? 0;
-    },
-    scale() {
-      return this.map?.scalePp ?? 0;
     }
   },
   methods: {
     async onClickDeleteMap(mapId) {
       await FSMap.Delete(mapId);
-    },
-    async onChangeOffSetXHandler(mapId, e) {
-      const { value } = e.currentTarget;
-      await this.updateMapShape(mapId, "offsetX", value);
-    },
-    async onChangeOffSetYHandler(mapId, e) {
-      const { value } = e.currentTarget;
-      await this.updateMapShape(mapId, "offsetY", value);
-    },
-    async onChangeScaleHandler(mapId, e) {
-      const { value } = e.currentTarget;
-      await this.updateMapShape(mapId, "scalePp", value);
     },
     async updateMapShape(mapId, key, value) {
       const v = parseInt(value, 10);

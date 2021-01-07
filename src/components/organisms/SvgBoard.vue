@@ -15,7 +15,7 @@
           <ha-button @click="onResetBoard(2)">RESET BOARD x2</ha-button>
           <h5>MAPS</h5>
           <div :key="m.id" v-for="m in maps">
-            {{ m.id }}, {{ m.offsetX }}, {{ m.offsetY }}
+            {{ m.id }}, {{ m.transform }}
           </div>
           <h5>PAWNS</h5>
           <div :key="p.id" v-for="p in pawns">
@@ -53,9 +53,6 @@
           :pawn-id="p.id"
         ></svg-pawn>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
-        <!-- boardの座標原点 -->
-        <!-- <circle r="2" cx="0" cy="0" style="fill: red;stroke: none;"></circle> -->
-        <!-- <text>O: {{ transform }} - {{ activeBoard.id }}</text> -->
       </g>
     </svg>
   </div>
