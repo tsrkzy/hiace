@@ -84,7 +84,7 @@ export default {
       return this.$store.getters["map/dragging"] === this.mapId;
     },
     locked() {
-      return !!this?.map?.offsetLock;
+      return !!this?.map?.dragLock;
     }
   },
   methods: {

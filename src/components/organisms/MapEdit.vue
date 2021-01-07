@@ -9,8 +9,8 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <ha-checkbox
       label="位置を固定する"
-      :value="offsetLock"
-      @input="onChangeOffsetLock"
+      :value="dragLock"
+      @input="onChangeDragLock"
     ></ha-checkbox>
     <fieldset>
       <legend>サイズの拡縮: {{ scaleValue }}%</legend>
@@ -94,7 +94,7 @@ export default {
       originTransform: new DOMMatrix(),
       /* 拡大率(%) */
       scaleValue: 100,
-      offsetLock: true
+      dragLock: true
     };
   },
   methods: {
@@ -107,9 +107,9 @@ export default {
 
       await FSMap.Update(this.mapId, { transform: `${transform}` });
     },
-    onChangeOffsetLock(checked) {
-      const offsetLock = !!checked;
-      FSMap.Update(this.mapId, { offsetLock });
+    onChangeDragLock(checked) {
+      const dragLock = !!checked;
+      FSMap.Update(this.mapId, { dragLock });
     },
     async onMapImageChange(imageId) {
       console.log("MapEdit.onMapImageChange", imageId); // @DELETEME
@@ -125,14 +125,14 @@ export default {
         throw new Error(`no map found: ${this.mapId}`);
       }
 
-      const { image: imageId, transform, offsetLock } = map;
+      const { image: imageId, transform, dragLock } = map;
       const t = new DOMMatrix(transform);
       this.originTransform = t;
 
       const scale = t.a;
       this.scaleValue = scale * 100;
 
-      this.offsetLock = offsetLock;
+      this.dragLock = dragLock;
       this.imageId = imageId;
       const { url } = await FSImage.GetById({ id: imageId });
       this.srcUrl = url;

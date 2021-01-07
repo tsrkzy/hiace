@@ -44,7 +44,7 @@ export class FSMap {
       board: boardId,
       image: imageId,
       scalePp: 100,
-      offsetLock: true,
+      dragLock: true,
 
       transform: `${new DOMMatrix()}`,
 
@@ -79,7 +79,7 @@ export class FSMap {
     mapId: string,
     params: {
       scalePp?: Number;
-      offsetLock?: boolean;
+      dragLock?: boolean;
       transform?: string;
     }
   ) {
