@@ -32,11 +32,14 @@
     ></image-manager>
     <sound-manager v-else-if="contentId === SOUND_MANAGER" :float-id="floatId">
     </sound-manager>
+    <room-manager v-else-if="contentId === ROOM_MANAGER" :float-id="floatId">
+    </room-manager>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
 
 <script>
+import RoomManager from "@/components/organisms/FloatContents/RoomManager";
 import MapEdit from "@/components/organisms/MapEdit";
 import BoardList from "@/components/organisms/FloatContents/BoardList";
 import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
@@ -53,12 +56,14 @@ import {
   CHAT_LIST,
   TABLE_VIEW,
   IMAGE_MANAGER,
-  SOUND_MANAGER
+  SOUND_MANAGER,
+  ROOM_MANAGER
 } from "@/interfaces/IFFloat";
 
 export default {
   name: "FloatContent",
   components: {
+    RoomManager,
     MapEdit,
     SoundManager,
     ImageManager,
@@ -77,7 +82,8 @@ export default {
       CHAT_LIST,
       TABLE_VIEW,
       IMAGE_MANAGER,
-      SOUND_MANAGER
+      SOUND_MANAGER,
+      ROOM_MANAGER
     };
   },
   props: {

@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="!nowDragging">
+  <div v-if="!nowDragging && loggedIn">
     <float
       class="float"
       v-for="f in floats"
@@ -39,6 +39,9 @@ export default {
       const p = !!this.$store.getters["pawn/dragging"];
       const b = !!this.$store.getters["board/dragging"];
       return m || p || b;
+    },
+    loggedIn() {
+      return this.$store.getters["auth/loggedIn"];
     }
   },
   methods: {

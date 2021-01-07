@@ -26,6 +26,7 @@ export const CHAT_LIST = "CHAT_LIST";
 export const TABLE_VIEW = "TABLE_VIEW";
 export const IMAGE_MANAGER = "IMAGE_MANAGER";
 export const SOUND_MANAGER = "SOUND_MANAGER";
+export const ROOM_MANAGER = "ROOM_MANAGER";
 
 export function title(id: string) {
   switch (id) {
@@ -52,6 +53,9 @@ export function title(id: string) {
     }
     case SOUND_MANAGER: {
       return "サウンド管理";
+    }
+    case ROOM_MANAGER: {
+      return "部屋情報";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);

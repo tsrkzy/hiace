@@ -21,11 +21,15 @@ export const room = {
       maps: [],
       soundEffects: [],
       music: null
-    }
+    },
+    requests: []
   },
   mutations: {
     setRoom(state, payload) {
       state.room = payload.room;
+    },
+    setRequest(state, payload) {
+      state.requests = payload.requests;
     }
   },
   actions: {
@@ -52,6 +56,10 @@ export const room = {
         music: null
       };
       commit("setRoom", { room });
+    },
+    setRequest({ commit }, { requests = [] }) {
+      console.log("room.setRequest", requests); // @DELETEME
+      commit("setRequest", { requests });
     }
   },
   getters: {
@@ -80,6 +88,9 @@ export const room = {
     },
     activeBoard(state, getters) {
       return getters["info"]?.activeBoard;
+    },
+    requests(state) {
+      return state.requests;
     }
   },
   modules: {}

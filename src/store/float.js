@@ -12,13 +12,15 @@ import {
   UNSET,
   TABLE_VIEW,
   IMAGE_MANAGER,
-  BOARD_LIST
+  BOARD_LIST,
+  ROOM_MANAGER
 } from "@/interfaces/IFFloat";
 
 export const float = {
   namespaced: true,
   state: {
     floats: [
+      new IFFloat(ROOM_MANAGER, true),
       new IFFloat(BOARD_LIST, true),
       new IFFloat(CHARACTER_LIST, true),
       new IFFloat(CHAT_LIST, true)
