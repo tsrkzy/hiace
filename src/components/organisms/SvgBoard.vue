@@ -14,9 +14,7 @@
           <ha-button @click="onResetBoard(0.5)">RESET BOARD x0.5</ha-button>
           <ha-button @click="onResetBoard(2)">RESET BOARD x2</ha-button>
           <h5>MAPS</h5>
-          <div :key="m.id" v-for="m in maps">
-            {{ m.id }}, {{ m.transform }}
-          </div>
+          <div :key="m.id" v-for="m in maps">{{ m.id }}, {{ m.transform }}</div>
           <h5>PAWNS</h5>
           <div :key="p.id" v-for="p in pawns">
             <ha-button @click="onResetPawn(p.id)"
@@ -81,6 +79,8 @@ export default {
 
       e.stopPropagation();
 
+      this.$store.dispatch("board/dragStart", { boardId: this.activeBoard.id });
+
       const $el = document.getElementById("svg-table");
       $el.classList.add("drag");
 
@@ -110,6 +110,7 @@ export default {
 
         this.transform = `${t}`;
         $el.classList.remove("drag");
+        this.$store.dispatch("board/dragFinish");
         $el.removeEventListener("mousemove", onMove);
         $el.removeEventListener("mouseup", onMouseUp);
         $el.removeEventListener("mouseleave", onMouseUp);

@@ -82,6 +82,9 @@ export default {
     },
     dragged() {
       return this.$store.getters["map/dragging"] === this.mapId;
+    },
+    locked() {
+      return !!this?.map?.offsetLock;
     }
   },
   methods: {
@@ -97,6 +100,11 @@ export default {
     },
     onMouseDown(e) {
       console.log("SvgMap.onMouseDown"); // @DELETEME
+      if (this.locked) {
+        console.log(`map is locked. ${this.mapId}`); // @DELETEME
+        return false;
+      }
+
       e.stopPropagation();
 
       this.$store.dispatch("map/dragStart", { mapId: this.mapId });

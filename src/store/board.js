@@ -1,17 +1,27 @@
 export const board = {
   namespaced: true,
   state: {
-    boards: []
+    boards: [],
+    drag: null
   },
   mutations: {
     setBoards(state, payload) {
       state.boards = payload.boards;
+    },
+    setDrag(state, payload) {
+      state.drag = payload.drag;
     }
   },
   actions: {
     setBoards({ commit }, { boards }) {
       console.log("board.setBoards", boards); // @DELETEME
       commit("setBoards", { boards });
+    },
+    dragStart({ commit }, { boardId }) {
+      commit("setDrag", { drag: boardId });
+    },
+    dragFinish({ commit }) {
+      commit("setDrag", { drag: null });
     }
   },
   getters: {
@@ -38,6 +48,9 @@ export const board = {
         return null;
       }
       return state.boards.find(b => b.id === activeBoard);
+    },
+    dragging(state) {
+      return state.drag;
     }
   }
 };

@@ -37,7 +37,8 @@ export default {
     nowDragging() {
       const m = !!this.$store.getters["map/dragging"];
       const p = !!this.$store.getters["pawn/dragging"];
-      return m || p;
+      const b = !!this.$store.getters["board/dragging"];
+      return m || p || b;
     }
   },
   methods: {

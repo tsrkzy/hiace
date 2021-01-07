@@ -8,7 +8,8 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <ha-checkbox
-      label="ドラッグで位置変更する"
+      label="位置を固定する"
+      :value="offsetLock"
       @input="onChangeOffsetLock"
     ></ha-checkbox>
     <fieldset>
@@ -92,7 +93,8 @@ export default {
       srcUrl: null,
       originTransform: new DOMMatrix(),
       /* 拡大率(%) */
-      scaleValue: 100
+      scaleValue: 100,
+      offsetLock: true
     };
   },
   methods: {
@@ -123,13 +125,14 @@ export default {
         throw new Error(`no map found: ${this.mapId}`);
       }
 
-      const { image: imageId, transform } = map;
+      const { image: imageId, transform, offsetLock } = map;
       const t = new DOMMatrix(transform);
       this.originTransform = t;
 
       const scale = t.a;
       this.scaleValue = scale * 100;
 
+      this.offsetLock = offsetLock;
       this.imageId = imageId;
       const { url } = await FSImage.GetById({ id: imageId });
       this.srcUrl = url;
