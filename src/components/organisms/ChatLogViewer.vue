@@ -15,7 +15,6 @@
       style="margin:0;padding: 0;"
     >
       <chat-row
-        :float-id="floatId"
         :chat-id="c"
         v-for="c of chatIdList"
         :key="c"

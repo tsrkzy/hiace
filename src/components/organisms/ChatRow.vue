@@ -29,7 +29,6 @@ export default {
   name: "ChatRow",
   props: {
     chatId: { type: String, require: true },
-    floatId: { type: Number, require: true }
   },
   computed: {
     chat() {
