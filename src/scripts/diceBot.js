@@ -18,7 +18,7 @@ export const GAME_SYSTEMS = [
 
 const config = {
   baseURL: "https://bcdice.onlinesession.app/v1/",
-  timeout: 1000
+  timeout: 3000
 };
 
 const axios_instance = axios.create(config);

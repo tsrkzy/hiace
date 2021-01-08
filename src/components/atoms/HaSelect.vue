@@ -3,7 +3,10 @@
     <slot name="label">
       <span v-if="label">{{ label }}</span>
     </slot>
-    <select @change="$emit('change', $event.currentTarget.value)">
+    <select
+      :disabled="disabled"
+      @change="$emit('change', $event.currentTarget.value)"
+    >
       <slot>
         <option selected :value="null">not selected</option>
       </slot>
@@ -28,7 +31,8 @@ export default {
   props: {
     label: { type: String },
     items: { type: Array, default: () => [] },
-    value: { type: String }
+    value: { type: String },
+    disabled: { type: Boolean, default: false }
   }
 };
 </script>

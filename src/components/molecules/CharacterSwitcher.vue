@@ -12,6 +12,7 @@
     </ha-select>
     <ha-select
       label="Alias"
+      :disabled="disableAlias"
       :items="aliasItems"
       v-model="aliasId"
       @change="onChangeAliasHandler"
@@ -52,6 +53,9 @@ export default {
     },
     userName() {
       return this.$store.getters["auth/user"].name;
+    },
+    disableAlias() {
+      return (this.aliasItems || []).length === 0;
     }
   },
   methods: {
@@ -80,6 +84,7 @@ export default {
       );
 
       this.aliasId = activeAlias;
+      this.pushUp();
     },
     async onChangeAliasHandler() {
       const { characterId, aliasId } = this;
@@ -88,6 +93,12 @@ export default {
       }
 
       await FSCharacter.SetActiveAlias(characterId, aliasId);
+      this.pushUp();
+    },
+    pushUp() {
+      const characterId = this.characterId;
+      const aliasId = this.aliasId;
+      this.$emit("changed", { characterId, aliasId });
     }
   },
   data() {

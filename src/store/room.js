@@ -91,6 +91,9 @@ export const room = {
     },
     requests(state) {
       return state.requests;
+    },
+    gameSystem(state){
+      return state.system;
     }
   },
   modules: {}

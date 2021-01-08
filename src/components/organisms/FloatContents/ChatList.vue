@@ -9,12 +9,31 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <chat-log-viewer :float-id="floatId" />
     <div style="width: 100%;height: 60px;">
-      <character-switcher ref="cs"></character-switcher>
-      <ha-select label="ch:" :items="channelItems" v-model="channelIdChatTo">
-        <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
-      </ha-select>
-      <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
-      </ha-select>
+      <details>
+        <summary>{{ configSummary }}</summary>
+        <fieldset>
+          <legend>チャット設定</legend>
+          <div>
+            <character-switcher
+              ref="cs"
+              @changed="onChangeCS"
+            ></character-switcher>
+          </div>
+          <div>
+            <ha-select
+              label="ch:"
+              :items="channelItems"
+              v-model="channelIdChatTo"
+            >
+              <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
+            </ha-select>
+          </div>
+          <div>
+            <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
+            </ha-select>
+          </div>
+        </fieldset>
+      </details>
       <ha-textarea
         @keydown="onKeydown"
         v-model="chatText"
@@ -22,16 +41,17 @@
         :resizeable="false"
         placeholder="enter: send / shift+enter: new line"
       ></ha-textarea>
-      <ha-button @click="sendChat">send</ha-button>
+      <!--      <ha-button @click="sendChat">send</ha-button>-->
     </div>
   </div>
 </template>
 
 <script>
-import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSAlias } from "@/collections/Alias";
+import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
-import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
@@ -45,7 +65,6 @@ export default {
   components: {
     ChatLogViewer,
     HaTextarea,
-    HaButton,
     HaSelect,
     CharacterSwitcher
   },
@@ -54,6 +73,9 @@ export default {
       type: Number,
       require: true
     }
+  },
+  created() {
+    this.diceSystem = this.$store.getters["room/gameSystem"];
   },
   computed: {
     channelItems() {
@@ -70,6 +92,24 @@ export default {
     },
     user() {
       return this.$store.getters["auth/user"];
+    },
+    configSummary() {
+      const { characterId, aliasId } = this;
+      const u = FSUser.Who(this.user.id) ?? "";
+      const c = FSCharacter.Who(characterId) ?? "";
+      const a = FSAlias.Who(aliasId) ?? "";
+      const ch = FSChannel.Who(this.channelIdChatTo) ?? "";
+      /*
+       * speaker
+       *   (${u}@PL)
+       *   (${c}@${a})
+       * to
+       *   ${ch}
+       *   ${talkee} // @TODO tell
+       * */
+      const speaker = c ? `(${c}@${a})` : `(${u}@PL)`;
+      const to = ch ? ` → ${ch}` : ``;
+      return `${speaker}${to}`;
     }
   },
   data() {
@@ -77,7 +117,9 @@ export default {
       SYSTEM_CHANNEL_ID,
       channelIdChatTo: SYSTEM_CHANNEL_ID,
       diceSystem: null,
-      chatText: ""
+      chatText: "",
+      characterId: null,
+      aliasId: null
     };
   },
   methods: {
@@ -85,6 +127,11 @@ export default {
       /* 子コンポーネントから選択中のcharacterとaliasを取得 */
       const { aliasId, characterId } = this.$refs.cs.getIdCharacterAndAlias();
       return { aliasId, characterId };
+    },
+    onChangeCS(speaker) {
+      const { characterId, aliasId } = speaker;
+      this.characterId = characterId;
+      this.aliasId = aliasId;
     },
     async sendChat() {
       console.log("DebugIndicator.sendChat"); // @DELETEME
