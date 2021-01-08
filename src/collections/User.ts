@@ -4,6 +4,7 @@ import "firebase/auth";
 
 import store from "@/store";
 import { getName } from "@/scripts/helper";
+import { SYSTEM_COLOR } from "@/collections/Chat";
 
 export class FSUser {
   static unsubscribeMap = new Map();
@@ -75,6 +76,7 @@ export class FSUser {
       photoUrl: me?.photoURL,
       email: me?.email,
       lastPing: Date.now(),
+      color: SYSTEM_COLOR,
       joinTo: []
     };
     const ref = await db.collection("user").add(u);

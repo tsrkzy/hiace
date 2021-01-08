@@ -9,6 +9,8 @@ export const TEXT = "TEXT";
 export const DICE = "DICE";
 export const SYSTEM = "SYSTEM";
 
+export const SYSTEM_COLOR = "#000000";
+
 export class FSChat {
   static unsubscribeMap = new Map();
 
@@ -42,8 +44,11 @@ export class FSChat {
     const db = firebase.firestore();
     const timestamp = Date.now();
 
+    const color = FSChat.getColor(owner, character);
+
     const c = {
       type,
+      color,
       room,
       channel,
       owner,
@@ -61,6 +66,22 @@ export class FSChat {
     }
 
     return { id, ...c };
+  }
+
+  static getColor(userId: string, characterId: string | null) {
+    const character = store.getters["character/info"].find(
+      (c: { id: string; color: string }) => c.id === characterId
+    );
+    if (character && character.color) {
+      return character.color;
+    }
+    const user = store.getters["user/info"].find(
+      (u: { id: string; color: string }) => u.id === userId
+    );
+    if (user && user.color) {
+      return user.color;
+    }
+    return SYSTEM_COLOR;
   }
 
   static async BroadcastLoggedIn({

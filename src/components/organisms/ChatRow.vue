@@ -6,13 +6,22 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <li style="margin: 0;word-break: break-word;">
-    <span>{{ format }}</span>
+  <li :style="{ margin: 0, wordBreak: 'break-word', color: color }">
+    <!-- channel -->
+    <span style="color: #000000;">{{ channel }}</span>
+    <!-- speaker -->
+    <span>{{ speaker }}</span>
+    <!-- one line -->
     <span v-if="textList.length === 1">{{ textList[0] }}</span>
+    <!-- multi lines -->
     <span v-else v-for="(t, i) of textList" :key="i">
       <br />
       <span
-        style="margin-left: 0.5rem;padding-left: 0.5rem;border-left: 1px solid lightgray;"
+        :style="{
+          marginLeft: '0.5rem',
+          paddingLeft: '0.5rem',
+          borderLeft: '1px solid lightgray'
+        }"
         >{{ t }}</span
       >
     </span>
@@ -23,23 +32,28 @@
 import { FSAlias } from "@/collections/Alias";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
+import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 
 export default {
   name: "ChatRow",
   props: {
-    chatId: { type: String, require: true },
+    chatId: { type: String, require: true }
   },
   computed: {
     chat() {
       return this.$store.getters["chat/info"].find(c => c.id === this.chatId);
     },
-    format() {
+    channel() {
       const chat = this.chat;
       const c = this.getChannelName(chat) || "none";
+      return `(${c})`;
+    },
+    speaker() {
+      const chat = this.chat;
       const s = this.getCharacterName(chat) || this.getUserName(chat);
       const a = chat.alias ? `(${this.getAliasName(chat)})` : "";
-      return `(${c}) ${s} ${a}:`;
+      return `${s} ${a}:`;
     },
     textList() {
       const chat = this.chat;
@@ -47,6 +61,9 @@ export default {
       const result = chat.value.result;
       const textList = chat.value.text.split(/\n/);
       return isDice ? [...textList, result] : textList;
+    },
+    color() {
+      return this.chat?.color || SYSTEM_COLOR;
     }
   },
   methods: {

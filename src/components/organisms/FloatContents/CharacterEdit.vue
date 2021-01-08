@@ -8,18 +8,14 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <div>
-      {{ characterId }}
-    </div>
-    <div>
       <ha-input-form
-        label="character.name = "
+        label="名前"
         :value="character['name']"
         @change="onCharacterNameInput"
       ></ha-input-form>
     </div>
     <div>
       <ha-textarea
-        label="character.text = "
         rows="3"
         :value="character['text']"
         @change="onCharacterTextInput"
@@ -27,10 +23,20 @@
     </div>
     <div>
       <ha-checkbox
-        label="show on initiative"
+        label="データテーブルに表示"
         v-model="showOnInitiative"
         @change="onCharacterShowOnInitiative"
       ></ha-checkbox>
+    </div>
+    <div>
+      <label>
+        <span>文字色</span>
+        <input
+          type="color"
+          :value="chatColor"
+          @change="onChangeColor($event)"
+        />
+      </label>
     </div>
     <div>
       <ha-select
@@ -64,6 +70,7 @@
 <script>
 import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
+import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSImage } from "@/collections/Image";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
@@ -97,7 +104,8 @@ export default {
       aliasId: null,
       srcUrl: null,
       pawnSizeStr: "1",
-      showOnInitiative: false
+      showOnInitiative: false,
+      chatColor: SYSTEM_COLOR
     };
   },
   async created() {
@@ -109,13 +117,15 @@ export default {
     const {
       activeAlias,
       pawnSize = 1,
-      showOnInitiative = false
+      showOnInitiative = false,
+      color = SYSTEM_COLOR
     } = this.$store.getters["character/info"].find(
       c => c.id === this.characterId
     );
     this.aliasId = activeAlias;
     this.pawnSizeStr = `${pawnSize}`;
     this.showOnInitiative = showOnInitiative;
+    this.chatColor = color;
 
     const { image } = this.$store.getters["alias/info"].find(
       a => a.id === activeAlias
@@ -140,6 +150,12 @@ export default {
     onCharacterShowOnInitiative(value) {
       console.log("CharacterEdit.onCharacterShowOnInitiative", value); // @DELETEME
       FSCharacter.Update(this.characterId, { showOnInitiative: value });
+    },
+    async onChangeColor(e) {
+      const color = e.currentTarget.value;
+      console.log("CharacterEdit.onChangeColor", color); // @DELETEME
+      this.chatColor = color;
+      await FSCharacter.Update(this.characterId, { color });
     },
     onChangePawnSize(pawnSizeStr) {
       console.log("CharacterEdit.onChangePawnSize", pawnSizeStr); // @DELETEME

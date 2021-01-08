@@ -14,12 +14,7 @@
       :id="`chat-list--scroll-content__${floatId}`"
       style="margin:0;padding: 0;"
     >
-      <chat-row
-        :chat-id="c"
-        v-for="c of chatIdList"
-        :key="c"
-      >
-      </chat-row>
+      <chat-row :chat-id="c" v-for="c of chatIdList" :key="c"> </chat-row>
     </ol>
   </div>
 </template>

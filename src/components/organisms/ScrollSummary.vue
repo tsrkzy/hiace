@@ -7,7 +7,7 @@
 
 <template>
   <details
-    ><summary>choose image</summary>
+    ><summary>画像を選択する</summary>
     <div style="width: 100%;max-height:192px;overflow-y: scroll;">
       <slot></slot>
     </div>

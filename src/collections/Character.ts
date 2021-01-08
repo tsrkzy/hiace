@@ -5,6 +5,7 @@ import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 import { getName } from "@/scripts/helper";
+import { SYSTEM_COLOR } from "@/collections/Chat";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
@@ -45,6 +46,7 @@ export class FSCharacter {
     showOnInitiative: boolean;
     chatPosition: number;
     pawnSize: number;
+    color: string;
   }) {
     const {
       owner,
@@ -55,7 +57,8 @@ export class FSCharacter {
       imageId = DEFAULT_CHARACTER_IMAGE,
       showOnInitiative = true,
       chatPosition = 1,
-      pawnSize = 1
+      pawnSize = 1,
+      color = SYSTEM_COLOR
     } = params;
 
     if (!owner) {
@@ -74,7 +77,8 @@ export class FSCharacter {
       activeAlias,
       showOnInitiative,
       chatPosition,
-      pawnSize
+      pawnSize,
+      color
     };
 
     const db = firebase.firestore();
