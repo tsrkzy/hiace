@@ -7,12 +7,11 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <div v-if="isOwner">
+    <div v-if="iAmOwner">
       <fieldset :key="r.id" v-for="r in requestItems">
         <legend>入室リクエスト:{{ r.email }}</legend>
-        <ha-button @click="onClickGrant">許可</ha-button>
-        <ha-button @click="onClickDrop">却下</ha-button>
-        <ha-button @click="onClickKick">キック</ha-button>
+        <ha-button @click="onClickGrant(r.id)">許可</ha-button>
+        <ha-button @click="onClickKick(r.id)">キック</ha-button>
       </fieldset>
     </div>
     <div v-else>
@@ -29,6 +28,21 @@
         <span>入室済み</span>
       </div>
     </div>
+    <h5>参加中のユーザ</h5>
+    <ul>
+      <li :key="u.id" v-for="u in userItems">
+        <span
+          >{{ isOwner(u.id) ? "★" : "" }}{{ u.email
+          }}{{ isMe(u.id) ? "(自分)" : "" }}</span
+        >
+        <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickDrop(u.id)"
+          >退室させる</ha-button
+        >
+        <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickKick(u.id)"
+          >キック</ha-button
+        >
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -78,7 +92,7 @@ export default {
     authenticated() {
       return this.$store.getters["auth/authenticated"];
     },
-    isOwner() {
+    iAmOwner() {
       const userId = this.user.id;
       return this.authenticated && this.room.owner === userId;
     },
@@ -90,6 +104,12 @@ export default {
     },
     requestItems() {
       return this.$store.getters["room/requests"];
+    },
+    userItems() {
+      return this.$store.getters["user/info"].map(u => ({
+        id: u.id,
+        email: u.email
+      }));
     }
   },
   data() {
@@ -100,9 +120,15 @@ export default {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
     },
-    async onClickGrant() {},
-    async onClickDrop() {},
-    async onClickKick() {},
+    async onClickGrant(userId) {
+      await FSRoom.GrantRequest(userId);
+    },
+    async onClickDrop(userId) {
+      await FSRoom.DropUser(userId);
+    },
+    async onClickKick(userId) {
+      await FSRoom.KickUser(userId);
+    },
     async fetchUser(userIdList) {
       const requests = this.$store.getters["room/requests"];
       const list = [];
@@ -112,6 +138,12 @@ export default {
         list.push({ id: userId, email });
       }
       await this.$store.dispatch("room/setRequest", { requests: list });
+    },
+    isMe(userId) {
+      return userId === this.$store.getters["auth/user"]?.id;
+    },
+    isOwner(userId) {
+      return this.room.owner === userId;
     }
   },
   watch: {

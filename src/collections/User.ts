@@ -114,6 +114,27 @@ export class FSUser {
     await userDoc.update({ joinTo });
   }
 
+  static async LeaveRoom(userId: string, roomId: string) {
+    const db = firebase.firestore();
+    const userDoc = db.collection("user").doc(userId);
+    const userRef = await userDoc.get();
+    const user = userRef.data();
+
+    if (!user) {
+      throw new Error(`no user found: ${userId}`);
+    }
+
+    const { joinTo = [] } = user;
+    if (joinTo.indexOf(roomId) === -1) {
+      console.log("already left");
+      return false;
+    }
+
+    joinTo.splice(joinTo.indexOf(userId), 1);
+
+    await userDoc.update({ joinTo });
+  }
+
   static SetListener(roomId: string) {
     console.log("User.SetListener"); // @DELETEME
     FSUser.RemoveListener();

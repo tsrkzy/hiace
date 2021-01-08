@@ -161,10 +161,9 @@ export class FSRoom {
    */
   static async DropUser(userId: string) {
     console.log("Room.dropUser", userId); // @DELETEME
+
+    /* room.users からの削除 */
     const room = store.getters["room/info"];
-    if (room.users.indexOf(userId) === -1) {
-      throw new Error(`no user found: ${userId}`);
-    }
     if (room.owner === userId) {
       throw new Error(`cannnot drop owner: ${userId}`);
     }
@@ -173,6 +172,9 @@ export class FSRoom {
     const db = firebase.firestore();
     const doc = db.collection("room").doc(room.id);
     await doc.update({ users });
+
+    /* user.joinTo からの削除 */
+    await FSUser.LeaveRoom(userId, room.id);
   }
 
   /**
@@ -182,21 +184,26 @@ export class FSRoom {
    */
   static async KickUser(userId: string) {
     console.log("Room.kickUser", userId); // @DELETEME
+
+    /* room.users, requests からの削除 + kicked への追加 */
     const room = store.getters["room/info"];
-    if (room.kicked.indexOf(userId) !== -1) {
-      throw new Error(`already kicked: ${userId}`);
-    }
     if (room.owner === userId) {
       throw new Error("cannot kick owner");
     }
     const users = room.users.filter((u: string) => u !== userId);
     const requests = room.requests.filter((u: string) => u !== userId);
+
     const kicked = room.kicked.slice();
-    kicked.push(userId);
+    if (room.kicked.indexOf(userId) === -1) {
+      kicked.push(userId);
+    }
 
     const db = firebase.firestore();
     const doc = db.collection("room").doc(room.id);
     await doc.update({ users, requests, kicked });
+
+    /* user.joinTo からの削除 */
+    await FSUser.LeaveRoom(userId, room.Id);
   }
 
   /**
