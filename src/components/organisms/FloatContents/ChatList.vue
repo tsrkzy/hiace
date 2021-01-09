@@ -7,7 +7,7 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <chat-log-viewer :float-id="floatId" />
+    <chat-log-viewer :float-id="floatId" :channel-id="channelId" />
     <div style="width: 100%;height: 60px;">
       <details>
         <summary>{{ configSummary }}</summary>
@@ -20,11 +20,7 @@
             ></character-switcher>
           </div>
           <div>
-            <ha-select
-              label="ch:"
-              :items="channelItems"
-              v-model="channelIdChatTo"
-            >
+            <ha-select label="ch:" :items="channelItems" v-model="channelId">
               <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
             </ha-select>
           </div>
@@ -52,6 +48,7 @@ import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
@@ -98,7 +95,7 @@ export default {
       const u = FSUser.Who(this.user.id) ?? "";
       const c = FSCharacter.Who(characterId) ?? "";
       const a = FSAlias.Who(aliasId) ?? "";
-      const ch = FSChannel.Who(this.channelIdChatTo) ?? "";
+      const ch = FSChannel.Who(this.channelId) ?? "";
       /*
        * speaker
        *   (${u}@PL)
@@ -115,7 +112,7 @@ export default {
   data() {
     return {
       SYSTEM_CHANNEL_ID,
-      channelIdChatTo: SYSTEM_CHANNEL_ID,
+      channelId: SYSTEM_CHANNEL_ID,
       diceSystem: null,
       chatText: "",
       characterId: null,
@@ -135,7 +132,7 @@ export default {
     },
     async sendChat() {
       console.log("DebugIndicator.sendChat"); // @DELETEME
-      const { chatText: _chatText = "", channelIdChatTo: channelId } = this;
+      const { chatText: _chatText = "", channelId: channelId } = this;
       if (!channelId) {
         throw new Error("no channel found");
       }

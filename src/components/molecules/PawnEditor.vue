@@ -53,7 +53,7 @@ export default {
     },
     imageUrl() {
       return this.image ? this.image.url : "";
-    },
+    }
   },
   methods: {
     async onClickDeletePawn(pawnId) {
