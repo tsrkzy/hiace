@@ -1,4 +1,4 @@
-import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { SYSTEM_CHANNEL_ID, SYSTEM_CHANNEL_TYPE } from "@/collections/Channel";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
@@ -66,6 +66,19 @@ export class FSChat {
     }
 
     return { id, ...c };
+  }
+
+  static async Welcome(roomId: string, owner: string) {
+    const c = {
+      type: SYSTEM_CHANNEL_TYPE,
+      room: roomId,
+      channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
+      owner: owner,
+      character: null,
+      alias: null,
+      value: { text: "welcome to hiace!" }
+    };
+    await FSChat.Create(c);
   }
 
   static getColor(userId: string, characterId: string | null) {

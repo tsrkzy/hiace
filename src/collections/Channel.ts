@@ -3,7 +3,10 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { getName } from "@/scripts/helper";
 
+/* chat.channelのnull大体 */
 export const SYSTEM_CHANNEL_ID = "SYSTEM";
+/** @deprecated */
+export const SYSTEM_CHANNEL_TYPE = "SYSTEM_CHANNEL_TYPE";
 
 export class FSChannel {
   static unsubscribeMap = new Map();
@@ -32,6 +35,20 @@ export class FSChannel {
     const id = docRef.id;
 
     return { id, ...c };
+  }
+
+  static async Update(channelId: string, criteria: object) {
+    const db = firebase.firestore();
+    const doc = db.collection("channel").doc(channelId);
+    return await doc.update(criteria);
+  }
+
+  static async Delete(channelId: string) {
+    const db = firebase.firestore();
+    return db
+      .collection("channel")
+      .doc(channelId)
+      .delete();
   }
 
   static SetListener(roomId: string) {

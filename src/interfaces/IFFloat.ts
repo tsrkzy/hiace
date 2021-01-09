@@ -27,6 +27,7 @@ export const TABLE_VIEW = "TABLE_VIEW";
 export const IMAGE_MANAGER = "IMAGE_MANAGER";
 export const SOUND_MANAGER = "SOUND_MANAGER";
 export const ROOM_MANAGER = "ROOM_MANAGER";
+export const CHANNEL_LIST = "CHANNEL_LIST";
 
 export function title(id: string) {
   switch (id) {
@@ -56,6 +57,9 @@ export function title(id: string) {
     }
     case ROOM_MANAGER: {
       return "ユーザ情報";
+    }
+    case CHANNEL_LIST: {
+      return "チャンネル一覧";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);

@@ -1,6 +1,5 @@
 import { FSBoard } from "@/collections/Board";
-import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import { FSChat, SYSTEM } from "@/collections/Chat";
+import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -81,16 +80,7 @@ export class FSRoom {
     const room = await FSRoom.Add(r);
     const id = room.id;
 
-    const c = {
-      type: SYSTEM,
-      room: id,
-      channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
-      owner: owner,
-      character: null,
-      alias: null,
-      value: { text: "welcome to hiace!" }
-    };
-    await FSChat.Create(c);
+    await FSChat.Welcome(id, owner);
 
     /* 開始時デフォルトのBoardを作成してactiveに指定 */
     const b = await FSBoard.CreateDefault({
