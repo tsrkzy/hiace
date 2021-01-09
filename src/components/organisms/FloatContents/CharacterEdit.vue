@@ -29,14 +29,7 @@
       ></ha-checkbox>
     </div>
     <div>
-      <label>
-        <span>文字色</span>
-        <input
-          type="color"
-          :value="chatColor"
-          @change="onChangeColor($event)"
-        />
-      </label>
+      <color-picker :chat-color="chatColor" @change="onChangeColor" />
     </div>
     <div>
       <ha-select
@@ -77,6 +70,7 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
+import ColorPicker from "@/components/organisms/FloatContents/ColorPicker";
 import ScrollSummary from "@/components/organisms/ScrollSummary";
 
 const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
@@ -84,6 +78,7 @@ const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 export default {
   name: "CharacterEdit",
   components: {
+    ColorPicker,
     ScrollSummary,
     HaCheckbox,
     HaSelect,
@@ -151,8 +146,7 @@ export default {
       console.log("CharacterEdit.onCharacterShowOnInitiative", value); // @DELETEME
       FSCharacter.Update(this.characterId, { showOnInitiative: value });
     },
-    async onChangeColor(e) {
-      const color = e.currentTarget.value;
+    async onChangeColor(color) {
       console.log("CharacterEdit.onChangeColor", color); // @DELETEME
       this.chatColor = color;
       await FSCharacter.Update(this.characterId, { color });
@@ -211,5 +205,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

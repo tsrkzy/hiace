@@ -55,7 +55,7 @@ export function title(id: string) {
       return "サウンド管理";
     }
     case ROOM_MANAGER: {
-      return "部屋情報";
+      return "ユーザ情報";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);

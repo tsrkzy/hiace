@@ -7,6 +7,12 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
+    <div>
+      <color-picker
+        :chat-color="chatColor"
+        @change="onChangeColor"
+      ></color-picker>
+    </div>
     <div v-if="iAmOwner">
       <fieldset :key="r.id" v-for="r in requestItems">
         <legend>入室リクエスト:{{ r.email }}</legend>
@@ -47,13 +53,15 @@
 </template>
 
 <script>
+import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
+import ColorPicker from "@/components/organisms/FloatContents/ColorPicker";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 export default {
   name: "RoomManager",
-  components: { HaButton },
+  components: { ColorPicker, HaButton },
   props: {
     floatId: {
       type: Number,
@@ -113,9 +121,16 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      chatColor: SYSTEM_COLOR
+    };
   },
   methods: {
+    async onChangeColor(color) {
+      console.log("RoomManager.onChangeColor", color); // @DELETEME
+      this.chatColor = color;
+      await FSUser.Update(this.user.id, { color });
+    },
     async makeRequest() {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
@@ -134,7 +149,10 @@ export default {
       const list = [];
       for (let i = 0; i < userIdList.length; i++) {
         const userId = userIdList[i];
-        const { email } = await FSUser.GetById({ id: userId });
+        const { email, color = SYSTEM_COLOR } = await FSUser.GetById({
+          id: userId
+        });
+        this.chatColor = color;
         list.push({ id: userId, email });
       }
       await this.$store.dispatch("room/setRequest", { requests: list });
