@@ -72,6 +72,12 @@ export class FSAlias {
     });
   }
 
+  static async Update(aliasId: string, criteria: object) {
+    const db = firebase.firestore();
+    const docRef = await db.collection("alias").doc(aliasId);
+    return await docRef.update(criteria);
+  }
+
   static async DeleteByCharacter(characterId: string) {
     const db = firebase.firestore();
     const querySnapshot = await db

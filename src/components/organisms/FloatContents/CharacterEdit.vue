@@ -7,6 +7,12 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
+    <ha-select
+      :value="characterId"
+      :items="characterItemList"
+      mandatory
+      @change="onCharacterChange"
+    ></ha-select>
     <div>
       <ha-input-form
         label="名前"
@@ -41,13 +47,24 @@
       </ha-select>
     </div>
     <div>
-      <ha-select :items="aliasItems" v-model="aliasId" @change="onChangeAlias">
-        <option disabled :value="null">select alias</option>
+      <ha-select
+        v-model="aliasId"
+        :items="aliasItems"
+        mandatory
+        @change="onChangeAlias"
+      >
       </ha-select>
-
+      <ul>
+        <li v-for="a in aliases" :key="a.id">
+          <ha-input-form
+            :value="a.name"
+            @change="onAliasNameChange(a.id, $event)"
+          ></ha-input-form>
+        </li>
+      </ul>
       <img
         :src="srcUrl"
-        alt="character.activeAlias.image"
+        :alt="imgAlt"
         style="max-width: 128px;max-height: 128px;"
       />
       <scroll-summary>
@@ -98,6 +115,7 @@ export default {
       imageId: null,
       aliasId: null,
       srcUrl: null,
+      imgAlt: null,
       pawnSizeStr: "1",
       showOnInitiative: false,
       chatColor: SYSTEM_COLOR
@@ -108,32 +126,27 @@ export default {
       f => f.id === this.floatId
     );
     this.characterId = float?.args?.characterId ?? CHARACTER_NOT_SELECTED;
-
-    const {
-      activeAlias,
-      pawnSize = 1,
-      showOnInitiative = false,
-      color = SYSTEM_COLOR
-    } = this.$store.getters["character/info"].find(
-      c => c.id === this.characterId
-    );
-    this.aliasId = activeAlias;
-    this.pawnSizeStr = `${pawnSize}`;
-    this.showOnInitiative = showOnInitiative;
-    this.chatColor = color;
+    this.syncAlias();
 
     const { image } = this.$store.getters["alias/info"].find(
-      a => a.id === activeAlias
+      a => a.id === this.aliasId
     );
 
     if (!image) {
-      console.warn(`no image on alias: ${activeAlias}`);
-      return false;
+      console.warn(`no image on alias: ${this.aliasId}`);
     }
-    const { url } = await FSImage.GetById({ id: image });
-    this.srcUrl = url;
+    await this.reloadImage(image);
   },
   methods: {
+    async onCharacterChange(characterId) {
+      this.characterId = characterId;
+      this.syncAlias();
+
+      const { image } = this.$store.getters["alias/info"].find(
+        a => a.id === this.aliasId
+      );
+      await this.reloadImage(image);
+    },
     onCharacterNameInput(value) {
       console.log("CharacterEdit.onCharacterNameInput", value); // @DELETEME
       FSCharacter.Update(this.characterId, { name: value });
@@ -161,19 +174,48 @@ export default {
       const { image } = this.$store.getters["alias/info"].find(
         a => a.id === aliasId
       );
-      const { url } = await FSImage.GetById({ id: image });
-      this.srcUrl = url;
+      await this.reloadImage(image);
+    },
+    async onAliasNameChange(aliasId, name) {
+      console.log("CharacterEdit.onAliasNameChange", aliasId, name); // @DELETEME
+      await FSAlias.Update(aliasId, { name });
     },
     async onAliasImageChange(imageId) {
       console.log("CharacterEdit.onAliasImageChange", imageId); // @DELETEME
       const { aliasId } = this;
       await FSAlias.SetImageId(aliasId, imageId);
 
-      const { url } = await FSImage.GetById({ id: imageId });
-      this.srcUrl = url;
+      await this.reloadImage(imageId);
+    },
+    async reloadImage(imageId) {
+      const image = await FSImage.GetById({ id: imageId });
+      this.srcUrl = image ? image.url : "";
+      this.imgAlt = image ? "" : "画像未設定";
+      this.imageId = imageId;
+    },
+    syncAlias() {
+      console.log("CharacterEdit.syncAlias"); // @DELETEME
+      const {
+        activeAlias = null,
+        pawnSize = 1,
+        showOnInitiative = false,
+        color = SYSTEM_COLOR
+      } = this.$store.getters["character/info"].find(
+        c => c.id === this.characterId
+      );
+      this.aliasId = activeAlias;
+      this.pawnSizeStr = `${pawnSize}`;
+      this.showOnInitiative = showOnInitiative;
+      this.chatColor = color;
     }
   },
   computed: {
+    characterItemList() {
+      return this.$store.getters["character/info"].map(c => ({
+        text: c.name,
+        value: c.id
+      }));
+    },
     character() {
       return (
         this.$store.getters["character/info"].find(

@@ -8,7 +8,9 @@
       @change="$emit('change', $event.currentTarget.value)"
     >
       <slot>
-        <option selected :value="null">not selected</option>
+        <option :disabled="mandatory" selected :value="null"
+          >not selected</option
+        >
       </slot>
       <option
         v-for="item in items"
@@ -32,7 +34,8 @@ export default {
     label: { type: String },
     items: { type: Array, default: () => [] },
     value: { type: String },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    mandatory: { type: Boolean, default: false }
   }
 };
 </script>

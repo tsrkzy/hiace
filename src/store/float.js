@@ -20,10 +20,10 @@ export const float = {
   namespaced: true,
   state: {
     floats: [
-      new IFFloat(ROOM_MANAGER, true),
-      new IFFloat(BOARD_LIST, true),
+      new IFFloat(ROOM_MANAGER, false),
+      new IFFloat(BOARD_LIST, false),
       new IFFloat(CHARACTER_LIST, true),
-      new IFFloat(CHAT_LIST, true)
+      new IFFloat(CHAT_LIST, false)
     ]
   },
   mutations: {
@@ -59,6 +59,10 @@ export const float = {
     create(state, payload) {
       const { contentId = UNSET, show = false, args } = payload;
       const float = new IFFloat(contentId, show, args);
+      /* singletonの場合はidが同じ */
+      if (state.floats.some(f => f.id === float.id)) {
+        return false;
+      }
       state.floats.push(float);
     },
     setShow(state, payload) {
@@ -66,6 +70,21 @@ export const float = {
       console.log("float.setShow", id, show); // @DELETEME
       const float = state.floats.find(f => f.id === id);
       float.show = show;
+    },
+    remove(state, payload) {
+      const { contentId } = payload;
+      const { floats = [] } = state;
+      const result = [];
+      for (let i = 0; i < floats.length; i++) {
+        const float = floats[i];
+        if (float.contentId === contentId) {
+          float.dispose();
+        } else {
+          result.push(float);
+        }
+      }
+
+      state.floats = result;
     }
   },
   actions: {
@@ -86,6 +105,10 @@ export const float = {
       commit("sink", { id });
     },
     create({ commit }, { contentId, show, args }) {
+      commit("create", { contentId, show, args });
+    },
+    recreate({ commit }, { contentId, show, args }) {
+      commit("remove", { contentId });
       commit("create", { contentId, show, args });
     },
     open({ commit }, { id }) {

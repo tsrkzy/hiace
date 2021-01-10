@@ -29,6 +29,17 @@ export const SOUND_MANAGER = "SOUND_MANAGER";
 export const ROOM_MANAGER = "ROOM_MANAGER";
 export const CHANNEL_LIST = "CHANNEL_LIST";
 
+const singletonList = [
+  CHARACTER_LIST,
+  // CHARACTER_EDIT,
+  BOARD_LIST,
+  MAP_EDIT,
+  IMAGE_MANAGER,
+  SOUND_MANAGER,
+  ROOM_MANAGER,
+  CHANNEL_LIST
+];
+
 export function title(id: string) {
   switch (id) {
     case CHARACTER_LIST: {
@@ -81,6 +92,14 @@ export class IFFloat implements IIFloat {
   args = null;
 
   constructor(contentId: string, show?: boolean, args?: any) {
+    const singleton = singletonList.indexOf(contentId) !== -1;
+    const t = IFFloat.instances.find(t => t.contentId === contentId);
+    if (singleton && t) {
+      t.args = args;
+      IFFloat.Pop(t.id);
+      return t;
+    }
+
     this.contentId = contentId;
     this.contentTitle = title(contentId);
     this.args = args;
@@ -91,6 +110,10 @@ export class IFFloat implements IIFloat {
     if (show) {
       IFFloat.Pop(this.id);
     }
+  }
+
+  dispose() {
+    IFFloat.instances.splice(IFFloat.instances.indexOf(this), 1);
   }
 
   static AssignId(f: IFFloat) {

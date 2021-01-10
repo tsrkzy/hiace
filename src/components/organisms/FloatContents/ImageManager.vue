@@ -38,7 +38,8 @@
     <input
       type="file"
       multiple
-      accept="imageId/*"
+      accept="image/*"
+      :value="inputFiles"
       @change="onClickFileUploadHandler"
     />
     <div>
@@ -71,6 +72,7 @@ export default {
   data() {
     return {
       imageId: null,
+      inputFiles: null,
       onlyMine: false
     };
   },
@@ -101,7 +103,7 @@ export default {
       await Promise.all(promiseList);
 
       /* アップロードに成功したら空にする */
-      e.currentTarget.value = "";
+      this.inputFiles = null;
     },
     onChangeOnlyMine(v) {
       console.log("ImageManager.onChangeOnlyMine", v); // @DELETEME

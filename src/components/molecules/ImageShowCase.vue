@@ -20,7 +20,8 @@
           height: '64px',
           margin: '0 1px',
           border:
-            imageId === image.id ? '1px dotted red' : '1px solid lightgray'
+            imageId === image.id ? '1px dotted red' : '1px solid lightgray',
+          backgroundColor: imageId === image.id ? 'lightsalmon' : 'transparent'
         }"
       >
         <input
