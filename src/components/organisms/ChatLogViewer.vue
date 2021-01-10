@@ -14,18 +14,26 @@
       :id="`chat-list--scroll-content__${floatId}`"
       style="margin:0;padding: 0;"
     >
-      <chat-row :chat-id="c" v-for="c of chatIdList" :key="c"> </chat-row>
+      <chat-row
+        :chat-id="c"
+        v-for="(c, i) of chatIdList"
+        :key="c"
+        :dim="dim(i)"
+      >
+      </chat-row>
     </ol>
   </div>
 </template>
 <script>
+import { SYSTEM } from "@/collections/Chat";
 import ChatRow from "@/components/organisms/ChatRow";
 
 export default {
   name: "chat-log-viewer",
   components: { ChatRow },
   props: {
-    floatId: { type: Number, require: true }
+    floatId: { type: Number, require: true },
+    channelId: { type: String, require: true }
   },
   methods: {
     showNew() {
@@ -37,6 +45,11 @@ export default {
         left: 0,
         behavior: "smooth"
       });
+    },
+    dim(index) {
+      const chatList = this.$store.getters["chat/info"];
+      const { channel, type } = chatList[chatList.length - (1 + index)];
+      return type !== SYSTEM && channel !== this.channelId;
     }
   },
   computed: {

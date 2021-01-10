@@ -25,7 +25,12 @@
             </ha-select>
           </div>
           <div>
-            <ha-select label="dice:" :items="diceBotItems" v-model="diceSystem">
+            <ha-select
+              label="dice:"
+              :items="diceBotItems"
+              :value="diceSystem"
+              @change="onChangeDice"
+            >
             </ha-select>
           </div>
         </fieldset>
@@ -37,7 +42,6 @@
         :resizeable="false"
         placeholder="enter: send / shift+enter: new line"
       ></ha-textarea>
-      <!--      <ha-button @click="sendChat">send</ha-button>-->
     </div>
   </div>
 </template>
@@ -48,7 +52,6 @@ import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
-import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
@@ -71,10 +74,11 @@ export default {
       require: true
     }
   },
-  created() {
-    this.diceSystem = this.$store.getters["room/gameSystem"];
-  },
+  created() {},
   computed: {
+    diceSystem() {
+      return this.innerDiceSystem ?? this.$store.getters["room/gameSystem"];
+    },
     channelItems() {
       return this.$store.getters["channel/info"].map(c => ({
         text: c.name,
@@ -113,7 +117,7 @@ export default {
     return {
       SYSTEM_CHANNEL_ID,
       channelId: SYSTEM_CHANNEL_ID,
-      diceSystem: null,
+      innerDiceSystem: null,
       chatText: "",
       characterId: null,
       aliasId: null
@@ -129,6 +133,10 @@ export default {
       const { characterId, aliasId } = speaker;
       this.characterId = characterId;
       this.aliasId = aliasId;
+    },
+    onChangeDice(value) {
+      console.log("ChatList.onChangeDice", value); // @DELETEME
+      this.innerDiceSystem = value;
     },
     async sendChat() {
       console.log("DebugIndicator.sendChat"); // @DELETEME

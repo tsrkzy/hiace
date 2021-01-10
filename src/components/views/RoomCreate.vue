@@ -4,7 +4,7 @@
     <ha-input-form label="部屋名" v-model="roomName"></ha-input-form>
     <ha-select
       label="システム"
-      v-model="system"
+      v-model="gameSystem"
       :items="systemList"
     ></ha-select>
     <google-authorizer></google-authorizer>
@@ -39,7 +39,7 @@ export default {
       const room = await FSRoom.Create({
         name: roomName,
         owner: user.id,
-        system: this.system
+        gameSystem: this.gameSystem
       });
 
       await FSUser.JoinRoom(room.owner, room.id);
@@ -51,7 +51,7 @@ export default {
     activateCreateRoomButton() {
       return (
         this.$store.getters["auth/authenticated"] &&
-        this.system &&
+        this.gameSystem &&
         this.roomName.trim()
       );
     }
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       roomName: "",
-      system: null,
+      gameSystem: null,
       systemList: GAME_SYSTEMS
     };
   }

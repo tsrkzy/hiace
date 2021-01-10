@@ -93,7 +93,7 @@ export const room = {
       return state.requests;
     },
     gameSystem(state) {
-      return state.system;
+      return state.room?.gameSystem;
     }
   },
   modules: {}

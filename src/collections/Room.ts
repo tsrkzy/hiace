@@ -42,7 +42,7 @@ export class FSRoom {
     requests: string[];
     kicked: string[];
     users: string[];
-    system: string;
+    gameSystem: string;
     activeBoard: null;
     music: null;
   }) {
@@ -56,11 +56,11 @@ export class FSRoom {
   static async Create({
     name,
     owner,
-    system
+    gameSystem
   }: {
     name: string;
     owner: string;
-    system: string;
+    gameSystem: string;
   }) {
     if (!owner) {
       throw new Error("no owner given");
@@ -73,7 +73,7 @@ export class FSRoom {
       requests: [],
       kicked: [],
       users: [owner], // 初期値ownerのみ、追加可能
-      system,
+      gameSystem,
       activeBoard: null,
       music: null
     };

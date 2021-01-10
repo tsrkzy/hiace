@@ -75,6 +75,9 @@ export default {
     user() {
       return this.$store.getters["auth/user"];
     },
+    chatColor() {
+      return this.user.color;
+    },
     youKicked() {
       return (
         this.authenticated && this.$store.getters["room/grant"].state === KICKED
@@ -121,14 +124,11 @@ export default {
     }
   },
   data() {
-    return {
-      chatColor: SYSTEM_COLOR
-    };
+    return {};
   },
   methods: {
     async onChangeColor(color) {
       console.log("RoomManager.onChangeColor", color); // @DELETEME
-      this.chatColor = color;
       await FSUser.Update(this.user.id, { color });
     },
     async makeRequest() {
@@ -145,14 +145,12 @@ export default {
       await FSRoom.KickUser(userId);
     },
     async fetchUser(userIdList) {
-      const requests = this.$store.getters["room/requests"];
       const list = [];
       for (let i = 0; i < userIdList.length; i++) {
         const userId = userIdList[i];
-        const { email, color = SYSTEM_COLOR } = await FSUser.GetById({
+        const { email } = await FSUser.GetById({
           id: userId
         });
-        this.chatColor = color;
         list.push({ id: userId, email });
       }
       await this.$store.dispatch("room/setRequest", { requests: list });

@@ -6,9 +6,21 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <li :style="{ margin: 0, wordBreak: 'break-word', color: color }">
+  <li
+    :style="{
+      margin: 0,
+      wordBreak: 'break-word',
+      fontWeight: system ? 'normal' : 'bold',
+      fontStyle: system ? 'italic' : 'normal',
+      color: system ? 'lightgray' : color
+    }"
+    :class="{ dim }"
+  >
     <!-- channel -->
-    <span style="color: #000000;">{{ channel }}</span>
+    <span
+      :style="{ fontWeight: 'normal', color: dim ? 'lightgray' : 'gray' }"
+      >{{ channel }}</span
+    >
     <!-- speaker -->
     <span>{{ speaker }}</span>
     <!-- one line -->
@@ -29,31 +41,39 @@
 </template>
 
 <script>
-import { FSAlias } from "@/collections/Alias";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
-import { SYSTEM_COLOR } from "@/collections/Chat";
+import { SYSTEM, SYSTEM_COLOR } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 
 export default {
   name: "ChatRow",
   props: {
-    chatId: { type: String, require: true }
+    chatId: { type: String, require: true },
+    dim: { type: Boolean, default: false }
   },
   computed: {
     chat() {
       return this.$store.getters["chat/info"].find(c => c.id === this.chatId);
     },
+    system() {
+      return this.chat.type === SYSTEM;
+    },
     channel() {
       const chat = this.chat;
+      if (this.system) {
+        return "";
+      }
       const c = this.getChannelName(chat) || "none";
-      return `(${c})`;
+      return `(${c}) `;
     },
     speaker() {
       const chat = this.chat;
+      if (this.system) {
+        return "$ hiace > ";
+      }
       const s = this.getCharacterName(chat) || this.getUserName(chat);
-      const a = chat.alias ? `(${this.getAliasName(chat)})` : "";
-      return `${s} ${a}:`;
+      return `${s}: `;
     },
     textList() {
       const chat = this.chat;
@@ -63,7 +83,7 @@ export default {
       return isDice ? [...textList, result] : textList;
     },
     color() {
-      return this.chat?.color || SYSTEM_COLOR;
+      return this.dim ? "lightgray" : this.chat?.color || SYSTEM_COLOR;
     }
   },
   methods: {
@@ -74,10 +94,6 @@ export default {
     getCharacterName(chatItem) {
       const { character } = chatItem;
       return FSCharacter.Who(character);
-    },
-    getAliasName(chatItem) {
-      const { alias } = chatItem;
-      return FSAlias.Who(alias);
     },
     getUserName(chatItem) {
       const { owner } = chatItem;
