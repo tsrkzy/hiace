@@ -24,6 +24,7 @@
       <ha-textarea
         rows="3"
         :value="character['text']"
+        placeholder="キャラクター説明"
         @change="onCharacterTextInput"
       ></ha-textarea>
     </div>
@@ -47,26 +48,34 @@
       </ha-select>
     </div>
     <div>
-      <ha-select
-        v-model="aliasId"
-        :items="aliasItems"
-        mandatory
-        @change="onChangeAlias"
-      >
-      </ha-select>
-      <ul>
-        <li v-for="a in aliases" :key="a.id">
-          <ha-input-form
-            :value="a.name"
-            @change="onAliasNameChange(a.id, $event)"
-          ></ha-input-form>
-        </li>
-      </ul>
-      <img
-        :src="srcUrl"
-        :alt="imgAlt"
-        style="max-width: 128px;max-height: 128px;"
-      />
+      <fieldset>
+        <legend>立ち絵</legend>
+        <ha-button @click="onCreateAlias">追加</ha-button>
+        <ul style="padding-left: 0;margin: 0;">
+          <li v-for="a in aliases" :key="a.id">
+            <ha-input-form
+              :value="a.name"
+              @change="onAliasNameChange(a.id, $event)"
+            ></ha-input-form>
+          </li>
+        </ul>
+      </fieldset>
+      <div>
+        <ha-select
+          v-model="aliasId"
+          :items="aliasItems"
+          mandatory
+          @change="onChangeAlias"
+        >
+        </ha-select>
+      </div>
+      <div>
+        <img
+          :src="srcUrl"
+          :alt="imgAlt"
+          style="max-width: 128px;max-height: 128px;"
+        />
+      </div>
       <scroll-summary>
         <image-show-case
           v-model="imageId"
@@ -82,6 +91,7 @@ import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
 import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSImage } from "@/collections/Image";
+import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
@@ -95,6 +105,7 @@ const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 export default {
   name: "CharacterEdit",
   components: {
+    HaButton,
     ColorPicker,
     ScrollSummary,
     HaCheckbox,
@@ -138,6 +149,27 @@ export default {
     await this.reloadImage(image);
   },
   methods: {
+    async onCreateAlias() {
+      const characterId = this.characterId;
+      console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
+      const character = this.$store.getters["character/info"].find(
+        c => c.id === characterId
+      );
+
+      const roomId = this.$store.getters["room/info"].id;
+      const t = Date.now() % 1000;
+      const name = `${character.name}_a${t}`;
+      const position = 1;
+      const a = {
+        roomId,
+        characterId,
+        imageId: null,
+        name,
+        position
+      };
+
+      await FSAlias.Create(a);
+    },
     async onCharacterChange(characterId) {
       this.characterId = characterId;
       this.syncAlias();

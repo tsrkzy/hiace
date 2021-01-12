@@ -12,48 +12,37 @@
       v-model="characterName"
       placeholder="キャラクタ名"
     ></ha-input-form>
-    <ul>
-      <li :key="item.id" v-for="item in characters">
-        <span>{{ item.character.name }}</span>
-        <ha-button @click="onClickEditCharacter(item.character.id)"
-          >キャラクタ編集
-        </ha-button>
-        <ha-button @click="onClickDeleteCharacter(item.character.id)"
-          >キャラクタ削除
-        </ha-button>
-        <ha-button @click="onClickCreateAliasToCharacter(item.id)"
-          >立ち絵を追加する
-        </ha-button>
-        <ha-button @click="onClickAddPawn(item.character.id)"
-          >コマ追加
-        </ha-button>
-        <ul>
-          <li :key="a.id" v-for="a in item.aliases">
-            <span
-              >{{ a.id === item.character.activeAlias ? "*" : "" }}:
-              {{ a.name }}</span
-            >
-            <ha-button
-              v-if="a.id !== item.character.activeAlias"
-              @click="onClickActivateAlias(item.character.id, a.id)"
-              >この立ち絵を使う
-            </ha-button>
-          </li>
-        </ul>
-        <ul>
-          <li :key="p.id" v-for="p in item.pawns">
-            <ha-button @click="onClickDeletePawn(p.id)"
-              >コマを削除する
-            </ha-button>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <fieldset :key="item.id" v-for="item in characters">
+      <legend>{{ item.character.name }}</legend>
+      <ha-button @click="onClickEditCharacter(item.character.id)"
+        >編集
+      </ha-button>
+      <ha-button @click="onClickAddPawn(item.character.id)"
+        >コマ追加
+      </ha-button>
+      <ul>
+        <li :key="a.id" v-for="a in item.aliases">
+          <span
+            >{{ a.id === item.character.activeAlias ? "★" : ""
+            }}{{ a.name }}</span
+          >
+          <ha-button
+            v-if="a.id !== item.character.activeAlias"
+            @click="onClickActivateAlias(item.character.id, a.id)"
+            >立絵切り替え
+          </ha-button>
+        </li>
+      </ul>
+      <!-- <ul>-->
+      <!-- <li :key="p.id" v-for="p in item.pawns">-->
+      <!-- <ha-button @click="onClickDeletePawn(p.id)">コマを削除 </ha-button>-->
+      <!-- </li>-->
+      <!-- </ul>-->
+    </fieldset>
   </div>
 </template>
 
 <script>
-import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
@@ -136,9 +125,9 @@ export default {
       const args = { characterId };
       await this.$store.dispatch("float/create", { contentId, show, args });
     },
-    async onClickDeleteCharacter(characterId) {
-      await FSCharacter.Delete(characterId);
-    },
+    // async onClickDeleteCharacter(characterId) {
+    //   await FSCharacter.Delete(characterId);
+    // },
     async onClickAddPawn(characterId) {
       console.log("CharacterList.onClickAddPawn", characterId); // @DELETEME
       const userId = this.$store.getters["auth/user"].id;
@@ -157,26 +146,6 @@ export default {
         imageId: image,
         characterId
       });
-    },
-    async onClickCreateAliasToCharacter(characterId) {
-      console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
-      const character = this.$store.getters["character/info"].find(
-        c => c.id === characterId
-      );
-
-      const roomId = this.$store.getters["room/info"].id;
-      const t = Date.now() % 1000;
-      const name = `${character.name}_a${t}`;
-      const position = 1;
-      const a = {
-        roomId,
-        characterId,
-        imageId: null,
-        name,
-        position
-      };
-
-      await FSAlias.Create(a);
     },
     async onClickActivateAlias(characterId, aliasId) {
       await FSCharacter.SetActiveAlias(characterId, aliasId);
