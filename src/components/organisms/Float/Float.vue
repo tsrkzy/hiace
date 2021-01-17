@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -90,6 +90,9 @@ export default {
       const downY = e.clientY;
       this.dragMove = true;
 
+      const $elList = document.getElementsByClassName("__hide_on_drag");
+      $elList.forEach($e => ($e.style.display = "none"));
+
       const $el = document.getElementById(`move_handle_${this.floatId}`);
 
       const onHandleMouseMove = e => {
@@ -113,6 +116,10 @@ export default {
         this.yt = null;
 
         this.dragMove = false;
+
+        const $elList = document.getElementsByClassName("__hide_on_drag");
+        $elList.forEach($e => ($e.style.display = ""));
+
         $el.removeEventListener("mousemove", onHandleMouseMove);
         $el.removeEventListener("mouseup", onHandleMouseUp);
         $el.removeEventListener("mouseleave", onHandleMouseUp);

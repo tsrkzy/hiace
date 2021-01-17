@@ -56,7 +56,7 @@ export class FSCharacter {
       activeAlias = "alias_1",
       imageId = DEFAULT_CHARACTER_IMAGE,
       showOnInitiative = true,
-      chatPosition = 1,
+      chatPosition = 0,
       pawnSize = 1,
       color = SYSTEM_COLOR
     } = params;

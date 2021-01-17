@@ -50,6 +50,17 @@
     <div>
       <fieldset>
         <legend>立ち絵</legend>
+        <label>
+          <span>位置</span>
+          <input
+            type="range"
+            min="0"
+            max="11"
+            step="1"
+            :value="chatPosition"
+            @change="onChangePosition"
+          />
+        </label>
         <ha-button @click="onCreateAlias">追加</ha-button>
         <ul style="padding-left: 0;margin: 0;">
           <li v-for="a in aliases" :key="a.id">
@@ -127,6 +138,7 @@ export default {
       aliasId: null,
       srcUrl: null,
       imgAlt: null,
+      chatPosition: "0",
       pawnSizeStr: "1",
       showOnInitiative: false,
       chatColor: SYSTEM_COLOR
@@ -196,11 +208,20 @@ export default {
       this.chatColor = color;
       await FSCharacter.Update(this.characterId, { color });
     },
-    onChangePawnSize(pawnSizeStr) {
+    async onChangePosition(e) {
+      const chatPositionStr = e.currentTarget.value || "0";
+      const chatPosition = parseInt(chatPositionStr, 10);
+      await FSCharacter.Update(this.characterId, {
+        chatPosition
+      });
+      this.chatPosition = chatPositionStr;
+    },
+    async onChangePawnSize(pawnSizeStr) {
       console.log("CharacterEdit.onChangePawnSize", pawnSizeStr); // @DELETEME
-      FSCharacter.Update(this.characterId, {
+      await FSCharacter.Update(this.characterId, {
         pawnSize: parseInt(pawnSizeStr, 10)
       });
+      this.pawnSizeStr = pawnSizeStr;
     },
     async onChangeAlias(aliasId) {
       const { image } = this.$store.getters["alias/info"].find(
@@ -229,6 +250,7 @@ export default {
       console.log("CharacterEdit.syncAlias"); // @DELETEME
       const {
         activeAlias = null,
+        chatPosition = 0,
         pawnSize = 1,
         showOnInitiative = false,
         color = SYSTEM_COLOR
@@ -236,6 +258,7 @@ export default {
         c => c.id === this.characterId
       );
       this.aliasId = activeAlias;
+      this.chatPosition = `${chatPosition}`;
       this.pawnSizeStr = `${pawnSize}`;
       this.showOnInitiative = showOnInitiative;
       this.chatColor = color;

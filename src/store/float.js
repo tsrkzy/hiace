@@ -10,8 +10,8 @@ import {
   CHAT_LIST,
   CHARACTER_LIST,
   UNSET,
-  TABLE_VIEW,
-  IMAGE_MANAGER,
+  // TABLE_VIEW,
+  // IMAGE_MANAGER,
   BOARD_LIST,
   ROOM_MANAGER
 } from "@/interfaces/IFFloat";
