@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import Float from "@/components/organisms/Float";
-import FloatContent from "@/components/organisms/FloatContent";
+import Float from "@/components/organisms/Float/Float";
+import FloatContent from "@/components/organisms/Float/FloatContent";
 export default {
   name: "FloatGroup",
   components: { FloatContent, Float },

@@ -57,7 +57,7 @@ import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
-import ColorPicker from "@/components/organisms/FloatContents/ColorPicker";
+import ColorPicker from "@/components/molecules/ColorPicker";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 export default {
   name: "RoomManager",

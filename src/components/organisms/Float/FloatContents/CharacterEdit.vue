@@ -97,8 +97,8 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
-import ColorPicker from "@/components/organisms/FloatContents/ColorPicker";
-import ScrollSummary from "@/components/organisms/ScrollSummary";
+import ColorPicker from "@/components/molecules/ColorPicker";
+import ScrollSummary from "@/components/atoms/ScrollSummary";
 
 const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 

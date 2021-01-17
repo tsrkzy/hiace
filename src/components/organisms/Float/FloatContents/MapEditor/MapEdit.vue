@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -60,7 +60,7 @@ import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
-import ScrollSummary from "@/components/organisms/ScrollSummary";
+import ScrollSummary from "@/components/atoms/ScrollSummary";
 const MAP_NOT_SELECTED = "MAP_NOT_SELECTED";
 
 export default {

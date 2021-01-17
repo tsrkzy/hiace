@@ -201,7 +201,7 @@ import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import MapEditor from "@/components/molecules/MapEditor";
 import SoundEditor from "@/components/molecules/SoundEditor";
-import TableView from "@/components/organisms/TableView";
+import TableView from "@/components/organisms/TableViewDeprecated";
 import { Smoke } from "@/scripts/Smoke";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 

@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -26,7 +26,7 @@
 </template>
 <script>
 import { SYSTEM } from "@/collections/Chat";
-import ChatRow from "@/components/organisms/ChatRow";
+import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
 
 export default {
   name: "chat-log-viewer",

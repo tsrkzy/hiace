@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -41,16 +41,16 @@
 </template>
 
 <script>
-import ChannelList from "@/components/organisms/FloatContents/ChannelList";
-import RoomManager from "@/components/organisms/FloatContents/RoomManager";
-import MapEdit from "@/components/organisms/MapEdit";
-import BoardList from "@/components/organisms/FloatContents/BoardList";
-import CharacterEdit from "@/components/organisms/FloatContents/CharacterEdit";
-import CharacterList from "@/components/organisms/FloatContents/CharacterList";
-import ChatList from "@/components/organisms/FloatContents/ChatList";
-import ImageManager from "@/components/organisms/FloatContents/ImageManager";
-import SoundManager from "@/components/organisms/FloatContents/SoundManager";
-import TableView from "@/components/organisms/FloatContents/TableView";
+import ChannelList from "@/components/organisms/Float/FloatContents/ChannelList";
+import RoomManager from "@/components/organisms/Float/FloatContents/RoomManager";
+import MapEdit from "@/components/organisms/Float/FloatContents/MapEditor/MapEdit";
+import BoardList from "@/components/organisms/Float/FloatContents/BoardList";
+import CharacterEdit from "@/components/organisms/Float/FloatContents/CharacterEdit";
+import CharacterList from "@/components/organisms/Float/FloatContents/CharacterList";
+import ChatList from "@/components/organisms/Float/FloatContents/ChatList/ChatList";
+import ImageManager from "@/components/organisms/Float/FloatContents/ImageManager";
+import SoundManager from "@/components/organisms/Float/FloatContents/SoundManager";
+import TableView from "@/components/organisms/Float/FloatContents/TableView";
 import {
   CHARACTER_LIST,
   CHARACTER_EDIT,

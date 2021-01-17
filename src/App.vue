@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import Smoke from "@/components/organisms/Smoke";
+import Smoke from "@/components/atoms/Smoke";
 export default {
   components: { Smoke }
 };

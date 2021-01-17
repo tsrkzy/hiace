@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -55,7 +55,7 @@ import { FSUser } from "@/collections/User";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
-import ChatLogViewer from "@/components/organisms/ChatLogViewer";
+import ChatLogViewer from "@/components/organisms/Float/FloatContents/ChatList/ChatLogViewer";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Throttle } from "@/scripts/Throttle";
 

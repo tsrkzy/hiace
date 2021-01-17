@@ -1,3 +1,10 @@
+<!-----------------------------------------------------------------------------
+  - Copyright (c) 2021.                                                       -
+  - @tsrkzy/Github.                                                           -
+  - tsrmix@gmail.com                                                          -
+  - All rights reserved.                                                      -
+  ----------------------------------------------------------------------------->
+
 <template>
   <div style="width:100%; height: 100%;">
     <div
@@ -59,8 +66,8 @@
 <script>
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
-import SvgMap from "@/components/organisms/SvgMap";
-import SvgPawn from "@/components/organisms/SvgPawn";
+import SvgMap from "@/components/organisms/Svg/SvgMap";
+import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 
 export default {
   name: "SvgBoard",
