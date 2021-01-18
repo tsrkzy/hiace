@@ -263,7 +263,6 @@ button.button__close {
   cursor: move;
 }
 .move-hit-box {
-  border: 1px red dashed;
   background-color: transparent;
   width: $ww;
   height: $hh;
@@ -274,7 +273,6 @@ button.button__close {
 }
 .scale-hit-box__se,
 .scale-hit-box__sw {
-  border: 1px red dashed;
   background-color: transparent;
   width: $ww;
   height: $hh;
@@ -284,7 +282,6 @@ button.button__close {
   cursor: grabbing;
 }
 .scale-handle__se {
-  background-color: red;
   width: $control-size;
   height: $control-size;
   position: absolute;
@@ -293,7 +290,6 @@ button.button__close {
   cursor: nwse-resize;
 }
 .scale-handle__sw {
-  background-color: red;
   width: $control-size;
   height: $control-size;
   position: absolute;

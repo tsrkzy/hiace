@@ -11,6 +11,12 @@
 <script>
 export default {
   name: "on-type-indicator",
+  props: {
+    debug: {
+      type: Boolean,
+      default: false
+    }
+  },
   created() {
     this.intervalId = window.setInterval(this.updateText, 1000);
   },
@@ -47,8 +53,14 @@ export default {
   data() {
     return {
       intervalId: null,
-      text: ""
+      text: " "
     };
   }
 };
 </script>
+<style lang="scss" scoped>
+p {
+  margin: 0;
+  color: dimgray;
+}
+</style>

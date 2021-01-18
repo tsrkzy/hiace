@@ -29,6 +29,15 @@ html {
     }
   }
 
+  label.chat-list__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
+  label.note-manager__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
+
   pre {
     font-size: 1rem;
     font-family: monospace;

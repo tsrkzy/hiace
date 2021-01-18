@@ -6,14 +6,8 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div
-    :id="`chat-list--scroll-parent__${floatId}`"
-    style="width: 100%;height: calc( 100% - 60px );background-color: white; overflow-y: scroll;overflow-x: hidden;"
-  >
-    <ol
-      :id="`chat-list--scroll-content__${floatId}`"
-      style="margin:0;padding: 0;"
-    >
+  <div :id="`chat-list--scroll-parent__${floatId}`">
+    <ol :id="`chat-list--scroll-content__${floatId}`">
       <chat-row
         :chat-id="c"
         v-for="(c, i) of chatIdList"
@@ -67,3 +61,16 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+div {
+  width: 100%;
+  height: calc(100% - 82px);
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+ol {
+  margin: 0;
+  padding: 0;
+}
+</style>

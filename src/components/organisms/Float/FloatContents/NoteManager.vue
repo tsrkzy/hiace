@@ -23,7 +23,13 @@
       ></ha-input-form>
     </div>
     <div>
-      <ha-textarea :value="text" @change="onChangeText($event)"></ha-textarea>
+      <ha-textarea
+        class="note-manager__textarea-wrapper"
+        :value="text"
+        @change="onChangeText($event)"
+        rows="10"
+        resizeable
+      ></ha-textarea>
     </div>
   </div>
 </template>

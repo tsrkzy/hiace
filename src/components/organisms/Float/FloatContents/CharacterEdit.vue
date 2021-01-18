@@ -26,6 +26,7 @@
         :value="character['text']"
         placeholder="キャラクター説明"
         @change="onCharacterTextInput"
+        resizeable
       ></ha-textarea>
     </div>
     <div>

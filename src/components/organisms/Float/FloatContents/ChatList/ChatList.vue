@@ -9,42 +9,32 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <alias-board></alias-board>
     <chat-log-viewer :float-id="floatId" :channel-id="channelId" />
-    <div style="width: 100%;height: 60px;">
-      <details>
-        <summary>{{ configSummary }}</summary>
-        <fieldset>
-          <legend>チャット設定</legend>
-          <div>
-            <character-switcher
-              ref="cs"
-              @changed="onChangeCS"
-            ></character-switcher>
-          </div>
-          <div>
-            <ha-select label="ch:" :items="channelItems" v-model="channelId">
-              <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
-            </ha-select>
-          </div>
-          <div>
-            <ha-select
-              label="dice:"
-              :items="diceBotItems"
-              :value="diceSystem"
-              @change="onChangeDice"
-            >
-            </ha-select>
-          </div>
-        </fieldset>
-      </details>
-      <ha-textarea
-        @keydown="onKeydown"
-        v-model="chatText"
-        rows="2"
-        :resizeable="false"
-        placeholder="enter: send / shift+enter: new line"
-      ></ha-textarea>
+    <fieldset>
+      <legend>チャット設定</legend>
+      <div>
+        <character-switcher ref="cs" @changed="onChangeCS"></character-switcher>
+        <ha-select label="チャンネル" :items="channelItems" v-model="channelId">
+          <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
+        </ha-select>
+        <ha-select
+          label="ダイス"
+          :items="diceBotItems"
+          :value="diceSystem"
+          @change="onChangeDice"
+        >
+        </ha-select>
+      </div>
+      <div>
+        <ha-textarea
+          class="chat-list__textarea-wrapper"
+          @keydown="onKeydown"
+          v-model="chatText"
+          rows="2"
+          placeholder="enter: send / shift+enter: new line"
+        ></ha-textarea>
+      </div>
       <on-type-indicator />
-    </div>
+    </fieldset>
   </div>
 </template>
 

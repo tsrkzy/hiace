@@ -1,7 +1,7 @@
 <template>
   <div>
     <ha-select
-      label="Character"
+      label="キャラクタ"
       :items="characterItems"
       v-model="characterId"
       @change="onChangeCharacterHandler"
@@ -11,7 +11,7 @@
       </option>
     </ha-select>
     <ha-select
-      label="Alias"
+      label="立ち絵"
       :disabled="disableAlias"
       :items="aliasItems"
       v-model="aliasId"
@@ -113,4 +113,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+  display: inline;
+}
+</style>

@@ -7,8 +7,8 @@
       @keydown="$emit('keydown', $event)"
       :placeholder="placeholder"
       :rows="rows"
-      :style="{
-        resize: resizeable ? 'both' : 'none'
+      :class="{
+        resizeable
       }"
     />
   </label>
@@ -25,9 +25,16 @@ export default {
     value: { type: String },
     placeholder: { type: String, default: "" },
     rows: { type: String, default: "2" },
-    resizeable: { type: Boolean, default: true }
+    resizeable: { type: Boolean, default: false }
   }
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+textarea {
+  resize: none;
+  &.resizeable {
+    resize: both;
+  }
+}
+</style>
