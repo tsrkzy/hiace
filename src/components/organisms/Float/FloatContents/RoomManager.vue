@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import { SYSTEM_COLOR } from "@/collections/Chat";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";

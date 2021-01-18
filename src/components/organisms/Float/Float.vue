@@ -11,6 +11,7 @@
       :id="`move_handle_${floatId}`"
       class="move-handle"
       @mousedown="onHandleMouseDown($event)"
+      style="z-index: 10;"
     >
       <span>{{ top ? "*" : "" }}{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
@@ -40,9 +41,9 @@
     <div
       v-if="!top"
       @click="onClickShroud"
-      style="background-color: rgba(0,0,0,0.5);position: absolute;top: 2rem;left:0;width: 100%;height: calc(100% - 2rem);"
+      style="z-index:1;background-color: rgba(0,0,0,0.5);position: absolute;top: 2rem;left:0;width: 100%;height: calc(100% - 2rem);"
     ></div>
-    <div class="content-slot">
+    <div class="content-slot" style="z-index: 1;">
       <slot name="content">failed to load content: {{ floatId }}</slot>
     </div>
   </div>
