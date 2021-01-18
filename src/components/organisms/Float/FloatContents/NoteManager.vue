@@ -7,15 +7,24 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-select
-      :items="noteItems"
-      mandatory
-      :value="noteId"
-      @change="onChangeNote($event)"
-    ></ha-select>
-    <ha-button @click="onCreateNote">追加</ha-button>
-    <ha-input-form :value="name" @change="onChangeName($event)"></ha-input-form>
-    <ha-textarea :value="text" @change="onChangeText($event)"></ha-textarea>
+    <div>
+      <ha-select
+        :items="noteItems"
+        mandatory
+        :value="noteId"
+        @change="onChangeNote($event)"
+      ></ha-select>
+      <ha-button @click="onCreateNote">追加</ha-button>
+    </div>
+    <div>
+      <ha-input-form
+        :value="name"
+        @change="onChangeName($event)"
+      ></ha-input-form>
+    </div>
+    <div>
+      <ha-textarea :value="text" @change="onChangeText($event)"></ha-textarea>
+    </div>
   </div>
 </template>
 
