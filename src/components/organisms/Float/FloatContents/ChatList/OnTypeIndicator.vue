@@ -26,8 +26,6 @@ export default {
   },
   methods: {
     updateText() {
-      console.log("OnTypeIndicator.updateText"); // @DELETEME
-
       const onTypeList = [];
       const SPAN_MS = 2000;
       const now = Date.now();

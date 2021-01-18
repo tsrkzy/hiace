@@ -112,6 +112,80 @@ export class IFFloat implements IIFloat {
     }
   }
 
+  static Export() {
+    const { instances = [] } = IFFloat;
+    const floats = instances.map((f: IFFloat) => {
+      return f.toJSON();
+    });
+    return { floats };
+  }
+
+  toJSON() {
+    const id = this.id;
+    const contentId = this.contentId;
+    const contentTitle = this.contentTitle;
+    const x = this.x;
+    const y = this.y;
+    const z = this.z;
+    const w = this.w;
+    const h = this.h;
+    const args = this.args;
+    return {
+      id,
+      show: true,
+      contentId,
+      contentTitle,
+      x,
+      y,
+      z,
+      w,
+      h,
+      args
+    };
+  }
+
+  static ToLS() {
+    const jsonObj = IFFloat.Export();
+    const json = JSON.stringify(jsonObj);
+    window.localStorage.setItem("config", json);
+  }
+
+  static Import() {
+    const { floats: configList = [] } = IFFloat.FromLS();
+    const floatList = [];
+    for (let i = 0; i < configList.length; i++) {
+      const config = configList[i];
+      const float = new IFFloat(config.contentId, true, config.args);
+      console.log(config.id, float); // @DELETEME
+      float.id = config.id;
+      float.contentTitle = config.contentTitle;
+      float.x = config.x;
+      float.y = config.y;
+      float.z = config.z;
+      float.w = config.w;
+      float.h = config.h;
+      floatList.push(float);
+    }
+    IFFloat.ReloadId();
+
+    return floatList;
+  }
+
+  static ReloadId() {
+    const { instances = [] } = IFFloat;
+    if (!instances.length) {
+      IFFloat.Id = 1;
+    } else {
+      const highest = instances.reduce((a, b) => (a.id > b.id ? a : b));
+      IFFloat.Id = (highest?.id ?? 0) + 1;
+    }
+  }
+
+  static FromLS() {
+    const json = window.localStorage.getItem("config");
+    return JSON.parse(json || "{}");
+  }
+
   dispose() {
     IFFloat.instances.splice(IFFloat.instances.indexOf(this), 1);
   }

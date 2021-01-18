@@ -20,15 +20,25 @@ export const float = {
   namespaced: true,
   state: {
     floats: [
-      new IFFloat(ROOM_MANAGER, true),
-      // new IFFloat(BOARD_LIST, false),
-      // new IFFloat(CHARACTER_LIST, true),
-      new IFFloat(CHAT_LIST, true)
+      /* IFFloat[] */
     ]
   },
   mutations: {
+    initialize(state) {
+      const importedList = IFFloat.Import();
+      if (!importedList.length) {
+        state.floats = [
+          new IFFloat(ROOM_MANAGER, true),
+          new IFFloat(CHAT_LIST, true)
+        ];
+      } else {
+        state.floats = importedList;
+      }
+    },
     setFloat(state, payload) {
       state.floats = payload.floats;
+
+      IFFloat.ToLS();
     },
     move(state, payload) {
       const { id, x = 0, y = 0 } = payload;
@@ -38,6 +48,8 @@ export const float = {
       }
       float.x = x;
       float.y = y;
+
+      IFFloat.ToLS();
     },
     scale(state, payload) {
       const { id, w, h } = payload;
@@ -47,6 +59,8 @@ export const float = {
       }
       float.w = w;
       float.h = h;
+
+      IFFloat.ToLS();
     },
     pop(state, payload) {
       const { id } = payload;
@@ -66,6 +80,8 @@ export const float = {
         return false;
       }
       state.floats.push(float);
+
+      IFFloat.ToLS();
     },
     setShow(state, payload) {
       const { id, show } = payload;
@@ -87,9 +103,14 @@ export const float = {
       }
 
       state.floats = result;
+
+      IFFloat.ToLS();
     }
   },
   actions: {
+    initialize({ commit }) {
+      commit("initialize");
+    },
     setFloat({ commit }, { floats }) {
       commit("setFloat", { floats });
     },

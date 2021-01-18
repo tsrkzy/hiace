@@ -50,12 +50,10 @@ export default {
   },
   methods: {
     onEnter(e) {
-      console.log("AliasBoard.onEnter"); // @DELETEME
       const $el = e.currentTarget;
       $el.style.display = "none";
       setTimeout(onTimeout, 2000);
       function onTimeout() {
-        console.log("AliasBoard.onTimeout"); // @DELETEME
         $el.style.display = "";
       }
     }

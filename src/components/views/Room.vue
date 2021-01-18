@@ -12,7 +12,7 @@
     <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
-      <window-opener></window-opener>
+      <window-opener v-if="joined"></window-opener>
       <google-authorizer></google-authorizer>
       <label
         >debug:
@@ -50,9 +50,6 @@ import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 
-const WINDOW_MARGIN = 40;
-const BORDER = 1;
-
 export default {
   name: "Room",
   components: {
@@ -68,6 +65,7 @@ export default {
   async created() {
     this.roomId = this.$route.params.room_id;
     await this.trackRoomInfo(this.roomId);
+    await this.$store.dispatch("float/initialize");
   },
   mounted() {},
   beforeDestroy() {
@@ -188,7 +186,7 @@ export default {
 
       /* FS上にGoogle認証と対応するユーザを作成、または取得 */
       const user = await FSUser.Create();
-      this.$store.dispatch("auth/logInAs", { user });
+      await this.$store.dispatch("auth/logInAs", { user });
     }
   }
 };

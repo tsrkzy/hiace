@@ -20,6 +20,7 @@
       v-if="!dragMove"
       class="button__close"
       @click="onClickClose($event)"
+      style="z-index: 10;"
     >
       -
     </button>
