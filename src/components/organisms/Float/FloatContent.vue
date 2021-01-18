@@ -36,12 +36,15 @@
     </room-manager>
     <channel-list v-else-if="contentId === CHANNEL_LIST" :float-id="floatId">
     </channel-list>
+    <note-manager v-else-if="contentId === NOTE_MANAGER" :float-id="floatId">
+    </note-manager>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
 
 <script>
 import ChannelList from "@/components/organisms/Float/FloatContents/ChannelList";
+import NoteManager from "@/components/organisms/Float/FloatContents/NoteManager";
 import RoomManager from "@/components/organisms/Float/FloatContents/RoomManager";
 import MapEdit from "@/components/organisms/Float/FloatContents/MapEditor/MapEdit";
 import BoardList from "@/components/organisms/Float/FloatContents/BoardList";
@@ -61,12 +64,14 @@ import {
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
-  CHANNEL_LIST
+  CHANNEL_LIST,
+  NOTE_MANAGER
 } from "@/interfaces/IFFloat";
 
 export default {
   name: "FloatContent",
   components: {
+    NoteManager,
     ChannelList,
     RoomManager,
     MapEdit,
@@ -89,7 +94,8 @@ export default {
       IMAGE_MANAGER,
       SOUND_MANAGER,
       ROOM_MANAGER,
-      CHANNEL_LIST
+      CHANNEL_LIST,
+      NOTE_MANAGER
     };
   },
   props: {

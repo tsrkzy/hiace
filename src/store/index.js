@@ -15,6 +15,7 @@ import { map } from "@/store/map";
 import { pawn } from "@/store/pawn";
 import { table } from "@/store/table";
 import { column } from "@/store/column";
+import { note } from "@/store/note";
 import { notice } from "@/store/notice";
 import { smoke } from "@/store/smoke";
 import { contextmenu } from "@/store/contextmenu";
@@ -41,6 +42,7 @@ export default new Vuex.Store({
     pawn,
     table,
     column,
+    note,
     notice,
     smoke,
     contextmenu,

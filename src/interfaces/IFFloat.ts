@@ -28,6 +28,7 @@ export const IMAGE_MANAGER = "IMAGE_MANAGER";
 export const SOUND_MANAGER = "SOUND_MANAGER";
 export const ROOM_MANAGER = "ROOM_MANAGER";
 export const CHANNEL_LIST = "CHANNEL_LIST";
+export const NOTE_MANAGER = "NOTE_MANAGER";
 
 const singletonList = [
   CHARACTER_LIST,
@@ -68,6 +69,9 @@ export function title(id: string) {
     }
     case ROOM_MANAGER: {
       return "ユーザ情報";
+    }
+    case NOTE_MANAGER: {
+      return "共有メモ";
     }
     case CHANNEL_LIST: {
       return "チャンネル一覧";
@@ -114,9 +118,14 @@ export class IFFloat implements IIFloat {
 
   static Export() {
     const { instances = [] } = IFFloat;
-    const floats = instances.map((f: IFFloat) => {
-      return f.toJSON();
-    });
+    const floats = [];
+    for (let i = 0; i < instances.length; i++) {
+      const float = instances[i];
+      if (!float.show) {
+        continue;
+      }
+      floats.push(float.toJSON());
+    }
     return { floats };
   }
 

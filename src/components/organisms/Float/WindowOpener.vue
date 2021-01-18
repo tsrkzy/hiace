@@ -25,6 +25,7 @@ import {
   TABLE_VIEW,
   ROOM_MANAGER,
   CHANNEL_LIST,
+  NOTE_MANAGER,
   title,
   UNSET
 } from "@/interfaces/IFFloat";
@@ -49,7 +50,8 @@ export default {
         IMAGE_MANAGER,
         SOUND_MANAGER,
         ROOM_MANAGER,
-        CHANNEL_LIST
+        CHANNEL_LIST,
+        NOTE_MANAGER
       ];
 
       const contents = contentList.map(id => ({ id, text: title(id) }));
