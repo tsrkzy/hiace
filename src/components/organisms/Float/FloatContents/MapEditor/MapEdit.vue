@@ -17,7 +17,7 @@
       <label>
         <input
           type="range"
-          min="25"
+          min="20"
           max="300"
           step="10"
           :value="scaleValue"
@@ -100,7 +100,7 @@ export default {
   methods: {
     async onChangeScaleHandler(e) {
       const { value } = e.currentTarget;
-      const scale = value / 100;
+      const scale = Math.float(value / 100);
       const ot = this.originTransform;
       /* マップの回転は想定していない */
       const transform = new DOMMatrix([scale, 0, 0, scale, ot.e, ot.f]);

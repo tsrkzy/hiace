@@ -60,7 +60,9 @@ export const float = {
       const { contentId = UNSET, show = false, args } = payload;
       const float = new IFFloat(contentId, show, args);
       /* singletonの場合はidが同じ */
-      if (state.floats.some(f => f.id === float.id)) {
+      const index = state.floats.findIndex(f => f.id === float.id);
+      if (index !== -1) {
+        state.floats[index].show = true;
         return false;
       }
       state.floats.push(float);

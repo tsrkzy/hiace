@@ -49,7 +49,7 @@ export function title(id: string) {
       return "キャラクタ編集";
     }
     case BOARD_LIST: {
-      return "ボード一覧";
+      return "オブジェクト一覧";
     }
     case MAP_EDIT: {
       return "マップ編集";

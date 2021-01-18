@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -19,7 +19,6 @@
 import {
   BOARD_LIST,
   CHARACTER_LIST,
-  MAP_EDIT,
   CHAT_LIST,
   IMAGE_MANAGER,
   SOUND_MANAGER,
@@ -45,7 +44,6 @@ export default {
       const contentList = [
         CHARACTER_LIST,
         BOARD_LIST,
-        MAP_EDIT,
         CHAT_LIST,
         TABLE_VIEW,
         IMAGE_MANAGER,

@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -14,7 +14,6 @@
     }"
     @mousedown="onMouseDown($event)"
   >
-    <text>{{ imageId }} {{ transform }}</text>
     <rect
       :width="width"
       :height="height"

@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="!nowDragging && loggedIn">
+  <div v-if="loggedIn" v-show="!nowDragging">
     <float
       class="float"
       v-for="f in floats"

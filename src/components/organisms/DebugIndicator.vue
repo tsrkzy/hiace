@@ -199,7 +199,7 @@ import HaButton from "@/components/atoms/HaButton";
 import CharacterShowCase from "@/components/molecules/CharacterShowCase";
 import ChatComposer from "@/components/molecules/ChatComposer";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
-import MapEditor from "@/components/molecules/MapEditor";
+import MapEditor from "@/components/molecules/MapEditorDeprecated";
 import SoundEditor from "@/components/molecules/SoundEditor";
 import TableView from "@/components/organisms/TableViewDeprecated";
 import { Smoke } from "@/scripts/Smoke";

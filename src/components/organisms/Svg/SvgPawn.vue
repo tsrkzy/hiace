@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -18,7 +18,6 @@
     <filter :id="`shadow_filter_${pawnId}`">
       <feColorMatrix in="SourceGraphic" type="saturate" values="0.1" />
     </filter>
-    <text>{{ character.name }} - {{ alias.name }}, {{ pawnSize }}</text>
     <!-- 外枠 -->
     <rect
       :width="pawnSize"
