@@ -70,7 +70,7 @@ export class FSChat {
 
   static async Welcome(roomId: string, owner: string) {
     const c = {
-      type: SYSTEM_CHANNEL_TYPE,
+      type: SYSTEM,
       room: roomId,
       channel: SYSTEM_CHANNEL_ID, // As CHANNEL_SYSTEM
       owner: owner,

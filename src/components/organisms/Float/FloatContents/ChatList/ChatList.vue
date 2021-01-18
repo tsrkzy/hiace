@@ -43,6 +43,7 @@
         :resizeable="false"
         placeholder="enter: send / shift+enter: new line"
       ></ha-textarea>
+      <on-type-indicator />
     </div>
   </div>
 </template>
@@ -58,6 +59,7 @@ import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import AliasBoard from "@/components/organisms/Float/FloatContents/ChatList/AliasBoard";
 import ChatLogViewer from "@/components/organisms/Float/FloatContents/ChatList/ChatLogViewer";
+import OnTypeIndicator from "@/components/organisms/Float/FloatContents/ChatList/OnTypeIndicator";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Throttle } from "@/scripts/Throttle";
 
@@ -65,6 +67,7 @@ const throttle = new Throttle(1000);
 export default {
   name: "ChatList",
   components: {
+    OnTypeIndicator,
     AliasBoard,
     ChatLogViewer,
     HaTextarea,
