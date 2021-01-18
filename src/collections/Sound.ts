@@ -147,7 +147,8 @@ export class FSSound {
       room: roomId,
       hidden: false,
       duration,
-      loop: false
+      loop: false,
+      name
     };
     const db = firebase.firestore();
     const soundDocRef = await db.collection("sound").add(sound);

@@ -6,17 +6,18 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div>
-    {{ playing ? "PLAYING!" : "" }}
+  <fieldset>
+    <legend>{{ soundName }}</legend>
+    {{ playing ? "再生中" : "" }}
     <label
-      ><span>mute</span><input @input="onInputMute" type="checkbox"
+      ><span>消音</span><input @input="onInputMute" type="checkbox"
     /></label>
     <label v-if="loaded"
-      ><span>loop</span
+      ><span>繰返</span
       ><input @input="onInputLoop" :checked="sound.loop" type="checkbox"
     /></label>
     <label>
-      <span>volume: </span>
+      <span>音量: </span>
       <input
         type="range"
         min="0"
@@ -26,14 +27,19 @@
         @change="onInputVolume"
       />
     </label>
-    {{ soundId }}
-    <ha-button v-if="sound" :disabled="!loaded" @click="onClickPlay"
-      >PLAY</ha-button
+    <ha-button v-if="sound && !playing" :disabled="!loaded" @click="onClickPlay"
+      >試聴開始</ha-button
     >
-    <ha-button v-if="sound" @click="onClickBroadcast">BROADCAST</ha-button>
-    <ha-button v-if="sound" @click="onClickDelete"
-      >DELETE: {{ this.soundId }}</ha-button
+    <ha-button v-if="sound && playing" :disabled="!loaded" @click="onClickPause"
+      >試聴停止</ha-button
     >
+    <ha-button v-if="sound && !playing" @click="onClickBroadcast"
+      >ルームで再生</ha-button
+    >
+    <ha-button v-if="sound && playing" @click="onClickStopBroadcast"
+      >ルームで停止</ha-button
+    >
+    <ha-button v-if="sound && false" @click="onClickDelete">削除</ha-button>
     <audio
       :id="`audio_sound_${soundId}`"
       :loop="sound && sound.loop"
@@ -41,7 +47,7 @@
     >
       <source :src="url" />
     </audio>
-  </div>
+  </fieldset>
 </template>
 
 <script>
@@ -81,6 +87,7 @@ export default {
 
     /* srcを設定した後、明示的にloadする */
     const sound = await FSSound.GetById({ id: this.soundId });
+    console.log(sound.url, sound); // @DELETEME
     this.url = sound.url;
 
     $a.load();
@@ -100,6 +107,9 @@ export default {
     sound() {
       return this.$store.getters["sound/info"].find(s => s.id === this.soundId);
     },
+    soundName() {
+      return this.sound?.name;
+    },
     roomMusic() {
       return this.$store.getters["room/music"];
     },
@@ -111,11 +121,17 @@ export default {
     async onClickBroadcast() {
       await FSRoom.SoundBroadcast(this.room.id, this.soundId);
     },
+    async onClickStopBroadcast() {
+      await FSRoom.SoundStop(this.room.id);
+    },
     async onClickDelete() {
       await FSSound.Delete(this.soundId);
     },
     async onClickPlay() {
       await this.play();
+    },
+    async onClickPause() {
+      await this.pause();
     },
     onInputVolume(e) {
       const v = e.currentTarget.value;
@@ -169,7 +185,9 @@ export default {
         return false;
       }
 
+      /* 再生停止、再生位置を先頭にリセット */
       $a.pause();
+      $a.currentTime = 0;
     }
   },
   watch: {

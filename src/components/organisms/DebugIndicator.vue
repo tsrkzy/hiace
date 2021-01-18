@@ -37,7 +37,7 @@
       <image-show-case v-model="imageSelect"></image-show-case>
       <!--      <pre>{{ images }}</pre>-->
     </details>
-    <details v-if="joined">
+    <details v-if="false">
       <summary>sounds</summary>
       <ul>
         <li v-for="s in sounds" :key="s.id">
