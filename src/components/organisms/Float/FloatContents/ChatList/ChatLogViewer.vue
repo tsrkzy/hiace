@@ -7,25 +7,17 @@
 
 <template>
   <div :id="`chat-list--scroll-parent__${floatId}`">
-    <ol :id="`chat-list--scroll-content__${floatId}`">
-      <chat-row
-        :chat-id="c"
-        v-for="(c, i) of chatIdList"
-        :key="c"
-        :dim="dim(i)"
-      >
-      </chat-row>
-    </ol>
+    <p-chat-row ref="p" :float-id="floatId"></p-chat-row>
   </div>
 </template>
 <script>
-import { SYSTEM } from "@/collections/Chat";
-import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
-import { StopWatch } from "@/scripts/StopWatch";
+import PChatRow from "@/components/organisms/Float/FloatContents/ChatList/PChatRow";
+
+const chatMap = new Map();
 
 export default {
   name: "chat-log-viewer",
-  components: { ChatRow },
+  components: { PChatRow },
   props: {
     floatId: { type: Number, require: true },
     channelId: { type: String, require: true }
@@ -41,26 +33,38 @@ export default {
         behavior: "smooth"
       });
     },
-    dim(index) {
-      const chatList = this.$store.getters["chat/info"];
-      const { channel, type } = chatList[chatList.length - (1 + index)];
-      return type !== SYSTEM && channel !== this.channelId;
+    addChat(chatList = []) {
+      console.log("ChatLogViewer.addChat", chatList); // @DELETEME
+      const channel = this.channelId;
+      this.$refs.p.exAdd(chatList, { channel });
+    },
+    changeChannel() {
+      const chatList = this.chatList;
+      const channel = this.channelId;
+      this.$refs.p.exAdd(chatList, { channel, flush: true });
     }
   },
   computed: {
-    chatIdList() {
-      /* @SAFE */
-      return this.$store.getters["chat/info"].map(c => c.id);
+    chatList() {
+      return this.$store.getters["chat/info"];
     }
   },
   watch: {
-    async chatIdList() {
-      const sw = StopWatch.start("ChatLogViewer.chatIdList");
-      /* チャットが作成されるまで待機 */
-      /* @HEAVY */
-      await this.$nextTick();
-      sw.stop();
-      this.showNew();
+    async chatList(newList) {
+      const added = [];
+      for (let i = 0; i < newList.length; i++) {
+        const chat = newList[i];
+        if (chatMap.has(chat.id)) {
+          continue;
+        }
+        added.push(chat);
+        chatMap.set(chat.id, chat.id);
+      }
+
+      this.addChat(added);
+    },
+    channelId() {
+      this.changeChannel();
     }
   }
 };
