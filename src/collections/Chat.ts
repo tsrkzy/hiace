@@ -1,4 +1,4 @@
-import { SYSTEM_CHANNEL_ID, SYSTEM_CHANNEL_TYPE } from "@/collections/Channel";
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
@@ -188,39 +188,32 @@ export class FSChat {
     const docsRef = db
       .collection("chat")
       .where("room", "==", roomId)
-      .orderBy("timestamp", "desc");
+      .orderBy("timestamp", "asc");
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       /* リスナ付与後、初回にハンドラはクエリに対する全ドキュメントをsnapshotとして受け取る
        * それらはchange.type==="added"のため、type==="added"のHookは画面呼出直後にバーストする
-       * 対策として、changesが2個/回以上の場合は画面呼出直後として扱い、Hook側で迂回可能にする */
+       *
+       * チャットの単発の追加はadd、それ以外はsetでハンドルするため、下記の条件で分岐している
+       */
       const changes = querySnapshot.docChanges();
-      const asInitializing = changes.length >= 2;
-
-      const chats: any[] = [];
-      changes.forEach(async change => {
-        const { type } = change;
-        switch (type) {
-          case "added": {
-            if (!asInitializing) {
-              // const chat = change.doc.data();
-              // onReceiveChat(chat.type, chat.value);
-            }
-            break;
-          }
-          // case "modified" : {}
-          // case "removed" : {}
-          default:
-            break;
-        }
-      });
-
-      querySnapshot.forEach(doc => {
-        const chat = doc.data();
-        chat.id = doc.id;
-        chats.push(chat);
-      });
-      store.dispatch("chat/setChats", { chats });
+      const simpleAdd = changes.length === 1 && changes[0].type === "added";
+      if (simpleAdd) {
+        /* push */
+        const change = changes[0];
+        const chat = change.doc.data();
+        chat.id = change.doc.id;
+        store.dispatch("chat/addChat", { chat });
+      } else {
+        /* = chat[] */
+        const chats: any[] = [];
+        querySnapshot.forEach(doc => {
+          const chat = doc.data();
+          chat.id = doc.id;
+          chats.push(chat);
+        });
+        store.dispatch("chat/setChats", { chats });
+      }
     });
     const listener = { roomId, unsubscribe };
     unsubscribeMap.set(roomId, listener);
@@ -236,6 +229,34 @@ export class FSChat {
     listener.unsubscribe();
 
     unsubscribeMap.delete(roomId);
+  }
+
+  static async AddBulk(roomId: string) {
+    const db = firebase.firestore();
+    const me = store.getters["auth/user"].id;
+
+    const BATCH_LIMIT = 500;
+    const LOOPS = Math.floor(500 / BATCH_LIMIT);
+    for (let i = 0; i < LOOPS; i++) {
+      const batch = db.batch();
+      for (let j = 0; j < BATCH_LIMIT; j++) {
+        const newChatRef = db.collection("chat").doc();
+
+        const c = {
+          type: TEXT,
+          color: "#000000",
+          room: roomId,
+          channel: null,
+          owner: me,
+          character: null,
+          alias: null,
+          value: { text: `bulk inserted: ${i * LOOPS + j}` },
+          timestamp: Date.now()
+        };
+        batch.set(newChatRef, c);
+      }
+      await batch.commit();
+    }
   }
 }
 

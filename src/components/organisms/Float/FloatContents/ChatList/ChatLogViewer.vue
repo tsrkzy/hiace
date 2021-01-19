@@ -21,6 +21,7 @@
 <script>
 import { SYSTEM } from "@/collections/Chat";
 import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
+import { StopWatch } from "@/scripts/StopWatch";
 
 export default {
   name: "chat-log-viewer",
@@ -48,14 +49,17 @@ export default {
   },
   computed: {
     chatIdList() {
-      const chatList = this.$store.getters["chat/info"].map(c => c.id);
-      return chatList.reverse();
+      /* @SAFE */
+      return this.$store.getters["chat/info"].map(c => c.id);
     }
   },
   watch: {
     async chatIdList() {
+      const sw = StopWatch.start("ChatLogViewer.chatIdList");
       /* チャットが作成されるまで待機 */
+      /* @HEAVY */
       await this.$nextTick();
+      sw.stop();
       this.showNew();
     }
   }

@@ -5,181 +5,7 @@
   >
     <ha-button @click="onClickSmoke">smoke</ha-button>
     <ha-button @click="onClickContext">context</ha-button>
-    <div v-if="joined">
-      <h5>File upload</h5>
-      <input
-        type="file"
-        multiple
-        accept="*/*"
-        @change="onClickFileUploadHandler"
-      />
-    </div>
-    {{ activeBoard }}
-    <details v-if="joined">
-      <summary>Boards</summary>
-      <ha-button @click="onClickCreateBoard">ADD BOARD</ha-button>
-      <ul>
-        <li v-for="b in boardItems" :key="b.id">
-          <ha-button @click="onClickActivateBoard(b.id)">
-            {{ activeBoard === b.id ? "*" : "" }}ACTIVATE: {{ b.name }}
-          </ha-button>
-          <ha-button @click="onClickDeleteBoard(b.id)"
-            >DELETE: {{ b.id }}
-          </ha-button>
-        </li>
-      </ul>
-      <pre>{{ boards }}</pre>
-    </details>
-    <h5>imageSelect</h5>
-    {{ imageSelect || "no image" }}
-    <details v-if="joined">
-      <summary>Images</summary>
-      <image-show-case v-model="imageSelect"></image-show-case>
-      <!--      <pre>{{ images }}</pre>-->
-    </details>
-    <details v-if="false">
-      <summary>sounds</summary>
-      <ul>
-        <li v-for="s in sounds" :key="s.id">
-          <sound-editor :sound-id="s.id"></sound-editor>
-        </li>
-      </ul>
-      <ha-button @click="onClickStopMusic">STOP</ha-button>
-    </details>
-    <details>
-      <summary>float.info</summary>
-      <ul>
-        <li v-for="f in $store.getters['float/info']" :key="f.id">
-          {{ f.id }}, {{ f.x }}, {{ f.y }}, {{ f.w }}, {{ f.h }}
-        </li>
-      </ul>
-    </details>
-    <div v-if="joined">
-      <!-- map -->
-      <details>
-        <summary>map.info</summary>
-        <map-editor v-for="m in maps" :key="m.id" :map-id="m.id"></map-editor>
-        <!-- <pre>{{ maps }}</pre>-->
-        <ha-button @click="onClickCreateMap">ADD MAP</ha-button>
-      </details>
-      <!-- pawn -->
-      <details>
-        <summary>pawn.info</summary>
-        <character-show-case v-model="characterSelect"></character-show-case>
-        <ha-button @click="onClickCreatePawn">ADD PAWN</ha-button>
-        <!--        <pre>{{ pawns }}</pre>-->
-      </details>
-    </div>
-    <details v-if="isOwner">
-      <summary>owner menu</summary>
-      <ha-button
-        :key="`grant-${u}`"
-        v-for="u in requests"
-        @click="grantRequest(u)"
-        >grant: {{ u }}
-      </ha-button>
-      <ha-button :key="`drop-${u}`" v-for="u in userIdList" @click="dropUser(u)"
-        >drop: {{ u }}
-      </ha-button>
-      <ha-button
-        :key="`kick-u-${u}`"
-        v-for="u in userIdList"
-        @click="kickUser(u)"
-        >kick: {{ u }}
-      </ha-button>
-      <ha-button :key="`kick-r-${u}`" v-for="u in requests" @click="kickUser(u)"
-        >kick: {{ u }}
-      </ha-button>
-    </details>
-    <div v-if="youKicked">
-      <span>キックされました</span>
-    </div>
-    <div v-if="waitForGrant">
-      <span>入出許可を待っています。このタブを閉じて待つこともできます。</span>
-    </div>
-    <div v-if="needRequest">
-      <span>入室リクエストを送る</span>
-      <ha-button @click="makeRequest">入室リクエストを送る</ha-button>
-    </div>
-    <div v-if="joined">
-      <span>入室完了</span>
-    </div>
-    <details v-if="$store.getters['auth/loggedIn']">
-      <summary> auth.user</summary>
-      <img
-        width="25"
-        height="25"
-        :src="$store.getters['auth/photoUrl']"
-        alt="user-icon"
-        style="border: 1px solid lightgray;"
-      />
-      <pre>{{ user }}</pre>
-    </details>
-    <details>
-      <summary>user.info</summary>
-      <ul>
-        <li :key="u.id" v-for="u in users">
-          <span>{{ u.id }}</span>
-          {{ maybeActive(u.lastPing) ? "●" : "" }}
-          <ha-button @click="onClickPing(u.id)">PING</ha-button>
-        </li>
-      </ul>
-    </details>
-    <details v-if="room">
-      <summary> room.info</summary>
-      <pre>{{ room }}</pre>
-    </details>
-    <details v-if="tables">
-      <summary>table.info</summary>
-      <pre>{{ $store.getters["table/matrixList"] }}</pre>
-      <!--      <pre>{{ tables }}</pre>-->
-      <ul>
-        <li :key="t.id" v-for="t in tableItems">
-          <table-view :table-id="t.id" />
-        </li>
-      </ul>
-      <ha-button @click="onClickCreateTable">ADD TABLE</ha-button>
-    </details>
-    {{ characterSelect }}
-    <details v-if="characters">
-      <summary>character.info</summary>
-      <ha-button @click="onClickCreateMyCharacter">ADD MY CHARACTER</ha-button>
-      <ul>
-        <li :key="c.id" v-for="c in characters">
-          {{ c.id }}
-          <ul>
-            <li :key="a.id" v-for="a in c.aliases">{{ a.id }}, {{ a.name }}</li>
-          </ul>
-          <ha-button @click="onClickCreateAliasToCharacter(c.id)"
-            >ADD ALIAS</ha-button
-          >
-        </li>
-      </ul>
-      <pre>      {{ characters }}</pre>
-    </details>
-    <details v-if="joined">
-      <summary>alias.info</summary>
-      <pre>{{ aliases }}</pre>
-    </details>
-    <details v-if="channels">
-      <summary>channel.info</summary>
-      <ha-button :disabled="!authenticated" @click="onClickCreateChannel"
-        >ADD CHANNEL
-      </ha-button>
-      <pre>{{ channels }}</pre>
-    </details>
-    <details v-if="chats">
-      <summary> chat.info</summary>
-      <chat-composer v-if="joined"></chat-composer>
-      <chat-composer v-if="joined"></chat-composer>
-      <ol>
-        <li v-for="c of chats" :key="c.id" style="margin: 0;">
-          ({{ c.channel || "none" }}) {{ c.character || userName
-          }}{{ c.alias ? `(${c.alias})` : "" }}:
-          {{ c.type === "DICE" ? c.value.result : c.value.text }}
-        </li>
-      </ol>
-    </details>
+    <ha-button @click="onAddChats">add 500 chats</ha-button>
   </div>
 </template>
 
@@ -188,32 +14,19 @@ import { FSAlias } from "@/collections/Alias";
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
+import { FSChat } from "@/collections/Chat";
 import { FSImage } from "@/collections/Image";
-import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
-import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
-import CharacterShowCase from "@/components/molecules/CharacterShowCase";
-import ChatComposer from "@/components/molecules/ChatComposer";
-import ImageShowCase from "@/components/molecules/ImageShowCase";
-import MapEditor from "@/components/molecules/MapEditorDeprecated";
-import SoundEditor from "@/components/molecules/SoundEditor";
-import TableView from "@/components/organisms/TableViewDeprecated";
 import { Smoke } from "@/scripts/Smoke";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "DebugIndicator",
   components: {
-    SoundEditor,
-    TableView,
-    CharacterShowCase,
-    ImageShowCase,
-    MapEditor,
-    ChatComposer,
     HaButton
   },
   created() {
@@ -326,9 +139,6 @@ export default {
     };
   },
   methods: {
-    async grantRequest(userId) {
-      await FSRoom.GrantRequest(userId);
-    },
     async dropUser(userId) {
       await FSRoom.DropUser(userId);
     },
@@ -339,14 +149,8 @@ export default {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
     },
-    async onClickPing(userId) {
-      await FSUser.Ping(userId);
-    },
     maybeActive(lastPing) {
       return this.milliSecond - lastPing < 2 * 1000;
-    },
-    async onClickStopMusic() {
-      await FSRoom.SoundStop(this.room.id);
     },
     async onClickCreateBoard() {
       const userId = this.user.id;
@@ -359,13 +163,6 @@ export default {
     },
     async onClickDeleteBoard(boardId) {
       await FSBoard.Delete(boardId);
-    },
-    async onClickCreateMap() {
-      const userId = this.user.id;
-      const roomId = this.room.id;
-      const boardId = this.activeBoard;
-      const imageId = this.imageSelect;
-      await FSMap.Create({ userId, roomId, boardId, imageId });
     },
     async onClickCreateMyCharacter() {
       const { id: userId, name: userName } = this.$store.getters["auth/user"];
@@ -455,6 +252,9 @@ export default {
     },
     async onContextmenu() {
       this.$store.dispatch("contextmenu/on");
+    },
+    async onAddChats() {
+      await FSChat.AddBulk(this.room.id);
     }
   }
 };
