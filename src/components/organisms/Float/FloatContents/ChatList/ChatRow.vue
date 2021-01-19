@@ -6,98 +6,43 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <li
-    :style="{
-      margin: 0,
-      wordBreak: 'break-word',
-      fontWeight: system ? 'normal' : 'bold',
-      fontStyle: system ? 'italic' : 'normal',
-      color: system ? 'lightgray' : color
-    }"
-    :class="{ dim }"
-  >
-    <!-- channel -->
-    <span
-      :style="{ fontWeight: 'normal', color: dim ? 'lightgray' : 'gray' }"
-      >{{ channel }}</span
-    >
-    <!-- speaker -->
-    <span>{{ speaker }}</span>
-    <!-- one line -->
-    <span v-if="textList.length === 1">{{ textList[0] }}</span>
-    <!-- multi lines -->
-    <span v-else v-for="(t, i) of textList" :key="i">
-      <br />
-      <span
-        :style="{
-          marginLeft: '0.5rem',
-          paddingLeft: '0.5rem',
-          borderLeft: '1px solid lightgray'
-        }"
-        >{{ t }}</span
-      >
-    </span>
-  </li>
+  <ol :id="`chat-list--scroll-content__${floatId}`">
+    <!-- パフォーマンス対策のためPureJSで制御 -->
+  </ol>
 </template>
 
 <script>
-import { FSChannel } from "@/collections/Channel";
-import { FSCharacter } from "@/collections/Character";
-import { SYSTEM, SYSTEM_COLOR } from "@/collections/Chat";
-import { FSUser } from "@/collections/User";
+import { createChatRowDom } from "@/components/organisms/Float/FloatContents/ChatList/ChatRowHelper";
+
+let _float_id;
+const $$ol = () => {
+  return document.getElementById(`chat-list--scroll-content__${_float_id}`);
+};
 
 export default {
   name: "ChatRow",
   props: {
-    chatId: { type: String, require: true },
-    dim: { type: Boolean, default: false }
+    floatId: { type: Number, require: true }
   },
-  computed: {
-    chat() {
-      return this.$store.getters["chat/info"].find(c => c.id === this.chatId);
-    },
-    system() {
-      return this.chat.type === SYSTEM;
-    },
-    channel() {
-      const chat = this.chat;
-      if (this.system) {
-        return "";
-      }
-      const c = this.getChannelName(chat) || "none";
-      return `(${c}) `;
-    },
-    speaker() {
-      const chat = this.chat;
-      if (this.system) {
-        return "$ hiace > ";
-      }
-      const s = this.getCharacterName(chat) || this.getUserName(chat);
-      return `${s}: `;
-    },
-    textList() {
-      const chat = this.chat;
-      const isDice = chat.type === "DICE";
-      const result = chat.value.result;
-      const textList = chat.value.text.split(/\n/);
-      return isDice ? [...textList, result] : textList;
-    },
-    color() {
-      return this.dim ? "lightgray" : this.chat?.color || SYSTEM_COLOR;
-    }
+  created() {
+    _float_id = this.floatId;
   },
+  computed: {},
   methods: {
-    getChannelName(chatItem) {
-      const { channel } = chatItem;
-      return FSChannel.Who(channel) || "全体";
-    },
-    getCharacterName(chatItem) {
-      const { character } = chatItem;
-      return FSCharacter.Who(character);
-    },
-    getUserName(chatItem) {
-      const { owner } = chatItem;
-      return FSUser.Who(owner);
+    exAdd(chatList = [], { channel = null, flush = false }) {
+      console.log("PChatRow.exAdd", channel, flush); // @DELETEME
+      const $ol = $$ol();
+      if (flush) {
+        $ol.innerHTML = "";
+      }
+
+      const $liList = [];
+      for (let i = 0; i < chatList.length; i++) {
+        const c = chatList[i];
+        const $li = createChatRowDom(c, channel);
+        $liList.push($li);
+      }
+      $ol.append(...$liList);
     }
   }
 };

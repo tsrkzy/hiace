@@ -12,7 +12,7 @@
       :class="{ onTop, scrollParent: true }"
       @scroll="onScroll"
     >
-      <p-chat-row ref="p" :float-id="floatId"></p-chat-row>
+      <chat-row ref="p" :float-id="floatId"></chat-row>
     </div>
     <div v-if="!onTop" class="scroll-to-top__button" @click="onScrollButton">
       <a>scroll to top{{ read ? "" : " (new message there)" }}</a>
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import PChatRow from "@/components/organisms/Float/FloatContents/ChatList/PChatRow";
+import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
 
 const SCROLL_MARGIN = 40;
 
@@ -28,7 +28,7 @@ const chatMap = new Map();
 
 export default {
   name: "chat-log-viewer",
-  components: { PChatRow },
+  components: { ChatRow },
   props: {
     floatId: { type: Number, require: true },
     channelId: { type: String, require: true }
