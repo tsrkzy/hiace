@@ -117,6 +117,12 @@ export class IFFloat implements IIFloat {
   }
 
   static Export() {
+    const jsonObj = IFFloat.ToJSON();
+    const json = JSON.stringify(jsonObj);
+    this.ToLS(json);
+  }
+
+  static ToJSON() {
     const { instances = [] } = IFFloat;
     const floats = [];
     for (let i = 0; i < instances.length; i++) {
@@ -127,6 +133,10 @@ export class IFFloat implements IIFloat {
       floats.push(float.toJSON());
     }
     return { floats };
+  }
+
+  static ToLS(json: string) {
+    window.localStorage.setItem("config", json);
   }
 
   toJSON() {
@@ -153,19 +163,17 @@ export class IFFloat implements IIFloat {
     };
   }
 
-  static ToLS() {
-    const jsonObj = IFFloat.Export();
-    const json = JSON.stringify(jsonObj);
-    window.localStorage.setItem("config", json);
-  }
-
   static Import() {
     const { floats: configList = [] } = IFFloat.FromLS();
     const floatList = [];
+    const m = new Map();
     for (let i = 0; i < configList.length; i++) {
       const config = configList[i];
+      if (m.has(config.id)) {
+        continue;
+      }
+      m.set(config.id, config.id);
       const float = new IFFloat(config.contentId, true, config.args);
-      console.log(config.id, float); // @DELETEME
       float.id = config.id;
       float.contentTitle = config.contentTitle;
       float.x = config.x;
@@ -180,6 +188,11 @@ export class IFFloat implements IIFloat {
     return floatList;
   }
 
+  static FromLS() {
+    const json = window.localStorage.getItem("config");
+    return JSON.parse(json || "{}");
+  }
+
   static ReloadId() {
     const { instances = [] } = IFFloat;
     if (!instances.length) {
@@ -188,11 +201,6 @@ export class IFFloat implements IIFloat {
       const highest = instances.reduce((a, b) => (a.id > b.id ? a : b));
       IFFloat.Id = (highest?.id ?? 0) + 1;
     }
-  }
-
-  static FromLS() {
-    const json = window.localStorage.getItem("config");
-    return JSON.parse(json || "{}");
   }
 
   dispose() {

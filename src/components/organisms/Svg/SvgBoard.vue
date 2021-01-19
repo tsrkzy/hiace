@@ -79,14 +79,16 @@ export default {
     async onResetPawn(pawnId) {
       await FSPawn.ResetTransform([pawnId]);
     },
-    onMouseDown(e) {
+    async onMouseDown(e) {
       if (!this.activeBoard) {
         return false;
       }
 
       e.stopPropagation();
 
-      this.$store.dispatch("board/dragStart", { boardId: this.activeBoard.id });
+      await this.$store.dispatch("board/dragStart", {
+        boardId: this.activeBoard.id
+      });
 
       const $el = document.getElementById("svg-table");
       $el.classList.add("drag");
@@ -106,18 +108,17 @@ export default {
       const onMove = e => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
-
-        this.transform = `${t}`;
+        $.style.transform = `${t}`;
       };
 
-      const onMouseUp = e => {
+      const onMouseUp = async e => {
         e.stopPropagation();
         console.log("SvgBoard.onMouseUp"); // @DELETEME
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
 
         this.transform = `${t}`;
         $el.classList.remove("drag");
-        this.$store.dispatch("board/dragFinish");
+        await this.$store.dispatch("board/dragFinish");
         $el.removeEventListener("mousemove", onMove);
         $el.removeEventListener("mouseup", onMouseUp);
         $el.removeEventListener("mouseleave", onMouseUp);
@@ -126,6 +127,8 @@ export default {
       $el.addEventListener("mousemove", onMove, false);
       $el.addEventListener("mouseup", onMouseUp, false);
       $el.addEventListener("mouseleave", onMouseUp, false);
+
+      return false;
     }
   },
   computed: {

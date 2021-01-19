@@ -97,7 +97,7 @@ export default {
       this.height = height;
       this.href = url;
     },
-    onMouseDown(e) {
+    async onMouseDown(e) {
       console.log("SvgMap.onMouseDown"); // @DELETEME
       if (this.locked) {
         console.log(`map is locked. ${this.mapId}`); // @DELETEME
@@ -106,7 +106,7 @@ export default {
 
       e.stopPropagation();
 
-      this.$store.dispatch("map/dragStart", { mapId: this.mapId });
+      await this.$store.dispatch("map/dragStart", { mapId: this.mapId });
 
       const $p = document.getElementById(`map_${this.mapId}`);
 
@@ -130,7 +130,7 @@ export default {
       const onMove = e => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
-        this.transform = `${t}`;
+        $b.style.transform = `${t}`;
       };
 
       const onMouseUp = async e => {

@@ -38,7 +38,7 @@ export const float = {
     setFloat(state, payload) {
       state.floats = payload.floats;
 
-      IFFloat.ToLS();
+      IFFloat.Export();
     },
     move(state, payload) {
       const { id, x = 0, y = 0 } = payload;
@@ -49,7 +49,7 @@ export const float = {
       float.x = x;
       float.y = y;
 
-      IFFloat.ToLS();
+      IFFloat.Export();
     },
     scale(state, payload) {
       const { id, w, h } = payload;
@@ -60,7 +60,7 @@ export const float = {
       float.w = w;
       float.h = h;
 
-      IFFloat.ToLS();
+      IFFloat.Export();
     },
     pop(state, payload) {
       const { id } = payload;
@@ -81,7 +81,7 @@ export const float = {
       }
       state.floats.push(float);
 
-      IFFloat.ToLS();
+      IFFloat.Export();
     },
     setShow(state, payload) {
       const { id, show } = payload;
@@ -104,7 +104,7 @@ export const float = {
 
       state.floats = result;
 
-      IFFloat.ToLS();
+      IFFloat.Export();
     }
   },
   actions: {

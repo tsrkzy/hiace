@@ -21,7 +21,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: black;
+        background: linear-gradient(-0.25turn, dimgray, black);
         color: white;
         width: 100%;
         text-overflow: ellipsis;

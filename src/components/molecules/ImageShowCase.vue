@@ -7,6 +7,11 @@
 
 <template>
   <div>
+    <ha-button
+      v-if="navToImageManager && !images.length"
+      @click="onOpenImageManager"
+      >画像をアップロード</ha-button
+    >
     <label
       v-for="image in images"
       :key="image.id"
@@ -25,6 +30,7 @@
         }"
       >
         <input
+          :disabled="disabled"
           v-show="false"
           :value="image.id"
           name="image_select"
@@ -54,12 +60,17 @@
 
 <script>
 import { FSImage } from "@/collections/Image";
+import HaButton from "@/components/atoms/HaButton";
+import { IMAGE_MANAGER } from "@/interfaces/IFFloat";
 
 export default {
   name: "ImageShowCase",
+  components: { HaButton },
   props: {
     imageId: { type: String },
-    onlyMine: { type: Boolean, default: false }
+    onlyMine: { type: Boolean, default: false },
+    navToImageManager: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false }
   },
   model: {
     prop: "imageId",
@@ -72,6 +83,12 @@ export default {
     },
     isHidden(image) {
       return image && image.hidden && image.owner === this.me;
+    },
+    onOpenImageManager() {
+      this.$store.dispatch("float/create", {
+        contentId: IMAGE_MANAGER,
+        show: true
+      });
     }
   },
   computed: {

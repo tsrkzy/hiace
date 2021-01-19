@@ -175,7 +175,7 @@ export default {
       const onMove = e => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
-        this.transform = `${t}`;
+        $p.style.transform = `${t}`;
       };
 
       const onMouseUp = async e => {

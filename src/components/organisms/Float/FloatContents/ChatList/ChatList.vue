@@ -11,7 +11,7 @@
     <chat-log-viewer :float-id="floatId" :channel-id="channelId" />
     <fieldset>
       <legend>チャット設定</legend>
-      <div>
+      <div style="white-space: nowrap;">
         <character-switcher ref="cs" @changed="onChangeCS"></character-switcher>
         <ha-select label="チャンネル" :items="channelItems" v-model="channelId">
           <option selected :value="SYSTEM_CHANNEL_ID">全体</option>

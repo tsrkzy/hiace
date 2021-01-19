@@ -13,46 +13,51 @@
       mandatory
       @change="onCharacterChange"
     ></ha-select>
-    <div>
-      <ha-input-form
-        label="名前"
-        :value="character['name']"
-        @change="onCharacterNameInput"
-      ></ha-input-form>
-    </div>
-    <div>
-      <ha-textarea
-        rows="3"
-        :value="character['text']"
-        placeholder="キャラクター説明"
-        @change="onCharacterTextInput"
-        resizeable
-      ></ha-textarea>
-    </div>
-    <div>
-      <ha-checkbox
-        label="データテーブルに表示"
-        v-model="showOnInitiative"
-        @change="onCharacterShowOnInitiative"
-      ></ha-checkbox>
-    </div>
-    <div>
-      <color-picker :chat-color="chatColor" @change="onChangeColor" />
-    </div>
-    <div>
-      <ha-select
-        :items="pawnSizeItems"
-        v-model="pawnSizeStr"
-        @change="onChangePawnSize"
-      >
-        <option disabled :value="null">select pawn size</option>
-      </ha-select>
-    </div>
-    <div>
-      <fieldset>
-        <legend>立ち絵</legend>
+    <fieldset>
+      <legend>キャラクタの設定</legend>
+      <div>
+        <ha-input-form
+          label="名前"
+          :value="character['name']"
+          @change="onCharacterNameInput"
+        ></ha-input-form>
+      </div>
+      <div>
+        <ha-textarea
+          class="character-edit__textarea-wrapper"
+          rows="3"
+          :value="character['text']"
+          placeholder="キャラクター説明"
+          @change="onCharacterTextInput"
+          resizeable
+        ></ha-textarea>
+      </div>
+      <div>
+        <ha-checkbox
+          label="データテーブルに表示する"
+          v-model="showOnInitiative"
+          @change="onCharacterShowOnInitiative"
+        ></ha-checkbox>
+      </div>
+      <div>
+        <color-picker :chat-color="chatColor" @change="onChangeColor" />
+      </div>
+      <div>
+        <ha-select
+          label="コマの大きさ"
+          :items="pawnSizeItems"
+          v-model="pawnSizeStr"
+          @change="onChangePawnSize"
+        >
+          <option disabled :value="null">select pawn size</option>
+        </ha-select>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>立ち絵</legend>
+      <div>
         <label>
-          <span>位置</span>
+          <span>表示位置</span>
           <input
             type="range"
             min="0"
@@ -62,16 +67,21 @@
             @change="onChangePosition"
           />
         </label>
-        <ha-button @click="onCreateAlias">追加</ha-button>
-        <ul style="padding-left: 0;margin: 0;">
-          <li v-for="a in aliases" :key="a.id">
-            <ha-input-form
-              :value="a.name"
-              @change="onAliasNameChange(a.id, $event)"
-            ></ha-input-form>
-          </li>
-        </ul>
-      </fieldset>
+      </div>
+      <div>
+        <ha-button @click="onCreateAlias">立ち絵の追加</ha-button>
+      </div>
+      <ul style="padding-left: 0;margin: 0;">
+        <li v-for="a in aliases" :key="a.id">
+          <ha-input-form
+            :value="a.name"
+            @change="onAliasNameChange(a.id, $event)"
+          ></ha-input-form>
+        </li>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend>画像の割り当て</legend>
       <div>
         <ha-select
           v-model="aliasId"
@@ -79,22 +89,27 @@
           mandatory
           @change="onChangeAlias"
         >
+          <option :value="null" selected disabled>割り当て先の立ち絵</option>
         </ha-select>
       </div>
       <div>
         <img
+          v-if="aliasId"
           :src="srcUrl"
           :alt="imgAlt"
           style="max-width: 128px;max-height: 128px;"
         />
+        <span v-else>立ち絵を選択してください</span>
       </div>
       <scroll-summary>
         <image-show-case
+          :disabled="!aliasId"
+          nav-to-image-manager
           v-model="imageId"
           @selectImage="onAliasImageChange"
         ></image-show-case>
       </scroll-summary>
-    </div>
+    </fieldset>
   </div>
 </template>
 

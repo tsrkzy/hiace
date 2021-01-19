@@ -8,26 +8,20 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <ha-button @click="onClickAddBoard">ボードを追加</ha-button>
-    <ul>
-      <li v-for="b in boardItems" :key="b.id">
-        <span>ボード: {{ b.id }}</span>
-        <ha-button @click="onClickDeleteBoard(b.id)">削除</ha-button>
-        <ha-button @click="onClickAddMap(b.id)">マップの追加</ha-button>
-        <ul>
-          <li v-for="m in b.maps" :key="m.id">
-            <span>マップ: {{ m.id }}{{ m.image ? "" : "(no image)" }}</span>
-            <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
-            <ha-button @click="onClickDeleteMap(m.id)">削除</ha-button>
-          </li>
-        </ul>
-        <ol>
-          <li v-for="p in b.pawns" :key="p.id">
-            <span>コマ: {{ whoIsPawn(p.id) }}({{ whosePawn(p.owner) }})</span>
-            <ha-button @click="onClickDeletePawn(p.id)">削除</ha-button>
-          </li>
-        </ol>
-      </li>
-    </ul>
+    <fieldset v-for="b in boardItems" :key="b.id">
+      <legend>ボード: {{ b.id }}</legend>
+      <!--      <ha-button @click="onClickDeleteBoard(b.id)">削除</ha-button>-->
+      <ha-button @click="onClickAddMap(b.id)">マップを追加</ha-button>
+      <fieldset v-for="m in b.maps" :key="m.id">
+        <legend>マップ: {{ m.id }}{{ m.image ? "" : "(no image)" }}</legend>
+        <ha-button @click="onClickMapEdit(m.id)">マップの編集</ha-button>
+        <ha-button @click="onClickDeleteMap(m.id)">マップの削除</ha-button>
+      </fieldset>
+      <fieldset v-for="p in b.pawns" :key="p.id">
+        <legend>コマ: {{ whoIsPawn(p.id) }}({{ whosePawn(p.owner) }})</legend>
+        <ha-button @click="onClickDeletePawn(p.id)">コマを削除</ha-button>
+      </fieldset>
+    </fieldset>
   </div>
 </template>
 

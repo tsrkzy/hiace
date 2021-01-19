@@ -33,6 +33,12 @@ export default {
     floatId: { type: Number, require: true },
     channelId: { type: String, require: true }
   },
+  mounted() {
+    const chatList = this.chatList;
+    const channel = this.channelId;
+    this.$refs.p.exAdd(chatList, { channel, flush: true });
+    this.showNew();
+  },
   methods: {
     showNew() {
       const $parent = document.getElementById(

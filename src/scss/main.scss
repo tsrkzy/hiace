@@ -29,6 +29,10 @@ html {
     }
   }
 
+  label.character-edit__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
   label.chat-list__textarea-wrapper > textarea {
     width: calc(100% - 8px);
   }
