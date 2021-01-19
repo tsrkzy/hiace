@@ -9,12 +9,12 @@
   <div class="chat-log-viewer__wrapper">
     <div
       :id="`chat-list--scroll-parent__${floatId}`"
-      :class="{ onTop, scrollParent: true }"
+      :class="{ onBottom, scrollParent: true }"
       @scroll="onScroll"
     >
       <chat-row ref="p" :float-id="floatId"></chat-row>
     </div>
-    <div v-if="!onTop" class="scroll-to-top__button" @click="onScrollButton">
+    <div v-if="!onBottom" class="scroll-to-top__button" @click="onScrollButton">
       <a>scroll to top{{ read ? "" : " (new message there)" }}</a>
     </div>
   </div>
@@ -54,7 +54,7 @@ export default {
       console.log("ChatLogViewer.addChat", chatList); // @DELETEME
       const channel = this.channelId;
       this.$refs.p.exAdd(chatList, { channel });
-      if (this.onTop) {
+      if (this.onBottom) {
         this.read = true;
         this.showNew();
       } else {
@@ -72,8 +72,37 @@ export default {
       const { scrollTop, clientHeight, scrollHeight } = $parent;
 
       /* chatが追加された際、その分のスクロールが終わるまでの一瞬に未読表示が出てしまうので、余裕をもたせる */
-      this.onTop = scrollTop >= scrollHeight - clientHeight - SCROLL_MARGIN;
+      const onBottom = scrollTop >= scrollHeight - clientHeight - SCROLL_MARGIN;
+      const onTop = scrollTop <= SCROLL_MARGIN;
+      if (onBottom) {
+        this.onBottomHandler();
+      } else if (onTop) {
+        this.onTopHandler();
+      } else {
+        this.onTop = false;
+        this.onBottom = false;
+      }
+    },
+    onBottomHandler() {
+      if (this.onBottom) {
+        return false;
+      }
+      console.log("ChatLogViewer.onBottomHandler"); // @DELETEME
+
+      this.onTop = false;
+      this.onBottom = true;
+
+      /* 既読フラグをON */
       this.read = true;
+    },
+    onTopHandler() {
+      if (this.onTop) {
+        return false;
+      }
+      console.log("ChatLogViewer.onTopHandler"); // @DELETEME
+
+      this.onTop = true;
+      this.onBottom = false;
     },
     onScrollButton() {
       this.showNew();
@@ -82,9 +111,14 @@ export default {
   data() {
     return {
       /* スクロール位置が最下部からSCROLL_MARGIN px以内 */
-      onTop: true,
-      /* !onTopのタイミングでchatが追加された */
-      read: true
+      onBottom: true,
+      /* !onBottomのタイミングでchatが追加された */
+      read: true,
+      /* 最後にbottomへ到達した際のchatId */
+      bookmark: null,
+
+      /* スクロール位置が最上部から */
+      onTop: false
     };
   },
   computed: {
@@ -100,6 +134,7 @@ export default {
         if (chatMap.has(chat.id)) {
           continue;
         }
+        /* 追加差分 */
         added.push(chat);
         chatMap.set(chat.id, chat.id);
       }
@@ -125,7 +160,7 @@ div.scrollParent {
   overflow-y: scroll;
   overflow-x: hidden;
 
-  &.onTop {
+  &.onBottom {
     background-color: white;
   }
 }
