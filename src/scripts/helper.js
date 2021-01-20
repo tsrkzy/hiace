@@ -31,3 +31,8 @@ export const mask = account => {
     })
     .join("");
 };
+
+export const isMacOS = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf("mac") > 0 && ua.indexOf("os") > 0;
+};

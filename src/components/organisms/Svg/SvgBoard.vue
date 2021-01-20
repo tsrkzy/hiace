@@ -67,6 +67,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
+import { isMacOS } from "@/scripts/helper";
 import { Throttle } from "@/scripts/Throttle";
 
 export default {
@@ -80,8 +81,8 @@ export default {
       await FSPawn.ResetTransform([pawnId]);
     },
     onWheel(event) {
-      /* 鉛直下方へのスクロールを正 */
-      const dir = event.deltaY > 0 ? -1 : 1;
+      /* windowsの場合の正。osxは逆 */
+      const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
       this.t
         .do()
         .then(() => {
@@ -203,7 +204,7 @@ export default {
     return {
       debug: false,
       transform: defaultTransform,
-      t: new Throttle(100)
+      t: new Throttle(80)
     };
   }
 };
