@@ -12,7 +12,7 @@
     <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
-      <window-opener v-if="joined"></window-opener>
+      <window-opener v-if="authenticated"></window-opener>
       <google-authorizer></google-authorizer>
       <label
         >debug:
@@ -116,8 +116,8 @@ export default {
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
 
-      const user = this.$store.getters["auth/user"];
-      await FSChat.BroadcastLoggedIn({ roomId, user });
+      // const user = this.$store.getters["auth/user"];
+      // await FSChat.BroadcastLoggedIn({ roomId, user });
     },
     afterKicked() {},
     afterWaiting() {},

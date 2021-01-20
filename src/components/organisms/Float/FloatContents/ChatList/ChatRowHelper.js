@@ -43,7 +43,8 @@ function createTextSpan(c) {
     value: { result = "", text = "" }
   } = c;
 
-  const textList = [...text.split(/\n/)];
+  const textList = [`${c.id}, ${text}`];
+  // const textList = [...text.split(/\n/)];
   if (type === DICE) {
     textList.push(result);
   }
@@ -68,8 +69,9 @@ function createTextSpan(c) {
 
 export function createChatRowDom(chat, activeChannel) {
   const $li = document.createElement("LI");
-  const { type, color } = chat;
+  const { type, color, id } = chat;
   const system = type === SYSTEM;
+  $li.dataset.chatId = id;
   $li.style.margin = "0";
   $li.style.wordBreak = "break-word";
   $li.style.fontWeight = system ? "normal" : "bold";

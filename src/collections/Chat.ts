@@ -236,27 +236,24 @@ export class FSChat {
     const me = store.getters["auth/user"].id;
 
     const BATCH_LIMIT = 500;
-    const LOOPS = Math.floor(500 / BATCH_LIMIT);
-    for (let i = 0; i < LOOPS; i++) {
-      const batch = db.batch();
-      for (let j = 0; j < BATCH_LIMIT; j++) {
-        const newChatRef = db.collection("chat").doc();
+    const batch = db.batch();
+    for (let i = 0; i < BATCH_LIMIT; i++) {
+      const newChatRef = db.collection("chat").doc();
 
-        const c = {
-          type: TEXT,
-          color: "#000000",
-          room: roomId,
-          channel: null,
-          owner: me,
-          character: null,
-          alias: null,
-          value: { text: `bulk inserted: ${i * LOOPS + j}` },
-          timestamp: Date.now()
-        };
-        batch.set(newChatRef, c);
-      }
-      await batch.commit();
+      const c = {
+        type: TEXT,
+        color: "#000000",
+        room: roomId,
+        channel: null,
+        owner: me,
+        character: null,
+        alias: null,
+        value: { text: `bulk inserted: ${i}` },
+        timestamp: Date.now() - (BATCH_LIMIT - i)
+      };
+      batch.set(newChatRef, c);
     }
+    await batch.commit();
   }
 }
 

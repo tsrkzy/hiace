@@ -14,24 +14,21 @@
 <script>
 import { createChatRowDom } from "@/components/organisms/Float/FloatContents/ChatList/ChatRowHelper";
 
-let _float_id;
-const $$ol = () => {
-  return document.getElementById(`chat-list--scroll-content__${_float_id}`);
-};
-
 export default {
   name: "ChatRow",
   props: {
     floatId: { type: Number, require: true }
   },
-  created() {
-    _float_id = this.floatId;
-  },
   computed: {},
   methods: {
-    exAdd(chatList = [], { channel = null, flush = false }) {
+    $ol() {
+      return document.getElementById(
+        `chat-list--scroll-content__${this.floatId}`
+      );
+    },
+    exAdd(chatList = [], { channel = null, flush = false, eliminate = 0 }) {
       console.log("PChatRow.exAdd", channel, flush); // @DELETEME
-      const $ol = $$ol();
+      const $ol = this.$ol();
       if (flush) {
         $ol.innerHTML = "";
       }
@@ -43,6 +40,13 @@ export default {
         $liList.push($li);
       }
       $ol.append(...$liList);
+
+      if (eliminate && $ol.childElementCount > eliminate) {
+        const deleteCount = $ol.childElementCount - eliminate;
+        for (let i = 0; i < deleteCount; i++) {
+          $ol.removeChild($ol.firstChild);
+        }
+      }
     }
   }
 };
