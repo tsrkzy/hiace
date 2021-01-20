@@ -7,10 +7,19 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <div v-if="image">
-      <p>持ち主: {{ whose(imageId) || "-" }}</p>
-      <p>タグ: {{ image.tags }}</p>
-      <ol v-if="isMine && imageId" style="padding-left: 0;">
+    <input
+      type="file"
+      multiple
+      accept="image/*"
+      :value="inputFiles"
+      @change="onClickFileUploadHandler"
+    />
+    <fieldset v-show="image">
+      <legend>画像の情報</legend>
+      <ul v-if="isMine && imageId">
+        <li>
+          <p>持ち主: {{ whose(imageId) || "-" }}</p>
+        </li>
         <li>
           <ha-checkbox
             label="他のユーザから隠す"
@@ -21,33 +30,27 @@
         <li>
           <ha-checkbox
             :value="image.tags.indexOf('map') !== -1"
-            label="マップとしてタグ付け"
+            label="マップとしてタグ付け(フィルタ機能が未実装)"
             @input="onMakeMap(imageId, $event)"
           ></ha-checkbox>
         </li>
         <li>
           <ha-checkbox
             :value="image.tags.indexOf('character') !== -1"
-            label="キャラクタとしてタグ付け"
+            label="キャラクタとしてタグ付け(フィルタ機能が未実装)"
             @input="onMakeCharacter(imageId, $event)"
           ></ha-checkbox>
         </li>
-      </ol>
-      <hr />
-    </div>
-    <input
-      type="file"
-      multiple
-      accept="image/*"
-      :value="inputFiles"
-      @change="onClickFileUploadHandler"
-    />
-    <div>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend>フィルタ設定</legend>
       <ha-checkbox
         label="自分の画像だけ表示"
         @input="onChangeOnlyMine($event)"
       ></ha-checkbox>
-    </div>
+    </fieldset>
+    <hr />
     <image-show-case
       v-model="imageId"
       @selectImage="onChangeSelectedImage"

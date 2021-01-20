@@ -29,6 +29,25 @@ html {
     }
   }
 
+  ol, ul {
+    margin: 0;
+    padding: 0 2rem;
+  }
+
+  button.ha {
+    padding: 0 2px;
+    line-height: 1.4rem;
+  }
+
+  pre {
+    font-size: 1rem;
+    font-family: monospace;
+  }
+
+  label {
+    user-select: none;
+  }
+
   label.character-edit__textarea-wrapper > textarea {
     width: calc(100% - 8px);
   }
@@ -39,12 +58,6 @@ html {
 
   label.note-manager__textarea-wrapper > textarea {
     width: calc(100% - 8px);
-  }
-
-
-  pre {
-    font-size: 1rem;
-    font-family: monospace;
   }
 }
 

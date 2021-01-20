@@ -23,8 +23,11 @@
       <ul>
         <li :key="a.id" v-for="a in item.aliases">
           <span
-            >{{ a.id === item.character.activeAlias ? "★" : ""
-            }}{{ a.name }}</span
+            >{{ a.id === item.character.activeAlias ? "[設定中]" : ""
+            }}{{ a.name
+            }}<span style="color: red;">{{
+              a.image ? "" : "(立ち絵が設定されていません)"
+            }}</span></span
           >
           <ha-button
             v-if="a.id !== item.character.activeAlias"

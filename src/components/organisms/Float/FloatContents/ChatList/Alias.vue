@@ -16,20 +16,8 @@
       height: `${height}px`
     }"
   >
-    <span
-      style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: linear-gradient(-0.25turn, dimgray, black);
-        color: white;
-        width: 100%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;"
-      >{{ billBoard }}</span
-    >
-    <img :alt="image" :src="srcUrl" style="max-height: 100%;" />
+    <span class="billboard">{{ billBoard }}</span>
+    <img class="alias" :alt="image" :src="srcUrl" />
   </div>
 </template>
 <script>
@@ -81,3 +69,20 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+img.alias {
+  max-height: 100%;
+}
+span.billboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(-0.25turn, dimgray, black);
+  opacity: 0.7;
+  color: white;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+</style>

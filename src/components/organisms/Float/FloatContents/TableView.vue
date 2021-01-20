@@ -8,7 +8,6 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <div>
-      {{ tableId }}
       <ha-select
         :value="tableId"
         :items="tableItems"
@@ -21,25 +20,32 @@
     </div>
     <div v-if="tableMatrix">
       <details>
-        <summary>config</summary>
-        <ha-button v-if="tableId" @click="onClickAddColumn('int')"
-          >数値
-        </ha-button>
-        <ha-button v-if="tableId" @click="onClickAddColumn('str')"
-          >テキスト
-        </ha-button>
-        <ha-button v-if="tableId" @click="onClickAddColumn('bool')"
-          >チェック
-        </ha-button>
-        <ol>
-          <li v-for="c in togglableColumns" :key="c.id">
-            <ha-checkbox
-              :label="c.label"
-              :value="c.show"
-              @change="onChangeColumnShow(c.id, $event)"
-            ></ha-checkbox>
-          </li>
-        </ol>
+        <summary>テーブル設定</summary>
+        <ha-input-form :value="tableName" @change="onTableName"></ha-input-form>
+        <fieldset>
+          <legend>列の追加</legend>
+          <ha-button v-if="tableId" @click="onClickAddColumn('int')"
+            >数値
+          </ha-button>
+          <ha-button v-if="tableId" @click="onClickAddColumn('str')"
+            >文字
+          </ha-button>
+          <ha-button v-if="tableId" @click="onClickAddColumn('bool')"
+            >真偽
+          </ha-button>
+        </fieldset>
+        <fieldset>
+          <legend>列の表示・非表示</legend>
+          <ol>
+            <li v-for="c in togglableColumns" :key="c.id">
+              <ha-checkbox
+                :label="c.label"
+                :value="c.show"
+                @change="onChangeColumnShow(c.id, $event)"
+              ></ha-checkbox>
+            </li>
+          </ol>
+        </fieldset>
       </details>
     </div>
     <div v-if="tableMatrix">
@@ -100,12 +106,13 @@ import { BOOL, FSColumn, INT, REF, STR } from "@/collections/Column";
 import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
+import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import { Notice } from "@/scripts/Notice";
 
 export default {
   name: "TableView",
-  components: { HaButton, HaCheckbox, HaSelect },
+  components: { HaInputForm, HaButton, HaCheckbox, HaSelect },
   props: {
     floatId: {
       type: Number,
@@ -206,11 +213,23 @@ export default {
         refPath: dataType === REF ? "character.id" : null,
         dataMap: {}
       });
+    },
+    async onTableName(name) {
+      console.log("TableView.onTableName", name); // @DELETEME
+      const tableId = this.tableId;
+      this.tableId = null;
+      await this.$nextTick();
+      await FSTable.Update(tableId, { name });
+      this.tableId = tableId;
     }
   },
   computed: {
     characters() {
       return this.$store.getters["character/info"];
+    },
+    tableName() {
+      return this.$store.getters["table/info"].find(t => t.id === this.tableId)
+        ?.name;
     },
     tableItems() {
       const matrixList = this.$store.getters["table/info"];

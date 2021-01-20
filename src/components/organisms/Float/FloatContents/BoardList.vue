@@ -14,12 +14,13 @@
       <ha-button @click="onClickAddMap(b.id)">マップを追加</ha-button>
       <fieldset v-for="m in b.maps" :key="m.id">
         <legend>マップ: {{ m.id }}{{ m.image ? "" : "(no image)" }}</legend>
-        <ha-button @click="onClickMapEdit(m.id)">マップの編集</ha-button>
-        <ha-button @click="onClickDeleteMap(m.id)">マップの削除</ha-button>
+        <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
+        <ha-button @click="onClickDeleteMap(m.id)">削除</ha-button>
       </fieldset>
       <fieldset v-for="p in b.pawns" :key="p.id">
         <legend>コマ: {{ whoIsPawn(p.id) }}({{ whosePawn(p.owner) }})</legend>
-        <ha-button @click="onClickDeletePawn(p.id)">コマを削除</ha-button>
+        <ha-button @click="onClickResetPawn(p.id)">原点へ戻す</ha-button>
+        <ha-button @click="onClickDeletePawn(p.id)">削除</ha-button>
       </fieldset>
     </fieldset>
   </div>
@@ -71,6 +72,9 @@ export default {
       const show = true;
       const args = { mapId };
       await this.$store.dispatch("float/create", { contentId, show, args });
+    },
+    async onClickResetPawn(pawnId) {
+      await FSPawn.ResetTransform([pawnId]);
     },
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);

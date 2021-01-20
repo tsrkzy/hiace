@@ -51,7 +51,7 @@
         <span
           v-if="isHidden(image)"
           style="position:absolute;left:0;top:0;color:white;background-color: red;"
-          >private</span
+          >個人</span
         >
       </div>
     </label>

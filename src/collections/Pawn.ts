@@ -81,7 +81,7 @@ export class FSPawn {
       updatedAt: Date.now()
     };
 
-    await docRef.update(params);
+    return await docRef.update(params);
   }
 
   static async ResetTransform(pawnIdList: string[]) {

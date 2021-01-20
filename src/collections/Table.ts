@@ -39,11 +39,17 @@ export class FSTable {
     const { roomId } = params;
     const t = {
       roomId,
-      name: "default",
+      name: `table_${Date.now()}`,
       filterColumns: [],
       filterCharacters: []
     };
     return await FSTable.Create(t);
+  }
+
+  static async Update(tableId: string, criteria: object) {
+    const db = firebase.firestore();
+    const docRef = db.collection("table").doc(tableId);
+    return await docRef.update(criteria);
   }
 
   static async Delete(tableId: string) {

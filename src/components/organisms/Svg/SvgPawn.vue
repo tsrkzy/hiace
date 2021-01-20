@@ -22,9 +22,12 @@
     <rect
       :width="pawnSize"
       :height="pawnSize"
-      stroke="red"
+      stroke="black"
       fill="rgba(0,0,0,0.2)"
     ></rect>
+    <!-- ビルボード -->
+    <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
+    <text x="0" y="8" fill="white">{{ character.name }}</text>
     <image
       v-if="!shadow"
       preserveAspectRatio="xMidYMid meet"
@@ -39,7 +42,7 @@
       :y="-1000 / 2"
       :width="pawnSize + 1000"
       :height="pawnSize + 1000"
-      stroke="red"
+      stroke="transparent"
       fill="transparent"
     ></rect>
   </g>
