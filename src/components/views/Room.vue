@@ -14,10 +14,7 @@
       <ha-button @click="$router.push('/')">←</ha-button>
       <window-opener v-if="authenticated"></window-opener>
       <google-authorizer></google-authorizer>
-      <label
-        >debug:
-        <input type="checkbox" v-model="debug" />
-      </label>
+      <ha-checkbox label="debug:" v-model="debug"></ha-checkbox>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
     <svg-board ref="svgTable"></svg-board>
@@ -40,6 +37,7 @@ import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import ContextMenu from "@/components/atoms/ContextMenu";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
@@ -54,6 +52,7 @@ import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 export default {
   name: "Room",
   components: {
+    HaCheckbox,
     WindowOpener,
     FloatGroup,
     ContextMenu,

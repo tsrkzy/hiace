@@ -11,10 +11,7 @@
       style="position:fixed; top:0; right:0;background-color: lightgray; opacity: 0.2;"
     >
       <!-- debug -->
-      <label>
-        <span>debug: </span>
-        <input type="checkbox" v-model="debug" />
-      </label>
+      <ha-checkbox label="debug:" v-model="debug"></ha-checkbox>
       <div v-if="debug">
         <div>
           <ha-button @click="onResetBoard(1)">RESET BOARD x1</ha-button>
@@ -66,12 +63,13 @@
 <script>
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 
 export default {
   name: "SvgBoard",
-  components: { HaButton, SvgPawn, SvgMap },
+  components: { HaCheckbox, HaButton, SvgPawn, SvgMap },
   methods: {
     onResetBoard(z) {
       this.transform = `matrix(${z}, 0, 0, ${z}, 0, 0)`;

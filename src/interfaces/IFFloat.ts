@@ -32,9 +32,7 @@ export const NOTE_MANAGER = "NOTE_MANAGER";
 
 const singletonList = [
   CHARACTER_LIST,
-  // CHARACTER_EDIT,
   BOARD_LIST,
-  MAP_EDIT,
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
@@ -127,7 +125,13 @@ export class IFFloat implements IIFloat {
     const floats = [];
     for (let i = 0; i < instances.length; i++) {
       const float = instances[i];
+
+      /* 非表示のfloatは無視 */
       if (!float.show) {
+        continue;
+      }
+      /* シングルトンでないfloatは無視 */
+      if (singletonList.indexOf(float.contentId) === -1) {
         continue;
       }
       floats.push(float.toJSON());

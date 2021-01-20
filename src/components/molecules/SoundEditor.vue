@@ -6,47 +6,56 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <fieldset>
+  <fieldset :class="{ playing }">
     <legend>{{ soundName }}</legend>
-    {{ playing ? "再生中" : "" }}
-    <label
-      ><span>消音</span><input @input="onInputMute" type="checkbox"
-    /></label>
-    <label v-if="loaded"
-      ><span>繰返</span
-      ><input @input="onInputLoop" :checked="sound.loop" type="checkbox"
-    /></label>
-    <label>
-      <span>音量: </span>
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.1"
-        value="0.5"
-        @change="onInputVolume"
-      />
-    </label>
-    <ha-button v-if="sound && !playing" :disabled="!loaded" @click="onClickPlay"
-      >試聴開始</ha-button
-    >
-    <ha-button v-if="sound && playing" :disabled="!loaded" @click="onClickPause"
-      >試聴停止</ha-button
-    >
-    <ha-button v-if="sound && !playing" @click="onClickBroadcast"
-      >ルームで再生</ha-button
-    >
-    <ha-button v-if="sound && playing" @click="onClickStopBroadcast"
-      >ルームで停止</ha-button
-    >
-    <ha-button v-if="sound && false" @click="onClickDelete">削除</ha-button>
-    <audio
-      :id="`audio_sound_${soundId}`"
-      :loop="sound && sound.loop"
-      preload="auto"
-    >
-      <source :src="url" />
-    </audio>
+    <div>
+      <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
+      <ha-checkbox
+        v-if="loaded"
+        label="繰返"
+        @input="onInputLoop"
+        :value="sound.loop"
+      ></ha-checkbox>
+      <ha-button
+        v-if="sound && !playing"
+        :disabled="!loaded"
+        @click="onClickPlay"
+        >試聴開始</ha-button
+      >
+      <ha-button
+        v-if="sound && playing"
+        :disabled="!loaded"
+        @click="onClickPause"
+        >試聴停止</ha-button
+      >
+      <ha-button v-if="sound && !playing" @click="onClickBroadcast"
+        >ルームで再生</ha-button
+      >
+      <ha-button v-if="sound && playing" @click="onClickStopBroadcast"
+        >ルームで停止</ha-button
+      >
+      <ha-button v-if="sound && false" @click="onClickDelete">削除</ha-button>
+    </div>
+    <div>
+      <label>
+        <span>音量: </span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.5"
+          @change="onInputVolume"
+        />
+      </label>
+      <audio
+        :id="`audio_sound_${soundId}`"
+        :loop="sound && sound.loop"
+        preload="auto"
+      >
+        <source :src="url" />
+      </audio>
+    </div>
   </fieldset>
 </template>
 
@@ -54,6 +63,7 @@
 import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 
 /**
  * @return {HTMLAudioElement | null}
@@ -65,7 +75,7 @@ const audioEl = soundId => {
 
 export default {
   name: "SoundEditor",
-  components: { HaButton },
+  components: { HaCheckbox, HaButton },
   props: {
     soundId: { type: String, require: true }
   },
@@ -138,12 +148,11 @@ export default {
       const $a = audioEl(this.soundId);
       $a.volume = parseFloat(v);
     },
-    onInputMute(e) {
+    onInputMute(checked) {
       const $a = audioEl(this.soundId);
-      $a.muted = e.currentTarget.checked;
+      $a.muted = checked;
     },
-    async onInputLoop(e) {
-      const loop = e.currentTarget.checked;
+    async onInputLoop(loop) {
       await FSSound.Update(this.soundId, { loop });
     },
     async play() {
@@ -202,4 +211,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+fieldset.playing {
+  animation: 2s linear 0s infinite alternate blink;
+}
+@keyframes blink {
+  from {
+    background-color: white;
+  }
+  to {
+    background-color: lightpink;
+  }
+}
+</style>
