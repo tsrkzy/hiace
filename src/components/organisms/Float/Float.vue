@@ -9,18 +9,16 @@
   <div v-if="float.show" :style="floatStyle">
     <div
       :id="`move_handle_${floatId}`"
-      class="move-handle"
+      class="move-handle z-10"
       @mousedown="onHandleMouseDown($event)"
-      style="z-index: 10;"
     >
-      <span>{{ top ? "*" : "" }}{{ float.contentTitle }}</span>
+      <span class="float-handle__title">{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
     </div>
     <button
       v-if="!dragMove"
-      class="button__close"
+      class="button__close z-10"
       @click="onClickClose($event)"
-      style="z-index: 10;"
     >
       -
     </button>
@@ -42,9 +40,11 @@
     <div
       v-if="!top"
       @click="onClickShroud"
-      style="z-index:1;background-color: rgba(0,0,0,0.5);position: absolute;top: 2rem;left:0;width: 100%;height: calc(100% - 2rem);"
+      @mouseover="onClickShroud"
+      class="float-content__shroud"
+      style=""
     ></div>
-    <div class="content-slot" style="z-index: 1;">
+    <div class="content-slot z-1">
       <slot name="content">failed to load content: {{ floatId }}</slot>
     </div>
   </div>
@@ -246,6 +246,25 @@ $control-size: 10px;
 $ww: 200vw;
 $hh: 200vh;
 
+span.float-handle__title {
+  user-select: none;
+}
+
+div.float-content__shroud {
+  z-index: 1;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0.05) 80%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 2rem);
+}
+
 button.button__close {
   top: 0;
   right: 0;
@@ -253,6 +272,7 @@ button.button__close {
   border: none;
   height: $handle-height;
 }
+
 .move-handle {
   position: absolute;
   top: 0;
@@ -262,6 +282,7 @@ button.button__close {
   background-color: lightgray;
   cursor: move;
 }
+
 .move-hit-box {
   background-color: transparent;
   width: $ww;
@@ -271,6 +292,7 @@ button.button__close {
   top: calc(-1 * #{$hh} / 2);
   cursor: move;
 }
+
 .scale-hit-box__se,
 .scale-hit-box__sw {
   background-color: transparent;
@@ -281,6 +303,7 @@ button.button__close {
   top: calc(-1 * #{$hh} / 2);
   cursor: grabbing;
 }
+
 .scale-handle__se {
   width: $control-size;
   height: $control-size;
@@ -289,6 +312,7 @@ button.button__close {
   right: 0;
   cursor: nwse-resize;
 }
+
 .scale-handle__sw {
   width: $control-size;
   height: $control-size;
@@ -297,6 +321,7 @@ button.button__close {
   left: 0;
   cursor: nesw-resize;
 }
+
 .content-slot {
   width: 100%;
   height: calc(100% - 2em);

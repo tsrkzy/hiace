@@ -5,6 +5,7 @@
       @input="$emit('input', $event.currentTarget.value)"
       @change="$emit('change', $event.currentTarget.value)"
       @keydown="$emit('keydown', $event)"
+      :disabled="disabled"
       :placeholder="placeholder"
       :rows="rows"
       :class="{
@@ -24,6 +25,7 @@ export default {
   props: {
     value: { type: String },
     placeholder: { type: String, default: "" },
+    disabled: { type: Boolean, default: false },
     rows: { type: String, default: "2" },
     resizeable: { type: Boolean, default: false }
   }

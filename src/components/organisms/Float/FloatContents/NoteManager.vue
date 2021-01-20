@@ -19,6 +19,7 @@
     <div>
       <ha-input-form
         :value="name"
+        :disabled="!noteId"
         @change="onChangeName($event)"
       ></ha-input-form>
     </div>
@@ -26,6 +27,7 @@
       <ha-textarea
         class="note-manager__textarea-wrapper"
         :value="text"
+        :disabled="!noteId"
         @change="onChangeText($event)"
         rows="10"
         resizeable
