@@ -8,7 +8,6 @@
 <template>
   <div class="chat-log-viewer__wrapper">
     <div class="scroll-upper__button">
-      {{ pageSelect }}
       <ha-select
         :items="pagingItems"
         v-model="pageSelect"
@@ -69,12 +68,6 @@ export default {
       const channel = this.channelId;
       this.$refs.p.exAdd(chatList, { channel, flush, eliminate });
     },
-    changeChannel() {
-      const chatList = this.chatList;
-      const channel = this.channelId;
-      this.$refs.p.exAdd(chatList, { channel, flush: true });
-      this.scroll();
-    },
     onScroll(e) {
       const $parent = e.currentTarget;
       const { scrollTop, clientHeight, scrollHeight } = $parent;
@@ -88,12 +81,6 @@ export default {
       }
     },
     onBottomHandler() {
-      if (this.onBottom) {
-        return false;
-      }
-      console.log("ChatLogViewer.onBottomHandler"); // @DELETEME
-
-      /* 既読フラグをON */
       this.onBottom = true;
       if (this.page === 0) {
         this.read = true;
@@ -189,8 +176,7 @@ export default {
       }
     },
     channelId() {
-      /* @TODO */
-      this.changeChannel();
+      this.onChangePage("0");
     }
   }
 };
