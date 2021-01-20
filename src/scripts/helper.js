@@ -19,8 +19,12 @@ export const getName = (entity, id) => {
 
   return nameMap[id] ?? "";
 };
-export const getMaskedAccountFromEmail = email => {
-  const account = email.substring(0, email.indexOf("@"));
+
+export const extractAccountFromEmail = email => {
+  return email.substring(0, email.indexOf("@"));
+};
+
+export const mask = account => {
   return Array.from(account)
     .map((s, i) => {
       return i % 4 < 2 ? s : "#";

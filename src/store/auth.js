@@ -1,4 +1,8 @@
-import { getMaskedAccountFromEmail } from "@/scripts/helper";
+import {
+  extractAccountFromEmail,
+  getMaskedAccountFromEmail,
+  mask
+} from "@/scripts/helper";
 
 export const auth = {
   namespaced: true,
@@ -68,8 +72,12 @@ export const auth = {
     },
     whoAmI(state) {
       const email = state.auth?.email ?? ".!error@gmail.com";
-      return getMaskedAccountFromEmail(email);
+      return extractAccountFromEmail(email);
     },
+    // sign(state){
+    //   const email = state.auth?.email ?? ".!error@gmail.com";
+    //   return mask(extractAccountFromEmail(email));
+    // },
     photoUrl(state) {
       return state.user.photoUrl;
     }

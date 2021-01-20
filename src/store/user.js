@@ -1,4 +1,4 @@
-import { getMaskedAccountFromEmail } from "@/scripts/helper";
+import { extractAccountFromEmail } from "@/scripts/helper";
 
 export const user = {
   namespaced: true,
@@ -25,7 +25,7 @@ export const user = {
       for (let i = 0; i < state.users.length; i++) {
         const id = state.users[i].id;
         const email = state.users[i].email;
-        nameMap[id] = getMaskedAccountFromEmail(email);
+        nameMap[id] = extractAccountFromEmail(email);
       }
       return nameMap;
     }

@@ -36,6 +36,7 @@
         height: '100%'
       }"
       @mousedown="onMouseDown($event)"
+      @wheel="onWheel($event)"
     >
       <g
         :id="`board_${activeBoard.id}`"
@@ -66,6 +67,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
+import { Throttle } from "@/scripts/Throttle";
 
 export default {
   name: "SvgBoard",
@@ -76,6 +78,22 @@ export default {
     },
     async onResetPawn(pawnId) {
       await FSPawn.ResetTransform([pawnId]);
+    },
+    onWheel(event) {
+      /* 鉛直下方へのスクロールを正 */
+      const dir = event.deltaY > 0 ? -1 : 1;
+      this.t
+        .do()
+        .then(() => {
+          const t = new DOMMatrix(this.transform);
+          let { a, e, f } = t;
+          const DELTA = 0.1;
+          a += dir * DELTA;
+          e *= 1 - DELTA;
+          f *= 1 - DELTA;
+          this.transform = new DOMMatrix([a, 0, 0, a, e, f]);
+        })
+        .catch(() => {});
     },
     async onMouseDown(e) {
       if (!this.activeBoard) {
@@ -184,7 +202,8 @@ export default {
     const defaultTransform = `${m}`;
     return {
       debug: false,
-      transform: defaultTransform
+      transform: defaultTransform,
+      t: new Throttle(100)
     };
   }
 };
