@@ -7,12 +7,13 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <div>
+    <fieldset>
+      <legend>個人設定</legend>
       <color-picker
         :chat-color="chatColor"
         @change="onChangeColor"
       ></color-picker>
-    </div>
+    </fieldset>
     <div v-if="iAmOwner">
       <fieldset :key="r.id" v-for="r in requestItems">
         <legend>入室リクエスト:{{ r.email }}</legend>
@@ -20,7 +21,8 @@
         <ha-button @click="onClickKick(r.id)">キック</ha-button>
       </fieldset>
     </div>
-    <div v-else>
+    <fieldset v-else>
+      <legend>入室状況</legend>
       <div v-if="youKicked">
         <span>キックされました</span>
       </div>
@@ -33,22 +35,32 @@
       <div v-if="joined">
         <span>入室済み</span>
       </div>
-    </div>
-    <h5>参加中のユーザ</h5>
-    <ul>
-      <li :key="u.id" v-for="u in userItems">
-        <span
-          >{{ isOwner(u.id) ? "★" : "" }}{{ u.email
-          }}{{ isMe(u.id) ? "(自分)" : "" }}</span
+    </fieldset>
+    <fieldset>
+      <legend>参加中のユーザ</legend>
+      <ul>
+        <li :key="u.id" v-for="u in userItems">
+          <span
+            >{{ isOwner(u.id) ? "★" : "" }}{{ u.email
+            }}{{ isMe(u.id) ? "(自分)" : "" }}</span
+          >
+          <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickDrop(u.id)"
+            >退室させる
+          </ha-button>
+          <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickKick(u.id)"
+            >キック
+          </ha-button>
+        </li>
+      </ul>
+      <fieldset>
+        <legend>素材</legend>
+        <a
+          target="_blank"
+          href="https://on-jin.com/sound/index.php?kensaku=%E3%83%80%E3%82%A4%E3%82%B9"
+          >サイコロ・振ってから転がす</a
         >
-        <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickDrop(u.id)"
-          >退室させる</ha-button
-        >
-        <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickKick(u.id)"
-          >キック</ha-button
-        >
-      </li>
-    </ul>
+      </fieldset>
+    </fieldset>
   </div>
 </template>
 

@@ -43,8 +43,8 @@
           type="range"
           min="0"
           max="1"
-          step="0.1"
-          value="0.5"
+          step="0.05"
+          value="0.1"
           @change="onInputVolume"
         />
       </label>

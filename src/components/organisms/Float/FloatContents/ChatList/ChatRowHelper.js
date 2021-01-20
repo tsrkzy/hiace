@@ -43,8 +43,7 @@ function createTextSpan(c) {
     value: { result = "", text = "" }
   } = c;
 
-  const textList = [`${c.id}, ${text}`];
-  // const textList = [...text.split(/\n/)];
+  const textList = [...text.split(/\n/)];
   if (type === DICE) {
     textList.push(result);
   }

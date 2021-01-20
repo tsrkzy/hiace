@@ -4,6 +4,7 @@ import "firebase/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
 import { callDiceBot } from "@/scripts/diceBot";
+import { diceroll } from "@/scripts/diceroll";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";
@@ -203,6 +204,9 @@ export class FSChat {
         const change = changes[0];
         const chat = change.doc.data();
         chat.id = change.doc.id;
+        if (chat.type === DICE) {
+          diceroll();
+        }
         store.dispatch("chat/addChat", { chat });
       } else {
         /* = chat[] */

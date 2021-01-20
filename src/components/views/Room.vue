@@ -115,8 +115,8 @@ export default {
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
 
-      // const user = this.$store.getters["auth/user"];
-      // await FSChat.BroadcastLoggedIn({ roomId, user });
+      const user = this.$store.getters["auth/user"];
+      await FSChat.BroadcastLoggedIn({ roomId, user });
     },
     afterKicked() {},
     afterWaiting() {},
