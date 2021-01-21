@@ -12,7 +12,7 @@
       <ha-button @click="$router.push('/')">←</ha-button>
       <window-opener v-if="authenticated && joined"></window-opener>
       <google-authorizer></google-authorizer>
-      <ha-checkbox label="debug:" v-model="debug"></ha-checkbox>
+      <ha-checkbox v-if="false" label="debug:" v-model="debug"></ha-checkbox>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
     <svg-board ref="svgTable" v-if="joined"></svg-board>

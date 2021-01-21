@@ -7,27 +7,6 @@
 
 <template>
   <div style="width:100%; height: 100%;">
-    <div
-      style="position:fixed; top:0; right:0;background-color: lightgray; opacity: 0.2;"
-    >
-      <!-- debug -->
-      <ha-checkbox label="debug:" v-model="debug"></ha-checkbox>
-      <div v-if="debug">
-        <div>
-          <ha-button @click="onResetBoard(1)">RESET BOARD x1</ha-button>
-          <ha-button @click="onResetBoard(0.5)">RESET BOARD x0.5</ha-button>
-          <ha-button @click="onResetBoard(2)">RESET BOARD x2</ha-button>
-          <h5>MAPS</h5>
-          <div :key="m.id" v-for="m in maps">{{ m.id }}, {{ m.transform }}</div>
-          <h5>PAWNS</h5>
-          <div :key="p.id" v-for="p in pawns">
-            <ha-button @click="onResetPawn(p.id)"
-              >RESET PAWN: {{ p.id }}</ha-button
-            >
-          </div>
-        </div>
-      </div>
-    </div>
     <svg
       id="svg-table"
       :style="{
@@ -62,9 +41,6 @@
 </template>
 
 <script>
-import { FSPawn } from "@/collections/Pawn";
-import HaButton from "@/components/atoms/HaButton";
-import HaCheckbox from "@/components/atoms/HaCheckbox";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 import { isMacOS } from "@/scripts/helper";
@@ -72,14 +48,8 @@ import { Throttle } from "@/scripts/Throttle";
 
 export default {
   name: "SvgBoard",
-  components: { HaCheckbox, HaButton, SvgPawn, SvgMap },
+  components: { SvgPawn, SvgMap },
   methods: {
-    onResetBoard(z) {
-      this.transform = `matrix(${z}, 0, 0, ${z}, 0, 0)`;
-    },
-    async onResetPawn(pawnId) {
-      await FSPawn.ResetTransform([pawnId]);
-    },
     onWheel(event) {
       /* windowsの場合の正。osxは逆 */
       const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
@@ -196,7 +166,6 @@ export default {
     }
   },
   data() {
-    // const zoom = [50, 100, 200][Math.floor(Math.random() * 3)];
     const zoom = 100;
     const z = zoom / 100;
     const m = new DOMMatrix([z, 0, 0, z, 0, 0]).inverse();
