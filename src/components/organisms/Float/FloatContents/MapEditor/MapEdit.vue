@@ -100,7 +100,7 @@ export default {
   methods: {
     async onChangeScaleHandler(e) {
       const { value } = e.currentTarget;
-      const scale = Math.floor(value / 100);
+      const scale = parseFloat(value) / 100;
       const ot = this.originTransform;
       /* マップの回転は想定していない */
       const transform = new DOMMatrix([scale, 0, 0, scale, ot.e, ot.f]);

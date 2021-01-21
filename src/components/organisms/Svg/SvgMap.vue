@@ -108,7 +108,7 @@ export default {
 
       await this.$store.dispatch("map/dragStart", { mapId: this.mapId });
 
-      const $p = document.getElementById(`map_${this.mapId}`);
+      const $m = document.getElementById(`map_${this.mapId}`);
 
       const downX = e.clientX;
       const downY = e.clientY;
@@ -116,30 +116,30 @@ export default {
       /* globalの座標系をboard,mapの座標系へ変換する行列 */
       const $b = document.getElementById(`board_${this.activeBoard.id}`);
       const $$b = $b.getCTM(); // global -> board
-      const $$p = $p.getCTM(); // global -> map
-      const $$bp = $$b.inverse().multiply($$p); // board -> map
+      const $$m = $m.getCTM(); // global -> map
+      const $$bm = $$b.inverse().multiply($$m); // board -> map
 
       function globalToLocal(dx, dy) {
         /* 変位をglobalからDOMローカルの座標系へ変換 */
-        return new DOMMatrix([1, 0, 0, 1, dx / $$p.a, dy / $$p.a]).translate(
-          $$bp.e,
-          $$bp.f
+        return new DOMMatrix([1, 0, 0, 1, dx / $$m.a, dy / $$m.a]).translate(
+          $$bm.e,
+          $$bm.f
         );
       }
 
       const onMove = e => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
-        $b.style.transform = `${t}`;
+        $m.style.transform = `${t}`;
       };
 
       const onMouseUp = async e => {
         e.stopPropagation();
         console.log("SvgMap.onMouseUp"); // @DELETEME
         await this.$store.dispatch("map/dragFinish");
-        $p.removeEventListener("mousemove", onMove);
-        $p.removeEventListener("mouseup", onMouseUp);
-        $p.removeEventListener("mouseleave", onMouseUp);
+        $m.removeEventListener("mousemove", onMove);
+        $m.removeEventListener("mouseup", onMouseUp);
+        $m.removeEventListener("mouseleave", onMouseUp);
 
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         const transform = `${t}`;
@@ -147,9 +147,9 @@ export default {
         await FSMap.Update(this.mapId, { transform });
       };
 
-      $p.addEventListener("mousemove", onMove, false);
-      $p.addEventListener("mouseup", onMouseUp, false);
-      $p.addEventListener("mouseleave", onMouseUp, false);
+      $m.addEventListener("mousemove", onMove, false);
+      $m.addEventListener("mouseup", onMouseUp, false);
+      $m.addEventListener("mouseleave", onMouseUp, false);
 
       return false;
     }

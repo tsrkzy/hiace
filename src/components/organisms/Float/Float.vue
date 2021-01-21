@@ -40,7 +40,6 @@
     <div
       v-if="!top"
       @click="onClickShroud"
-      @mouseover="onClickShroud"
       class="float-content__shroud"
       style=""
     ></div>

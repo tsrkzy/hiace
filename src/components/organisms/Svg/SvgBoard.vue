@@ -67,6 +67,7 @@ export default {
         .catch(() => {});
     },
     async onMouseDown(e) {
+      console.log("SvgBoard.onMouseDown"); // @DELETEME
       if (!this.activeBoard) {
         return false;
       }
