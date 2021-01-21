@@ -52,14 +52,14 @@
           </ha-button>
         </li>
       </ul>
-      <fieldset>
-        <legend>素材</legend>
-        <a
-          target="_blank"
-          href="https://on-jin.com/sound/index.php?kensaku=%E3%83%80%E3%82%A4%E3%82%B9"
-          >on-jin.com</a
-        >
-      </fieldset>
+    </fieldset>
+    <fieldset>
+      <legend>素材</legend>
+      <a
+        target="_blank"
+        href="https://on-jin.com/sound/index.php?kensaku=%E3%83%80%E3%82%A4%E3%82%B9"
+        >on-jin.com</a
+      >
     </fieldset>
   </div>
 </template>

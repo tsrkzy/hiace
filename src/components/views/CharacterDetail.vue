@@ -8,7 +8,7 @@
 <template>
   <div
     v-if="show"
-    :class="`detail-text __hide_on_drag ${leftSide ? 'flip' : ''}`"
+    :class="`bs-5 detail-text __hide_on_drag ${leftSide ? 'flip' : ''}`"
   >
     <pre>{{ lines }}</pre>
   </div>
@@ -35,7 +35,7 @@ export default {
 div.detail-text {
   position: absolute;
   border: 1px solid black;
-  background-color: ghostwhite;
+  background-color: cornsilk;
   color: black;
   opacity: 0.8;
   top: 5vh;

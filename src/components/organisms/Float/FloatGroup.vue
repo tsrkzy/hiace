@@ -8,7 +8,6 @@
 <template>
   <div v-if="loggedIn" v-show="!nowDragging">
     <float
-      class="float"
       v-for="f in floats"
       :key="f.id"
       :float-id="f.id"

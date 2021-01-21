@@ -207,7 +207,7 @@ export default {
         return;
       }
       e.stopPropagation();
-      const { screenX: x } = e;
+      const { pageX: x } = e;
       const { innerWidth: w } = window;
       const side = x < w / 2 ? "left" : "right";
       const text = this.character.text;

@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="float.show" :style="floatStyle">
+  <div v-if="float.show" :style="floatStyle" class="float bs-5">
     <div
       :id="`move_handle_${floatId}`"
       class="move-handle z-10"
