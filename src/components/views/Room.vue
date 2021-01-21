@@ -5,11 +5,14 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <template>
-  <div
-    id="floor"
-    style="margin: 40px;border: 1px solid black;overflow: hidden;width: calc(100vw - 80px); height:calc(100vh - 80px);"
-  >
+  <div id="floor" class="floor_container">
     <notice></notice>
+    <div
+      v-if="show"
+      :class="`detail-text __hide_on_drag ${leftSide ? 'flip' : ''}`"
+    >
+      <p :key="i" v-for="(l, i) in detailLines">{{ l }}</p>
+    </div>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
       <window-opener v-if="authenticated && joined"></window-opener>
@@ -24,8 +27,8 @@
       v-if="authenticated && !joined"
       :disabled="waitForGrant"
       @click="makeRequest"
-      >入室リクエスト</ha-button
-    >
+      >入室リクエスト
+    </ha-button>
     <span v-if="waitForGrant">リクエスト受理待ち</span>
   </div>
 </template>
@@ -178,6 +181,15 @@ export default {
     },
     grantState() {
       return this.$store.getters["room/grant"].state;
+    },
+    detailLines() {
+      return this.$store.getters["detail/lines"];
+    },
+    show() {
+      return this.$store.getters["detail/show"];
+    },
+    leftSide() {
+      return this.$store.getters["detail/leftSide"];
     }
   },
   data() {
@@ -214,4 +226,33 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+div.floor_container {
+  margin: 40px;
+  border: 1px solid black;
+  overflow: hidden;
+  width: calc(100vw - 80px);
+  height: calc(100vh - 80px);
+}
+
+div.detail-text {
+  position: absolute;
+  border: 1px solid black;
+  background-color: ghostwhite;
+  color: black;
+  opacity: 0.8;
+  top: 5vh;
+  left: 5vw;
+  z-index: 11;
+  width: 40vw;
+  padding: 1rem;
+  white-space: normal;
+  word-break: break-all;
+  &.flip {
+    left: 55vw;
+  }
+  p {
+    margin: 0;
+  }
+}
+</style>

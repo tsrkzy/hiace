@@ -25,9 +25,13 @@ export const map = {
       commit("setMaps", { maps });
     },
     dragStart({ commit }, { mapId }) {
+      const $elList = document.getElementsByClassName("__hide_on_drag");
+      $elList.forEach($e => ($e.style.display = "none"));
       commit("setDrag", { drag: mapId });
     },
     dragFinish({ commit }) {
+      const $elList = document.getElementsByClassName("__hide_on_drag");
+      $elList.forEach($e => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { mapId, transform }) {

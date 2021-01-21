@@ -31,9 +31,13 @@ export const pawn = {
       commit("setPawns", { pawns });
     },
     dragStart({ commit }, { pawnId }) {
+      const $elList = document.getElementsByClassName("__hide_on_drag");
+      $elList.forEach($e => ($e.style.display = "none"));
       commit("setDrag", { drag: pawnId });
     },
     dragFinish({ commit }) {
+      const $elList = document.getElementsByClassName("__hide_on_drag");
+      $elList.forEach($e => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { pawnId, transform }) {

@@ -13,6 +13,7 @@
       transform: `${transform}`
     }"
     @mousedown="onMouseDown($event)"
+    @mouseenter="onMouseEnter($event)"
     :filter="shadow ? `url(#shadow_filter_${pawnId})` : ''"
   >
     <filter :id="`shadow_filter_${pawnId}`">
@@ -200,6 +201,25 @@ export default {
       $p.addEventListener("mouseleave", onMouseUp, false);
 
       return false;
+    },
+    async onMouseEnter(e) {
+      if (this.shadow) {
+        return;
+      }
+      e.stopPropagation();
+      const { screenX: x } = e;
+      const { innerWidth: w } = window;
+      const side = x < w / 2 ? "left" : "right";
+      const text = this.character.text;
+      await this.$store.dispatch("detail/setContent", { text, side });
+
+      const $p = document.getElementById(`pawn_${this.pawnId}`);
+      const onLeave = async e => {
+        e.stopPropagation();
+        await this.$store.dispatch("detail/off");
+        $p.removeEventListener("mouseleave", onLeave);
+      };
+      $p.addEventListener("mouseleave", onLeave, false);
     }
   },
   data() {

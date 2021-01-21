@@ -20,6 +20,7 @@ import { notice } from "@/store/notice";
 import { smoke } from "@/store/smoke";
 import { contextmenu } from "@/store/contextmenu";
 import { float } from "@/store/float";
+import { detail } from "@/store/detail";
 
 Vue.use(Vuex);
 
@@ -46,6 +47,7 @@ export default new Vuex.Store({
     notice,
     smoke,
     contextmenu,
-    float
+    float,
+    detail
   }
 });
