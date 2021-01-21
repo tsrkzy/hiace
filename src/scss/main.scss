@@ -46,6 +46,8 @@ html {
     user-select: none;
 
     &.ha {
+      color: dimgray;
+      cursor: not-allowed;
       padding: 0 2px;
       line-height: 1.4rem;
     }

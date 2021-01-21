@@ -12,14 +12,21 @@
     <notice></notice>
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
-      <window-opener v-if="authenticated"></window-opener>
+      <window-opener v-if="authenticated && joined"></window-opener>
       <google-authorizer></google-authorizer>
       <ha-checkbox label="debug:" v-model="debug"></ha-checkbox>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
-    <svg-board ref="svgTable"></svg-board>
-    <float-group></float-group>
-    <context-menu></context-menu>
+    <svg-board ref="svgTable" v-if="joined"></svg-board>
+    <float-group v-if="joined"></float-group>
+    <context-menu v-if="joined"></context-menu>
+    <ha-button
+      v-if="authenticated && !joined"
+      :disabled="waitForGrant"
+      @click="makeRequest"
+      >入室リクエスト</ha-button
+    >
+    <span v-if="waitForGrant">リクエスト受理待ち</span>
   </div>
 </template>
 
@@ -135,13 +142,17 @@ export default {
       }
       /* 入室申請が未提出 */
       if (state === NO_REQUEST) {
-        console.log("send request"); // @DELETEME
+        console.log("no request"); // @DELETEME
       }
       /* 入室許可済み */
       if (state === JOINED) {
         console.log("joined"); // @DELETEME
         await this.afterJoined();
       }
+    },
+    async makeRequest() {
+      const userId = this.user.id;
+      await FSRoom.MakeRequest(userId);
     }
   },
   computed: {
@@ -151,9 +162,18 @@ export default {
     room() {
       return this.$store.getters["room/info"];
     },
+    user() {
+      return this.$store.getters["auth/user"];
+    },
     joined() {
       return (
         this.authenticated && this.$store.getters["room/grant"].state === JOINED
+      );
+    },
+    waitForGrant() {
+      return (
+        this.authenticated &&
+        this.$store.getters["room/grant"].state === WAITING
       );
     },
     grantState() {
