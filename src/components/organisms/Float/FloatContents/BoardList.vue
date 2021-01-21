@@ -7,7 +7,7 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-button @click="onClickAddBoard">ボードを追加</ha-button>
+    <ha-button v-if="false" @click="onClickAddBoard">ボードを追加</ha-button>
     <fieldset v-for="b in boardItems" :key="b.id">
       <legend>ボード: {{ b.id }}</legend>
       <!--      <ha-button @click="onClickDeleteBoard(b.id)">削除</ha-button>-->

@@ -1,18 +1,25 @@
 <template>
   <div class="container">
-    <h3>部屋の作成</h3>
-    <ha-input-form label="部屋名" v-model="roomName"></ha-input-form>
-    <ha-select
-      label="システム"
-      v-model="gameSystem"
-      :items="systemList"
-    ></ha-select>
+    <fieldset class="create-room__fieldset">
+      <legend>部屋の作成</legend>
+      <ha-input-form
+        label="部屋名"
+        v-model="roomName"
+        placeholder="必須"
+      ></ha-input-form>
+      <ha-select label="システム" v-model="gameSystem" :items="systemList">
+        <option :value="null" selected disabled>ダイスシステム(必須)</option>
+      </ha-select>
+      <div>
+        <ha-button
+          :disabled="!activateCreateRoomButton"
+          @click="onClickCreateRoomButtonHandler"
+          >作成
+        </ha-button>
+      </div>
+      <p v-if="!authenticated">Googleのアカウントでログイン</p>
+    </fieldset>
     <google-authorizer></google-authorizer>
-    <ha-button
-      :disabled="!activateCreateRoomButton"
-      @click="onClickCreateRoomButtonHandler"
-      >作成</ha-button
-    >
   </div>
 </template>
 
@@ -54,6 +61,9 @@ export default {
         this.gameSystem &&
         this.roomName.trim()
       );
+    },
+    authenticated() {
+      return this.$store.getters["auth/authenticated"];
     }
   },
   data() {
@@ -66,4 +76,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+fieldset.create-room__fieldset {
+  width: 40vw;
+  margin: 5vh 30vw;
+}
+</style>

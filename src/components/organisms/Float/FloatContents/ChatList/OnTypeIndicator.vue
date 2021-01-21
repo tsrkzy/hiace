@@ -60,7 +60,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 p {
-  margin: 0;
   color: dimgray;
 }
 </style>

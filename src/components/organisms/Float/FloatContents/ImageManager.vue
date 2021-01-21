@@ -132,8 +132,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-p {
-  margin: 0;
-}
-</style>
+<style lang="scss" scoped></style>

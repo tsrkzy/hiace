@@ -30,13 +30,25 @@ export const ROOM_MANAGER = "ROOM_MANAGER";
 export const CHANNEL_LIST = "CHANNEL_LIST";
 export const NOTE_MANAGER = "NOTE_MANAGER";
 
+/* floatを複数枚作成しないもの */
 const singletonList = [
   CHARACTER_LIST,
   BOARD_LIST,
+  TABLE_VIEW,
   IMAGE_MANAGER,
   SOUND_MANAGER,
-  ROOM_MANAGER,
-  CHANNEL_LIST
+  ROOM_MANAGER
+];
+
+/* 場所を記憶する、つまりアプリ開始時に表示可能なもの */
+const startUpList = [
+  CHARACTER_LIST,
+  BOARD_LIST,
+  CHAT_LIST,
+  TABLE_VIEW,
+  IMAGE_MANAGER,
+  SOUND_MANAGER,
+  ROOM_MANAGER
 ];
 
 export function title(id: string) {
@@ -48,7 +60,7 @@ export function title(id: string) {
       return "キャラクタ編集";
     }
     case BOARD_LIST: {
-      return "オブジェクト一覧";
+      return "マップオブジェクト";
     }
     case MAP_EDIT: {
       return "マップ編集";
@@ -130,8 +142,8 @@ export class IFFloat implements IIFloat {
       if (!float.show) {
         continue;
       }
-      /* シングルトンでないfloatは無視 */
-      if (singletonList.indexOf(float.contentId) === -1) {
+      /* 初期表示可能なもののみ */
+      if (startUpList.indexOf(float.contentId) === -1) {
         continue;
       }
       floats.push(float.toJSON());
