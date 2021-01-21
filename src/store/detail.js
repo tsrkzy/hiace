@@ -32,7 +32,7 @@ export const detail = {
       return state.side === "left";
     },
     lines(state) {
-      return state.text.split(/\n/);
+      return state.text;
     },
     show(state) {
       return state.show;

@@ -7,12 +7,7 @@
 <template>
   <div id="floor" class="floor_container">
     <notice></notice>
-    <div
-      v-if="show"
-      :class="`detail-text __hide_on_drag ${leftSide ? 'flip' : ''}`"
-    >
-      <p :key="i" v-for="(l, i) in detailLines">{{ l }}</p>
-    </div>
+    <character-detail />
     <div style="position: fixed; top: 0;left:0;">
       <ha-button @click="$router.push('/')">←</ha-button>
       <window-opener v-if="authenticated && joined"></window-opener>
@@ -40,28 +35,30 @@ import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSColumn } from "@/collections/Column";
+import { FSImage } from "@/collections/Image";
+import { FSMap } from "@/collections/Map";
 import { FSNote } from "@/collections/Note";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
 import { FSUser } from "@/collections/User";
+import ContextMenu from "@/components/atoms/ContextMenu";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
+import Notice from "@/components/atoms/Notice";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
-import ContextMenu from "@/components/atoms/ContextMenu";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
 import FloatGroup from "@/components/organisms/Float/FloatGroup";
-import Notice from "@/components/atoms/Notice";
 import WindowOpener from "@/components/organisms/Float/WindowOpener";
-import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
-import { FSImage } from "@/collections/Image";
-import { FSMap } from "@/collections/Map";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
+import CharacterDetail from "@/components/views/CharacterDetail";
+import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "Room",
   components: {
+    CharacterDetail,
     HaCheckbox,
     WindowOpener,
     FloatGroup,
@@ -181,15 +178,6 @@ export default {
     },
     grantState() {
       return this.$store.getters["room/grant"].state;
-    },
-    detailLines() {
-      return this.$store.getters["detail/lines"];
-    },
-    show() {
-      return this.$store.getters["detail/show"];
-    },
-    leftSide() {
-      return this.$store.getters["detail/leftSide"];
     }
   },
   data() {
@@ -233,26 +221,5 @@ div.floor_container {
   overflow: hidden;
   width: calc(100vw - 80px);
   height: calc(100vh - 80px);
-}
-
-div.detail-text {
-  position: absolute;
-  border: 1px solid black;
-  background-color: ghostwhite;
-  color: black;
-  opacity: 0.8;
-  top: 5vh;
-  left: 5vw;
-  z-index: 11;
-  width: 40vw;
-  padding: 1rem;
-  white-space: normal;
-  word-break: break-all;
-  &.flip {
-    left: 55vw;
-  }
-  p {
-    margin: 0;
-  }
 }
 </style>
