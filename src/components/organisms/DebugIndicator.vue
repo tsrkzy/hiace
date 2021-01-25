@@ -32,6 +32,7 @@ export default {
   created() {
     this.milliSecond = null;
     const clock = () => {
+      console.log("tick"); // @DELETEME
       this.milliSecond = Date.now();
     };
     this.clock_id = window.setInterval(clock, 1000);

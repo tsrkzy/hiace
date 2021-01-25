@@ -1,6 +1,6 @@
 import { FSBoard } from "@/collections/Board";
 import { FSChat } from "@/collections/Chat";
-import { FSUser } from "@/collections/User";
+import { FSUser, TabIF } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
@@ -95,8 +95,6 @@ export class FSRoom {
   static async SoundBroadcast(roomId: string, soundId: string) {
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(roomId);
-
-    /* @TODO システムチャットを経由するか、システムチャットをpostする */
 
     await docRef.update({ music: null });
     await docRef.update({ music: soundId });

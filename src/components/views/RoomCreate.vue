@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { FSNegotiation } from "@/collections/Negotiation";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
@@ -34,7 +35,12 @@ import { GAME_SYSTEMS } from "@/scripts/diceBot";
 
 export default {
   name: "Room",
-  components: { GoogleAuthorizer, HaInputForm, HaSelect, HaButton },
+  components: {
+    GoogleAuthorizer,
+    HaInputForm,
+    HaSelect,
+    HaButton
+  },
   methods: {
     async onClickCreateRoomButtonHandler() {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
@@ -49,7 +55,11 @@ export default {
         gameSystem: this.gameSystem
       });
 
-      await FSUser.JoinRoom(room.owner, room.id);
+      await FSUser.JoinRoom(user.id, room.id);
+
+      /* RTC接続の最小単位を作成 */
+      const node = await FSNegotiation.AddNode(room.id, user.id);
+      console.log(node); // @DELETEME
 
       this.$router.push(`/r/${room.id}`);
     }

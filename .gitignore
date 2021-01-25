@@ -26,6 +26,8 @@ pnpm-debug.log*
 .firebase/*.cache
 .firebaserc
 firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # resource
 /devResource

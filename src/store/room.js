@@ -95,6 +95,5 @@ export const room = {
     gameSystem(state) {
       return state.room?.gameSystem;
     }
-  },
-  modules: {}
+  }
 };
