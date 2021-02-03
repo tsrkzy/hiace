@@ -160,8 +160,27 @@ export function onMessageHandler(json: string) {
   const { key, body } = jsonObj;
   switch (key) {
     case TYPING: {
-      const { userName } = body;
+      const { userName, characterId } = body;
       Notice.Log(`ON TYPE: ${userName}`);
+      popBalloon(characterId);
     }
   }
+}
+
+function popBalloon(characterId: string) {
+  const $$s = `div.balloon-holder.alias-${characterId}`;
+  const $elList = Array.from(document.querySelectorAll($$s)).filter($e => !!$e);
+  const cls = "dimming";
+  for (let i = 0; i < $elList.length; i++) {
+    const $el = $elList[i];
+    if ($el.classList.contains(cls)) {
+      $el.classList.remove(cls);
+    }
+  }
+  setTimeout(() => {
+    for (let i = 0; i < $elList.length; i++) {
+      const $el = $elList[i];
+      $el.classList.add(cls);
+    }
+  }, 10);
 }

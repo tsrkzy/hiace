@@ -17,6 +17,16 @@
     }"
   >
     <span class="billboard">{{ billBoard }}</span>
+    <div :class="`balloon-holder alias-${characterId}`">
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="25" rx="2" ry="2" class="mumble"></ellipse>
+        <ellipse cx="40" cy="16" rx="5" ry="5" class="mumble"></ellipse>
+        <ellipse cx="21" cy="11" rx="20" ry="10" class="mumble"></ellipse>
+        <ellipse cx="10" cy="11" rx="1" ry="1" class="mumble dot"></ellipse>
+        <ellipse cx="20" cy="11" rx="1" ry="1" class="mumble dot"></ellipse>
+        <ellipse cx="30" cy="11" rx="1" ry="1" class="mumble dot"></ellipse>
+      </svg>
+    </div>
     <img class="alias" :alt="image" :src="srcUrl" />
   </div>
 </template>
@@ -70,6 +80,15 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+div.balloon-holder {
+  position: absolute;
+  top: -30px;
+  left: 10px;
+  opacity: 0;
+  &.dimming {
+    animation: dim 800ms linear both;
+  }
+}
 img.alias {
   max-height: 100%;
 }
@@ -84,5 +103,34 @@ span.billboard {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+svg {
+  width: 100px;
+  height: 30px;
+  ellipse.mumble {
+    stroke: dimgray;
+    fill: white;
+    &.dot {
+      stroke: none;
+      fill: dimgray;
+    }
+  }
+}
+
+@keyframes dim {
+  0% {
+    display: block;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    display: none;
+    opacity: 0;
+  }
 }
 </style>

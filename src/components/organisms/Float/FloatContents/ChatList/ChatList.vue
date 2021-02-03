@@ -172,8 +172,10 @@ export default {
         await this.sendChat();
       }
 
+      const { characterId } = this.getSpeaker();
+
       const userName = this.$store.getters["auth/user"].name;
-      const m = new PeerMessage(TYPING, { userName });
+      const m = new PeerMessage(TYPING, { userName, characterId });
       Peer.Send(m.toJSON());
     }
   }
