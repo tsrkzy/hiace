@@ -14,12 +14,12 @@
 <script>
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
-import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
+import { Peer, PeerMessage, TYPING } from "@/scripts/Peer";
 import { Throttle } from "@/scripts/Throttle";
 
 const throttle = new Throttle(1000);
@@ -80,12 +80,9 @@ export default {
       await FSChat.Chat(c, this.diceSystem);
     },
     onKeydown() {
-      throttle
-        .do()
-        .then(() => {
-          FSUser.Ping(this.user.id);
-        })
-        .catch(() => {});
+      const userName = this.$store.getters["auth/user"].name;
+      const m = new PeerMessage(TYPING, { userName });
+      Peer.Send(m.toJSON());
     }
   }
 };

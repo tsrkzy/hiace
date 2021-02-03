@@ -7,19 +7,23 @@
 import {
   Negotiation,
   OFFER_SET_REMOTE_SDP,
+  onMessageHandler,
   PeerConfig,
   SET_ANSWER_REMOTE_SDP,
   WAIT_FOR_REMOTE_ICE
 } from "@/scripts/Peer";
 import { FSNegotiation } from "@/collections/Negotiation";
+import { Notice } from "@/scripts/Notice";
 
 export class AnswerPeer {
   id: string;
-  _connection: RTCPeerConnection | null;
-  _channel: RTCDataChannel | null;
+  _connection: RTCPeerConnection | null = null;
+  _channel: RTCDataChannel | null = null;
   candidates: RTCIceCandidate[] = [];
   answerSDP: RTCSessionDescription | undefined;
   offerSDP: RTCSessionDescription | undefined;
+
+  isOpen: Boolean = false;
 
   get connection() {
     if (!this._connection) {
@@ -42,9 +46,6 @@ export class AnswerPeer {
 
   constructor(negotiationId: string) {
     console.log("AnswerPeer.constructor", negotiationId); // @DELETEME
-    this._connection = null;
-    this._channel = null;
-
     this.id = negotiationId;
     this.connection = this.createConnection();
   }
@@ -124,10 +125,12 @@ export class AnswerPeer {
   /* channel handler */
   onmessage(e: MessageEvent) {
     console.log("onmessage", e.data);
+    onMessageHandler(e.data);
   }
   onopen() {
-    this.channel?.send("answer: onopen");
+    this.isOpen = true;
     console.log("onopen");
+    Notice.Log(`WebRTC: established - (${this.id})`);
   }
   onerror() {
     console.log("onerror");
@@ -167,12 +170,20 @@ export class AnswerPeer {
     });
   }
 
-  ping() {
+  send(messageJson: string) {
+    if (!this.isOpen) {
+      return;
+    }
+
     if (!this.channel) {
       console.warn("channel has not created yet"); // @DELETEME
       return false;
     }
-    console.log("answer.ping"); // @DELETEME
-    this.channel.send("ping");
+
+    this.channel.send(messageJson);
+  }
+
+  ping() {
+    this.send("ping");
   }
 }

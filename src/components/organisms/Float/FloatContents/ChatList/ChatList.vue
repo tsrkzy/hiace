@@ -51,6 +51,7 @@ import AliasBoard from "@/components/organisms/Float/FloatContents/ChatList/Alia
 import ChatLogViewer from "@/components/organisms/Float/FloatContents/ChatList/ChatLogViewer";
 import OnTypeIndicator from "@/components/organisms/Float/FloatContents/ChatList/OnTypeIndicator";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
+import { Peer, PeerMessage, TYPING } from "@/scripts/Peer";
 import { Throttle } from "@/scripts/Throttle";
 
 const throttle = new Throttle(1000);
@@ -171,12 +172,9 @@ export default {
         await this.sendChat();
       }
 
-      throttle
-        .do()
-        .then(() => {
-          FSUser.Ping(this.user.id);
-        })
-        .catch(() => {});
+      const userName = this.$store.getters["auth/user"].name;
+      const m = new PeerMessage(TYPING, { userName });
+      Peer.Send(m.toJSON());
     }
   }
 };

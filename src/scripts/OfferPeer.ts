@@ -15,17 +15,21 @@ import {
   OFFER_SET_REMOTE_ICE,
   WAIT_FOR_CHANNEL,
   CONNECTION_DEAD,
-  CHANNEL_ESTABLISHED
+  CHANNEL_ESTABLISHED,
+  onMessageHandler
 } from "@/scripts/Peer";
 import { FSNegotiation } from "@/collections/Negotiation";
+import { Notice } from "@/scripts/Notice";
 
 export class OfferPeer {
   id: string;
-  _connection: RTCPeerConnection | null;
-  _channel: RTCDataChannel | null;
+  _connection: RTCPeerConnection | null = null;
+  _channel: RTCDataChannel | null = null;
   candidates: RTCIceCandidate[] = [];
   answerSDP: RTCSessionDescription | undefined;
   offerSDP: RTCSessionDescription | undefined;
+
+  isOpen: Boolean = false;
 
   get connection() {
     if (!this._connection) {
@@ -47,9 +51,6 @@ export class OfferPeer {
   }
 
   constructor(negotiationId: string) {
-    this._connection = null;
-    this._channel = null;
-
     this.id = negotiationId;
 
     const connection = new RTCPeerConnection(PeerConfig);
@@ -152,10 +153,13 @@ export class OfferPeer {
   /* channel handler */
   onmessage(e: MessageEvent) {
     console.log("onmessage", e.data);
+    onMessageHandler(e.data);
   }
   onopen() {
     console.log("onopen");
+    this.isOpen = true;
     FSNegotiation.Update(this.id, { phase: CHANNEL_ESTABLISHED });
+    Notice.Log(`WebRTC: established - (${this.id})`);
   }
   onerror() {
     console.log("onerror");
@@ -199,12 +203,20 @@ export class OfferPeer {
     });
   }
 
-  ping() {
+  send(messageJson: string) {
+    if (!this.isOpen) {
+      return;
+    }
+
     if (!this.channel) {
       console.warn("channel has not created yet"); // @DELETEME
       return false;
     }
-    console.log("offer.ping"); // @DELETEME
-    this.channel.send("ping");
+
+    this.channel.send(messageJson);
+  }
+
+  ping() {
+    this.send("ping");
   }
 }

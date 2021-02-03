@@ -7,6 +7,7 @@
 import store from "@/store";
 import { OfferPeer } from "@/scripts/OfferPeer";
 import { AnswerPeer } from "@/scripts/AnswerPeer";
+import { Notice } from "@/scripts/Notice";
 
 export const CHANNEL_NAME = "CHANNEL";
 export const PeerConfig = {
@@ -81,6 +82,25 @@ export class Negotiation {
   }
 }
 
+export const TYPING = 1;
+export class PeerMessage {
+  key: number;
+  body: object;
+  constructor(key: number, body: object) {
+    this.key = key;
+    this.body = body;
+  }
+
+  toJSON(): string {
+    const result = {
+      key: this.key,
+      body: this.body
+    };
+
+    return JSON.stringify(result);
+  }
+}
+
 export class Peer {
   static Map = new Map();
 
@@ -118,12 +138,30 @@ export class Peer {
     return Peer.Map.get(negotiationId);
   }
 
-  static Clear() {
-    Peer.Map.clear();
-  }
-
   static Next(n: NegotitationIF) {
     const peer = Peer.GetById(n.id);
     peer.next(n);
+  }
+
+  static Send(messageJson: string) {
+    const peerList = Array.from(Peer.Map.values());
+    for (let i = 0; i < peerList.length; i++) {
+      const peer = peerList[i];
+      peer.send(messageJson);
+    }
+  }
+}
+
+export function onMessageHandler(json: string) {
+  const jsonObj = JSON.parse(json);
+  if (!jsonObj) {
+    return;
+  }
+  const { key, body } = jsonObj;
+  switch (key) {
+    case TYPING: {
+      const { userName } = body;
+      Notice.Log(`ON TYPE: ${userName}`);
+    }
   }
 }
