@@ -22,7 +22,8 @@ export const room = {
       soundEffects: [],
       music: null
     },
-    requests: []
+    requests: [],
+    background: false
   },
   mutations: {
     setRoom(state, payload) {
@@ -30,6 +31,9 @@ export const room = {
     },
     setRequest(state, payload) {
       state.requests = payload.requests;
+    },
+    setBackground(state, payload) {
+      state.background = payload.background;
     }
   },
   actions: {
@@ -60,6 +64,12 @@ export const room = {
     setRequest({ commit }, { requests = [] }) {
       console.log("room.setRequest", requests); // @DELETEME
       commit("setRequest", { requests });
+    },
+    windowBlur({ commit }) {
+      commit("setBackground", { background: true });
+    },
+    windowFocus({ commit }) {
+      commit("setBackground", { background: false });
     }
   },
   getters: {
@@ -94,6 +104,9 @@ export const room = {
     },
     gameSystem(state) {
       return state.room?.gameSystem;
+    },
+    windowInBackground(state) {
+      return state?.background;
     }
   }
 };

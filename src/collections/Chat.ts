@@ -5,6 +5,7 @@ import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
 import { callDiceBot } from "@/scripts/diceBot";
 import { diceroll } from "@/scripts/diceroll";
+import { ring } from "@/scripts/DoorBell";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";
@@ -204,9 +205,8 @@ export class FSChat {
         const change = changes[0];
         const chat = change.doc.data();
         chat.id = change.doc.id;
-        if (chat.type === DICE) {
-          diceroll();
-        }
+        onReceiveChat(chat);
+
         store.dispatch("chat/addChat", { chat });
       } else {
         /* = chat[] */
@@ -262,4 +262,15 @@ export class FSChat {
 }
 
 // function onSendingChat(chatType: string, chatValue?: any) {}
-// function onReceiveChat(chatType: string, chatValue?: any) {}
+
+function onReceiveChat(chat: firebase.firestore.DocumentData) {
+  if (chat.type === DICE) {
+    diceroll();
+    return;
+  }
+
+  const background = store.getters["room/windowInBackground"];
+  if (background) {
+    ring();
+  }
+}

@@ -17,7 +17,8 @@
           >作成
         </ha-button>
       </div>
-      <p v-if="!authenticated">Googleのアカウントでログイン</p>
+      <p v-if="!authenticated">Googleアカウントでのログインが必要です</p>
+      <powered-by />
     </fieldset>
     <google-authorizer></google-authorizer>
   </div>
@@ -31,6 +32,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
+import PoweredBy from "@/components/views/PoweredBy";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Notify } from "@/scripts/Notify";
 import { Smoke } from "@/scripts/Smoke";
@@ -38,6 +40,7 @@ import { Smoke } from "@/scripts/Smoke";
 export default {
   name: "Room",
   components: {
+    PoweredBy,
     GoogleAuthorizer,
     HaInputForm,
     HaSelect,
