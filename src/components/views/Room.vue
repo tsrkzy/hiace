@@ -56,6 +56,8 @@ import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 import CharacterDetail from "@/components/views/CharacterDetail";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
+import { Smoke } from "@/scripts/Smoke";
+
 export default {
   name: "Room",
   components: {
@@ -71,9 +73,16 @@ export default {
     DebugIndicator
   },
   async created() {
-    this.roomId = this.$route.params.room_id;
-    await this.trackRoomInfo(this.roomId);
-    await this.$store.dispatch("float/initialize");
+    await Smoke.on();
+    try {
+      this.roomId = this.$route.params.room_id;
+      await this.trackRoomInfo(this.roomId);
+      await this.$store.dispatch("float/initialize");
+      await this.$nextTick();
+    } catch (e) {
+      console.error(e);
+    }
+    await Smoke.off();
   },
   mounted() {},
   beforeDestroy() {

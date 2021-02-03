@@ -19,7 +19,6 @@ export class Notice {
   }
 
   static Log(text) {
-    console.log("Notice.Log"); // @DELETEME
     const notice = new Notice(text, 0);
     const { id } = notice;
     store.dispatch("notice/add", { notice });

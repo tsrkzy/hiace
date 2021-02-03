@@ -32,6 +32,8 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
+import { Notice } from "@/scripts/Notice";
+import { Smoke } from "@/scripts/Smoke";
 
 export default {
   name: "Room",
@@ -46,22 +48,28 @@ export default {
       console.log("RoomCreate.onClickCreateRoomButtonHandler"); // @DELETEME
       const { roomName } = this;
 
-      const user = await FSUser.Create();
-      this.$store.dispatch("auth/logInAs", { user });
+      await Smoke.on();
+      try {
+        const user = await FSUser.Create();
+        await this.$store.dispatch("auth/logInAs", { user });
 
-      const room = await FSRoom.Create({
-        name: roomName,
-        owner: user.id,
-        gameSystem: this.gameSystem
-      });
+        const room = await FSRoom.Create({
+          name: roomName,
+          owner: user.id,
+          gameSystem: this.gameSystem
+        });
 
-      await FSUser.JoinRoom(user.id, room.id);
+        await FSUser.JoinRoom(user.id, room.id);
 
-      /* RTC接続の最小単位を作成 */
-      const node = await FSNegotiation.AddNode(room.id, user.id);
-      console.log(node); // @DELETEME
-
-      this.$router.push(`/r/${room.id}`);
+        /* RTC接続の最小単位を作成 */
+        await FSNegotiation.AddNode(room.id, user.id);
+        await Smoke.off();
+        await this.$router.push(`/r/${room.id}`);
+      } catch (e) {
+        console.error(e);
+        Notice.Log("Room.create() failed");
+      }
+      await Smoke.off();
     }
   },
   computed: {
