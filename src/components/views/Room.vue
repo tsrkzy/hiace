@@ -57,6 +57,7 @@ import CharacterDetail from "@/components/views/CharacterDetail";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 import { Smoke } from "@/scripts/Smoke";
+import { Notify } from "@/scripts/Notify";
 
 export default {
   name: "Room",
@@ -81,6 +82,7 @@ export default {
       await this.$nextTick();
     } catch (e) {
       console.error(e);
+      Notify.Log("Room.initialize() failed.");
     }
     await Smoke.off();
   },

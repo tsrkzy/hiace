@@ -7,28 +7,28 @@
 
 import store from "@/store";
 
-export class Notice {
+export class Notify {
   static id = 0;
   level = 0;
   text = "";
 
   static GetId() {
-    const id = Notice.id;
-    Notice.id++;
+    const id = Notify.id;
+    Notify.id++;
     return id;
   }
 
   static Log(text) {
-    const notice = new Notice(text, 0);
+    const notice = new Notify(text, 0);
     const { id } = notice;
     store.dispatch("notice/add", { notice });
     window.setTimeout(() => {
-      console.log("Notice.delete"); // @DELETEME
+      console.log("Notify.delete"); // @DELETEME
       store.dispatch("notice/delete", { id });
     }, 4000);
   }
   constructor(text, level) {
-    this.id = Notice.GetId();
+    this.id = Notify.GetId();
     this.text = text;
     this.level = level;
   }

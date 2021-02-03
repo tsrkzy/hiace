@@ -13,7 +13,7 @@ import {
   WAIT_FOR_REMOTE_ICE
 } from "@/scripts/Peer";
 import { FSNegotiation } from "@/collections/Negotiation";
-import { Notice } from "@/scripts/Notice";
+import { Notify } from "@/scripts/Notify";
 
 export class AnswerPeer {
   id: string;
@@ -130,7 +130,7 @@ export class AnswerPeer {
   onopen() {
     this.isOpen = true;
     console.log("onopen");
-    Notice.Log(`WebRTC: established - (${this.id})`);
+    Notify.Log(`WebRTC: established - (${this.id})`);
   }
   onerror() {
     console.log("onerror");

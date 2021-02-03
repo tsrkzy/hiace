@@ -7,7 +7,7 @@
 import store from "@/store";
 import { OfferPeer } from "@/scripts/OfferPeer";
 import { AnswerPeer } from "@/scripts/AnswerPeer";
-import { Notice } from "@/scripts/Notice";
+import { Notify } from "@/scripts/Notify";
 
 export const CHANNEL_NAME = "CHANNEL";
 export const PeerConfig = {
@@ -161,7 +161,7 @@ export function onMessageHandler(json: string) {
   switch (key) {
     case TYPING: {
       const { userName, characterId } = body;
-      Notice.Log(`ON TYPE: ${userName}`);
+      Notify.Log(`ON TYPE: ${userName}`);
       popBalloon(characterId);
     }
   }

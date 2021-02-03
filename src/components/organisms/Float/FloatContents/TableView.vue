@@ -108,7 +108,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
-import { Notice } from "@/scripts/Notice";
+import { Notify } from "@/scripts/Notify";
 
 export default {
   name: "TableView",
@@ -178,7 +178,7 @@ export default {
         e.currentTarget.value = cell.value;
 
         console.error(error);
-        Notice.Log(error);
+        Notify.Log(error);
       }
     },
     async onInputHeader(e, column) {

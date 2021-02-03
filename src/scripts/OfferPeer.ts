@@ -19,7 +19,7 @@ import {
   onMessageHandler
 } from "@/scripts/Peer";
 import { FSNegotiation } from "@/collections/Negotiation";
-import { Notice } from "@/scripts/Notice";
+import { Notify } from "@/scripts/Notify";
 
 export class OfferPeer {
   id: string;
@@ -159,7 +159,7 @@ export class OfferPeer {
     console.log("onopen");
     this.isOpen = true;
     FSNegotiation.Update(this.id, { phase: CHANNEL_ESTABLISHED });
-    Notice.Log(`WebRTC: established - (${this.id})`);
+    Notify.Log(`WebRTC: established - (${this.id})`);
   }
   onerror() {
     console.log("onerror");

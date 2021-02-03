@@ -32,7 +32,7 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
-import { Notice } from "@/scripts/Notice";
+import { Notify } from "@/scripts/Notify";
 import { Smoke } from "@/scripts/Smoke";
 
 export default {
@@ -67,7 +67,7 @@ export default {
         await this.$router.push(`/r/${room.id}`);
       } catch (e) {
         console.error(e);
-        Notice.Log("Room.create() failed");
+        Notify.Log("Room.create() failed");
       }
       await Smoke.off();
     }
