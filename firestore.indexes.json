@@ -15,6 +15,20 @@
       ]
     },
     {
+      "collectionGroup": "node",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "room",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "owner",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "pawn",
       "queryScope": "COLLECTION",
       "fields": [
