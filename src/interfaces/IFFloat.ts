@@ -29,6 +29,7 @@ export const SOUND_MANAGER = "SOUND_MANAGER";
 export const ROOM_MANAGER = "ROOM_MANAGER";
 export const CHANNEL_LIST = "CHANNEL_LIST";
 export const NOTE_MANAGER = "NOTE_MANAGER";
+export const ISSUE_WRITER = "ISSUE_WRITER";
 
 /* floatを複数枚作成しないもの */
 const singletonList = [
@@ -37,7 +38,8 @@ const singletonList = [
   TABLE_VIEW,
   IMAGE_MANAGER,
   SOUND_MANAGER,
-  ROOM_MANAGER
+  ROOM_MANAGER,
+  ISSUE_WRITER
 ];
 
 /* 場所を記憶する、つまりアプリ開始時に表示可能なもの */
@@ -48,7 +50,8 @@ const startUpList = [
   TABLE_VIEW,
   IMAGE_MANAGER,
   SOUND_MANAGER,
-  ROOM_MANAGER
+  ROOM_MANAGER,
+  ISSUE_WRITER
 ];
 
 export function title(id: string) {
@@ -85,6 +88,9 @@ export function title(id: string) {
     }
     case CHANNEL_LIST: {
       return "チャンネル一覧";
+    }
+    case ISSUE_WRITER: {
+      return "要望・バグ報告";
     }
   }
   throw new Error(`implement error: no title for contentId: ${id}`);

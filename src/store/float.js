@@ -13,7 +13,8 @@ import {
   // TABLE_VIEW,
   // IMAGE_MANAGER,
   // BOARD_LIST,
-  ROOM_MANAGER
+  ROOM_MANAGER,
+  ISSUE_WRITER
 } from "@/interfaces/IFFloat";
 
 export const float = {
@@ -29,9 +30,13 @@ export const float = {
       if (!importedList.length) {
         state.floats = [
           new IFFloat(ROOM_MANAGER, true),
-          new IFFloat(CHAT_LIST, true)
+          new IFFloat(CHAT_LIST, true),
+          new IFFloat(ISSUE_WRITER, true)
         ];
       } else {
+        if (!importedList.find(f => f.contentId === ISSUE_WRITER)) {
+          importedList.push(new IFFloat(ISSUE_WRITER, true));
+        }
         state.floats = importedList;
       }
     },

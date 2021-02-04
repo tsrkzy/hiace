@@ -38,12 +38,17 @@
     </channel-list>
     <note-manager v-else-if="contentId === NOTE_MANAGER" :float-id="floatId">
     </note-manager>
+    <issue-writer
+      v-else-if="contentId === ISSUE_WRITER"
+      :float-id="floatId"
+    ></issue-writer>
     <div :float-id="floatId" v-else>content not found: {{ contentId }}</div>
   </div>
 </template>
 
 <script>
 import ChannelList from "@/components/organisms/Float/FloatContents/ChannelList";
+import IssueWriter from "@/components/organisms/Float/FloatContents/IssueWriter";
 import NoteManager from "@/components/organisms/Float/FloatContents/NoteManager";
 import RoomManager from "@/components/organisms/Float/FloatContents/RoomManager";
 import MapEdit from "@/components/organisms/Float/FloatContents/MapEditor/MapEdit";
@@ -65,12 +70,14 @@ import {
   SOUND_MANAGER,
   ROOM_MANAGER,
   CHANNEL_LIST,
-  NOTE_MANAGER
+  NOTE_MANAGER,
+  ISSUE_WRITER
 } from "@/interfaces/IFFloat";
 
 export default {
   name: "FloatContent",
   components: {
+    IssueWriter,
     NoteManager,
     ChannelList,
     RoomManager,
@@ -95,7 +102,8 @@ export default {
       SOUND_MANAGER,
       ROOM_MANAGER,
       CHANNEL_LIST,
-      NOTE_MANAGER
+      NOTE_MANAGER,
+      ISSUE_WRITER
     };
   },
   props: {

@@ -9,7 +9,7 @@
     >
       <slot>
         <option :disabled="mandatory" selected :value="null"
-          >not selected</option
+          >選択してください</option
         >
       </slot>
       <option
