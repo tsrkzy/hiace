@@ -65,12 +65,12 @@ export default {
        * 慣性スクロールでwheelがマウスの場合より多く発生するので、
        * 係数で抑え込む */
       const MOUSE_SCROLL_SPEED = 1.0;
-      const TRACKPAD_SCROLL_SPEED = 0.06;
+      const TRACKPAD_SCROLL_SPEED = 0.2;
       const os = isMacOS() ? TRACKPAD_SCROLL_SPEED : MOUSE_SCROLL_SPEED;
 
       /* Windowsのマウスでwheelが1回発火したときの拡大率のステップ */
       const ZOOM_RATE_DELTA = 0.1;
-      const DELTA = ZOOM_RATE_DELTA * os;
+      const DELTA = a * ZOOM_RATE_DELTA * os;
 
       /* 拡大率の下限値と上限値 */
       const MIN_ZOOM_RATE = 0.1;
