@@ -51,10 +51,15 @@ export default {
   components: { SvgPawn, SvgMap },
   methods: {
     onWheel(event) {
+      const SVG_MARGIN = 40;
+      const { clientX: _x, clientY: _y } = event;
+      const x = _x - SVG_MARGIN;
+      const y = _y - SVG_MARGIN;
+
       /* windowsの場合の正。osxは逆 */
       const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
       const t = new DOMMatrix(this.transform);
-      let { a, e, f } = t;
+      let { a, e: _e, f: _f } = t;
 
       /* osxの場合はtrackpadとして扱う
        * 慣性スクロールでwheelがマウスの場合より多く発生するので、
@@ -71,11 +76,19 @@ export default {
       const MIN_ZOOM_RATE = 0.1;
       const MAX_ZOOM_RATE = 3.0;
 
+      /* 倍率100%の際の、boardの原点から測ったクリック位置 */
+      const ix = (x - _e) / a;
+      const iy = (y - _f) / a;
+
+      /* 倍率を増減 */
       a += dir * DELTA;
       a = Math.max(a, MIN_ZOOM_RATE);
       a = Math.min(a, MAX_ZOOM_RATE);
-      e *= 1 - DELTA;
-      f *= 1 - DELTA;
+
+      /* クリック位置から逆算 */
+      const e = x + -a * ix;
+      const f = y + -a * iy;
+
       this.transform = new DOMMatrix([a, 0, 0, a, e, f]);
     },
     async onMouseDown(e) {
