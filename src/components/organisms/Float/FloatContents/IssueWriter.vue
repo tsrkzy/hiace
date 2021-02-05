@@ -23,10 +23,7 @@
         ></ha-select>
       </div>
       <div>
-        <ha-input-form
-          placeholder="タイトル(必須)"
-          v-model="title"
-        ></ha-input-form>
+        <ha-input-form placeholder="タイトル" v-model="title"></ha-input-form>
       </div>
       <div>
         <ha-textarea
@@ -61,6 +58,17 @@ import HaTextarea from "@/components/atoms/HaTextarea";
 import { Notify } from "@/scripts/Notify";
 import { octokit } from "@/scripts/Octokit";
 
+const BUG = { id: 1262032686, label: "不具合", raw: "bug" };
+const ENHANCEMENT = { id: 1262032688, label: "機能追加", raw: "enhancement" };
+const CATEGORY_LABEL = {
+  [BUG.id]: BUG.label,
+  [ENHANCEMENT.id]: ENHANCEMENT.label
+};
+const CATEGORY_RAW = {
+  [BUG.id]: BUG.raw,
+  [ENHANCEMENT.id]: ENHANCEMENT.raw
+};
+
 export default {
   name: "IssueWriter",
   components: { HaSelect, HaButton, HaTextarea, HaInputForm },
@@ -90,8 +98,9 @@ export default {
           state: "open",
           sort: "updated",
           direction: "desc",
-          per_page: 10
+          per_page: 40
         });
+        console.log(r.data); // @DELETEME
         return r.data;
       } catch (e) {
         console.error(e);
@@ -101,18 +110,19 @@ export default {
       console.log("IssueWriter.onClickCreateIssue"); // @DELETEME
       const title = this.title;
       const body = this.issueJson;
+      const labels = [CATEGORY_RAW[this.category]].filter(l => !!l);
       await octokit.request("POST /repos/{owner}/{repo}/issues", {
         owner: "tsrkzy",
         repo: "hiace",
         title,
-        body
+        body,
+        labels
       });
       this.clear();
       this.issueList = await this.fetchIssues();
       Notify.Log("Issue.create()");
     },
     clear() {
-      this.category = null;
       this.title = "";
       this.body = "";
     },
@@ -124,15 +134,16 @@ export default {
   computed: {
     categoryItems() {
       return [
-        { value: "bug", text: "不具合" },
-        { value: "feature", text: "機能追加" }
+        { value: `${BUG.id}`, text: `${BUG.label}` },
+        { value: `${ENHANCEMENT.id}`, text: `${ENHANCEMENT.label}` }
       ];
     },
     issueJson() {
       const c = "```";
       const room = this.$store.getters["room/info"]?.id;
       const { title, category, body } = this;
-      return `${c}\n/* raw message */\ntitle: ${title}\nroom: ${room}\ncategory: ${category}\nbody: ${body}\n${c}`;
+      const categoryLabel = CATEGORY_LABEL[category] ?? "null";
+      return `${c}\n/* raw message */\ntitle: ${title}\nroom: ${room}\ncategory: ${categoryLabel}\nbody: ${body}\n${c}`;
     },
     disableCreate() {
       const category = this.category;
@@ -142,8 +153,13 @@ export default {
     },
     issueItems() {
       return this.issueList.map(issue => {
-        const { number, title, html_url: url } = issue;
-        return { text: `#${number}: ${title}`, url };
+        const { number, title, html_url, labels } = issue;
+        const isBug = labels.some(l => l.id === BUG.id);
+        const bug = isBug ? " [bug]" : "";
+        return {
+          text: `#${number}${bug}: ${title}`,
+          url: html_url
+        };
       });
     }
   }
