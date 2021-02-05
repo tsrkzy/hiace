@@ -224,10 +224,7 @@ export default {
       await this.$store.dispatch("auth/logInAs", { user });
 
       /* RTC接続の最小単位を作成 */
-      // const tab = FSUser.GetTab(roomId, user.id);
-      // await FSRoom.AddTab(roomId, tab);
-      const node = await FSNegotiation.AddNode(roomId, user.id);
-      console.log(node); // @DELETEME
+      await FSNegotiation.AddNode(roomId, user.id);
     }
   }
 };

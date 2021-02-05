@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin: 10vh 30vw 0 30vw; width: 40vw;">
     <span>Terms of Use/Service（利用規約)</span>
     <pre>
 # アプリケーションの内容
