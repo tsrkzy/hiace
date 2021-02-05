@@ -10,11 +10,15 @@
     <p class="comment-out">/* hiace: onlineTRPG session utility */</p>
     <p class="src-code">
       <span class="key1">this</span>.<span class="key2">isPoweredBy</span>({
-      script: [<a href="https://github.com/tsrkzy/hiace" target="_blank"
+      <span class="key3">script</span>: [<a
+        href="https://github.com/tsrkzy/hiace"
+        target="_blank"
         >"tsrkzy"</a
-      >], hosting:
+      >], <span class="key3">hosting</span>:
       <a href="https://firebase.google.com/" target="_blank">"firebase"</a>,
-      frameworks: [<a href="https://jp.vuejs.org/index.html" target="_blank"
+      <span class="key3">frameworks</span>: [<a
+        href="https://jp.vuejs.org/index.html"
+        target="_blank"
         >"vuejs"</a
       >,&nbsp;
       <a href="https://necolas.github.io/normalize.css/" target="_blank"
@@ -45,17 +49,22 @@ div.powered-by {
 
       span {
         &.key1 {
-          color: darkorange;
+          color: dimgray;
           font-weight: 400;
         }
 
         &.key2 {
           color: rebeccapurple;
+          font-weight: 500;
+        }
+
+        &.key3 {
+          color: darkorange;
         }
       }
 
       a {
-        text-decoration: none;
+        text-decoration: underline;
         font-weight: 400;
         color: darkgreen;
       }
