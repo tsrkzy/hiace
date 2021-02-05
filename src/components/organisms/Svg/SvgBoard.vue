@@ -45,7 +45,6 @@
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 import { isMacOS } from "@/scripts/helper";
-import { Throttle } from "@/scripts/Throttle";
 
 export default {
   name: "SvgBoard",
@@ -54,18 +53,30 @@ export default {
     onWheel(event) {
       /* windowsの場合の正。osxは逆 */
       const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
-      this.t
-        .do()
-        .then(() => {
-          const t = new DOMMatrix(this.transform);
-          let { a, e, f } = t;
-          const DELTA = 0.1;
-          a += dir * DELTA;
-          e *= 1 - DELTA;
-          f *= 1 - DELTA;
-          this.transform = new DOMMatrix([a, 0, 0, a, e, f]);
-        })
-        .catch(() => {});
+      const t = new DOMMatrix(this.transform);
+      let { a, e, f } = t;
+
+      /* osxの場合はtrackpadとして扱う
+       * 慣性スクロールでwheelがマウスの場合より多く発生するので、
+       * 係数で抑え込む */
+      const MOUSE_SCROLL_SPEED = 1.0;
+      const TRACKPAD_SCROLL_SPEED = 0.06;
+      const os = isMacOS() ? TRACKPAD_SCROLL_SPEED : MOUSE_SCROLL_SPEED;
+
+      /* Windowsのマウスでwheelが1回発火したときの拡大率のステップ */
+      const ZOOM_RATE_DELTA = 0.1;
+      const DELTA = ZOOM_RATE_DELTA * os;
+
+      /* 拡大率の下限値と上限値 */
+      const MIN_ZOOM_RATE = 0.1;
+      const MAX_ZOOM_RATE = 3.0;
+
+      a += dir * DELTA;
+      a = Math.max(a, MIN_ZOOM_RATE);
+      a = Math.min(a, MAX_ZOOM_RATE);
+      e *= 1 - DELTA;
+      f *= 1 - DELTA;
+      this.transform = new DOMMatrix([a, 0, 0, a, e, f]);
     },
     async onMouseDown(e) {
       console.log("SvgBoard.onMouseDown"); // @DELETEME
@@ -145,14 +156,6 @@ export default {
         .filter(p => p.board === activeBoardId)
         .reverse();
     },
-    svgSize() {
-      const $el = document.getElementById("svg-table");
-      if (!$el) {
-        return { width: 0, height: 0 };
-      }
-      const { width, height } = $el.getBoundingClientRect();
-      return { width, height };
-    },
     crossHair() {
       const g = 10;
       const l = 200;
@@ -174,8 +177,7 @@ export default {
     const defaultTransform = `${m}`;
     return {
       debug: false,
-      transform: defaultTransform,
-      t: new Throttle(80)
+      transform: defaultTransform
     };
   }
 };

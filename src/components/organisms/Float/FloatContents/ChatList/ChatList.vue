@@ -52,9 +52,7 @@ import ChatLogViewer from "@/components/organisms/Float/FloatContents/ChatList/C
 import OnTypeIndicator from "@/components/organisms/Float/FloatContents/ChatList/OnTypeIndicator";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Peer, PeerMessage, TYPING } from "@/scripts/Peer";
-import { Throttle } from "@/scripts/Throttle";
 
-const throttle = new Throttle(1000);
 export default {
   name: "ChatList",
   components: {
