@@ -37,6 +37,11 @@
         ></svg-pawn>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
       </g>
+      <path
+        id="weathercock"
+        style="stroke: gray; fill: lightgray; fill-opacity: .8; transform: matrix(1,0,0,1,20,20);"
+        :d="weathercockPath"
+      ></path>
     </svg>
   </div>
 </template>
@@ -46,10 +51,23 @@ import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 import { isMacOS } from "@/scripts/helper";
 
+const W = 20;
+
 export default {
   name: "SvgBoard",
   components: { SvgPawn, SvgMap },
   methods: {
+    updateWeathercock(transform) {
+      const { e, f } = new DOMMatrix(transform);
+      const r = Math.sqrt(e * e + f * f);
+      const a = r === 0 ? 1 : e / r;
+      const b = r === 0 ? 0 : f / r;
+      const c = r === 0 ? 0 : -f / r;
+      const d = r === 0 ? 1 : e / r;
+
+      const $el = document.getElementById("weathercock");
+      $el.style.transform = `${new DOMMatrix([a, b, c, d, W, W])}`;
+    },
     onWheel(event) {
       const SVG_MARGIN = 40;
       const { clientX: _x, clientY: _y } = event;
@@ -89,7 +107,9 @@ export default {
       const e = x + -a * ix;
       const f = y + -a * iy;
 
-      this.transform = new DOMMatrix([a, 0, 0, a, e, f]);
+      const newTransform = new DOMMatrix([a, 0, 0, a, e, f]);
+      this.updateWeathercock(newTransform);
+      this.transform = newTransform;
     },
     async onMouseDown(e) {
       console.log("SvgBoard.onMouseDown"); // @DELETEME
@@ -121,6 +141,8 @@ export default {
       const onMove = e => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
+
+        this.updateWeathercock(t);
         $.style.transform = `${t}`;
       };
 
@@ -129,6 +151,7 @@ export default {
         console.log("SvgBoard.onMouseUp"); // @DELETEME
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
 
+        this.updateWeathercock(t);
         this.transform = `${t}`;
         $el.classList.remove("drag");
         await this.$store.dispatch("board/dragFinish");
@@ -180,7 +203,12 @@ export default {
       M 0,${-m}
       L 0,${-g}
       M ${-m},0
-      L ${-g}, 0`;
+      L ${-g},0`;
+    },
+    weathercockPath() {
+      const h = W / 2;
+      return `M -${W / 2},-${h / 2} l ${W},${h / 2} l -${W},${h / 2} l 0,-${W /
+        2} z`;
     }
   },
   data() {
@@ -189,7 +217,6 @@ export default {
     const m = new DOMMatrix([z, 0, 0, z, 0, 0]).inverse();
     const defaultTransform = `${m}`;
     return {
-      debug: false,
       transform: defaultTransform
     };
   }
