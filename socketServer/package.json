@@ -1,15 +1,19 @@
 {
-  "name":         "socketserver",
-  "version":      "1.0.0",
-  "description":  "express + socket.io",
-  "main":         "server.js",
-  "scripts":      {
-    "start": "node server.js"
+  "name":            "socketserver",
+  "version":         "1.0.0",
+  "description":     "express + socket.io",
+  "main":            "server.js",
+  "scripts":         {
+    "start": "node server.js",
+    "serve": "$(npm bin)/nodemon"
   },
-  "author":       "",
-  "license":      "ISC",
-  "dependencies": {
+  "author":          "",
+  "license":         "ISC",
+  "dependencies":    {
     "express":   "^4.17.1",
     "socket.io": "^3.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

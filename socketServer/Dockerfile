@@ -8,11 +8,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
-# /hiace/socketServer -> .usr/src/app
+# /hiace/socketServer -> /usr/src/app
 COPY . .
 
 # Listen port
 EXPOSE 3000
 
-# Run Node.js
-CMD [ "node", "server.js" ]
+# Run server.js
+CMD ["node", "server.js"]
