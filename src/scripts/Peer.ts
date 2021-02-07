@@ -16,7 +16,12 @@ export const PeerConfig = {
     { urls: "stun:stun1.l.google.com:19302" },
     { urls: "stun:stun2.l.google.com:19302" },
     { urls: "stun:stun3.l.google.com:19302" },
-    { urls: "stun:stun4.l.google.com:19302" }
+    { urls: "stun:stun4.l.google.com:19302" },
+    {
+      urls: "turn:35.200.40.145:80?transport=udp",
+      username: process.env.VUE_APP_TURN_CREDENTIAL_USER,
+      credential: process.env.VUE_APP_TURN_CREDENTIAL_PASSWORD
+    }
   ]
 };
 
