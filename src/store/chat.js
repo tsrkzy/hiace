@@ -13,12 +13,16 @@ export const chat = {
   },
   actions: {
     setChats({ commit }, { chats }) {
-      console.log("chat.setChats", chats); // @DELETEME
+      console.log("chat.setChats", chats);
       commit("setChats", { chats });
     },
     addChat({ commit }, { chat }) {
-      console.log("chat.addChat", chat); // @DELETEME
+      console.log("chat.addChat", chat);
       commit("addChat", { chat });
+    },
+    flush({ commit }) {
+      console.log("chat.flush");
+      commit("setChats", { chats: [] });
     }
   },
   getters: {

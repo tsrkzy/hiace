@@ -233,6 +233,8 @@ export class FSChat {
     listener.unsubscribe();
 
     unsubscribeMap.delete(roomId);
+
+    store.dispatch("chat/flush");
   }
 
   static async AddBulk(roomId: string) {
