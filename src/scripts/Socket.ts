@@ -5,8 +5,13 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+
 const uri = process.env.VUE_APP_WEB_SOCKET_URI ?? "ws://localhost:3000";
 export const ws = new WebSocket(uri);
+// export class Socket extends WebSocket{
+//
+// }
+
 
 ws.addEventListener("close", e => {
   console.log("close", e); // @DELETEME
