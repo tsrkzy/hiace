@@ -37,7 +37,6 @@ import { FSChat } from "@/collections/Chat";
 import { FSColumn } from "@/collections/Column";
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
-import { FSNegotiation } from "@/collections/Negotiation";
 import { FSNote } from "@/collections/Note";
 import { FSPawn } from "@/collections/Pawn";
 import { FSRoom } from "@/collections/Room";
@@ -105,7 +104,6 @@ export default {
     FSTable.RemoveListener(this.roomId);
     FSColumn.RemoveListener(this.roomId);
     FSNote.RemoveListener(this.roomId);
-    FSNegotiation.RemoveListener(this.roomId);
 
     Socket.Dispose();
     this.$store.dispatch("room/leaveRoom");
@@ -137,7 +135,6 @@ export default {
       FSTable.SetListener(roomId);
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
-      FSNegotiation.SetListener(roomId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });
@@ -229,9 +226,6 @@ export default {
       /* FS上にGoogle認証と対応するユーザを作成、または取得 */
       const user = await FSUser.Create();
       await this.$store.dispatch("auth/logInAs", { user });
-
-      // /* RTC接続の最小単位を作成 */
-      // await FSNegotiation.AddNode(roomId, user.id);
     }
   }
 };

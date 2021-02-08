@@ -36,7 +36,6 @@
         <span>入室済み</span>
       </div>
     </fieldset>
-    <rtc-status v-if="joined" />
     <fieldset>
       <legend>参加中のユーザ</legend>
       <ul>
@@ -70,12 +69,11 @@ import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import ColorPicker from "@/components/molecules/ColorPicker";
-import RtcStatus from "@/components/organisms/Float/FloatContents/RtcStatus";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "RoomManager",
-  components: { RtcStatus, ColorPicker, HaButton },
+  components: { ColorPicker, HaButton },
   props: {
     floatId: {
       type: Number,
