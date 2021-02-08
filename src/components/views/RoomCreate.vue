@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { FSNegotiation } from "@/collections/Negotiation";
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
@@ -36,6 +35,7 @@ import PoweredBy from "@/components/views/PoweredBy";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Notify } from "@/scripts/Notify";
 import { Smoke } from "@/scripts/Smoke";
+import { Socket } from "@/scripts/Socket";
 
 export default {
   name: "Room",
@@ -64,8 +64,12 @@ export default {
 
         await FSUser.JoinRoom(user.id, room.id);
 
+        /* WebSocket */
+        new Socket(room.id);
+
         /* RTC接続の最小単位を作成 */
-        await FSNegotiation.AddNode(room.id, user.id);
+        // await FSNegotiation.AddNode(room.id, user.id);
+
         await Smoke.off();
         await this.$router.push(`/r/${room.id}`);
       } catch (e) {

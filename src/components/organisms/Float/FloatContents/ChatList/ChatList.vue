@@ -51,7 +51,7 @@ import AliasBoard from "@/components/organisms/Float/FloatContents/ChatList/Alia
 import ChatLogViewer from "@/components/organisms/Float/FloatContents/ChatList/ChatLogViewer";
 import OnTypeIndicator from "@/components/organisms/Float/FloatContents/ChatList/OnTypeIndicator";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
-import { Peer, PeerMessage, TYPING } from "@/scripts/Peer";
+import { ON_TYPE, Socket } from "@/scripts/Socket";
 
 export default {
   name: "ChatList",
@@ -173,8 +173,7 @@ export default {
       const { characterId } = this.getSpeaker();
 
       const userName = this.$store.getters["auth/user"].name;
-      const m = new PeerMessage(TYPING, { userName, characterId });
-      Peer.Send(m.toJSON());
+      Socket.Send(ON_TYPE, { userName, characterId });
     }
   }
 };

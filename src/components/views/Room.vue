@@ -55,7 +55,7 @@ import WindowOpener from "@/components/organisms/Float/WindowOpener";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 import CharacterDetail from "@/components/views/CharacterDetail";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
-import "@/scripts/Socket";
+import { Socket } from "@/scripts/Socket";
 
 import { Smoke } from "@/scripts/Smoke";
 import { Notify } from "@/scripts/Notify";
@@ -106,6 +106,8 @@ export default {
     FSColumn.RemoveListener(this.roomId);
     FSNote.RemoveListener(this.roomId);
     FSNegotiation.RemoveListener(this.roomId);
+
+    Socket.Dispose();
     this.$store.dispatch("room/leaveRoom");
   },
   methods: {
@@ -136,8 +138,12 @@ export default {
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
       FSNegotiation.SetListener(roomId);
+
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });
+
+      /* WebSocket */
+      new Socket(roomId);
     },
     afterKicked() {},
     afterWaiting() {},
@@ -224,8 +230,8 @@ export default {
       const user = await FSUser.Create();
       await this.$store.dispatch("auth/logInAs", { user });
 
-      /* RTC接続の最小単位を作成 */
-      await FSNegotiation.AddNode(roomId, user.id);
+      // /* RTC接続の最小単位を作成 */
+      // await FSNegotiation.AddNode(roomId, user.id);
     }
   }
 };

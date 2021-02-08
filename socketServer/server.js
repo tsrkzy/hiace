@@ -6,7 +6,9 @@
  -----------------------------------------------------------------------------*/
 
 "use strict";
+
 const WS = require("ws");
+const { SocketClient, onMessage } = require("./SocketClient");
 
 const wss = new WS.Server({
   port: 3000,
@@ -29,10 +31,15 @@ const wss = new WS.Server({
 });
 
 wss.on("connection", ws => {
+  console.log("connection");
   ws.on("message", message => {
-    console.log(`received: ${message}`); // @DELETEME
-    ws.send(`you send: ${message}`);
+    onMessage(ws, message);
   });
 
-  ws.send("hello!");
+  ws.on("close", () => {
+    console.log("close"); // @DELETEME
+    SocketClient.Dispose(ws);
+  });
 });
+
+console.log("start socket-server");
