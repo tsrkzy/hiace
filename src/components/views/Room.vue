@@ -55,6 +55,7 @@ import WindowOpener from "@/components/organisms/Float/WindowOpener";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 import CharacterDetail from "@/components/views/CharacterDetail";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
+import "@/scripts/Socket";
 
 import { Smoke } from "@/scripts/Smoke";
 import { Notify } from "@/scripts/Notify";

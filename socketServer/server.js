@@ -6,16 +6,33 @@
  -----------------------------------------------------------------------------*/
 
 "use strict";
+const WS = require("ws");
 
-const express = require("express");
+const wss = new WS.Server({
+  port: 3000,
+  perMessageDeflate: {
+    zlibDeflateOptions: {
+      chunkSize: 1024,
+      memLevel: 7,
+      level: 3
+    },
+    zlibInflateOptions: {
+      chunkSize: 10 * 1024
+    },
+    clientNoContextTakeover: true,
+    serverNoContextTakeover: true,
+    serverMaxWindowBits: 10,
 
-const app = express();
-app.get("/", (req, res) => {
-  res.send("hello hehehe!");
+    concurrencyLimit: 10,
+    threshold: 1024
+  }
 });
 
-const PORT = 3000;
-const HOST = "0.0.0.0";
-app.listen(PORT, HOST);
+wss.on("connection", ws => {
+  ws.on("message", message => {
+    console.log(`received: ${message}`); // @DELETEME
+    ws.send(`you send: ${message}`);
+  });
 
-console.log(`express running at http:${HOST}:${PORT}`);
+  ws.send("hello!");
+});
