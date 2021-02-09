@@ -11,7 +11,7 @@ RUN npm install
 # /hiace/socketServer -> /usr/src/app
 COPY . .
 
-# Listen port
+# Listen port - http(s)3000(4000)
 EXPOSE 3000
 
 # Run server.js
