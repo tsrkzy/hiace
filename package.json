@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service build && firebase deploy",
+    "deploy": "NODE_ENV=production vue-cli-service build && firebase deploy",
     "build-watch": "vue-cli-service build --watch"
   },
   "dependencies": {

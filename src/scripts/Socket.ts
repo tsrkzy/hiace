@@ -17,7 +17,6 @@ export class Socket extends WebSocket {
   static Instance: Socket | null;
 
   constructor(roomId: string) {
-    // const uri = "ws://localhost:3000";
     const uri = process.env.VUE_APP_WEB_SOCKET_URI ?? "ws://localhost:3000";
     super(uri);
     this.id = generateId();
