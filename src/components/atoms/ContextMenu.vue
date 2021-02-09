@@ -6,8 +6,12 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="show" :style="overlayStyle" @click.stop="onClickOverlay">
-    <div :style="parentAccordionStyle">
+  <div
+    v-if="show"
+    class="contextmenu contextmenu-overlay"
+    @click.stop="onClickOverlay"
+  >
+    <div class="contextmenu contextmenu-parent__accordion">
       <div
         v-for="item in itemList"
         :key="item.value"
@@ -15,19 +19,22 @@
       >
         <div
           v-if="item.divider"
-          style="border-top: 1px lightgray dashed;"
+          class="contextmenu contextmenu-parent__divider"
         ></div>
-        <div v-else :style="parentItemStyle">
+        <div v-else class="contextmenu contextmenu-parent__item">
           {{ item.text
           }}{{ hasChild(item) ? (open === item.value ? " = " : " + ") : "" }}
         </div>
-        <div v-if="open === item.value" :style="childAccordionStyle">
+        <div
+          v-if="open === item.value"
+          class="contextmenu contextmenu-child__accordion"
+        >
           <div
             v-for="child in item.children"
             :key="child.value"
             @click.stop="onClickChild(child)"
           >
-            <div :style="childItemStyle">
+            <div class="contextmenu contextmenu-child__item">
               {{ child.text }}
             </div>
           </div>
@@ -71,52 +78,6 @@ export default {
       set(open) {
         this.$store.dispatch("contextmenu/open", { open });
       }
-    },
-    overlayStyle() {
-      return {
-        position: "fixed",
-        top: "0px",
-        left: "0px",
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0,0,0,0.2)"
-      };
-    },
-    parentAccordionStyle() {
-      return {
-        position: "absolute",
-        left: "25vh",
-        top: "25vh",
-        color: "dimgray",
-        boxShadow: "0.5px 0.5px 2px dimgray"
-      };
-    },
-    parentItemStyle() {
-      return {
-        cursor: "pointer",
-        width: "100px",
-        height: "2rem",
-        padding: ".5rem",
-        backgroundColor: "rgba(255,255,255,0.96)"
-      };
-    },
-    childAccordionStyle() {
-      return {
-        position: "absolute",
-        left: "100px",
-        top: "0px",
-        color: "dimgray",
-        boxShadow: "0.5px 0.5px 2px dimgray"
-      };
-    },
-    childItemStyle() {
-      return {
-        cursor: "pointer",
-        width: "100px",
-        height: "2rem",
-        padding: ".5rem",
-        backgroundColor: "rgba(255,255,255,0.96)"
-      };
     },
     itemList() {
       const itemList = [];
@@ -186,4 +147,52 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+div.contextmenu {
+  &.contextmenu-overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  &.contextmenu-parent__accordion {
+    position: absolute;
+    left: 50vh;
+    top: 50vh;
+    color: dimgray;
+    box-shadow: 0.5px 0.5px 2px dimgray;
+  }
+  &.contextmenu-parent__divider {
+    border-top: 1px lightgray dashed;
+  }
+  &.contextmenu-parent__item {
+    cursor: pointer;
+    width: 100px;
+    height: 2rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.96);
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+  &.contextmenu-child__accordion {
+    position: absolute;
+    left: 100px;
+    top: 0px;
+    color: dimgray;
+    box-shadow: 0.5px 0.5px 2px dimgray;
+  }
+  &.contextmenu-child__item {
+    cursor: pointer;
+    width: 100px;
+    height: 2rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.96);
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+}
+</style>
