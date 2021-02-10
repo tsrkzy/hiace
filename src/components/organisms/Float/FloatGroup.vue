@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="loggedIn" v-show="!nowDragging">
+  <div class="float-group__container" v-if="loggedIn" v-show="!nowDragging">
     <float
       v-for="f in floats"
       :key="f.id"
@@ -53,4 +53,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.float-group__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+</style>

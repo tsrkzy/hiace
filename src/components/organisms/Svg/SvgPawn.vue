@@ -53,6 +53,7 @@
 import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
+import { showContext } from "@/scripts/Contextmenu";
 
 export default {
   name: "SvgPawn",
@@ -149,13 +150,24 @@ export default {
   },
   methods: {
     onMouseDown(e) {
+      console.log("SvgPawn.onMouseDown");
       if (this.shadow) {
         return;
       }
-      console.log("SvgPawn.onMouseDown"); // @DELETEME
+
       e.stopPropagation();
+      e.preventDefault();
+
+      /* 右クリック、またはctrlと一緒に押下した場合はcontextMenuとして扱う */
+      const isContextmenu = e.button === 2 || e.ctrlKey;
+      if (isContextmenu) {
+        /* macの右クリックはここ */
+        this.showContext(e);
+        return false;
+      }
 
       this.moveStart(e);
+      return false;
     },
     async onMouseEnter(e) {
       if (this.shadow) {
@@ -175,6 +187,15 @@ export default {
         $p.removeEventListener("mouseleave", onLeave);
       };
       $p.addEventListener("mouseleave", onLeave, false);
+    },
+    onContextmenu(e) {
+      console.log("SvgPawn.onContextmenu");
+      /* windowsの右クリックはここに来る */
+      this.showContext(e);
+    },
+    showContext(e) {
+      console.log("SvgPawn.showContext");
+      showContext(e, "pawn", this.pawnId);
     },
     moveStart(e) {
       this.$store.dispatch("pawn/dragStart", { pawnId: this.pawnId });

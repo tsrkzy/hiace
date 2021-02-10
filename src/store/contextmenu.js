@@ -62,6 +62,9 @@ export const contextmenu = {
     },
     y(state) {
       return state.y;
+    },
+    itemGroups(state) {
+      return state.itemGroups;
     }
   }
 };

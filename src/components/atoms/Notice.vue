@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="position: fixed; top: 0px; right: 0px;">
+  <div style="position: absolute; top: 0px; right: 0px;">
     <div :key="notice.id" v-for="notice in notices" class="notice-bar">
       <span>{{ notice.text }}</span>
     </div>

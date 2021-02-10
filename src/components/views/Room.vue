@@ -6,18 +6,17 @@
   ----------------------------------------------------------------------------->
 <template>
   <div id="floor" class="floor_container">
-    <notice></notice>
-    <character-detail />
+    <notice class="z-5"></notice>
+    <character-detail class="z-4" />
     <div style="position: fixed; top: 0;left:0;">
-      <ha-button @click="$router.push('/')">←</ha-button>
       <window-opener v-if="authenticated && joined"></window-opener>
       <google-authorizer></google-authorizer>
       <ha-checkbox v-if="false" label="debug:" v-model="debug"></ha-checkbox>
       <debug-indicator v-if="debug"></debug-indicator>
     </div>
     <svg-board ref="svgTable" v-if="joined"></svg-board>
-    <float-group v-if="joined"></float-group>
-    <context-menu v-if="joined"></context-menu>
+    <context-menu class="z-2" v-if="joined"></context-menu>
+    <float-group class="z-1" v-if="joined"></float-group>
     <ha-button
       v-if="authenticated && !joined"
       :disabled="waitForGrant"

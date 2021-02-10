@@ -40,7 +40,6 @@ div.detail-text {
   opacity: 0.8;
   top: 5vh;
   left: 5vw;
-  z-index: 11;
   width: 40vw;
   padding: 1rem;
   &.flip {

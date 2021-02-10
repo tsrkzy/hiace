@@ -36,11 +36,6 @@
           </ha-button>
         </li>
       </ul>
-      <!-- <ul>-->
-      <!-- <li :key="p.id" v-for="p in item.pawns">-->
-      <!-- <ha-button @click="onClickDeletePawn(p.id)">コマを削除 </ha-button>-->
-      <!-- </li>-->
-      <!-- </ul>-->
     </fieldset>
   </div>
 </template>
@@ -128,9 +123,6 @@ export default {
       const args = { characterId };
       await this.$store.dispatch("float/create", { contentId, show, args });
     },
-    // async onClickDeleteCharacter(characterId) {
-    //   await FSCharacter.Delete(characterId);
-    // },
     async onClickAddPawn(characterId) {
       console.log("CharacterList.onClickAddPawn", characterId); // @DELETEME
       const userId = this.$store.getters["auth/user"].id;
