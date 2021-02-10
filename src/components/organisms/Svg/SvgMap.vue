@@ -37,6 +37,7 @@
 <script>
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
+import { showContext } from "@/scripts/Contextmenu";
 
 export default {
   name: "SvgMap",
@@ -99,17 +100,27 @@ export default {
     },
     async onMouseDown(e) {
       console.log("SvgMap.onMouseDown"); // @DELETEME
+
+      /* 右クリック、またはctrlと一緒に押下した場合はcontextMenuとして扱う */
+      const isContextmenu = e.button === 2 || e.ctrlKey;
+      if (isContextmenu) {
+        /* macの右クリックはここ */
+        e.preventDefault();
+        e.stopPropagation();
+        this.showContext(e);
+        return false;
+      }
+
       if (this.locked) {
         console.log(`map is locked. ${this.mapId}`); // @DELETEME
         return false;
       }
+      e.stopPropagation();
 
       await this.moveStart(e);
       return false;
     },
     async moveStart(e) {
-      e.stopPropagation();
-
       await this.$store.dispatch("map/dragStart", { mapId: this.mapId });
 
       const $m = document.getElementById(`map_${this.mapId}`);
@@ -154,6 +165,10 @@ export default {
       $m.addEventListener("mousemove", onMove, false);
       $m.addEventListener("mouseup", onMouseUp, false);
       $m.addEventListener("mouseleave", onMouseUp, false);
+    },
+    showContext(e) {
+      console.log("SvgMap.showContext");
+      showContext(e, "map", this.mapId);
     }
   },
   data() {

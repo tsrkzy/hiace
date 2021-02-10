@@ -22,7 +22,6 @@
         :id="`board_${activeBoard.id}`"
         v-if="activeBoard"
         :style="{ transform: `${transform}` }"
-        @contextmenu.prevent
       >
         <text x="0" y="-3" style="fill: black;">O</text>
         <path

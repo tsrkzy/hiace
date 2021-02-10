@@ -27,7 +27,6 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   const result: ContextMenuItem[] = [];
 
   /* コマを原点に戻す */
-
   const resetPosItem = new ContextMenuChildItem({
     value: `reset_pawn_${pawnId}`,
     text: `コマを原点に戻す`,
