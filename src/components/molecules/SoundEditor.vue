@@ -88,6 +88,11 @@ export default {
       this.loaded = true;
       $a.oncanplaythrough = null;
       console.log(`sound ready for play: ${this.soundId}`);
+
+      /* 接続時に既に再生中なら再生する */
+      if (this.roomMusic === this.sound?.id) {
+        this.play();
+      }
     };
 
     $a.onerror = e => {

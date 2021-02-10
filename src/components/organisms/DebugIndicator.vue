@@ -1,8 +1,5 @@
 <template>
-  <div
-    style="width:40vw;height: 90vh;overflow-y: scroll;background-color: lightgray;opacity: 0.7; "
-    @contextmenu="onContextmenu"
-  >
+  <div class="debug-indicator" @contextmenu="onContextmenu">
     <ha-button @click="onClickSmoke">smoke</ha-button>
     <ha-button @click="onClickContext">context</ha-button>
     <ha-button @click="onAddChats">add 500 chats</ha-button>
@@ -39,3 +36,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+div.debug-indicator {
+  width: 40vw;
+  height: 20vh;
+  overflow-y: scroll;
+  background-color: lightgray;
+  opacity: 0.7;
+}
+</style>
