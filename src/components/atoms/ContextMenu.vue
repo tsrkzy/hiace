@@ -11,7 +11,13 @@
     class="contextmenu contextmenu-overlay"
     @click.stop="onClickOverlay"
   >
-    <div class="contextmenu contextmenu-parent__accordion">
+    <div
+      class="contextmenu contextmenu-parent__accordion"
+      :style="{
+        top: `${y}px`,
+        left: `${x}px`
+      }"
+    >
       <div
         v-for="item in itemList"
         :key="item.value"
@@ -70,6 +76,12 @@ export default {
   computed: {
     show() {
       return this.$store.getters["contextmenu/show"];
+    },
+    x() {
+      return this.$store.getters["contextmenu/x"] ?? 0;
+    },
+    y() {
+      return this.$store.getters["contextmenu/y"] ?? 0;
     },
     open: {
       get() {
@@ -151,16 +163,16 @@ export default {
 div.contextmenu {
   &.contextmenu-overlay {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.2);
   }
   &.contextmenu-parent__accordion {
     position: absolute;
-    left: 50vh;
-    top: 50vh;
+    left: 0;
+    top: 0;
     color: dimgray;
     box-shadow: 0.5px 0.5px 2px dimgray;
   }

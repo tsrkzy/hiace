@@ -155,6 +155,28 @@ export default {
       console.log("SvgPawn.onMouseDown"); // @DELETEME
       e.stopPropagation();
 
+      this.moveStart(e);
+    },
+    async onMouseEnter(e) {
+      if (this.shadow) {
+        return;
+      }
+      e.stopPropagation();
+      const { pageX: x } = e;
+      const { innerWidth: w } = window;
+      const side = x < w / 2 ? "left" : "right";
+      const text = this.character.text;
+      await this.$store.dispatch("detail/setContent", { text, side });
+
+      const $p = document.getElementById(`pawn_${this.pawnId}`);
+      const onLeave = async e => {
+        e.stopPropagation();
+        await this.$store.dispatch("detail/off");
+        $p.removeEventListener("mouseleave", onLeave);
+      };
+      $p.addEventListener("mouseleave", onLeave, false);
+    },
+    moveStart(e) {
       this.$store.dispatch("pawn/dragStart", { pawnId: this.pawnId });
 
       const $p = document.getElementById(`pawn_${this.pawnId}`);
@@ -201,25 +223,6 @@ export default {
       $p.addEventListener("mouseleave", onMouseUp, false);
 
       return false;
-    },
-    async onMouseEnter(e) {
-      if (this.shadow) {
-        return;
-      }
-      e.stopPropagation();
-      const { pageX: x } = e;
-      const { innerWidth: w } = window;
-      const side = x < w / 2 ? "left" : "right";
-      const text = this.character.text;
-      await this.$store.dispatch("detail/setContent", { text, side });
-
-      const $p = document.getElementById(`pawn_${this.pawnId}`);
-      const onLeave = async e => {
-        e.stopPropagation();
-        await this.$store.dispatch("detail/off");
-        $p.removeEventListener("mouseleave", onLeave);
-      };
-      $p.addEventListener("mouseleave", onLeave, false);
     }
   },
   data() {

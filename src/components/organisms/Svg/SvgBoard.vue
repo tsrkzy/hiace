@@ -119,6 +119,10 @@ export default {
 
       e.stopPropagation();
 
+      await this.moveStart(e);
+      return false;
+    },
+    async moveStart(e) {
       await this.$store.dispatch("board/dragStart", {
         boardId: this.activeBoard.id
       });
@@ -163,8 +167,6 @@ export default {
       $el.addEventListener("mousemove", onMove, false);
       $el.addEventListener("mouseup", onMouseUp, false);
       $el.addEventListener("mouseleave", onMouseUp, false);
-
-      return false;
     }
   },
   computed: {

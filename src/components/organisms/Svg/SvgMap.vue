@@ -104,6 +104,10 @@ export default {
         return false;
       }
 
+      await this.moveStart(e);
+      return false;
+    },
+    async moveStart(e) {
       e.stopPropagation();
 
       await this.$store.dispatch("map/dragStart", { mapId: this.mapId });
@@ -150,8 +154,6 @@ export default {
       $m.addEventListener("mousemove", onMove, false);
       $m.addEventListener("mouseup", onMouseUp, false);
       $m.addEventListener("mouseleave", onMouseUp, false);
-
-      return false;
     }
   },
   data() {
