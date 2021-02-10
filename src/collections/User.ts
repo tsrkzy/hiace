@@ -6,13 +6,6 @@ import store from "@/store";
 import { getName } from "@/scripts/helper";
 import { SYSTEM_COLOR } from "@/collections/Chat";
 
-export interface TabIF {
-  user: string;
-  tabId: string;
-  room: string;
-  createdAt: number;
-}
-
 export class FSUser {
   static unsubscribeMap = new Map();
 

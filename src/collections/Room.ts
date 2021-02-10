@@ -1,6 +1,6 @@
 import { FSBoard } from "@/collections/Board";
 import { FSChat } from "@/collections/Chat";
-import { FSUser, TabIF } from "@/collections/User";
+import { FSUser } from "@/collections/User";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
