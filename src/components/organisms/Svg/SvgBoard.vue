@@ -49,6 +49,7 @@
 <script>
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
+import { showContext } from "@/scripts/Contextmenu";
 import { isMacOS } from "@/scripts/helper";
 
 const W = 20;
@@ -118,6 +119,15 @@ export default {
       }
 
       e.stopPropagation();
+      e.preventDefault();
+
+      /* 右クリック、またはctrlと一緒に押下した場合はcontextMenuとして扱う */
+      const isContextmenu = e.button === 2 || e.ctrlKey;
+      if (isContextmenu) {
+        /* macの右クリックはここ */
+        this.showContext(e);
+        return false;
+      }
 
       await this.moveStart(e);
       return false;
@@ -167,6 +177,10 @@ export default {
       $el.addEventListener("mousemove", onMove, false);
       $el.addEventListener("mouseup", onMouseUp, false);
       $el.addEventListener("mouseleave", onMouseUp, false);
+    },
+    showContext(e) {
+      console.log("SvgBoard.showContext");
+      showContext(e, "board", null);
     }
   },
   computed: {

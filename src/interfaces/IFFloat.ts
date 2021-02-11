@@ -261,4 +261,17 @@ export class IFFloat implements IIFloat {
       f.z = MAX_Z - i;
     }
   }
+
+  static Reset() {
+    const { instances = [] } = IFFloat;
+    for (let i = 0; i < instances.length; i++) {
+      const float = instances[i];
+      float.show = true;
+      float.x = 100 + i * 20;
+      float.y = 100 + i * 20;
+      float.z = i + 1;
+      float.w = 300;
+      float.h = 200;
+    }
+  }
 }

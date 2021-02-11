@@ -9,6 +9,7 @@ import store from "@/store";
 import { ContextMenuItem } from "@/scripts/Contextmenu/ContextMenu";
 import { pawnItems } from "@/scripts/Contextmenu/menu/pawnMenu";
 import { mapItems } from "@/scripts/Contextmenu/menu/mapMenu";
+import { boardItems } from "@/scripts/Contextmenu/menu/boardItems";
 
 export const showContext = (
   e: MouseEvent,
@@ -29,7 +30,8 @@ function getItemGroups(entity: string, entityId: string) {
   let result: ContextMenuItem[] = [];
   const PAWN = "pawn";
   const MAP = "map";
-  const entityList = [PAWN, MAP];
+  const BOARD = "board";
+  const entityList = [PAWN, MAP, BOARD];
   if (entityList.indexOf(entity) === -1) {
     throw new Error(`invalid entity: ${entity}`);
   }
@@ -41,6 +43,10 @@ function getItemGroups(entity: string, entityId: string) {
     }
     case MAP: {
       result = result.concat(mapItems(entityId));
+      break;
+    }
+    case BOARD: {
+      result = result.concat(boardItems());
       break;
     }
   }

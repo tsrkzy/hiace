@@ -110,6 +110,10 @@ export const float = {
       state.floats = result;
 
       IFFloat.Export();
+    },
+    reset(state) {
+      IFFloat.Reset();
+      IFFloat.Export();
     }
   },
   actions: {
@@ -145,6 +149,9 @@ export const float = {
     close({ commit }, { id }) {
       commit("setShow", { id, show: false });
       commit("sink", { id });
+    },
+    reset({ commit }) {
+      commit("reset");
     }
   },
   getters: {
