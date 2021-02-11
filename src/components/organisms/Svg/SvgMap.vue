@@ -20,6 +20,12 @@
       stroke="red"
       fill="transparent"
     ></rect>
+    <rect
+      :width="width"
+      :height="height"
+      stroke="transparent"
+      fill="dimgray"
+    ></rect>
     <image :width="width" :height="height" :href="href"></image>
     <!-- ドラッグ中の当たり判定拡張 -->
     <rect
@@ -38,6 +44,7 @@
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import { showContext } from "@/scripts/Contextmenu";
+import { Notify } from "@/scripts/Notify";
 
 export default {
   name: "SvgMap",
@@ -56,9 +63,13 @@ export default {
     this.transform = transform;
 
     if (!image) {
-      throw new Error(`map has no image: ${this.mapId}`);
+      Notify.Log("マップに画像が割り当てられていません");
+      this.imageId = null;
+      this.width = 400;
+      this.height = 400;
+    } else {
+      await this.fetchImage(image);
     }
-    await this.fetchImage(image);
 
     this.loaded = true;
   },
@@ -88,8 +99,8 @@ export default {
     }
   },
   methods: {
-    async fetchImage(image) {
-      this.imageId = image;
+    async fetchImage(imageId) {
+      this.imageId = imageId;
       const { url, width, height } = await FSImage.GetById({
         id: this.imageId
       });
@@ -192,6 +203,18 @@ export default {
     transformStore(transform) {
       console.log("update store.map.transform", transform); // @DELETEME
       this.transform = transform;
+    },
+    image(image) {
+      if (!!image.id) {
+        this.fetchImage(image.id)
+          .then(() => {
+            this.loaded = true;
+          })
+          .catch(e => {
+            console.error(e);
+            Notify.Log("マップ画像の読み込みに失敗");
+          });
+      }
     }
   }
 };
