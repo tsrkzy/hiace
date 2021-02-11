@@ -27,13 +27,13 @@
       }"
     >
       <alias
-        class="alias"
         :key="c.characterId"
         v-for="c in characterItems"
         :character-id="c.characterId"
         :alias-id="c.aliasId"
         :chat-position="c.chatPosition"
         :image="c.image"
+        :top="c.top"
       />
     </div>
   </div>
@@ -75,7 +75,10 @@ export default {
 
       const { chats = [], characters = [], aliases = [] } = this;
 
-      const counter = new Map();
+      const cMap = new Map();
+      const pMap = new Map();
+
+      /* 最終チャットの立ち絵が最も手前にくるので逆順でシーク */
       for (let i = 0; i < chats.length; i++) {
         const chat = chats[chats.length - (i + 1)];
         const { character: characterId } = chat;
@@ -86,16 +89,21 @@ export default {
         }
 
         /* 直近で発言した10名のcharacterのみ */
-        if (counter.has(characterId)) {
+        if (cMap.has(characterId)) {
           continue;
         }
-        counter.set(characterId, true);
+        cMap.set(characterId, true);
 
         for (let j = 0; j < characters.length; j++) {
           const { id, activeAlias, chatPosition } = characters[j];
 
           if (characterId !== id) {
             continue;
+          }
+
+          const top = !pMap.has(chatPosition);
+          if (top) {
+            pMap.set(chatPosition, characterId);
           }
 
           for (let k = 0; k < aliases.length; k++) {
@@ -105,7 +113,8 @@ export default {
                 characterId,
                 aliasId: a.id,
                 chatPosition,
-                image: a.image
+                image: a.image,
+                top
               });
               break;
             }
@@ -113,7 +122,7 @@ export default {
         }
 
         /* 直近で発言した10名のcharacterのみ */
-        if (Array.from(counter.keys()).length >= 10) {
+        if (Array.from(cMap.keys()).length >= 10) {
           break;
         }
       }

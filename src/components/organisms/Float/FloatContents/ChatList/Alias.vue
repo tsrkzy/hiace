@@ -15,6 +15,7 @@
       left: `calc(${chatPosition} * 90% / 12)`,
       height: `${height}px`
     }"
+    :class="{ alias: true, top }"
   >
     <span class="billboard">{{ billBoard }}</span>
     <div :class="`balloon-holder alias-${characterId}`">
@@ -40,7 +41,8 @@ export default {
     characterId: { type: String, require: true },
     aliasId: { type: String, require: true },
     chatPosition: { type: Number, require: true },
-    image: { type: String, require: true }
+    image: { type: String, require: true },
+    top: { type: Boolean, default: false }
   },
   async created() {
     await this.reloadImage(this.image);
@@ -80,40 +82,47 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-div.balloon-holder {
-  position: absolute;
-  top: -30px;
-  left: 10px;
-  opacity: 0;
-  &.dimming {
-    animation: dim 800ms linear both;
+div.alias {
+  opacity: 0.5;
+  &.top {
+    opacity: 1;
   }
-}
-img.alias {
-  max-height: 100%;
-}
-span.billboard {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: linear-gradient(-0.25turn, dimgray, black);
-  opacity: 0.7;
-  color: white;
-  width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-svg {
-  width: 100px;
-  height: 30px;
-  ellipse.mumble {
-    stroke: dimgray;
-    fill: white;
-    &.dot {
-      stroke: none;
-      fill: dimgray;
+
+  div.balloon-holder {
+    position: absolute;
+    top: -30px;
+    left: 10px;
+    opacity: 0;
+    &.dimming {
+      animation: dim 800ms linear both;
     }
+
+    svg {
+      width: 100px;
+      height: 30px;
+      ellipse.mumble {
+        stroke: dimgray;
+        fill: white;
+        &.dot {
+          stroke: none;
+          fill: dimgray;
+        }
+      }
+    }
+  }
+  img.alias {
+    max-height: 100%;
+  }
+  span.billboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(-0.25turn, dimgray, black);
+    color: white;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
