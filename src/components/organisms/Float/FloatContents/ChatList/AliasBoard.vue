@@ -19,6 +19,7 @@
     @mouseenter="onEnter($event)"
   >
     <div
+      class="alias-board__alias_container"
       :style="{
         height: `${height}px`,
         width: '100%',
@@ -26,6 +27,7 @@
       }"
     >
       <alias
+        class="alias"
         :key="c.characterId"
         v-for="c in characterItems"
         :character-id="c.characterId"
@@ -65,26 +67,58 @@ export default {
     aliases() {
       return this.$store.getters["alias/info"];
     },
+    chats() {
+      return this.$store.getters["chat/info"];
+    },
     characterItems() {
       const items = [];
 
-      const { characters = [], aliases = [] } = this;
-      for (let i = 0; i < characters.length; i++) {
-        const { id: characterId, activeAlias, chatPosition } = characters[i];
-        for (let j = 0; j < aliases.length; j++) {
-          const a = aliases[j];
-          if (activeAlias === a.id) {
-            items.push({
-              characterId,
-              aliasId: a.id,
-              chatPosition,
-              image: a.image
-            });
-            break;
+      const { chats = [], characters = [], aliases = [] } = this;
+
+      const counter = new Map();
+      for (let i = 0; i < chats.length; i++) {
+        const chat = chats[chats.length - (i + 1)];
+        const { character: characterId } = chat;
+
+        /* characterを持たないchatは無視 */
+        if (!characterId) {
+          continue;
+        }
+
+        /* 直近で発言した10名のcharacterのみ */
+        if (counter.has(characterId)) {
+          continue;
+        }
+        counter.set(characterId, true);
+
+        for (let j = 0; j < characters.length; j++) {
+          const { id, activeAlias, chatPosition } = characters[j];
+
+          if (characterId !== id) {
+            continue;
           }
+
+          for (let k = 0; k < aliases.length; k++) {
+            const a = aliases[k];
+            if (activeAlias === a.id) {
+              items.push({
+                characterId,
+                aliasId: a.id,
+                chatPosition,
+                image: a.image
+              });
+              break;
+            }
+          }
+        }
+
+        /* 直近で発言した10名のcharacterのみ */
+        if (Array.from(counter.keys()).length >= 10) {
+          break;
         }
       }
 
+      items.reverse();
       return items;
     }
   }
