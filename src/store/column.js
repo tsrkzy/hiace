@@ -17,6 +17,14 @@ export const column = {
   getters: {
     info(state) {
       return state.columns;
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.columns.length; i++) {
+        const id = state.columns[i].id;
+        nameMap[id] = state.columns[i].label;
+      }
+      return nameMap;
     }
   }
 };

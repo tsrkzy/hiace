@@ -30,10 +30,11 @@ export default {
   background-color: dimgray;
   color: ghostwhite;
   margin: 0.5rem;
-  padding: 0 1rem;
-  max-width: 150px;
-  word-break: break-word;
-  white-space: normal;
+  padding: 0.5rem;
+  max-width: 30vw;
+  max-height: 30px;
+  white-space: nowrap;
+  word-break: keep-all;
   border-radius: 2px;
 }
 </style>

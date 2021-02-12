@@ -14,3 +14,12 @@ export function touch(targetName: string, entity: string, entityId: string) {
   const message = `${userName}が${targetName}(${entityName})を操作しました`;
   Socket.Send(TOUCH, { message });
 }
+
+export function touchTable(characterId: string, columnId: string, value: any) {
+  const userName = store.getters["auth/whoAmI"];
+  const characterName = getName("character", characterId);
+  const columnName = getName("column", columnId);
+  const valueStr = `${value}`;
+  const message = `${userName}が「${characterName}」の「${columnName}」を「${valueStr}」に変更しました`;
+  Socket.Send(TOUCH, { message });
+}

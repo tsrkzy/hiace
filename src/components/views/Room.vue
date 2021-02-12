@@ -81,7 +81,7 @@ export default {
       await this.$nextTick();
     } catch (e) {
       console.error(e);
-      Notify.Log("Room.initialize() failed.");
+      Notify.Log("ルームの初期化に失敗");
     }
     await Smoke.off();
   },

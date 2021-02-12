@@ -142,7 +142,7 @@ function popBalloon(characterId: string) {
 }
 
 function onOpenHandler(e: Event) {
-  Notify.Log("WebSocket-Connection.established()");
+  Notify.Log("Websocket接続確立");
   joinRoom();
   function joinRoom() {
     const id = Socket.Instance?.id;

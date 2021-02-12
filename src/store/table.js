@@ -20,6 +20,14 @@ export const table = {
     info(state) {
       return state.tables;
     },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.tables.length; i++) {
+        const id = state.tables[i].id;
+        nameMap[id] = state.tables[i].name;
+      }
+      return nameMap;
+    },
     matrixList(state, getters, rootState, rootGetters) {
       const { tables = [] } = state;
       const columns = rootGetters["column/info"];

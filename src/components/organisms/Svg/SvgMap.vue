@@ -63,7 +63,7 @@ export default {
     this.transform = transform;
 
     if (!image) {
-      Notify.Log("マップに画像が割り当てられていません");
+      Notify.Log("マップに画像が割り当てられていない");
       this.imageId = null;
       this.width = 400;
       this.height = 400;

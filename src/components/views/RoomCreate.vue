@@ -74,7 +74,7 @@ export default {
         await this.$router.push(`/r/${room.id}`);
       } catch (e) {
         console.error(e);
-        Notify.Log("Room.create() failed");
+        Notify.Log("ルームの作成に失敗");
       }
       await Smoke.off();
     }

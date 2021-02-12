@@ -109,6 +109,7 @@ import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import { Notify } from "@/scripts/Notify";
+import { touchTable } from "@/scripts/touch";
 
 export default {
   name: "TableView",
@@ -173,6 +174,8 @@ export default {
 
         // dataMap のkey:characterId な valueを変更
         await FSColumn.UpdateDataMap(columnId, [{ characterId, value }]);
+
+        touchTable(characterId, columnId, value);
       } catch (error) {
         /* ロールバック */
         e.currentTarget.value = cell.value;

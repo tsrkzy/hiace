@@ -120,7 +120,7 @@ export default {
       });
       this.clear();
       this.issueList = await this.fetchIssues();
-      Notify.Log("Issue.create()");
+      Notify.Log("GithubにIssueを作成");
     },
     clear() {
       this.title = "";
