@@ -4,6 +4,7 @@
       <span v-if="label">{{ label }}</span>
     </slot>
     <select
+      :value="value"
       :disabled="disabled"
       @change="$emit('change', $event.currentTarget.value)"
     >

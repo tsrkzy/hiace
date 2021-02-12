@@ -267,7 +267,7 @@ export default {
   },
   watch: {
     tableItems(tableItems) {
-      if (tableItems.indexOf(this.tableId) === -1) {
+      if (tableItems.findIndex(t => t.value === this.tableId) === -1) {
         this.tableId = null;
       }
     }
