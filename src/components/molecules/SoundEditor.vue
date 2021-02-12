@@ -64,6 +64,7 @@ import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
+import { touch } from "@/scripts/touch";
 
 /**
  * @return {HTMLAudioElement | null}
@@ -135,9 +136,11 @@ export default {
   methods: {
     async onClickBroadcast() {
       await FSRoom.SoundBroadcast(this.room.id, this.soundId);
+      touch("音源", "sound", this.soundId);
     },
     async onClickStopBroadcast() {
       await FSRoom.SoundStop(this.room.id);
+      touch("音源", "sound", this.soundId);
     },
     async onClickDelete() {
       await FSSound.Delete(this.soundId);

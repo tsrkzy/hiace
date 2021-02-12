@@ -38,6 +38,14 @@ export const sound = {
   getters: {
     info(state) {
       return state.sounds;
+    },
+    nameMap(state) {
+      const nameMap = {};
+      for (let i = 0; i < state.sounds.length; i++) {
+        const id = state.sounds[i].id;
+        nameMap[id] = state.sounds[i].name;
+      }
+      return nameMap;
     }
   }
 };

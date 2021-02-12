@@ -27,6 +27,7 @@ export class Notify {
       store.dispatch("notice/delete", { id });
     }, 4000);
   }
+
   constructor(text, level) {
     this.id = Notify.GetId();
     this.text = text;
