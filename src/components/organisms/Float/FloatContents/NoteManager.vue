@@ -42,6 +42,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
+import { touch } from "@/scripts/touch";
 export default {
   name: "NoteManager",
   components: { HaButton, HaInputForm, HaTextarea, HaSelect },
@@ -82,6 +83,7 @@ export default {
     async onChangeText(text) {
       this.text = text;
       await FSNote.Update(this.noteId, { text });
+      touch("共有メモ", "note", this.noteId);
     }
   },
   computed: {
