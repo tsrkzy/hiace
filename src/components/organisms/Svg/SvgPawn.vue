@@ -54,6 +54,7 @@ import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
 import { showContext } from "@/scripts/Contextmenu";
+import { touch } from "@/scripts/touch";
 
 export default {
   name: "SvgPawn",
@@ -237,6 +238,7 @@ export default {
         const transform = `${t}`;
         this.transform = transform;
         await FSPawn.Update(this.pawnId, { transform });
+        touch("コマ", "character", this.pawn.character);
       };
 
       $p.addEventListener("mousemove", onMove, false);

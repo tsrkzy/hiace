@@ -9,6 +9,7 @@ import { Notify } from "@/scripts/Notify";
 
 export const JOIN_ROOM = "JOIN_ROOM";
 export const ON_TYPE = "ON_TYPE";
+export const TOUCH = "TOUCH";
 
 export class Socket extends WebSocket {
   id: string;
@@ -39,7 +40,7 @@ export class Socket extends WebSocket {
       throw new Error("empty value");
     }
 
-    if ([JOIN_ROOM, ON_TYPE].indexOf(key) === -1) {
+    if ([JOIN_ROOM, ON_TYPE, TOUCH].indexOf(key) === -1) {
       throw new Error(`invalid key: ${key}`);
     }
 
@@ -112,6 +113,12 @@ function onMessageHandler(e: MessageEvent) {
     case ON_TYPE: {
       const { characterId /*, userName*/ } = value;
       popBalloon(characterId);
+      break;
+    }
+    case TOUCH: {
+      const { message } = value;
+      Notify.Log(message);
+      break;
     }
   }
 }

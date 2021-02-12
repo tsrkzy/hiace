@@ -104,6 +104,7 @@ class SocketClient {
 const DEBUG = "DEBUG";
 const JOIN_ROOM = "JOIN_ROOM";
 const ON_TYPE = "ON_TYPE";
+const TOUCH = "TOUCH";
 
 function onMessage(ws, jsonLike) {
   const data = _parseMessage(jsonLike);
@@ -125,6 +126,12 @@ function onMessage(ws, jsonLike) {
     case ON_TYPE: {
       const socket = SocketClient.GetByWs(ws);
       const packet = new Packet(ON_TYPE, data.value);
+      socket.broadcast(packet);
+      break;
+    }
+    case TOUCH: {
+      const socket = SocketClient.GetByWs(ws);
+      const packet = new Packet(TOUCH, data.value);
       socket.broadcast(packet);
       break;
     }
