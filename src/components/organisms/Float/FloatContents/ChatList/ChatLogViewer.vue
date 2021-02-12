@@ -20,7 +20,7 @@
       <ha-button v-if="!read" @click="onClickPageZero"
         >トップへ{{ read ? "" : " (未読あり)" }}</ha-button
       >
-      <ha-button v-if="!onBottom" @click="onClickScroll">↓</ha-button>
+      <ha-button v-if="!onBottom" @click="onClickScrollToBottom">↓</ha-button>
     </div>
     <div
       :id="`chat-list--scroll-parent__${floatId}`"
@@ -54,19 +54,17 @@ export default {
   },
   methods: {
     scroll({ top = false, rough = false } = {}) {
-      const $parent = document.getElementById(
-        `chat-list--scroll-parent__${this.floatId}`
-      );
+      const f = this.floatId;
+      const $parent = document.getElementById(`chat-list--scroll-parent__${f}`);
       $parent.scrollTo({
         top: top ? 0 : $parent.scrollHeight - $parent.clientHeight,
         left: 0,
         behavior: rough ? "auto" : "smooth"
       });
     },
-    add(chatList = [], { flush = false, eliminate = false }) {
-      console.log("ChatLogViewer.add", chatList); // @DELETEME
+    add(chatList = [], { flush = false } = {}) {
       const channel = this.channelId;
-      this.$refs.p.exAdd(chatList, { channel, flush, eliminate });
+      this.$refs.p.exAdd(chatList, { channel, flush });
     },
     onScroll(e) {
       const $parent = e.currentTarget;
@@ -91,7 +89,7 @@ export default {
       this.read = true;
       this.onBottom = true;
     },
-    onClickScroll() {
+    onClickScrollToBottom() {
       this.scroll();
     },
     onChangePage(pageIndexStr) {
@@ -118,6 +116,9 @@ export default {
   },
   data() {
     return {
+      /* コンポーネントのグローバルに配置すると、
+       * 複数インスタンス化した場合に衝突するのでdataにぶら下げているだけ
+       * VueはMapをreactiveにしない */
       chatMap: new Map(),
       /* スクロール位置が最下部からSCROLL_MARGIN px以内 */
       onBottom: true,
@@ -133,6 +134,15 @@ export default {
     chatList() {
       return this.$store.getters["chat/info"];
     },
+    characters() {
+      return this.$store.getters["character/info"];
+    },
+    /**
+     * ページング用のオブジェクトの配列を返す
+     * chatId: ページングオブジェクトの中で最も新しいchat
+     * value: 何ページ目か。先頭は0ページ目
+     * text: ページング用セレクトボックスのラベル
+     */
     pagingItems() {
       const chatList = this.chatList;
       const items = [];
@@ -151,31 +161,45 @@ export default {
     }
   },
   watch: {
-    async chatList(newList) {
-      console.log("ChatLogViewer.watch->chatList"); // @DELETEME
+    chatList(newList) {
+      /* chatMapを利用し、追加されたchatをaddedとして切り出す */
       const added = [];
       for (let i = 0; i < newList.length; i++) {
         const chat = newList[i];
         if (this.chatMap.has(chat.id)) {
           continue;
         }
-        /* 追加差分 */
         added.push(chat);
         this.chatMap.set(chat.id, chat.id);
       }
 
       if (this.page !== 0) {
+        /* 先頭のページにいない場合は、既読フラグを折る */
         this.read = false;
       } else {
-        const eliminate = this.onBottom ? LPP : 0;
-        this.add(added.slice(-LPP), { eliminate });
+        /* 先頭のページにいる場合は追加でレンダリングし、最下部を読んでいる場合は自動でスクロール */
+        this.add(added.slice(-LPP));
         if (this.onBottom) {
           this.read = true;
           this.scroll();
         }
       }
     },
+    characters(_, old) {
+      if (old.length !== 0) {
+        /* 初回にキャラクタが読み込まれたら再描画する
+         * それ以外のタイミングは無視
+         * @SEE https://github.com/tsrkzy/hiace/issues/25 */
+        return false;
+      }
+      const { chatList = [] } = this;
+      this.add(chatList.slice(-LPP), { flush: true });
+      this.pageSelect = "0";
+      this.page = 0;
+      this.scroll();
+    },
     channelId() {
+      /* 閲覧中のチャンネル(props.channelId)を変更したら、先頭のページに戻る */
       this.onChangePage("0");
     }
   }

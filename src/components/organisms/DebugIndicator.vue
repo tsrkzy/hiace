@@ -16,6 +16,11 @@ export default {
   components: {
     HaButton
   },
+  computed: {
+    room() {
+      return this.$store.getters["room/info"];
+    }
+  },
   methods: {
     async onClickSmoke() {
       await Smoke.on();

@@ -13,6 +13,7 @@
 
 <script>
 import { createChatRowDom } from "@/components/organisms/Float/FloatContents/ChatList/ChatRowHelper";
+const LPP = 200;
 
 export default {
   name: "ChatRow",
@@ -22,12 +23,16 @@ export default {
   computed: {},
   methods: {
     $ol() {
-      return document.getElementById(
-        `chat-list--scroll-content__${this.floatId}`
-      );
+      const f = this.floatId;
+      return document.getElementById(`chat-list--scroll-content__${f}`);
     },
-    exAdd(chatList = [], { channel = null, flush = false, eliminate = 0 }) {
-      console.log("PChatRow.exAdd", channel, flush); // @DELETEME
+    /**
+     * チャットログのDOMを追加(または洗い替え)でレンダリングし、ページごとの最大表示数に合わせて古い順にDOMを削除する。
+     * @param chatList
+     * @param channel {?string}
+     * @param flush {?boolean} 描画済みのチャットログを削除してから描画を行う
+     */
+    exAdd(chatList = [], { channel = null, flush = false }) {
       const $ol = this.$ol();
       if (flush) {
         $ol.innerHTML = "";
@@ -41,8 +46,8 @@ export default {
       }
       $ol.append(...$liList);
 
-      if (eliminate && $ol.childElementCount > eliminate) {
-        const deleteCount = $ol.childElementCount - eliminate;
+      if ($ol.childElementCount > LPP) {
+        const deleteCount = $ol.childElementCount - LPP;
         for (let i = 0; i < deleteCount; i++) {
           $ol.removeChild($ol.firstChild);
         }
