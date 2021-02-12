@@ -27,7 +27,7 @@
       :class="{ onBottom, scrollParent: true }"
       @scroll="onScroll"
     >
-      <chat-row ref="p" :float-id="floatId"></chat-row>
+      <chat-row ref="p" :float-id="floatId" :font-size="fontSize"></chat-row>
     </div>
   </div>
 </template>
@@ -44,7 +44,8 @@ export default {
   components: { HaButton, HaSelect, ChatRow },
   props: {
     floatId: { type: Number, require: true },
-    channelId: { type: String, require: true }
+    channelId: { type: String, require: true },
+    fontSize: { type: Number, default: 0 }
   },
   mounted() {
     const chatList = this.chatList;

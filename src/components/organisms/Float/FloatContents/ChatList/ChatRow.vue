@@ -6,7 +6,10 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <ol :id="`chat-list--scroll-content__${floatId}`">
+  <ol
+    :id="`chat-list--scroll-content__${floatId}`"
+    :class="`chat-list__font-size-${fontSize}`"
+  >
     <!-- パフォーマンス対策のためPureJSで制御 -->
   </ol>
 </template>
@@ -18,7 +21,8 @@ const LPP = 200;
 export default {
   name: "ChatRow",
   props: {
-    floatId: { type: Number, require: true }
+    floatId: { type: Number, require: true },
+    fontSize: { type: Number, default: 0 }
   },
   computed: {},
   methods: {

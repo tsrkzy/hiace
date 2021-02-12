@@ -3,7 +3,7 @@ html {
     overflow: hidden;
   }
 
-  font-size: 8px;
+  font-size: 10px;
   font-family: Roboto, monospace;
 
   div.container > button {
@@ -100,6 +100,28 @@ html {
 
   label.note-manager__textarea-wrapper > textarea {
     width: calc(100% - 8px);
+  }
+
+  ol {
+    &.chat-list__font-size-0 {
+      font-size: 1.0rem;
+    }
+
+    &.chat-list__font-size-1 {
+      font-size: 1.1rem;
+    }
+
+    &.chat-list__font-size-2 {
+      font-size: 1.2rem;
+    }
+
+    &.chat-list__font-size-3 {
+      font-size: 1.4rem;
+    }
+
+    &.chat-list__font-size-4 {
+      font-size: 1.8rem;
+    }
   }
 }
 

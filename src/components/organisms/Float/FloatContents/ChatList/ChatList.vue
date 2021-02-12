@@ -8,7 +8,11 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <alias-board></alias-board>
-    <chat-log-viewer :float-id="floatId" :channel-id="channelId" />
+    <chat-log-viewer
+      :float-id="floatId"
+      :channel-id="channelId"
+      :font-size="fontSize"
+    />
     <fieldset>
       <legend>チャット設定</legend>
       <div style="white-space: nowrap;">
@@ -23,6 +27,9 @@
           @change="onChangeDice"
         >
         </ha-select>
+        <span>文字サイズ: +{{ fontSize }}</span>
+        <ha-button @click="onClickLarge">+</ha-button>
+        <ha-button @click="onClickSmall">-</ha-button>
       </div>
       <div>
         <ha-textarea
@@ -44,6 +51,7 @@ import { FSChannel, SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
+import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
@@ -56,6 +64,7 @@ import { ON_TYPE, Socket } from "@/scripts/Socket";
 export default {
   name: "ChatList",
   components: {
+    HaButton,
     OnTypeIndicator,
     AliasBoard,
     ChatLogViewer,
@@ -115,7 +124,8 @@ export default {
       innerDiceSystem: null,
       chatText: "",
       characterId: null,
-      aliasId: null
+      aliasId: null,
+      fontSize: 0
     };
   },
   methods: {
@@ -174,6 +184,12 @@ export default {
 
       const userName = this.$store.getters["auth/user"].name;
       Socket.Send(ON_TYPE, { userName, characterId });
+    },
+    onClickLarge() {
+      if (this.fontSize < 4) this.fontSize++;
+    },
+    onClickSmall() {
+      if (this.fontSize > 0) this.fontSize--;
     }
   }
 };
