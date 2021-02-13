@@ -9,7 +9,12 @@
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <p>
       <a href="https://github.com/tsrkzy/hiace/issues" target="_blank"
-        >Issue/Github(外部ページ)</a
+        >不具合・要望一覧(Github/Issue)</a
+      >
+    </p>
+    <p>
+      <a href="https://github.com/tsrkzy/hiace/wiki" target="_blank"
+        >使い方(Wiki/Github)</a
       >
     </p>
     <fieldset>
