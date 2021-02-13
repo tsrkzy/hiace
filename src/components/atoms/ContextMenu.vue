@@ -35,7 +35,7 @@
           <div
             v-for="child in item.children"
             :key="child.value"
-            @click.stop="onClickItem(item)"
+            @click.stop="onClickItem(child)"
           >
             <div class="contextmenu contextmenu-child__item">
               {{ child.text }}
@@ -48,6 +48,11 @@
 </template>
 
 <script>
+import {
+  ContextMenuChildItem,
+  ContextMenuParentItem
+} from "@/scripts/Contextmenu/ContextMenu";
+
 export default {
   name: "ContextMenu",
   methods: {
@@ -55,9 +60,13 @@ export default {
       this.$store.dispatch("contextmenu/off");
     },
     async onClickItem(item) {
-      console.log("ContextMenu.onClickItem", typeof item);
-      await item.callback();
-      await this.$store.dispatch("contextmenu/off");
+      if (item instanceof ContextMenuChildItem) {
+        await item.callback();
+        await this.$store.dispatch("contextmenu/off");
+      } else if (item instanceof ContextMenuParentItem) {
+        await item.callback();
+        await this.$store.dispatch("contextmenu/open", { open: item.value });
+      }
     },
     hasChild(item) {
       return item.children && item.children.length > 0;
@@ -113,7 +122,7 @@ div.contextmenu {
   }
   &.contextmenu-parent__item {
     cursor: pointer;
-    width: 180px;
+    width: 150px;
     height: 2rem;
     padding: 0.5rem;
     background-color: rgba(255, 255, 255, 0.96);
@@ -126,14 +135,14 @@ div.contextmenu {
   }
   &.contextmenu-child__accordion {
     position: absolute;
-    left: 180px;
+    left: 150px;
     top: 0px;
     color: dimgray;
     box-shadow: 0.5px 0.5px 2px dimgray;
   }
   &.contextmenu-child__item {
     cursor: pointer;
-    width: 180px;
+    width: 150px;
     height: 2rem;
     padding: 0.5rem;
     background-color: rgba(255, 255, 255, 0.96);

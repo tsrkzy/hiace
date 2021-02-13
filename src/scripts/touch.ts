@@ -23,3 +23,9 @@ export function touchTable(characterId: string, columnId: string, value: any) {
   const message = `${userName}が「${characterName}」の「${columnName}」を「${valueStr}」に変更しました`;
   Socket.Send(TOUCH, { message });
 }
+
+export function touchFree(msg: string) {
+  const userName = store.getters["auth/whoAmI"];
+  const message = `${userName}が${msg}`;
+  Socket.Send(TOUCH, { message });
+}

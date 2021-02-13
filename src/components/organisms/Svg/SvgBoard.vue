@@ -35,7 +35,14 @@
           :key="`shadow_${p.id}`"
           :pawn-id="p.id"
         ></svg-pawn>
+        <svg-dice
+          shadow
+          v-for="d in dices"
+          :key="`shadow_${d.id}`"
+          :dice-id="d.id"
+        ></svg-dice>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
+        <svg-dice v-for="d in dices" :key="d.id" :dice-id="d.id"></svg-dice>
       </g>
       <path
         id="weathercock"
@@ -47,6 +54,7 @@
 </template>
 
 <script>
+import SvgDice from "@/components/organisms/Svg/SvgDice";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
 import { showContext } from "@/scripts/Contextmenu";
@@ -56,7 +64,7 @@ const W = 20;
 
 export default {
   name: "SvgBoard",
-  components: { SvgPawn, SvgMap },
+  components: { SvgDice, SvgPawn, SvgMap },
   methods: {
     updateWeathercock(transform) {
       const { e, f } = new DOMMatrix(transform);
@@ -206,6 +214,18 @@ export default {
        * filterで新しい配列を作った後にreverse()する */
       return this.$store.getters["pawn/info"]
         .filter(p => p.board === activeBoardId)
+        .reverse();
+    },
+    dices() {
+      const activeBoardId = this.activeBoard?.id;
+      if (!activeBoardId) {
+        return [];
+      }
+      /* store.dice/info はupdatedAtの降順
+       * HTMLの兄弟要素の重ね順は後勝ちなので、
+       * filterで新しい配列を作った後にreverse()する */
+      return this.$store.getters["dice/info"]
+        .filter(d => d.board === activeBoardId)
         .reverse();
     },
     crossHair() {

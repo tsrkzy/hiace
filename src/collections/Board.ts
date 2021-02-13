@@ -3,6 +3,7 @@ import { FSPawn } from "@/collections/Pawn";
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { FSDice } from "@/collections/Dice";
 
 export class FSBoard {
   static unsubscribeMap = new Map();
@@ -52,6 +53,9 @@ export class FSBoard {
 
     /* 紐づくPawnも削除 */
     await FSPawn.DeleteByBoard(boardId);
+
+    /* 紐づくDiceも削除 */
+    await FSDice.DeleteByBoard(boardId);
 
     return docRef;
   }

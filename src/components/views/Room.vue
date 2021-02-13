@@ -34,6 +34,7 @@ import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSColumn } from "@/collections/Column";
+import { FSDice } from "@/collections/Dice";
 import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import { FSNote } from "@/collections/Note";
@@ -100,6 +101,7 @@ export default {
     FSBoard.RemoveListener(this.roomId);
     FSMap.RemoveListener(this.roomId);
     FSPawn.RemoveListener(this.roomId);
+    FSDice.RemoveListener(this.roomId);
     FSTable.RemoveListener(this.roomId);
     FSColumn.RemoveListener(this.roomId);
     FSNote.RemoveListener(this.roomId);
@@ -131,6 +133,7 @@ export default {
       FSBoard.SetListener(roomId);
       FSMap.SetListener(roomId);
       FSPawn.SetListener(roomId);
+      FSDice.SetListener(roomId);
       FSTable.SetListener(roomId);
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
@@ -199,7 +202,7 @@ export default {
   data() {
     return {
       roomId: null,
-      debug: false
+      debug: true
     };
   },
   watch: {

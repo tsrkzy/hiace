@@ -10,8 +10,8 @@
     <ha-button v-if="false" @click="onClickAddBoard">ボードを追加</ha-button>
     <fieldset v-for="b in boardItems" :key="b.id">
       <legend>ボード: {{ b.id }}</legend>
-      <!--      <ha-button @click="onClickDeleteBoard(b.id)">削除</ha-button>-->
       <ha-button @click="onClickAddMap(b.id)">マップを追加</ha-button>
+      <ha-button @click="onClickAddDice(b.id)">ダイスを追加</ha-button>
       <fieldset v-for="m in b.maps" :key="m.id">
         <legend>マップ: {{ m.id }}{{ m.image ? "" : "(no image)" }}</legend>
         <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
@@ -28,6 +28,7 @@
 
 <script>
 import { FSBoard } from "@/collections/Board";
+import { FSDice } from "@/collections/Dice";
 import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import { FSUser } from "@/collections/User";
@@ -62,6 +63,11 @@ export default {
       const roomId = this.$store.getters["room/info"].id;
       const imageId = null;
       await FSMap.Create({ userId, roomId, boardId, imageId });
+    },
+    async onClickAddDice(boardId) {
+      const roomId = this.$store.getters["room/info"].id;
+      const userId = this.$store.getters["auth/user"].id;
+      await FSDice.Create({ boardId, roomId, userId });
     },
     async onClickDeleteMap(mapId) {
       await FSMap.Delete(mapId);

@@ -37,7 +37,8 @@ export default {
       const m = !!this.$store.getters["map/dragging"];
       const p = !!this.$store.getters["pawn/dragging"];
       const b = !!this.$store.getters["board/dragging"];
-      return m || p || b;
+      const d = !!this.$store.getters["dice/dragging"];
+      return m || p || b || d;
     },
     loggedIn() {
       return this.$store.getters["auth/loggedIn"];

@@ -3,11 +3,14 @@
     <ha-button @click="onClickSmoke">smoke</ha-button>
     <ha-button @click="onClickContext">context</ha-button>
     <ha-button @click="onAddChats">add 500 chats</ha-button>
+    <ha-button @click="onAddDice">ADD DICE</ha-button>
+    <pre>{{ dices }}</pre>
   </div>
 </template>
 
 <script>
 import { FSChat } from "@/collections/Chat";
+import { FSDice } from "@/collections/Dice";
 import HaButton from "@/components/atoms/HaButton";
 import { Smoke } from "@/scripts/Smoke";
 
@@ -19,9 +22,22 @@ export default {
   computed: {
     room() {
       return this.$store.getters["room/info"];
+    },
+    dices() {
+      return this.$store.getters["dice/info"];
     }
   },
   methods: {
+    async onAddDice() {
+      const boardId = this.$store.getters["room/activeBoard"];
+      const roomId = this.$store.getters["room/info"].id;
+      const userId = this.$store.getters["auth/user"].id;
+      await FSDice.Create({
+        boardId,
+        roomId,
+        userId
+      });
+    },
     async onClickSmoke() {
       await Smoke.on();
       const cancelId = window.setTimeout(async () => {

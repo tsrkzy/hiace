@@ -132,6 +132,12 @@ export default {
       return this?.pawn.transform || new DOMMatrix();
     },
     shadowHandler() {
+      /* マップの位置変更中は非表示 */
+      const m = this.$store.getters["map/dragging"];
+      if (m) {
+        return false;
+      }
+
       const drag = this.$store.getters["pawn/dragging"];
       const { shadow, pawnId } = this;
 

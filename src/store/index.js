@@ -13,6 +13,7 @@ import { alias } from "@/store/alias";
 import { board } from "@/store/board";
 import { map } from "@/store/map";
 import { pawn } from "@/store/pawn";
+import { dice } from "@/store/dice";
 import { table } from "@/store/table";
 import { column } from "@/store/column";
 import { note } from "@/store/note";
@@ -41,6 +42,7 @@ export default new Vuex.Store({
     board,
     map,
     pawn,
+    dice,
     table,
     column,
     note,
