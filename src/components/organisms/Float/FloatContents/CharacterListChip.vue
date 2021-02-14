@@ -7,7 +7,7 @@
 
 <template>
   <fieldset>
-    <legend>{{ characterName || "ERROR" }}</legend>
+    <legend>{{ `${characterName}(${owner})` || "ERROR" }}</legend>
     <ha-button @click="onClickEditCharacter">編集 </ha-button>
     <ha-button @click="onClickAddPawn">コマ追加 </ha-button>
     <ha-select
@@ -16,6 +16,12 @@
       :items="aliasItems"
       @change="onAliasChange"
     ></ha-select>
+    <ha-button v-if="own && archived" @click="onArchiveTo(false)"
+      >控室から出す</ha-button
+    >
+    <ha-button v-if="own && !archived" @click="onArchiveTo(true)"
+      >控室に入れる</ha-button
+    >
   </fieldset>
 </template>
 <script>
@@ -24,6 +30,7 @@ import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
+import { getName } from "@/scripts/helper";
 
 export default {
   name: "CharacterListChip",
@@ -44,6 +51,12 @@ export default {
     activeAlias() {
       return this.character?.activeAlias;
     },
+    archived() {
+      return !!this.character?.archived;
+    },
+    owner() {
+      return getName("user", this.character?.owner);
+    },
     aliases() {
       return this.$store.getters["alias/info"].filter(
         a => a.character === this.characterId
@@ -53,6 +66,11 @@ export default {
       return this.$store.getters["alias/info"]
         .filter(a => a.character === this.characterId)
         .map(a => ({ text: a.name, value: a.id }));
+    },
+    own() {
+      const owner = this.character?.owner;
+      const myUserId = this.$store.getters["auth/user"].id;
+      return owner === myUserId;
     }
   },
   methods: {
@@ -85,6 +103,9 @@ export default {
     async onAliasChange(aliasId) {
       const { characterId } = this;
       await FSCharacter.SetActiveAlias(characterId, aliasId);
+    },
+    async onArchiveTo(archived) {
+      await FSCharacter.Update(this.characterId, { archived: !!archived });
     }
   }
 };

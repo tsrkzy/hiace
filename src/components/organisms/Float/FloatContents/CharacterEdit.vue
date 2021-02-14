@@ -27,7 +27,7 @@
           class="character-edit__textarea-wrapper"
           rows="3"
           :value="character['text']"
-          placeholder="キャラクター説明"
+          placeholder="キャラクタ説明"
           @change="onCharacterTextInput"
           resizeable
         ></ha-textarea>
@@ -52,6 +52,14 @@
           <option disabled :value="null">select pawn size</option>
         </ha-select>
       </div>
+      <ha-checkbox
+        v-if="showDelete"
+        v-model="showDeleteButton"
+        label="キャラクタを完全に削除する"
+      ></ha-checkbox>
+      <ha-button v-if="showDeleteButton" @click="onDeleteCharacter"
+        >キャラクタを削除</ha-button
+      >
     </fieldset>
     <fieldset>
       <legend>立ち絵</legend>
@@ -126,6 +134,7 @@ import HaTextarea from "@/components/atoms/HaTextarea";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import ColorPicker from "@/components/molecules/ColorPicker";
 import ScrollSummary from "@/components/atoms/ScrollSummary";
+import { Smoke } from "@/scripts/Smoke";
 
 const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
@@ -157,7 +166,8 @@ export default {
       chatPosition: "0",
       pawnSizeStr: "1",
       showOnInitiative: false,
-      chatColor: SYSTEM_COLOR
+      chatColor: SYSTEM_COLOR,
+      showDeleteButton: false
     };
   },
   async created() {
@@ -278,6 +288,13 @@ export default {
       this.pawnSizeStr = `${pawnSize}`;
       this.showOnInitiative = showOnInitiative;
       this.chatColor = color;
+    },
+    async onDeleteCharacter() {
+      const characterId = this.characterId;
+      await Smoke.on();
+      await FSCharacter.Delete(characterId);
+      await this.$store.dispatch("float/close", { id: this.floatId });
+      await Smoke.off();
     }
   },
   computed: {
@@ -314,6 +331,11 @@ export default {
         .fill(0)
         .map((_, i) => i + 1);
       return size.map(i => ({ value: `${i}`, text: `x${i}` }));
+    },
+    showDelete() {
+      const owner = this.character?.owner;
+      const myUserId = this.$store.getters["auth/user"].id;
+      return owner === myUserId;
     }
   }
 };

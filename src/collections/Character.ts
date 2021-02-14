@@ -47,6 +47,7 @@ export class FSCharacter {
     chatPosition: number;
     pawnSize: number;
     color: string;
+    archived: boolean;
   }) {
     const {
       owner,
@@ -58,7 +59,8 @@ export class FSCharacter {
       showOnInitiative = true,
       chatPosition = 0,
       pawnSize = 1,
-      color = SYSTEM_COLOR
+      color = SYSTEM_COLOR,
+      archived = false
     } = params;
 
     if (!owner) {
@@ -78,7 +80,8 @@ export class FSCharacter {
       showOnInitiative,
       chatPosition,
       pawnSize,
-      color
+      color,
+      archived
     };
 
     const db = firebase.firestore();

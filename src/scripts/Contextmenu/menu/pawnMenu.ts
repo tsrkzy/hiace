@@ -35,10 +35,10 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     }
   });
 
-  /* キャラクター編集 */
+  /* キャラクタ編集 */
   const editCharacterItem = new ContextMenuChildItem({
     value: `edit_pawn_character_${pawn.character}`,
-    text: `キャラクターの編集(${characterName})`,
+    text: `キャラクタの編集(${characterName})`,
     callback: async () => {
       const contentId = CHARACTER_EDIT;
       const show = true;
