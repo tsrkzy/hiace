@@ -102,7 +102,7 @@ export class FSDice {
   }
 
   static SetListener(roomId: string) {
-    console.warn("Dice.SetListener", roomId); // @DELETEME
+    console.log("Dice.SetListener", roomId); // @DELETEME
     FSDice.RemoveListener();
 
     const db = firebase.firestore();
@@ -110,12 +110,10 @@ export class FSDice {
       .collection("dice")
       .where("room", "==", roomId)
       .orderBy("updatedAt", "desc");
-    // const docsRef = db.collection("dice").where("room", "==", roomId);
 
     const unsubscribe = docsRef.onSnapshot(querySnapshot => {
       const dices: any[] = [];
       querySnapshot.forEach(doc => {
-        console.warn(">>>>>>>>"); // @DELETEME
         const dice = doc.data();
         dice.id = doc.id;
         dices.push(dice);

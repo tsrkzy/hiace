@@ -12,31 +12,11 @@
       v-model="characterName"
       placeholder="キャラクタ名"
     ></ha-input-form>
-    <fieldset :key="item.id" v-for="item in characters">
-      <legend>{{ item.character.name }}</legend>
-      <ha-button @click="onClickEditCharacter(item.character.id)"
-        >編集
-      </ha-button>
-      <ha-button @click="onClickAddPawn(item.character.id)"
-        >コマ追加
-      </ha-button>
-      <ul>
-        <li :key="a.id" v-for="a in item.aliases">
-          <span
-            >{{ a.id === item.character.activeAlias ? "[設定中]" : ""
-            }}{{ a.name
-            }}<span style="color: red;">{{
-              a.image ? "" : "(立ち絵が設定されていません)"
-            }}</span></span
-          >
-          <ha-button
-            v-if="a.id !== item.character.activeAlias"
-            @click="onClickActivateAlias(item.character.id, a.id)"
-            >立絵切り替え
-          </ha-button>
-        </li>
-      </ul>
-    </fieldset>
+    <CharacterListChip
+      :key="characterId"
+      v-for="characterId in characterIdList"
+      :character-id="characterId"
+    />
   </div>
 </template>
 
@@ -45,60 +25,19 @@ import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
-import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
+import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterListChip";
 
 export default {
   name: "CharacterList",
-  components: { HaInputForm, HaButton },
+  components: { CharacterListChip, HaInputForm, HaButton },
   data() {
     return {
       characterName: ""
     };
   },
   computed: {
-    characters() {
-      const characters = this.$store.getters["character/info"];
-      const pawns = this.$store.getters["pawn/info"];
-      const aliases = this.$store.getters["alias/info"];
-
-      const items = [];
-      for (let i = 0; i < characters.length; i++) {
-        const c = characters[i];
-        const item = {
-          id: c.id,
-          character: c,
-          aliases: [],
-          pawns: []
-        };
-
-        for (let j = 0; j < aliases.length; j++) {
-          const a = aliases[j];
-          const { character: characterId } = a;
-          if (c.id === characterId) {
-            item.aliases.push(a);
-          }
-        }
-
-        for (let j = 0; j < pawns.length; j++) {
-          const p = pawns[j];
-          const { character: characterId } = p;
-          if (c.id === characterId) {
-            item.pawns.push(p);
-          }
-        }
-
-        items.push(item);
-      }
-      return items;
-    },
-    characterItems() {
-      const characters = this.$store.getters["character/info"];
-      return characters
-        .map(c => ({
-          value: c.id,
-          text: c.name
-        }))
-        .sort((a, b) => (a.text.toUpperCase() - b.text.toUpperCase() ? 1 : -1));
+    characterIdList() {
+      return this.$store.getters["character/info"].map(c => c.id);
     }
   },
   methods: {
@@ -117,31 +56,6 @@ export default {
       };
       await FSCharacter.Create(c);
     },
-    async onClickEditCharacter(characterId) {
-      const contentId = CHARACTER_EDIT;
-      const show = true;
-      const args = { characterId };
-      await this.$store.dispatch("float/create", { contentId, show, args });
-    },
-    async onClickAddPawn(characterId) {
-      console.log("CharacterList.onClickAddPawn", characterId); // @DELETEME
-      const userId = this.$store.getters["auth/user"].id;
-      const roomId = this.$store.getters["room/info"].id;
-      const boardId = this.$store.getters["room/activeBoard"];
-      const { activeAlias } = this.$store.getters["character/info"].find(
-        c => c.id === characterId
-      );
-      const { image } = this.$store.getters["alias/info"].find(
-        a => a.id === activeAlias
-      );
-      await FSPawn.Create({
-        userId,
-        roomId,
-        boardId,
-        imageId: image,
-        characterId
-      });
-    },
     async onClickActivateAlias(characterId, aliasId) {
       await FSCharacter.SetActiveAlias(characterId, aliasId);
     },
@@ -151,5 +65,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>
