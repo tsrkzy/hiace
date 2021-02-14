@@ -15,10 +15,23 @@
       >キャラクタ追加</ha-button
     >
     <ha-button @click="onClickCreateMyCharacter(true)">控室に追加</ha-button>
+    <h5>自分のキャラクタ</h5>
     <CharacterListChip
-      :key="characterId"
-      v-for="characterId in characterIdList"
-      :character-id="characterId"
+      :key="c.id"
+      v-for="c in categolizedCharacters.own"
+      :character-id="c.id"
+    />
+    <h5>自分の控室</h5>
+    <CharacterListChip
+      :key="c.id"
+      v-for="c in categolizedCharacters.ownArchived"
+      :character-id="c.id"
+    />
+    <h5>その他</h5>
+    <CharacterListChip
+      :key="c.id"
+      v-for="c in categolizedCharacters.others"
+      :character-id="c.id"
     />
   </div>
 </template>
@@ -39,21 +52,24 @@ export default {
     };
   },
   computed: {
-    characterIdList() {
+    categolizedCharacters() {
+      const result = { own: [], ownArchived: [], others: [] };
       const userId = this.$store.getters["auth/user"].id;
-      return this.$store.getters["character/info"]
-        .slice()
-        .filter(c => !(c.owner !== userId && c.archived))
-        .sort((a, b) => {
-          return a.owner === userId && b.owner === userId
-            ? a.archived
-              ? 1
-              : -1
-            : b.owner === userId
-            ? 1
-            : -1;
-        })
-        .map(c => c.id);
+      const characters = this.$store.getters["character/info"];
+
+      for (let i = 0; i < characters.length; i++) {
+        const c = characters[i];
+        if (c.owner !== userId) {
+          result.others.push(c);
+        } else if (c.archived) {
+          result.ownArchived.push(c);
+        } else {
+          result.own.push(c);
+        }
+      }
+
+      result.others.sort((a, b) => (a.owner > b.owner ? 1 : -1));
+      return result;
     }
   },
   methods: {
