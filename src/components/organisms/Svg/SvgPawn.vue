@@ -29,6 +29,18 @@
     <!-- ビルボード -->
     <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
     <text x="0" y="8" fill="white">{{ character.name }}</text>
+    <!-- 控室 -->
+    <path
+      v-if="archived"
+      :d="`M 0,0 L ${pawnSize},${pawnSize} z`"
+      stroke="black"
+    ></path>
+    <path
+      v-if="archived"
+      :d="`M 0,${pawnSize} L ${pawnSize},0 z`"
+      stroke="black"
+    ></path>
+    <!-- 画像 -->
     <image
       v-if="!shadow"
       preserveAspectRatio="xMidYMid meet"
@@ -103,6 +115,9 @@ export default {
         this.$store.getters["character/info"].find(c => c.id === characterId) ||
         {}
       );
+    },
+    archived() {
+      return !!this.character?.archived;
     },
     pawnSize() {
       const size = this.character?.pawnSize ?? 1;
