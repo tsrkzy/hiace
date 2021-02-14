@@ -8,7 +8,10 @@
 <template>
   <g>
     <rect
+      :stroke="color"
+      stroke-width="1"
       :fill="color"
+      fill-opacity=".8"
       x="0"
       y="0"
       :rx="diceSize / 6"
@@ -18,6 +21,7 @@
     ></rect>
     <path
       stroke="white"
+      stroke-opacity=".95"
       stroke-width="10"
       stroke-linecap="round"
       stroke-linejoin="round"
