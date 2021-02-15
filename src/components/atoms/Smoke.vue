@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div v-if="show" :style="style"></div>
+  <div v-if="show" class="smoke"></div>
 </template>
 
 <script>
@@ -15,20 +15,20 @@ export default {
   computed: {
     show() {
       return this.$store.getters["smoke/show"];
-    },
-    style() {
-      return {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0,0,0,0.2)",
-        backdropFilter: "blur(0.5px)"
-      };
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+div.smoke {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(0.5px);
+  z-index: 1;
+}
+</style>

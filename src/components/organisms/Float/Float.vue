@@ -9,7 +9,7 @@
   <div v-if="float.show" :style="floatStyle" class="float bs-5">
     <div
       :id="`move_handle_${floatId}`"
-      class="move-handle z-10"
+      :class="`move-handle z-10 ${top ? 'top' : ''}`"
       @mousedown="onHandleMouseDown($event)"
     >
       <span class="float-handle__title">{{ float.contentTitle }}</span>
@@ -37,12 +37,7 @@
     >
       <div v-if="scaleSw" class="scale-hit-box__sw"></div>
     </div>
-    <div
-      v-if="!top"
-      @click="onClickShroud"
-      class="float-content__shroud"
-      style=""
-    ></div>
+    <div v-if="!top" @click="onClickShroud" class="float-content__shroud"></div>
     <div class="content-slot z-1">
       <slot name="content">failed to load content: {{ floatId }}</slot>
     </div>
@@ -280,6 +275,9 @@ button.button__close {
   height: $handle-height;
   background-color: lightgray;
   cursor: move;
+  &.top {
+    background-color: lightsteelblue;
+  }
 }
 
 .move-hit-box {

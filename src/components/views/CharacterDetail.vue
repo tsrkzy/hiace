@@ -7,7 +7,7 @@
 
 <template>
   <div
-    v-if="show"
+    v-if="show && lines"
     :class="`bs-5 detail-text __hide_on_drag ${leftSide ? 'flip' : ''}`"
   >
     <pre>{{ lines }}</pre>
@@ -37,9 +37,12 @@ div.detail-text {
   border: 1px solid black;
   background-color: cornsilk;
   color: black;
-  opacity: 0.8;
+  opacity: 0.9;
   top: 5vh;
   left: 5vw;
+  max-height: 90vh;
+  max-width: 45vw;
+  overflow: hidden;
   width: 40vw;
   padding: 1rem;
   &.flip {

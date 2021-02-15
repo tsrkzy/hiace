@@ -42,6 +42,7 @@ import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterListChip";
+import { Smoke } from "@/scripts/Smoke";
 
 export default {
   name: "CharacterList",
@@ -87,7 +88,10 @@ export default {
         imageId: null,
         archived
       };
+      await Smoke.on();
       await FSCharacter.Create(c);
+      await Smoke.off();
+      this.characterName = "";
     },
     async onClickActivateAlias(characterId, aliasId) {
       await FSCharacter.SetActiveAlias(characterId, aliasId);
