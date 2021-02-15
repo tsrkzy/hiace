@@ -9,6 +9,7 @@ import { ring } from "@/scripts/DoorBell";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";
+export const DICE_SECRET = "DICE_SECRET";
 export const SYSTEM = "SYSTEM";
 
 export const SYSTEM_COLOR = "#000000";
@@ -119,6 +120,60 @@ export class FSChat {
     return await FSChat.Create(c);
   }
 
+  static async OpenSecret(chatId: string) {
+    const userId = store.getters["auth/user"].id;
+
+    const db = firebase.firestore();
+    const {
+      room,
+      channel,
+      owner,
+      character,
+      alias,
+      value: _value,
+      color
+    } = store.getters["chat/info"].find((c: { id: string }) => c.id === chatId);
+    if (owner !== userId) {
+      throw new Error("only owner can change secret status");
+    }
+
+    const { command, result, text } = _value;
+    const type = DICE;
+
+    /* 元のシークレットダイスのチャットを公開済みに変更 */
+    const batch = db.batch();
+    const secretRef = db.collection("chat").doc(chatId);
+    batch.update(secretRef, {
+      value: {
+        command,
+        result,
+        text: `シークレットダイス(公開済): ${text}`,
+        secret: false
+      }
+    });
+
+    const c = {
+      room,
+      channel,
+      owner,
+      character,
+      alias,
+      type,
+      color,
+      value: {
+        command,
+        result,
+        text: `公開: ${text}`,
+        secret: false
+      },
+      timestamp: Date.now()
+    };
+    /* 新しく同じ内容でDICEを再投稿 */
+    const chatRef = db.collection("chat").doc();
+    batch.set(chatRef, c);
+    await batch.commit();
+  }
+
   static async Chat(
     params: {
       room: string;
@@ -161,7 +216,7 @@ export class FSChat {
         throw new Error("game system or command is empty");
       }
 
-      const { ok, result, reason } = await callDiceBot(system, text);
+      const { ok, result, reason, secret } = await callDiceBot(system, text);
       if (!ok) {
         throw new Error(`diceBot: ${reason}`);
       }
@@ -169,7 +224,8 @@ export class FSChat {
       /* diceBotが正常にコマンドを実行した */
       params.value.command = text;
       params.value.result = result;
-      type = DICE;
+      params.value.secret = secret;
+      type = secret ? DICE_SECRET : DICE;
     } catch (e) {
       /* diceBotがコマンドとして解釈しなかった */
       console.warn(e);
@@ -263,10 +319,8 @@ export class FSChat {
   }
 }
 
-// function onSendingChat(chatType: string, chatValue?: any) {}
-
 function onReceiveChat(chat: firebase.firestore.DocumentData) {
-  if (chat.type === DICE) {
+  if (chat.type === DICE || chat.type === DICE_SECRET) {
     diceroll();
     return;
   }

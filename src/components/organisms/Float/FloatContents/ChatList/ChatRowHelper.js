@@ -5,8 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { DICE, SYSTEM } from "@/collections/Chat";
+import { DICE, DICE_SECRET, FSChat, SYSTEM } from "@/collections/Chat";
 import { getName } from "@/scripts/helper";
+import store from "@/store";
 
 function createChannelSpan(c, activeChannel) {
   const $ch = document.createElement("SPAN");
@@ -40,11 +41,39 @@ function createTextSpan(c) {
   const $t = document.createElement("SPAN");
   const {
     type,
-    value: { result = "", text = "" }
+    value: { result = "", text = "", secret = false }
   } = c;
 
+  /* 公開前のシークレットダイスの場合 */
+  if (type === DICE_SECRET) {
+    if (secret) {
+      const $tt = document.createElement("SPAN");
+      $tt.textContent = "シークレットダイス";
+      const userId = store.getters["auth/user"].id;
+      const $a = document.createElement("BUTTON");
+      $a.classList.add("ha");
+      $a.textContent = "公開";
+      $a.style.color = "dimgray";
+      if (c.owner !== userId) {
+        $a.setAttribute("disabled", "disabled");
+        $a.style.color = "lightgray";
+      } else {
+        $a.addEventListener("click", openSecret, false);
+        async function openSecret() {
+          await FSChat.OpenSecret(c.id);
+          $a.removeEventListener("click", openSecret);
+          $a.remove();
+        }
+      }
+      $t.append($tt);
+      $t.append($a);
+
+      return $t;
+    }
+  }
+
   const textList = [...text.split(/\n/)];
-  if (type === DICE) {
+  if (type === DICE || type === DICE_SECRET) {
     textList.push(result);
   }
 
