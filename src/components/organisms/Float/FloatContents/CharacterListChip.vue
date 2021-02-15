@@ -9,7 +9,8 @@
   <fieldset>
     <legend>{{ `${characterName}(${owner})` || "ERROR" }}</legend>
     <ha-button @click="onClickEditCharacter">編集 </ha-button>
-    <ha-button @click="onClickAddPawn">コマ追加 </ha-button>
+    <ha-button v-if="hasAlias" @click="onClickAddPawn">コマ追加</ha-button>
+    <ha-button v-else disabled>立ち絵なし</ha-button>
     <ha-select
       mandatory
       :value="activeAlias"
@@ -66,6 +67,10 @@ export default {
       return this.$store.getters["alias/info"]
         .filter(a => a.character === this.characterId)
         .map(a => ({ text: a.name, value: a.id }));
+    },
+    hasAlias() {
+      const active = this.aliases.find(a => a.id === this.activeAlias);
+      return !!active?.image;
     },
     own() {
       const owner = this.character?.owner;

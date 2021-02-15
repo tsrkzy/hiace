@@ -39,7 +39,14 @@
         <tbody>
           <tr v-for="(row, i) in rows" :key="i">
             <td v-for="(cell, j) in filterWithHeader(row.cells)" :key="j">
-              <label>
+              <div
+                v-if="cell.dataType === 'ref'"
+                style="background-color: ghostwhite;user-select: none;"
+                @contextmenu="onContextmenu($event, cell.characterId)"
+              >
+                {{ cell.value }}
+              </div>
+              <label v-else>
                 <input
                   v-if="cell.dataType === 'int'"
                   type="number"
@@ -56,7 +63,7 @@
                   @change="onInputCell($event, cell)"
                 />
                 <input
-                  v-else
+                  v-else-if="cell.dataType === 'str'"
                   type="text"
                   :value="cell.value"
                   :disabled="cell.columnId.startsWith('system')"
@@ -78,6 +85,7 @@ import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import TableConfig from "@/components/organisms/Float/FloatContents/TableConfig";
+import { showContext } from "@/scripts/Contextmenu";
 import { Notify } from "@/scripts/Notify";
 import { touchTable } from "@/scripts/touch";
 
@@ -171,6 +179,15 @@ export default {
         .filter(c => c.system || c.show)
         .map(c => c.id);
       return cells.filter(c => dispColumnIdList.indexOf(c.columnId) !== -1);
+    },
+    onContextmenu(e, characterId) {
+      console.log("TableView.onContextmenu", e, characterId);
+      this.showContext(e, characterId);
+    },
+    showContext(e, characterId) {
+      e.stopPropagation();
+      e.preventDefault();
+      showContext(e, "table_row", characterId);
     }
   },
   computed: {

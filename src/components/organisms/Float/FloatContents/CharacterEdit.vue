@@ -35,7 +35,7 @@
       <div>
         <ha-checkbox
           label="データテーブルに表示する"
-          v-model="showOnInitiative"
+          :value="showOnInitiative"
           @change="onCharacterShowOnInitiative"
         ></ha-checkbox>
       </div>
@@ -165,7 +165,6 @@ export default {
       imgAlt: null,
       chatPosition: "0",
       pawnSizeStr: "1",
-      showOnInitiative: false,
       chatColor: SYSTEM_COLOR,
       showDeleteButton: false
     };
@@ -278,7 +277,6 @@ export default {
         activeAlias = null,
         chatPosition = 0,
         pawnSize = 1,
-        showOnInitiative = false,
         color = SYSTEM_COLOR
       } = this.$store.getters["character/info"].find(
         c => c.id === this.characterId
@@ -286,7 +284,6 @@ export default {
       this.aliasId = activeAlias;
       this.chatPosition = `${chatPosition}`;
       this.pawnSizeStr = `${pawnSize}`;
-      this.showOnInitiative = showOnInitiative;
       this.chatColor = color;
     },
     async onDeleteCharacter() {
@@ -331,6 +328,9 @@ export default {
         .fill(0)
         .map((_, i) => i + 1);
       return size.map(i => ({ value: `${i}`, text: `x${i}` }));
+    },
+    showOnInitiative() {
+      return !!this.character.showOnInitiative;
     },
     showDelete() {
       const owner = this.character?.owner;

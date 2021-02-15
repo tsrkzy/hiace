@@ -11,6 +11,7 @@ import { pawnItems } from "@/scripts/Contextmenu/menu/pawnMenu";
 import { mapItems } from "@/scripts/Contextmenu/menu/mapMenu";
 import { boardItems } from "@/scripts/Contextmenu/menu/boardItems";
 import { diceItems } from "@/scripts/Contextmenu/menu/diceItems";
+import { tableRowItems } from "@/scripts/Contextmenu/menu/tableRowMenu";
 
 export const showContext = (
   e: MouseEvent,
@@ -33,7 +34,8 @@ function getItemGroups(entity: string, entityId: string) {
   const MAP = "map";
   const BOARD = "board";
   const DICE = "dice";
-  const entityList = [PAWN, MAP, BOARD, DICE];
+  const TABLE_ROW = "table_row";
+  const entityList = [PAWN, MAP, BOARD, DICE, TABLE_ROW];
   if (entityList.indexOf(entity) === -1) {
     throw new Error(`invalid entity: ${entity}`);
   }
@@ -53,6 +55,10 @@ function getItemGroups(entity: string, entityId: string) {
     }
     case DICE: {
       result = result.concat(diceItems(entityId));
+      break;
+    }
+    case TABLE_ROW: {
+      result = result.concat(tableRowItems(entityId));
       break;
     }
   }
