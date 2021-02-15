@@ -12,27 +12,28 @@
       <ha-input-form :value="tableName" @change="onTableName"></ha-input-form>
       <fieldset>
         <legend>列の追加</legend>
-        <ha-button v-if="tableId" @click="onAddColumn('int')">数値 </ha-button>
-        <ha-button v-if="tableId" @click="onAddColumn('str')">文字 </ha-button>
-        <ha-button v-if="tableId" @click="onAddColumn('bool')">真偽 </ha-button>
+        <ha-button v-if="tableId" @click="onAddColumn('int')">数値</ha-button>
+        <ha-button v-if="tableId" @click="onAddColumn('str')">文字</ha-button>
+        <ha-button v-if="tableId" @click="onAddColumn('bool')">真偽</ha-button>
       </fieldset>
       <fieldset>
-        <legend>列の表示・非表示</legend>
+        <legend>列設定</legend>
         <ol>
           <li v-for="(c, i) in togglableColumns" :key="c.id">
             <ha-checkbox
-              :label="c.label"
               :value="c.show"
-              @change="onChangeColumnShow"
+              @change="onChangeColumnShow(c.id, $event)"
             ></ha-checkbox>
-            <ha-button v-if="i !== 0" @click="onChangeOrder(c.id, -1)"
-              >←</ha-button
+            <ha-button @click="onDeleteColumn(c.id)">削除</ha-button>
+            <ha-button :disabled="i === 0" @click="onChangeOrder(c.id, -1)"
+              >↑</ha-button
             >
             <ha-button
-              v-if="i !== togglableColumns.length - 1"
+              :disabled="i === togglableColumns.length - 1"
               @click="onChangeOrder(c.id, +1)"
-              >→</ha-button
+              >↓</ha-button
             >
+            <span>{{ c.label }}</span>
           </li>
         </ol>
       </fieldset>
@@ -48,7 +49,7 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 
 export default {
   name: "TableConfig",
-  components: { HaButton, HaCheckbox, HaInputForm },
+  components: { HaCheckbox, HaButton, HaInputForm },
   props: {
     tableId: { type: String, require: true }
   },
@@ -99,6 +100,9 @@ export default {
     },
     async onChangeOrder(columnId, order) {
       await FSColumn.Reorder(this.tableId, columnId, order);
+    },
+    async onDeleteColumn(columnId) {
+      await FSColumn.Delete(columnId);
     }
   }
 };
