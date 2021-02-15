@@ -18,36 +18,7 @@
       <ha-button @click="onCreateTable">作成</ha-button>
       <ha-button @click="onDeleteTable">削除</ha-button>
     </div>
-    <div v-if="tableMatrix">
-      <details>
-        <summary>テーブル設定</summary>
-        <ha-input-form :value="tableName" @change="onTableName"></ha-input-form>
-        <fieldset>
-          <legend>列の追加</legend>
-          <ha-button v-if="tableId" @click="onClickAddColumn('int')"
-            >数値
-          </ha-button>
-          <ha-button v-if="tableId" @click="onClickAddColumn('str')"
-            >文字
-          </ha-button>
-          <ha-button v-if="tableId" @click="onClickAddColumn('bool')"
-            >真偽
-          </ha-button>
-        </fieldset>
-        <fieldset>
-          <legend>列の表示・非表示</legend>
-          <ol>
-            <li v-for="c in togglableColumns" :key="c.id">
-              <ha-checkbox
-                :label="c.label"
-                :value="c.show"
-                @change="onChangeColumnShow(c.id, $event)"
-              ></ha-checkbox>
-            </li>
-          </ol>
-        </fieldset>
-      </details>
-    </div>
+    <table-config :table-id="tableId" />
     <div v-if="tableMatrix">
       <table style="width: 100%;">
         <thead>
@@ -105,15 +76,14 @@
 import { BOOL, FSColumn, INT, REF, STR } from "@/collections/Column";
 import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
-import HaCheckbox from "@/components/atoms/HaCheckbox";
-import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
+import TableConfig from "@/components/organisms/Float/FloatContents/TableConfig";
 import { Notify } from "@/scripts/Notify";
 import { touchTable } from "@/scripts/touch";
 
 export default {
   name: "TableView",
-  components: { HaInputForm, HaButton, HaCheckbox, HaSelect },
+  components: { TableConfig, HaButton, HaSelect },
   props: {
     floatId: {
       type: Number,
@@ -196,44 +166,18 @@ export default {
       e.currentTarget.blur();
       await FSColumn.Update(column.id, { label: newLabel });
     },
-    async onChangeColumnShow(columnId, show = false) {
-      console.log("TableView.onChangeColumnShow", columnId, show); // @DELETEME
-      await FSColumn.Update(columnId, { show });
-    },
     filterWithHeader(cells) {
       const dispColumnIdList = this.columns
         .filter(c => c.system || c.show)
         .map(c => c.id);
       return cells.filter(c => dispColumnIdList.indexOf(c.columnId) !== -1);
-    },
-    async onClickAddColumn(dataType) {
-      const roomId = this.room.id;
-      await FSColumn.Create({
-        roomId,
-        tableId: this.tableId,
-        label: dataType,
-        dataType,
-        refPath: dataType === REF ? "character.id" : null,
-        dataMap: {}
-      });
-    },
-    async onTableName(name) {
-      console.log("TableView.onTableName", name); // @DELETEME
-      const tableId = this.tableId;
-      this.tableId = null;
-      await this.$nextTick();
-      await FSTable.Update(tableId, { name });
-      this.tableId = tableId;
     }
   },
   computed: {
     characters() {
       return this.$store.getters["character/info"];
     },
-    tableName() {
-      return this.$store.getters["table/info"].find(t => t.id === this.tableId)
-        ?.name;
-    },
+
     tableItems() {
       const matrixList = this.$store.getters["table/info"];
       return matrixList.map(t => ({ value: t.id, text: t.name }));
@@ -249,20 +193,8 @@ export default {
     columns() {
       return (this.tableMatrix?.columns ?? []).filter(c => c.system || c.show);
     },
-    allColumns() {
-      return this.tableMatrix?.columns ?? [];
-    },
-    togglableColumns() {
-      return this.allColumns.filter(c => !c.system);
-    },
     rows() {
       return (this.tableMatrix?.rows ?? []).filter(r => r.show);
-    },
-    allRows() {
-      return this.tableMatrix?.rows ?? [];
-    },
-    room() {
-      return this.$store.getters["room/info"];
     }
   },
   watch: {
@@ -274,5 +206,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>
