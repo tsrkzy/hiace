@@ -24,13 +24,23 @@
         :key="item.value"
         @click.stop="onClickItem(item)"
       >
-        <div class="contextmenu contextmenu-parent__item">
+        <div
+          :class="{
+            contextmenu: true,
+            'contextmenu-parent__item': true,
+            disabled: item.disabled
+          }"
+        >
           {{ item.text
           }}{{ hasChild(item) ? (open === item.value ? " = " : " + ") : "" }}
         </div>
         <div
           v-if="open === item.value"
-          class="contextmenu contextmenu-child__accordion"
+          :class="{
+            contextmenu: true,
+            'contextmenu-child__accordion': true,
+            disabled: item.disabled
+          }"
         >
           <div
             v-for="child in item.children"
@@ -60,6 +70,10 @@ export default {
       this.$store.dispatch("contextmenu/off");
     },
     async onClickItem(item) {
+      if (item.disabled) {
+        console.log("contextmenu item is disabled"); // @DELETEME
+        return false;
+      }
       if (item instanceof ContextMenuChildItem) {
         await item.callback();
         await this.$store.dispatch("contextmenu/off");
@@ -132,6 +146,11 @@ div.contextmenu {
     &:hover {
       background-color: lightgray;
     }
+    &.disabled {
+      cursor: not-allowed;
+      text-decoration-line: line-through;
+      color: gray;
+    }
   }
   &.contextmenu-child__accordion {
     position: absolute;
@@ -148,6 +167,11 @@ div.contextmenu {
     background-color: rgba(255, 255, 255, 0.96);
     &:hover {
       background-color: lightgray;
+    }
+    &.disabled {
+      cursor: not-allowed;
+      text-decoration-line: line-through;
+      color: gray;
     }
   }
 }

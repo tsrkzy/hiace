@@ -13,15 +13,23 @@ import store from "@/store";
 import { getName } from "@/scripts/helper";
 import { FSPawn } from "@/collections/Pawn";
 import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
+import { FSCharacter } from "@/collections/Character";
 
 export function pawnItems(pawnId: string): ContextMenuItem[] {
   const pawn = store.getters["pawn/info"].find(
     (p: { id: string }) => p.id === pawnId
   );
-
   if (!pawn) {
     throw new Error(`no pawn exists: ${pawnId}`);
   }
+  const character = store.getters["character/info"].find(
+    (c: { id: string }) => c.id === pawn.character
+  );
+  if (!character) {
+    throw new Error(`no character exists: ${character.id}`);
+  }
+  const { pawnSize } = character;
+
   const characterName: string = getName("character", pawn.character);
 
   const result: ContextMenuItem[] = [];
@@ -64,10 +72,32 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     }
   });
 
+  /* コマを大きくする */
+  const pawnSizeUp = new ContextMenuChildItem({
+    value: `pawn_size_up_${pawnId}`,
+    text: `コマを大きくする(${characterName})`,
+    callback: async () => {
+      await FSCharacter.Update(character.id, { pawnSize: pawnSize + 1 });
+    },
+    disabled: pawnSize >= 8
+  });
+
+  /* コマを小さくする */
+  const pawnSizeDown = new ContextMenuChildItem({
+    value: `pawn_size_down_${pawnId}`,
+    text: `コマを縮める(${characterName})`,
+    callback: async () => {
+      await FSCharacter.Update(character.id, { pawnSize: pawnSize - 1 });
+    },
+    disabled: pawnSize <= 1
+  });
+
   result.push(resetPosItem);
   result.push(editCharacterItem);
   result.push(copyPawnItem);
   result.push(deletePawnItem);
+  result.push(pawnSizeUp);
+  result.push(pawnSizeDown);
 
   return result;
 }
