@@ -12,11 +12,6 @@
         >不具合・要望一覧(Github/Issue)</a
       >
     </p>
-    <p>
-      <a href="https://github.com/tsrkzy/hiace/wiki" target="_blank"
-        >使い方(Wiki/Github)</a
-      >
-    </p>
     <fieldset>
       <legend>報告内容</legend>
       <div>

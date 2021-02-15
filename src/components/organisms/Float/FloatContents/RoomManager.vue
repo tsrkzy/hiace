@@ -54,12 +54,19 @@
       </ul>
     </fieldset>
     <fieldset>
-      <legend>素材</legend>
-      <a
-        target="_blank"
-        href="https://on-jin.com/sound/index.php?kensaku=%E3%83%80%E3%82%A4%E3%82%B9"
-        >on-jin.com</a
-      >
+      <legend>外部サイト</legend>
+      <p>
+        <a
+          target="_blank"
+          href="https://on-jin.com/sound/index.php?kensaku=%E3%83%80%E3%82%A4%E3%82%B9"
+          >on-jin.com</a
+        ><span>(フリー効果音、BGM)</span>
+      </p>
+      <p>
+        <a href="https://github.com/tsrkzy/hiace/wiki" target="_blank"
+          >使い方(Wiki/Github)</a
+        >
+      </p>
     </fieldset>
   </div>
 </template>
