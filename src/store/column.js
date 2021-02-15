@@ -16,7 +16,7 @@ export const column = {
   },
   getters: {
     info(state) {
-      return state.columns;
+      return state.columns.slice().sort((a, b) => (a.order > b.order ? 1 : -1));
     },
     nameMap(state) {
       const nameMap = {};

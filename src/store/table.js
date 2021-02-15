@@ -46,16 +46,16 @@ export const table = {
         /* ヘッダの作成 */
 
         /* デフォルト列: character.idとcharacter.name */
-        const idColumn = {
-          id: "system_id",
-          system: true,
-          roomId,
-          tableId: t.id,
-          label: "#id",
-          dataType: REF,
-          refPath: "character.id",
-          dataMap: {}
-        };
+        // const idColumn = {
+        //   id: "system_id",
+        //   system: true,
+        //   roomId,
+        //   tableId: t.id,
+        //   label: "#id",
+        //   dataType: REF,
+        //   refPath: "character.id",
+        //   dataMap: {}
+        // };
         const nameColumn = {
           id: "system_name",
           system: true,
@@ -66,7 +66,7 @@ export const table = {
           refPath: "character.name",
           dataMap: {}
         };
-        m.columns.push(idColumn, nameColumn);
+        m.columns.push(/*idColumn,*/ nameColumn);
         for (let j = 0; j < columns.length; j++) {
           const col = columns[j];
           if (col.table !== t.id) {

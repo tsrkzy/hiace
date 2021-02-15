@@ -19,12 +19,20 @@
       <fieldset>
         <legend>列の表示・非表示</legend>
         <ol>
-          <li v-for="c in togglableColumns" :key="c.id">
+          <li v-for="(c, i) in togglableColumns" :key="c.id">
             <ha-checkbox
               :label="c.label"
               :value="c.show"
               @change="onChangeColumnShow"
             ></ha-checkbox>
+            <ha-button v-if="i !== 0" @click="onChangeOrder(c.id, -1)"
+              >←</ha-button
+            >
+            <ha-button
+              v-if="i !== togglableColumns.length - 1"
+              @click="onChangeOrder(c.id, +1)"
+              >→</ha-button
+            >
           </li>
         </ol>
       </fieldset>
@@ -88,6 +96,9 @@ export default {
     async onChangeColumnShow(columnId, show = false) {
       console.log("TableView.onChangeColumnShow", columnId, show); // @DELETEME
       await FSColumn.Update(columnId, { show });
+    },
+    async onChangeOrder(columnId, order) {
+      await FSColumn.Reorder(this.tableId, columnId, order);
     }
   }
 };

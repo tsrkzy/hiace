@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { BOOL, FSColumn, INT, REF, STR } from "@/collections/Column";
+import { BOOL, FSColumn, INT, STR } from "@/collections/Column";
 import { FSTable } from "@/collections/Table";
 import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
@@ -195,6 +195,9 @@ export default {
     },
     rows() {
       return (this.tableMatrix?.rows ?? []).filter(r => r.show);
+    },
+    room() {
+      return this.$store.getters["room/info"];
     }
   },
   watch: {
