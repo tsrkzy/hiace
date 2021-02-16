@@ -210,7 +210,7 @@ export default {
 div.chat-log-viewer__wrapper {
   position: relative;
   width: 100%;
-  height: calc(100% - 82px);
+  height: calc(100% - 8rem);
 }
 
 div.scrollParent {
