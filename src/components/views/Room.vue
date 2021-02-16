@@ -24,6 +24,9 @@
       >入室リクエスト
     </ha-button>
     <span v-if="waitForGrant">リクエスト受理待ち</span>
+
+    <!-- 音楽の初期ロードとサウンド管理フロート開いてなくても音を鳴らす用 -->
+    <sound-manager v-if="joined" v-show="false" :float-id="-1"></sound-manager>
   </div>
 </template>
 
@@ -49,11 +52,11 @@ import HaCheckbox from "@/components/atoms/HaCheckbox";
 import Notice from "@/components/atoms/Notice";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import DebugIndicator from "@/components/organisms/DebugIndicator";
+import SoundManager from "@/components/organisms/Float/FloatContents/SoundManager";
 import FloatGroup from "@/components/organisms/Float/FloatGroup";
 import WindowOpener from "@/components/organisms/Float/WindowOpener";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 import CharacterDetail from "@/components/views/CharacterDetail";
-import { Sound } from "@/scripts/Sound";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { Socket } from "@/scripts/Socket";
 
@@ -63,6 +66,7 @@ import { Notify } from "@/scripts/Notify";
 export default {
   name: "Room",
   components: {
+    SoundManager,
     CharacterDetail,
     HaCheckbox,
     WindowOpener,
@@ -144,11 +148,6 @@ export default {
 
       /* WebSocket */
       new Socket(roomId);
-
-      /* BGM */
-      const music = this.$store.getters["room/music"];
-      const $a = Sound.GetById(music);
-      await $a.play();
     },
     afterKicked() {},
     afterWaiting() {},
