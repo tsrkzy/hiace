@@ -1,9 +1,12 @@
 <template>
   <div class="debug-indicator" @contextmenu="onContextmenu">
+    <p>music: {{ music }}</p>
+    <p>playing: {{ playing }}</p>
     <ha-button @click="onClickSmoke">smoke</ha-button>
     <ha-button @click="onClickContext">context</ha-button>
     <ha-button @click="onAddChats">add 500 chats</ha-button>
     <ha-button @click="onAddDice">ADD DICE</ha-button>
+    <ha-button @click="onResetWindow">RESET WINDOW</ha-button>
     <pre>{{ dices }}</pre>
   </div>
 </template>
@@ -25,6 +28,12 @@ export default {
     },
     dices() {
       return this.$store.getters["dice/info"];
+    },
+    music() {
+      return this.$store.getters["room/music"];
+    },
+    playing() {
+      return this.$store.getters["sound/playing"];
     }
   },
   methods: {
@@ -53,6 +62,10 @@ export default {
     },
     async onAddChats() {
       await FSChat.AddBulk(this.room.id);
+    },
+    async onResetWindow() {
+      console.log("DebugIndicator.onResetWindow");
+      window.localStorage.removeItem("config");
     }
   }
 };

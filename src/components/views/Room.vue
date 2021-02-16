@@ -53,6 +53,7 @@ import FloatGroup from "@/components/organisms/Float/FloatGroup";
 import WindowOpener from "@/components/organisms/Float/WindowOpener";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
 import CharacterDetail from "@/components/views/CharacterDetail";
+import { Sound } from "@/scripts/Sound";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { Socket } from "@/scripts/Socket";
 
@@ -143,6 +144,11 @@ export default {
 
       /* WebSocket */
       new Socket(roomId);
+
+      /* BGM */
+      const music = this.$store.getters["room/music"];
+      const $a = Sound.GetById(music);
+      await $a.play();
     },
     afterKicked() {},
     afterWaiting() {},

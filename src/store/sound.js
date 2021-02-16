@@ -11,7 +11,8 @@ export const sound = {
     sounds: [],
 
     /* グローバルミュート */
-    mute: false
+    mute: false,
+    playing: null
   },
   mutations: {
     setSounds(state, payload) {
@@ -19,6 +20,10 @@ export const sound = {
     },
     setMute(state, payload) {
       state.mute = payload.mute;
+    },
+    setPlaying(state, payload) {
+      console.warn("sound.setPlaying", payload.playing);
+      state.playing = payload.playing;
     }
   },
   actions: {
@@ -33,11 +38,22 @@ export const sound = {
     globalUnMute({ commit }) {
       console.log("sound.globalUnMute"); // @DELETEME
       commit("setMute", { mute: false });
+    },
+    setPlaying({ commit }, { playing }) {
+      console.log("sound.setPlaying"); // @DELETEME
+      commit("setPlaying", { playing });
+    },
+    unsetPlaying({ commit }) {
+      console.log("sound.unsetPlaying"); // @DELETEME
+      commit("setPlaying", { playing: null });
     }
   },
   getters: {
     info(state) {
       return state.sounds;
+    },
+    playing(state) {
+      return state.playing;
     },
     nameMap(state) {
       const nameMap = {};

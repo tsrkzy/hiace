@@ -3,6 +3,7 @@ import "firebase/firestore";
 import "firebase/storage";
 
 import store from "@/store";
+import { Sound } from "@/scripts/Sound";
 
 async function validateAudioUrl(url: string) {
   return await new Promise(resolve => {
@@ -165,6 +166,9 @@ export class FSSound {
   }
 
   static async Delete(soundId: string) {
+    const sound = Sound.GetById(soundId);
+    sound.dispose();
+
     const db = firebase.firestore();
     const docRef = await db
       .collection("sound")

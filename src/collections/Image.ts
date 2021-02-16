@@ -26,7 +26,6 @@ export class FSImage {
   }
 
   static async GetById({ id }: { id: string }) {
-    console.log("Image.GetById", id); // @DELETEME
     if (!id) {
       return null;
     }

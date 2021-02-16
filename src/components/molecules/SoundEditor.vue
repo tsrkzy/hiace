@@ -11,30 +11,15 @@
     <div>
       <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
       <ha-checkbox
-        v-if="loaded"
         label="繰返"
         @input="onInputLoop"
         :value="sound.loop"
       ></ha-checkbox>
-      <ha-button
-        v-if="sound && !playing"
-        :disabled="!loaded"
-        @click="onClickPlay"
-        >試聴開始</ha-button
-      >
-      <ha-button
-        v-if="sound && playing"
-        :disabled="!loaded"
-        @click="onClickPause"
-        >試聴停止</ha-button
-      >
-      <ha-button v-if="sound && !playing" @click="onClickBroadcast"
-        >ルームで再生</ha-button
-      >
-      <ha-button v-if="sound && playing" @click="onClickStopBroadcast"
-        >ルームで停止</ha-button
-      >
-      <ha-button v-if="sound && false" @click="onClickDelete">削除</ha-button>
+      <ha-button v-if="testPlayBtn" @click="onPlay">試聴開始</ha-button>
+      <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
+      <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
+      <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
+      <ha-button v-if="sound" @click="onDelete">削除</ha-button>
     </div>
     <div>
       <label>
@@ -48,13 +33,6 @@
           @change="onInputVolume"
         />
       </label>
-      <audio
-        :id="`audio_sound_${soundId}`"
-        :loop="sound && sound.loop"
-        preload="auto"
-      >
-        <source :src="url" />
-      </audio>
     </div>
   </fieldset>
 </template>
@@ -64,15 +42,9 @@ import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
+import { Sound } from "@/scripts/Sound";
 import { touch } from "@/scripts/touch";
-
-/**
- * @return {HTMLAudioElement | null}
- * */
-const audioEl = soundId => {
-  const $a = document.getElementById(`audio_sound_${soundId}`);
-  return $a instanceof HTMLAudioElement ? $a : null;
-};
+import store from "@/store";
 
 export default {
   name: "SoundEditor",
@@ -80,41 +52,22 @@ export default {
   props: {
     soundId: { type: String, require: true }
   },
-  async mounted() {
-    const $a = audioEl(this.soundId);
+  async created() {
+    const $a = new Sound(this.soundId);
     $a.volume = 0.1;
 
-    $a.oncanplaythrough = () => {
-      /* 読み込みし、再生準備完了 */
-      this.loaded = true;
-      $a.oncanplaythrough = null;
-      console.log(`sound ready for play: ${this.soundId}`);
-
-      /* 接続時に既に再生中なら再生する */
-      if (this.roomMusic === this.sound?.id) {
-        this.play();
-      }
-    };
-
-    $a.onerror = e => {
-      console.error(e);
-      throw new Error(`failed to load sound: ${this.soundId}`);
-    };
-
-    /* srcを設定した後、明示的にloadする */
-    const sound = await FSSound.GetById({ id: this.soundId });
-    console.log(sound.url, sound); // @DELETEME
-    this.url = sound.url;
-
-    $a.load();
+    const url = this.sound?.url;
+    await $a.load(url);
+    if (this.roomMusic === this.soundId) {
+      await $a.play();
+    }
   },
   data() {
     return {
       /* srcから<audio>が音声ファイルのロードを正常に完了し、再生準備が整ったらtrue */
       loaded: false,
 
-      /* 再生中はtrue、loopせず止まったりpauseした場合はfalse */
-      playing: false,
+      testPlay: false,
 
       url: null
     };
@@ -126,93 +79,97 @@ export default {
     soundName() {
       return this.sound?.name;
     },
+    loop() {
+      return this.sound?.loop;
+    },
     roomMusic() {
       return this.$store.getters["room/music"];
     },
     room() {
       return this.$store.getters["room/info"];
+    },
+    playing() {
+      return this.$store.getters["sound/playing"] === this.soundId;
+    },
+    /* グローバル再生中は非表示 */
+    /* ローカル再生中は切り替え */
+    testPlayBtn() {
+      return this.roomMusic !== this.soundId && !this.testPlay;
+    },
+    testPauseBtn() {
+      return this.roomMusic !== this.soundId && this.testPlay;
+    },
+    /* ローカル再生中は非表示 */
+    /* グローバル再生中は切り替え */
+    playBtn() {
+      return this.roomMusic !== this.soundId && !this.testPlay;
+    },
+    pauseBtn() {
+      return this.roomMusic === this.soundId && !this.testPlay;
     }
   },
   methods: {
-    async onClickBroadcast() {
+    async onBroadcast() {
+      this.pause(true);
+      this.testPlay = false;
       await FSRoom.SoundBroadcast(this.room.id, this.soundId);
       touch("音源", "sound", this.soundId);
     },
-    async onClickStopBroadcast() {
+    async onStopBroadcast() {
       await FSRoom.SoundStop(this.room.id);
       touch("音源", "sound", this.soundId);
     },
-    async onClickDelete() {
+    async onDelete() {
       await FSSound.Delete(this.soundId);
     },
-    async onClickPlay() {
-      await this.play();
+    async onPlay() {
+      await this.play(true);
+      this.testPlay = true;
     },
-    async onClickPause() {
-      await this.pause();
+    async onPause() {
+      this.pause(true);
+      this.testPlay = false;
     },
     onInputVolume(e) {
       const v = e.currentTarget.value;
-      const $a = audioEl(this.soundId);
+      const $a = Sound.GetById(this.soundId);
       $a.volume = parseFloat(v);
     },
     onInputMute(checked) {
-      const $a = audioEl(this.soundId);
+      const $a = Sound.GetById(this.soundId);
       $a.muted = checked;
     },
     async onInputLoop(loop) {
       await FSSound.Update(this.soundId, { loop });
     },
-    async play() {
-      console.log("SoundEditor.play", this.soundId); // @DELETEME
-      const $a = audioEl(this.soundId);
-      if (!$a) {
-        throw new Error("cannot found audio element");
-      }
-
-      /* すでに再生中の場合、再生位置を先頭へ移動して終了 */
-      if (!$a.paused) {
-        $a.currentTime = 0;
-        return false;
-      }
-
-      /* 再生開始 */
-      await $a.play();
-      this.playing = true;
-
-      $a.onpause = () => {
-        this.playing = false;
-        $a.onpause = null;
-      };
-
-      $a.onended = () => {
-        this.playing = false;
-        $a.onended = null;
-      };
+    async play(testPlay = false) {
+      console.log("SoundEditor.play", this.soundId);
+      const $a = Sound.GetById(this.soundId);
+      await $a.play(testPlay);
     },
     pause() {
       console.log("SoundEditor.pause", this.soundId); // @DELETEME
-      const $a = audioEl(this.soundId);
-      if (!$a) {
-        throw new Error("cannot found audio element");
-      }
-
-      /* すでに停止している場合は何もしない */
-      if ($a.paused) {
-        return false;
-      }
-
-      /* 再生停止、再生位置を先頭にリセット */
+      const $a = Sound.GetById(this.soundId);
+      this.testPlay = false;
       $a.pause();
-      $a.currentTime = 0;
     }
   },
   watch: {
-    async roomMusic(music) {
+    loop(loop) {
+      const $a = Sound.GetById(this.soundId);
+      $a.loop = loop;
+    },
+    roomMusic(music) {
+      console.log("SoundEditor.roomMusic");
       if (this.soundId === music) {
-        await this.play();
-      } else if (this.playing) {
         this.pause();
+        this.play();
+        this.$store.dispatch("sound/setPlaying", { playing: this.soundId });
+        return;
+      }
+      this.pause();
+      if (!music) {
+        store.dispatch("sound/unsetPlaying");
       }
     }
   }
