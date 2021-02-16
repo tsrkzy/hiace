@@ -22,7 +22,7 @@
 
 <script>
 import { FSSound } from "@/collections/Sound";
-import SoundEditor from "@/components/molecules/SoundEditor";
+import SoundEditor from "@/components/molecules/SoundPlayer";
 export default {
   name: "SoundManager",
   components: { SoundEditor },

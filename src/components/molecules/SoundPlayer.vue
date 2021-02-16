@@ -56,7 +56,7 @@ export default {
     const $a = new Sound(this.soundId);
     $a.volume = 0.1;
 
-    const url = this.sound?.url;
+    const { url } = FSSound.GetById({ id: this.soundId });
     await $a.load(url);
     if (this.roomMusic === this.soundId) {
       await $a.play();
