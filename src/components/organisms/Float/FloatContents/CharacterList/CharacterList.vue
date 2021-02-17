@@ -7,14 +7,7 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <ha-input-form
-      v-model="characterName"
-      placeholder="キャラクタ名"
-    ></ha-input-form>
-    <ha-button @click="onClickCreateMyCharacter(false)"
-      >キャラクタ追加</ha-button
-    >
-    <ha-button @click="onClickCreateMyCharacter(true)">控室に追加</ha-button>
+    <create-character-form></create-character-form>
     <h5>自分のキャラクタ</h5>
     <CharacterListChip
       :key="c.id"
@@ -39,19 +32,12 @@
 <script>
 import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
-import HaButton from "@/components/atoms/HaButton";
-import HaInputForm from "@/components/atoms/HaInputForm";
 import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterList/CharacterListChip";
-import { Smoke } from "@/scripts/Smoke";
+import CreateCharacterForm from "@/components/organisms/Float/FloatContents/CharacterList/CreateCharacterForm";
 
 export default {
   name: "CharacterList",
-  components: { CharacterListChip, HaInputForm, HaButton },
-  data() {
-    return {
-      characterName: ""
-    };
-  },
+  components: { CreateCharacterForm, CharacterListChip },
   computed: {
     categolizedCharacters() {
       const result = { own: [], ownArchived: [], others: [] };
@@ -74,25 +60,6 @@ export default {
     }
   },
   methods: {
-    async onClickCreateMyCharacter(archived) {
-      const characterName = this.characterName;
-      const { id: userId, name: userName } = this.$store.getters["auth/user"];
-      const roomId = this.$store.getters["room/info"].id;
-
-      const t = Date.now() % 1000;
-
-      const c = {
-        owner: userId,
-        name: characterName ?? `${userName}_c${t}`,
-        roomId,
-        imageId: null,
-        archived
-      };
-      await Smoke.on();
-      await FSCharacter.Create(c);
-      await Smoke.off();
-      this.characterName = "";
-    },
     async onClickActivateAlias(characterId, aliasId) {
       await FSCharacter.SetActiveAlias(characterId, aliasId);
     },
