@@ -9,9 +9,8 @@
   <g
     :id="shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`"
     v-if="loaded && shadowHandler"
-    :style="{
-      transform: `${transform}`
-    }"
+    :style="{ transform: `${transform}` }"
+    class="token-transition"
     @mousedown="onMouseDown($event)"
     @mouseenter="onMouseEnter($event)"
     :filter="shadow ? `url(#shadow_filter_${pawnId})` : ''"
@@ -228,6 +227,9 @@ export default {
 
       const $p = document.getElementById(`pawn_${this.pawnId}`);
 
+      /* transformのtransitionを削除 */
+      $p.classList.remove("token-transition");
+
       const downX = e.clientX;
       const downY = e.clientY;
 
@@ -255,6 +257,7 @@ export default {
         e.stopPropagation();
         console.log("SvgPawn.onMouseUp"); // @DELETEME
         await this.$store.dispatch("pawn/dragFinish");
+        $p.classList.add("token-transition");
         $p.removeEventListener("mousemove", onMove);
         $p.removeEventListener("mouseup", onMouseUp);
         $p.removeEventListener("mouseleave", onMouseUp);
@@ -262,6 +265,7 @@ export default {
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         const transform = `${t}`;
         this.transform = transform;
+        await FSPawn.Touch(this.pawnId);
         await FSPawn.Update(this.pawnId, { transform });
         touch("コマ", "character", this.pawn.character);
       };

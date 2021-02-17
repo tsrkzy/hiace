@@ -68,6 +68,15 @@ export class FSDice {
     return await docRef.update(criteria);
   }
 
+  static async Touch(diceId: string) {
+    const db = firebase.firestore();
+    const docRef = await db.collection("dice").doc(diceId);
+    const params = {
+      updatedAt: Date.now()
+    };
+    return await docRef.update(params);
+  }
+
   static async ResetTransform(diceIdList: string[]) {
     const db = firebase.firestore();
     const batch = db.batch();

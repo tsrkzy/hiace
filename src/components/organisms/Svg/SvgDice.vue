@@ -10,6 +10,7 @@
     :id="shadow ? `shadow_dice_${diceId}` : `dice_${diceId}`"
     v-if="shadowHandler"
     :style="{ transform: `${transform}` }"
+    class="token-transition"
     @mousedown="onMouseDown($event)"
   >
     <!-- 外枠 -->
@@ -51,6 +52,7 @@ import { DICE_SIZE, FSDice } from "@/collections/Dice";
 import Aster from "@/components/organisms/Svg/face/Aster";
 import Die from "@/components/organisms/Svg/face/Die";
 import { showContext } from "@/scripts/Contextmenu";
+import { touchFree } from "@/scripts/touch";
 
 export default {
   name: "SvgDice",
@@ -148,6 +150,9 @@ export default {
 
       const $d = document.getElementById(`dice_${this.diceId}`);
 
+      /* transformのtransitionを削除 */
+      $d.classList.remove("token-transition");
+
       const downX = e.clientX;
       const downY = e.clientY;
 
@@ -174,6 +179,7 @@ export default {
       const onMouseUp = async e => {
         e.stopPropagation();
         await this.$store.dispatch("dice/dragFinish");
+        $d.classList.add("token-transition");
         $d.removeEventListener("mousemove", onMove);
         $d.removeEventListener("mouseup", onMouseUp);
         $d.removeEventListener("mouseleave", onMouseUp);
@@ -181,8 +187,9 @@ export default {
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         const transform = `${t}`;
         this.transform = transform;
+        await FSDice.Touch(this.diceId);
         await FSDice.Update(this.diceId, { transform });
-        // touch("コマ", "character", this.dice.character);
+        touchFree("ダイスを動かしました");
       };
 
       $d.addEventListener("mousemove", onMove, false);

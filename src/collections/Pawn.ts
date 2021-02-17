@@ -86,6 +86,15 @@ export class FSPawn {
     return await docRef.update(params);
   }
 
+  static async Touch(pawnId: string) {
+    const db = firebase.firestore();
+    const docRef = await db.collection("pawn").doc(pawnId);
+    const params = {
+      updatedAt: Date.now()
+    };
+    return await docRef.update(params);
+  }
+
   static async ResetTransform(pawnIdList: string[]) {
     const db = firebase.firestore();
     const batch = db.batch();
