@@ -28,7 +28,7 @@
     ></rect>
     <!-- ビルボード -->
     <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
-    <text x="0" y="8" fill="white">{{ character.name }}</text>
+    <text x="0" y="8" fill="white">{{ characterName }}</text>
     <!-- 控室 -->
     <path
       v-if="archived"
@@ -64,7 +64,7 @@
 <script>
 import { FSCharacter } from "@/collections/Character";
 import { FSImage } from "@/collections/Image";
-import { FSPawn } from "@/collections/Pawn";
+import { FSPawn, PAWN_UNIT_SIZE } from "@/collections/Pawn";
 import { showContext } from "@/scripts/Contextmenu";
 import { touch } from "@/scripts/touch";
 
@@ -119,9 +119,13 @@ export default {
     archived() {
       return !!this.character?.archived;
     },
+    characterName() {
+      const { character, archived } = this;
+      return archived ? `${character.name}[控室]` : character.name;
+    },
     pawnSize() {
       const size = this.character?.pawnSize ?? 1;
-      return 120 * size;
+      return PAWN_UNIT_SIZE * size;
     },
     alias() {
       const { activeAlias = "" } = this.character;

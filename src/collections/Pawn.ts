@@ -4,6 +4,7 @@ import "firebase/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { getName } from "@/scripts/helper";
 
+export const PAWN_UNIT_SIZE = 120;
 export class FSPawn {
   static unsubscribeMap = new Map();
 
@@ -35,8 +36,9 @@ export class FSPawn {
     boardId: string;
     imageId: string;
     characterId: string;
+    transform?: string | DOMMatrix;
   }) {
-    const { roomId, userId, boardId, imageId, characterId } = params;
+    const { roomId, userId, boardId, imageId, characterId, transform } = params;
 
     if (!roomId) {
       throw new Error("no roomId given");
@@ -57,7 +59,7 @@ export class FSPawn {
       board: boardId,
       image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
-      transform: `${new DOMMatrix()}`,
+      transform: `${transform ?? new DOMMatrix()}`,
       updatedAt: Date.now()
     };
 

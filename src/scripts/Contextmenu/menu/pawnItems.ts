@@ -7,11 +7,12 @@
 
 import {
   ContextMenuChildItem,
-  ContextMenuItem
+  ContextMenuItem,
+  ContextMenuParentItem
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 import { getName } from "@/scripts/helper";
-import { FSPawn } from "@/collections/Pawn";
+import { FSPawn, PAWN_UNIT_SIZE } from "@/collections/Pawn";
 import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
 import { FSCharacter } from "@/collections/Character";
 
@@ -28,7 +29,15 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   if (!character) {
     throw new Error(`no character exists: ${character.id}`);
   }
-  const { pawnSize } = character;
+  const { pawnSize, archived } = character;
+  const {
+    room: roomId,
+    owner: userId,
+    board: boardId,
+    image: imageId,
+    character: characterId,
+    transform: _transform
+  } = pawn;
 
   const characterName: string = getName("character", pawn.character);
 
@@ -58,9 +67,20 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   /* コマ複製 */
   const copyPawnItem = new ContextMenuChildItem({
     value: `copy_pawn_${pawnId}`,
-    text: "コマを複製する(未実装)",
-    callback: async () => {},
-    disabled: true
+    text: "コマを複製する",
+    callback: async () => {
+      const transform = new DOMMatrix(_transform);
+      transform.e += pawnSize * PAWN_UNIT_SIZE;
+      transform.f += pawnSize * PAWN_UNIT_SIZE;
+      await FSPawn.Create({
+        roomId,
+        userId,
+        boardId,
+        imageId,
+        characterId,
+        transform
+      });
+    }
   });
 
   /* コマ削除 */
@@ -72,6 +92,12 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     }
   });
 
+  /* コマの大きさ変更 */
+  const changePawnSize = new ContextMenuParentItem({
+    value: `change_pawn_size_${pawnId}`,
+    text: "コマの大きさを変更する"
+  });
+
   /* コマを大きくする */
   const pawnSizeUp = new ContextMenuChildItem({
     value: `pawn_size_up_${pawnId}`,
@@ -81,6 +107,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     },
     disabled: pawnSize >= 8
   });
+  changePawnSize.children.push(pawnSizeUp);
 
   /* コマを小さくする */
   const pawnSizeDown = new ContextMenuChildItem({
@@ -91,13 +118,36 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     },
     disabled: pawnSize <= 1
   });
+  changePawnSize.children.push(pawnSizeDown);
+
+  /* キャラクターを控室に入れる */
+  const archiveCharacterItem = new ContextMenuChildItem({
+    value: `archive_character_${pawnId}`,
+    text: `控室に入れる`,
+    callback: async () => {
+      await FSCharacter.Update(characterId, { archived: true });
+    }
+  });
+
+  /* キャラクターを控室から出す */
+  const unArchiveCharacterItem = new ContextMenuChildItem({
+    value: `un_archive_character_${pawnId}`,
+    text: `控室から出す`,
+    callback: async () => {
+      await FSCharacter.Update(characterId, { archived: false });
+    }
+  });
 
   result.push(resetPosItem);
   result.push(editCharacterItem);
   result.push(copyPawnItem);
   result.push(deletePawnItem);
-  result.push(pawnSizeUp);
-  result.push(pawnSizeDown);
+  result.push(changePawnSize);
+  if (archived) {
+    result.push(unArchiveCharacterItem);
+  } else {
+    result.push(archiveCharacterItem);
+  }
 
   return result;
 }
