@@ -69,4 +69,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+select {
+  margin: 8px;
+  padding: 4px;
+}
+</style>
