@@ -1,5 +1,5 @@
 <!-----------------------------------------------------------------------------
-  - Copyright (c) 2020.                                                       -
+  - Copyright (c) 2021.                                                       -
   - @tsrkzy/Github.                                                           -
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
@@ -41,7 +41,7 @@ import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
 import HaButton from "@/components/atoms/HaButton";
 import HaInputForm from "@/components/atoms/HaInputForm";
-import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterListChip";
+import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterList/CharacterListChip";
 import { Smoke } from "@/scripts/Smoke";
 
 export default {

@@ -56,7 +56,7 @@ import SoundManager from "@/components/organisms/Float/FloatContents/SoundManage
 import FloatGroup from "@/components/organisms/Float/FloatGroup";
 import WindowOpener from "@/components/organisms/Float/WindowOpener";
 import SvgBoard from "@/components/organisms/Svg/SvgBoard";
-import CharacterDetail from "@/components/views/CharacterDetail";
+import CharacterDetail from "@/components/molecules/CharacterDetail";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 import { Socket } from "@/scripts/Socket";
 

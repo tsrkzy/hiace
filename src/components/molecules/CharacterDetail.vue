@@ -15,7 +15,7 @@
 </template>
 <script>
 export default {
-  name: "character-detail",
+  name: "CharacterDetail",
   props: {},
   computed: {
     lines() {

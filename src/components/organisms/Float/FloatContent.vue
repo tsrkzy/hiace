@@ -53,8 +53,8 @@ import NoteManager from "@/components/organisms/Float/FloatContents/NoteManager"
 import RoomManager from "@/components/organisms/Float/FloatContents/RoomManager";
 import MapEdit from "@/components/organisms/Float/FloatContents/MapEditor/MapEdit";
 import BoardList from "@/components/organisms/Float/FloatContents/BoardList";
-import CharacterEdit from "@/components/organisms/Float/FloatContents/CharacterEdit";
-import CharacterList from "@/components/organisms/Float/FloatContents/CharacterList";
+import CharacterEdit from "@/components/organisms/Float/FloatContents/CharacterList/CharacterEdit";
+import CharacterList from "@/components/organisms/Float/FloatContents/CharacterList/CharacterList";
 import ChatList from "@/components/organisms/Float/FloatContents/ChatList/ChatList";
 import ImageManager from "@/components/organisms/Float/FloatContents/ImageManager";
 import SoundManager from "@/components/organisms/Float/FloatContents/SoundManager";
