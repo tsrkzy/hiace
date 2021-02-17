@@ -31,8 +31,10 @@
             disabled: item.disabled
           }"
         >
-          {{ item.text
-          }}{{ hasChild(item) ? (open === item.value ? " = " : " + ") : "" }}
+          <span>{{ item.text }}</span
+          ><span>{{
+            hasChild(item) ? (open === item.value ? " ▼" : " ▶") : ""
+          }}</span>
         </div>
         <div
           v-if="open === item.value"
@@ -139,7 +141,7 @@ div.contextmenu {
     width: 150px;
     height: 2rem;
     padding: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.96);
+    background-color: ghostwhite;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
@@ -164,7 +166,7 @@ div.contextmenu {
     width: 150px;
     height: 2rem;
     padding: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.96);
+    background-color: ghostwhite;
     &:hover {
       background-color: lightgray;
     }
