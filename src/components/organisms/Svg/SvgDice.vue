@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { FSDice } from "@/collections/Dice";
+import { DICE_SIZE, FSDice } from "@/collections/Dice";
 import Aster from "@/components/organisms/Svg/face/Aster";
 import Die from "@/components/organisms/Svg/face/Die";
 import { showContext } from "@/scripts/Contextmenu";
@@ -76,7 +76,7 @@ export default {
       return this.$store.getters["dice/info"].find(d => d.id === id) || {};
     },
     diceSize() {
-      return 60;
+      return DICE_SIZE;
     },
     activeBoard() {
       return this.$store.getters["board/active"];

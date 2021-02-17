@@ -31,11 +31,13 @@
 </template>
 
 <script>
+import { DICE_SIZE } from "@/collections/Dice";
+
 export default {
   name: "Aster",
   props: {
     color: { type: String, default: "black" },
-    diceSize: { type: Number, default: 120 }
+    diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
     d() {

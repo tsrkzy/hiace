@@ -34,12 +34,14 @@
 </template>
 
 <script>
+import { DICE_SIZE } from "@/collections/Dice";
+
 export default {
   name: "Die",
   props: {
     color: { type: String, default: "black" },
     dice: { type: String, require: true },
-    diceSize: { type: Number, default: 120 }
+    diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
     eyes() {

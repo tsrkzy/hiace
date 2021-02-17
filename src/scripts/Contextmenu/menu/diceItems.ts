@@ -11,7 +11,7 @@ import {
   ContextMenuParentItem
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
-import { FSDice } from "@/collections/Dice";
+import { DICE_SIZE, FSDice } from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
 
 export function diceItems(diceId: string): ContextMenuItem[] {
@@ -26,7 +26,7 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   const dice = store.getters["dice/info"].find(
     (d: { id: string }) => d.id === diceId
   );
-  const { face } = dice;
+  const { face, color, transform: _transform } = dice;
 
   const result: ContextMenuItem[] = [];
 
@@ -81,7 +81,17 @@ export function diceItems(diceId: string): ContextMenuItem[] {
     value: `create_dice_${diceId}`,
     text: "ダイスを追加",
     callback: async () => {
-      await FSDice.Create({ boardId, roomId, userId });
+      const transform = new DOMMatrix(_transform);
+      transform.e += DICE_SIZE;
+      transform.f += DICE_SIZE;
+      await FSDice.Create({
+        boardId,
+        roomId,
+        userId,
+        face,
+        color,
+        transform
+      });
       touchFree(`ダイスを追加しました`);
     }
   });

@@ -2,6 +2,7 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
+export const DICE_SIZE = 40;
 export class FSDice {
   static unsubscribeMap = new Map();
 
@@ -27,8 +28,11 @@ export class FSDice {
     boardId: string;
     roomId: string;
     userId: string;
+    transform?: string | DOMMatrix;
+    color?: string;
+    face?: string;
   }) {
-    const { boardId, roomId, userId } = params;
+    const { boardId, roomId, userId, transform, color, face } = params;
 
     if (!boardId) {
       throw new Error("no boardId given");
@@ -44,9 +48,9 @@ export class FSDice {
       board: boardId,
       room: roomId,
       owner: userId,
-      transform: `${new DOMMatrix()}`,
-      color: "black",
-      face: "*",
+      transform: `${transform ?? new DOMMatrix()}`,
+      color: color ?? "black",
+      face: face ?? "*",
       hidden: false,
       updatedAt: Date.now()
     };
