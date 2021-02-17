@@ -7,11 +7,11 @@
 
 import store from "@/store";
 import { ContextMenuItem } from "@/scripts/Contextmenu/ContextMenu";
-import { pawnItems } from "@/scripts/Contextmenu/menu/pawnMenu";
-import { mapItems } from "@/scripts/Contextmenu/menu/mapMenu";
+import { pawnItems } from "@/scripts/Contextmenu/menu/pawnItems";
+import { mapItems } from "@/scripts/Contextmenu/menu/mapItems";
 import { boardItems } from "@/scripts/Contextmenu/menu/boardItems";
 import { diceItems } from "@/scripts/Contextmenu/menu/diceItems";
-import { tableRowItems } from "@/scripts/Contextmenu/menu/tableRowMenu";
+import { tableRowItems } from "@/scripts/Contextmenu/menu/tableRowItems";
 
 export const showContext = (
   e: MouseEvent,
