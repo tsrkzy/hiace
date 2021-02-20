@@ -12,23 +12,37 @@
       @click="onOpenImageManager"
       >画像をアップロード</ha-button
     >
+    <label v-if="showNull && images.length" style="display: inline-block;">
+      <!-- 外枠 -->
+      <div :class="`image-frame ${imageId ? '' : 'selected'}`">
+        <input
+          :disabled="disabled"
+          v-show="false"
+          :value="null"
+          name="image_select"
+          type="radio"
+          @change="onChangeSelectImage"
+        />
+        <div
+          :style="{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            maxWidth: '64px',
+            maxHeight: '64px'
+          }"
+        >
+          <span>指定しない</span>
+        </div>
+      </div>
+    </label>
     <label
       v-for="image in images"
       :key="image.id"
       style="display: inline-block;"
     >
       <!-- 外枠 -->
-      <div
-        :style="{
-          position: 'relative',
-          width: '64px',
-          height: '64px',
-          margin: '0 1px',
-          border:
-            imageId === image.id ? '1px dotted red' : '1px solid lightgray',
-          backgroundColor: imageId === image.id ? 'lightsalmon' : 'transparent'
-        }"
-      >
+      <div :class="`image-frame ${imageId === image.id ? 'selected' : ''}`">
         <input
           :disabled="disabled"
           v-show="false"
@@ -37,17 +51,7 @@
           type="radio"
           @change="onChangeSelectImage"
         />
-        <img
-          :alt="image.id"
-          :src="image.url"
-          :style="{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            maxWidth: '64px',
-            maxHeight: '64px'
-          }"
-        />
+        <img :alt="image.id" :src="image.url" />
         <span
           v-if="isHidden(image)"
           style="position:absolute;left:0;top:0;color:white;background-color: red;"
@@ -70,7 +74,8 @@ export default {
     imageId: { type: String },
     onlyMine: { type: Boolean, default: false },
     navToImageManager: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    showNull: { type: Boolean, default: false }
   },
   model: {
     prop: "imageId",
@@ -119,4 +124,24 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+div.image-frame {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 1px;
+  border: 1px solid lightgray;
+  background-color: transparent;
+  &.selected {
+    border: 1px dotted red;
+    background-color: lightsalmon;
+  }
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 64px;
+    max-height: 64px;
+  }
+}
+</style>

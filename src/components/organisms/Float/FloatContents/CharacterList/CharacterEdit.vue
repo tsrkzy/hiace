@@ -113,6 +113,7 @@
         <image-show-case
           :disabled="!aliasId"
           nav-to-image-manager
+          show-null
           v-model="imageId"
           @selectImage="onAliasImageChange"
         ></image-show-case>
