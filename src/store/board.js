@@ -1,3 +1,5 @@
+import { getName } from "@/scripts/helper";
+
 export const board = {
   namespaced: true,
   state: {
@@ -39,7 +41,17 @@ export const board = {
       const divisions = [];
       for (let i = 0; i < boards.length; i++) {
         const b = boards[i];
-        const pawns = pawnList.filter(p => p.board === b.id);
+        const pawns = pawnList
+          .filter(p => p.board === b.id)
+          .sort((a, b) => {
+            if (a.owner > b.owner) return 1;
+            if (a.owner < b.owner) return -1;
+            const bName = getName("character", b.character);
+            const aName = getName("character", a.character);
+            if (aName > bName) return 1;
+            if (aName < bName) return -1;
+            return 0;
+          });
         const maps = mapList.filter(m => m.board === b.id);
         divisions.push({ id: b.id, pawns, maps });
       }
