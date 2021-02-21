@@ -2,15 +2,23 @@ import { FSAlias } from "@/collections/Alias";
 import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { FSPawn } from "@/collections/Pawn";
-import { getName } from "@/scripts/helper";
+import { getName, postfix } from "@/scripts/helper";
 import { SYSTEM_COLOR } from "@/collections/Chat";
 
 export const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
 
 type TCharacter = {
   id: string;
+  owner?: string;
+  name?: string;
+  room?: string;
+  text?: string;
+  showOnInitiative?: boolean;
+  chatPosition?: number;
+  pawnSize?: number;
+  color?: string;
+  archived?: boolean;
   activeAlias?: string;
 };
 
@@ -28,12 +36,24 @@ export class FSCharacter {
       .doc(id)
       .get();
 
-    if (!docRef.exists) {
+    const character = docRef.data();
+    if (!character) {
       return null;
     }
-    const character = docRef.data();
 
-    return { id, ...character };
+    return {
+      id,
+      owner: character.owner,
+      name: character.name,
+      room: character.room,
+      text: character.text,
+      showOnInitiative: character.showOnInitiative,
+      chatPosition: character.chatPosition,
+      pawnSize: character.pawnSize,
+      color: character.color,
+      archived: character.archived,
+      activeAlias: character.activeAlias
+    };
   }
 
   static async Create(params: {
@@ -49,13 +69,49 @@ export class FSCharacter {
     color: string;
     archived: boolean;
   }) {
+    const character = await FSCharacter.CreateOrphan({
+      owner: params.owner,
+      name: params.name,
+      room: params.roomId,
+      text: params.text ?? "",
+      activeAlias: params.activeAlias,
+      showOnInitiative: params.showOnInitiative ?? true,
+      chatPosition: params.chatPosition ?? 0,
+      pawnSize: params.pawnSize ?? 1,
+      color: params.color ?? SYSTEM_COLOR,
+      archived: params.archived ?? false
+    });
+    const id = character.id;
+
+    /* 初期aliasを作成してactiveに指定 */
+    const alias = await FSAlias.CreateDefault({
+      roomId: params.roomId,
+      characterId: id,
+      imageId: params.imageId
+    });
+    await FSCharacter.SetActiveAlias(id, alias.id);
+
+    return character;
+  }
+
+  static async CreateOrphan(params: {
+    owner: string;
+    name: string;
+    room: string;
+    text: string;
+    activeAlias: string | null;
+    showOnInitiative: boolean;
+    chatPosition: number;
+    pawnSize: number;
+    color: string;
+    archived: boolean;
+  }) {
     const {
       owner,
       name,
-      roomId,
-      text = "",
-      activeAlias = "alias_1",
-      imageId = DEFAULT_CHARACTER_IMAGE,
+      room,
+      text,
+      activeAlias = null,
       showOnInitiative = true,
       chatPosition = 0,
       pawnSize = 1,
@@ -67,14 +123,13 @@ export class FSCharacter {
       throw new Error("no owner given");
     }
 
-    if (!roomId) {
-      throw new Error("no roomId given");
+    if (!room) {
+      throw new Error("no room given");
     }
-
     const c = {
       owner,
       name,
-      room: roomId,
+      room,
       text,
       activeAlias,
       showOnInitiative,
@@ -83,20 +138,63 @@ export class FSCharacter {
       color,
       archived
     };
-
     const db = firebase.firestore();
     const characterDocRef = await db.collection("character").add(c);
     const id = characterDocRef.id;
-
-    /* 初期aliasを作成してactiveに指定 */
-    const alias = await FSAlias.CreateDefault({
-      roomId,
-      characterId: id,
-      imageId
-    });
-    await FSCharacter.SetActiveAlias(id, alias.id);
-
     return { id, ...c };
+  }
+
+  static async Duplicate(characterId: string) {
+    const c = store.getters["character/info"].find(
+      (c: { id: string }) => c.id === characterId
+    );
+    if (!c) {
+      throw new Error(`no character found: ${characterId}`);
+    }
+    const {
+      owner,
+      name,
+      room,
+      text,
+      showOnInitiative,
+      chatPosition,
+      pawnSize,
+      color,
+      archived,
+      activeAlias
+    } = c;
+
+    const newCharacter = await FSCharacter.CreateOrphan({
+      owner,
+      name: postfix(name),
+      room,
+      text,
+      activeAlias: null,
+      showOnInitiative,
+      chatPosition,
+      pawnSize,
+      color,
+      archived
+    });
+    const newCharacterId = newCharacter.id;
+
+    const aList = store.getters["alias/info"].filter(
+      (a: { character: string }) => a.character === characterId
+    );
+    for (let i = 0; i < aList.length; i++) {
+      const a = aList[i];
+      const newAlias = await FSAlias.Create({
+        roomId: room,
+        characterId: newCharacterId,
+        imageId: a.image,
+        name: a.name
+      });
+      if (a.id === activeAlias) {
+        await FSCharacter.SetActiveAlias(newCharacterId, newAlias.id);
+      }
+    }
+
+    return newCharacter;
   }
 
   static async Update(characterId: string, criteria: object) {

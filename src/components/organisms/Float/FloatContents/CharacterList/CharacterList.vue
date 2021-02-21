@@ -55,7 +55,11 @@ export default {
         }
       }
 
-      result.others.sort((a, b) => (a.owner > b.owner ? 1 : -1));
+      result.others.sort((a, b) =>
+        a.owner > b.owner ? 1 : a.name > b.name ? 1 : -1
+      );
+      result.ownArchived.sort((a, b) => (a.name > b.name ? 1 : -1));
+      result.own.sort((a, b) => (a.name > b.name ? 1 : -1));
       return result;
     }
   },

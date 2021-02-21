@@ -64,10 +64,40 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     }
   });
 
+  /* キャラクタを複製 */
+  const copyCharacterItem = new ContextMenuChildItem({
+    value: `copy_character_${pawnId}`,
+    text: "キャラクターを複製する",
+    callback: async () => {
+      const characterId = pawn.character;
+      const character = await FSCharacter.Duplicate(characterId);
+      const transform = new DOMMatrix(_transform);
+      transform.e += pawnSize * PAWN_UNIT_SIZE;
+      transform.f += pawnSize * PAWN_UNIT_SIZE;
+      await FSPawn.Create({
+        roomId,
+        userId,
+        boardId,
+        imageId,
+        characterId: character.id,
+        transform
+      });
+    }
+  });
+
+  /* キャラクターを控室に入れる */
+  const archiveCharacterItem = new ContextMenuChildItem({
+    value: `archive_character_${pawnId}`,
+    text: `控室に入れて隠す`,
+    callback: async () => {
+      await FSCharacter.Update(characterId, { archived: true });
+    }
+  });
+
   /* コマ複製 */
   const copyPawnItem = new ContextMenuChildItem({
     value: `copy_pawn_${pawnId}`,
-    text: "コマを複製する",
+    text: "コマを増やす",
     callback: async () => {
       const transform = new DOMMatrix(_transform);
       transform.e += pawnSize * PAWN_UNIT_SIZE;
@@ -120,34 +150,15 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   });
   changePawnSize.children.push(pawnSizeDown);
 
-  /* キャラクターを控室に入れる */
-  const archiveCharacterItem = new ContextMenuChildItem({
-    value: `archive_character_${pawnId}`,
-    text: `控室に入れる`,
-    callback: async () => {
-      await FSCharacter.Update(characterId, { archived: true });
-    }
-  });
-
-  /* キャラクターを控室から出す */
-  const unArchiveCharacterItem = new ContextMenuChildItem({
-    value: `un_archive_character_${pawnId}`,
-    text: `控室から出す`,
-    callback: async () => {
-      await FSCharacter.Update(characterId, { archived: false });
-    }
-  });
-
   result.push(resetPosItem);
   result.push(editCharacterItem);
+  if (!archived) {
+    result.push(archiveCharacterItem);
+  }
+  result.push(copyCharacterItem);
   result.push(copyPawnItem);
   result.push(deletePawnItem);
   result.push(changePawnSize);
-  if (archived) {
-    result.push(unArchiveCharacterItem);
-  } else {
-    result.push(archiveCharacterItem);
-  }
 
   return result;
 }

@@ -9,6 +9,7 @@
   <fieldset>
     <legend>{{ `${characterName}(${owner})` || "ERROR" }}</legend>
     <ha-button @click="onClickEditCharacter">編集 </ha-button>
+    <ha-button @click="onDuplicateCharacter">複製</ha-button>
     <ha-button v-if="hasAlias" @click="onClickAddPawn">コマ追加</ha-button>
     <ha-button v-else disabled>立ち絵なし</ha-button>
     <ha-select
@@ -84,6 +85,10 @@ export default {
       const show = true;
       const args = { characterId: this.characterId };
       await this.$store.dispatch("float/create", { contentId, show, args });
+    },
+    async onDuplicateCharacter() {
+      const { characterId } = this;
+      await FSCharacter.Duplicate(characterId);
     },
     async onClickAddPawn() {
       console.log("CharacterList.onClickAddPawn"); // @DELETEME

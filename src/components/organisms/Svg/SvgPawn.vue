@@ -8,7 +8,7 @@
 <template>
   <g
     :id="shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`"
-    v-if="loaded && shadowHandler"
+    v-if="!archived && loaded && shadowHandler"
     :style="{ transform: `${transform}` }"
     class="token-transition"
     @mousedown="onMouseDown($event)"
