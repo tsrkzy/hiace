@@ -8,36 +8,38 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <create-character-form></create-character-form>
-    <h5>自分のキャラクタ</h5>
-    <CharacterListChip
-      :key="c.id"
-      v-for="c in categolizedCharacters.own"
-      :character-id="c.id"
-    />
-    <h5>自分の控室</h5>
-    <CharacterListChip
-      :key="c.id"
-      v-for="c in categolizedCharacters.ownArchived"
-      :character-id="c.id"
-    />
-    <h5>その他</h5>
-    <CharacterListChip
-      :key="c.id"
-      v-for="c in categolizedCharacters.others"
-      :character-id="c.id"
-    />
+    <container>
+      <column cols="2"><h5>自分のキャラクタ</h5></column>
+      <column cols="1" :key="c.id" v-for="c in categolizedCharacters.own">
+        <CharacterListChip :character-id="c.id" />
+      </column>
+      <column cols="2"><h5>自分の控室</h5></column>
+      <column
+        cols="1"
+        :key="c.id"
+        v-for="c in categolizedCharacters.ownArchived"
+      >
+        <CharacterListChip :character-id="c.id" />
+      </column>
+      <column cols="2"><h5>その他</h5></column>
+      <column cols="1" :key="c.id" v-for="c in categolizedCharacters.others">
+        <CharacterListChip :character-id="c.id" />
+      </column>
+    </container>
   </div>
 </template>
 
 <script>
 import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
+import Column from "@/components/atoms/flex/Column";
+import Container from "@/components/atoms/flex/Container";
 import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterList/CharacterListChip";
 import CreateCharacterForm from "@/components/organisms/Float/FloatContents/CharacterList/CreateCharacterForm";
 
 export default {
   name: "CharacterList",
-  components: { CreateCharacterForm, CharacterListChip },
+  components: { Column, Container, CreateCharacterForm, CharacterListChip },
   computed: {
     categolizedCharacters() {
       const result = { own: [], ownArchived: [], others: [] };
@@ -55,9 +57,13 @@ export default {
         }
       }
 
-      result.others.sort((a, b) =>
-        a.owner > b.owner ? 1 : a.name > b.name ? 1 : -1
-      );
+      result.others.sort((a, b) => {
+        if (a.owner > b.owner) return 1;
+        if (a.owner < b.owner) return -1;
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+        return 0;
+      });
       result.ownArchived.sort((a, b) => (a.name > b.name ? 1 : -1));
       result.own.sort((a, b) => (a.name > b.name ? 1 : -1));
       return result;
@@ -73,3 +79,4 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss"></style>
