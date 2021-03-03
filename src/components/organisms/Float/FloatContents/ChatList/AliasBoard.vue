@@ -7,15 +7,8 @@
 
 <template>
   <div
-    class="__hide_on_drag"
-    :style="{
-      backgroundColor: 'transparent',
-      position: 'absolute',
-      height: '200px',
-      width: '100%',
-      left: 0,
-      top: `-${height}px`
-    }"
+    class="__hide_on_drag alias-board__container"
+    :style="{ top: `-${height}px` }"
     @mouseenter="onEnter($event)"
   >
     <div
@@ -47,16 +40,21 @@ export default {
   components: { Alias },
   data() {
     return {
-      height: 200
+      height: 200,
+      timeoutId: null
     };
   },
   methods: {
     onEnter(e) {
       const $el = e.currentTarget;
-      $el.style.display = "none";
-      setTimeout(onTimeout, 2000);
+      $el.style.opacity = ".7";
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
+      this.timeoutId = setTimeout(onTimeout, 2000);
       function onTimeout() {
-        $el.style.display = "";
+        $el.style.opacity = "1";
       }
     }
   },
@@ -133,3 +131,13 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss">
+div.alias-board__container {
+  background-color: transparent;
+  position: absolute;
+  height: 200px;
+  width: 100%;
+  left: 0;
+  transition: opacity 200ms;
+}
+</style>
