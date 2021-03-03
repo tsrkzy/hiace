@@ -38,12 +38,15 @@ export const board = {
       const boards = state.boards;
       const mapList = rootGetters["map/info"];
       const pawnList = rootGetters["pawn/info"];
+      const me = rootGetters["auth/user"].id;
       const divisions = [];
       for (let i = 0; i < boards.length; i++) {
         const b = boards[i];
         const pawns = pawnList
           .filter(p => p.board === b.id)
           .sort((a, b) => {
+            if (a.owner !== me && b.owner === me) return 1;
+            if (a.owner === me && b.owner !== me) return -1;
             if (a.owner > b.owner) return 1;
             if (a.owner < b.owner) return -1;
             const bName = getName("character", b.character);
