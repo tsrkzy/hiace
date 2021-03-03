@@ -114,7 +114,7 @@
           :disabled="!aliasId"
           nav-to-image-manager
           show-null
-          v-model="imageId"
+          :image-id="imageId"
           @selectImage="onAliasImageChange"
         ></image-show-case>
       </scroll-summary>

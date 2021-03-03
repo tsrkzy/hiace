@@ -7,6 +7,7 @@
 
 <template>
   <div>
+    <span>{{ imageId }}</span>
     <ha-button
       v-if="navToImageManager && !images.length"
       @click="onOpenImageManager"
@@ -23,15 +24,7 @@
           type="radio"
           @change="onChangeSelectImage"
         />
-        <div
-          :style="{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            maxWidth: '64px',
-            maxHeight: '64px'
-          }"
-        >
+        <div class="null-image__inner-frame">
           <span>指定しない</span>
         </div>
       </div>
@@ -77,10 +70,10 @@ export default {
     disabled: { type: Boolean, default: false },
     showNull: { type: Boolean, default: false }
   },
-  model: {
-    prop: "imageId",
-    event: "selectImage"
-  },
+  // model: {
+  //   prop: "imageId",
+  //   event: "selectImage"
+  // },
   methods: {
     onChangeSelectImage(e) {
       const { value } = e.currentTarget;
@@ -136,6 +129,15 @@ div.image-frame {
     border: 1px dotted red;
     background-color: lightsalmon;
   }
+
+  div.null-image__inner-frame {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 64px;
+    max-height: 64px;
+  }
+
   img {
     position: absolute;
     left: 0;
