@@ -15,6 +15,11 @@ export const SYSTEM = "SYSTEM";
 
 export const SYSTEM_COLOR = "#000000";
 
+interface IHistory {
+  key: number;
+  text: string;
+}
+
 export class FSChat {
   static unsubscribeMap = new Map();
 
@@ -227,12 +232,35 @@ export class FSChat {
       params.value.result = result;
       params.value.secret = secret;
       type = secret ? DICE_SECRET : DICE;
+
+      /* ヒストリに保存 */
+      FSChat.PushHistory(text);
     } catch (e) {
       /* diceBotがコマンドとして解釈しなかった */
       console.warn(e);
     }
 
     return await FSChat.Create({ type, ...params });
+  }
+
+  static LoadHistory(): IHistory[] {
+    const historyJSON = window.localStorage.getItem("history") || "[]";
+    return JSON.parse(historyJSON);
+  }
+
+  static PushHistory(command: string) {
+    const historyList = FSChat.LoadHistory();
+
+    /* 先頭に追加して重複を削除、10個に絞ってkey振り直し */
+    historyList.unshift({ key: 0, text: command });
+    const filteredHistoryList = historyList
+      .filter((v, i, a) => a.findIndex(w => w.text === v.text) === i)
+      .slice(0, 10);
+    filteredHistoryList.forEach((v, i) => {
+      v.key = i;
+    });
+    window.localStorage.setItem("history", JSON.stringify(filteredHistoryList));
+    return filteredHistoryList;
   }
 
   static SetListener(roomId: string) {

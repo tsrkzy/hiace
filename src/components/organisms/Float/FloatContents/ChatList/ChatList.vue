@@ -37,7 +37,7 @@
           @keydown="onKeydown"
           v-model="chatText"
           rows="2"
-          placeholder="enter: send / shift+enter: new line"
+          placeholder="enter: send / shift+enter: new line / arrow up: dice log"
         ></ha-textarea>
       </div>
       <on-type-indicator />
@@ -123,6 +123,7 @@ export default {
       channelId: SYSTEM_CHANNEL_ID,
       innerDiceSystem: null,
       chatText: "",
+      historyKey: -1,
       characterId: null,
       aliasId: null,
       fontSize: 0
@@ -173,8 +174,38 @@ export default {
       }
     },
     async onKeydown(e) {
-      const { code, isComposing, shiftKey } = e;
-      if (!isComposing && !shiftKey && code.toLowerCase() === "enter") {
+      const { code, isComposing, shiftKey, currentTarget } = e;
+      const { value: value = "", selectionStart } = currentTarget;
+
+      const historyList = FSChat.LoadHistory();
+      const historyLength = historyList.length;
+
+      const firstLineLength = value.split("\n")[0].length;
+      const caretOnFirstLine = selectionStart <= firstLineLength;
+
+      const lowerCode = code.toLowerCase();
+      if (
+        !isComposing &&
+        !shiftKey &&
+        lowerCode === "arrowup" &&
+        caretOnFirstLine &&
+        historyLength !== 0
+      ) {
+        /* 変換中でなく、キャレットが文頭にある時にarrowupが入力された場合 */
+        this.historyKey++;
+        this.historyKey =
+          this.historyKey >= historyLength ? 0 : this.historyKey;
+        const history = historyList.find(h => h.key === this.historyKey);
+        if (history) {
+          this.chatText = history.text;
+          return false;
+        }
+      }
+
+      /* ヒストリ呼出しでない or ヒストリがない場合はヒストリ参照をリセット */
+      this.historyKey = -1;
+
+      if (!isComposing && !shiftKey && lowerCode === "enter") {
         /* 変換中でない場合のEnter */
         e.preventDefault();
         await this.sendChat();
