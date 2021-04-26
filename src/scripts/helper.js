@@ -82,3 +82,19 @@ function next(postfix = "") {
   if (!LIST[i + 1]) throw new Error("implement error: out of range");
   return LIST[i + 1];
 }
+
+/**
+ * Excelで出力されがちな汚い長いテキストをきれいにする
+ *
+ * 1. 各行末の連続した半角空白、全角空白を全て削除する
+ * 2. 半角空白、全角空白、半角二重引用符のみの行を削除する
+ * 3. 3個以上連続する改行(\n)を改行2個に変換
+ * @param nastyText {string}
+ */
+export function washExcelNastyText(nastyText) {
+  const a1 = nastyText.replace(/[\s]*\n/g, "\n");
+  const a2 = a1.replace(/\n"/g, "\n");
+  const a3 = a2.replace(/\n{3,}/g, "\n\n");
+  const a4 = a3.replace(/^["\n\s]*/g, "");
+  return a4;
+}

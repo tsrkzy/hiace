@@ -135,6 +135,7 @@ import HaTextarea from "@/components/atoms/HaTextarea";
 import ImageShowCase from "@/components/molecules/ImageShowCase";
 import ColorPicker from "@/components/molecules/ColorPicker";
 import ScrollSummary from "@/components/atoms/ScrollSummary";
+import { washExcelNastyText } from "@/scripts/helper";
 import { Smoke } from "@/scripts/Smoke";
 
 const CHARACTER_NOT_SELECTED = "CHARACTER_NOT_SELECTED";
@@ -223,7 +224,8 @@ export default {
     },
     onCharacterTextInput(value) {
       console.log("CharacterEdit.onCharacterTextInput", value); // @DELETEME
-      FSCharacter.Update(this.characterId, { text: value });
+      const washedText = washExcelNastyText(value);
+      FSCharacter.Update(this.characterId, { text: washedText });
     },
     onCharacterShowOnInitiative(value) {
       console.log("CharacterEdit.onCharacterShowOnInitiative", value); // @DELETEME
