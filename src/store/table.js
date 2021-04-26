@@ -78,9 +78,10 @@ export const table = {
         /* キャラクタごとに行を作成 */
         for (let k = 0; k < characters.length; k++) {
           const character = characters[k];
+
           const row = {
             characterId: character.id,
-            show: character.showOnInitiative,
+            show: character.showOnInitiative && !character.archived,
             cells: []
           };
           /* 列要素を作成 */
