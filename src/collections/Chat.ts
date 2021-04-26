@@ -6,6 +6,7 @@ import { FSCharacter } from "@/collections/Character";
 import { callDiceBot } from "@/scripts/diceBot";
 import { diceroll } from "@/scripts/diceroll";
 import { ring } from "@/scripts/DoorBell";
+import { mask } from "@/scripts/helper";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";
@@ -115,7 +116,7 @@ export class FSChat {
       owner: userId,
       character: null,
       alias: null,
-      value: { text: `logged in - - - ${email} - - -` }
+      value: { text: `logged in - - - ${mask(email)} - - -` }
     };
     return await FSChat.Create(c);
   }

@@ -3,14 +3,18 @@ import "firebase/firestore";
 import "firebase/auth";
 
 import store from "@/store";
-import { getName } from "@/scripts/helper";
+import { getName, mask } from "@/scripts/helper";
 import { SYSTEM_COLOR } from "@/collections/Chat";
 
 export class FSUser {
   static unsubscribeMap = new Map();
 
-  static Who(id: string) {
-    return getName("user", id);
+  static Who(id: string, useMask: boolean = false) {
+    let userName = getName("user", id);
+    if (useMask) {
+      userName = mask(userName);
+    }
+    return userName;
   }
 
   static async GetById({ id }: { id: string }) {

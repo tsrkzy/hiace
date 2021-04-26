@@ -54,6 +54,10 @@
       </ul>
     </fieldset>
     <fieldset>
+      <legend>DL</legend>
+      <chat-download-button />
+    </fieldset>
+    <fieldset>
       <legend>外部サイト</legend>
       <p>
         <a
@@ -76,11 +80,12 @@ import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
 import ColorPicker from "@/components/molecules/ColorPicker";
+import ChatDownloadButton from "@/components/organisms/Float/FloatContents/ChatDownloadButton";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "RoomManager",
-  components: { ColorPicker, HaButton },
+  components: { ChatDownloadButton, ColorPicker, HaButton },
   props: {
     floatId: {
       type: Number,
