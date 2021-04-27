@@ -4,7 +4,11 @@
  - tsrmix@gmail.com                                                           -
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
-import { HM_CHARACTER_ARCHIVE, HM_TABLE_COLUMN } from "@/message";
+import {
+  HM_CHARACTER_ARCHIVE,
+  HM_TABLE_COLUMN,
+  HM_CHAT_DICE_LOG
+} from "@/message";
 
 interface IIFloat {
   id: number;
@@ -63,7 +67,7 @@ export const FLOAT_HELP_MESSAGES = {
   [CHARACTER_EDIT]: [],
   [BOARD_LIST]: [],
   [MAP_EDIT]: [],
-  [CHAT_LIST]: [],
+  [CHAT_LIST]: [HM_CHAT_DICE_LOG],
   [TABLE_VIEW]: [HM_TABLE_COLUMN],
   [IMAGE_MANAGER]: [],
   [SOUND_MANAGER]: [],
