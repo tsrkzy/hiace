@@ -1,5 +1,6 @@
 html {
   body {
+    user-select: none;
     overflow: hidden;
   }
 
@@ -34,6 +35,13 @@ html {
           border: none;
         }
       }
+    }
+  }
+
+  details {
+    summary {
+      display: list-item;
+      background-color: lightgray;
     }
   }
 
@@ -76,8 +84,6 @@ html {
   }
 
   button {
-    user-select: none;
-
     &.ha {
       padding: 0 2px;
       line-height: 1.4rem;
@@ -103,10 +109,6 @@ html {
     font-family: monospace;
   }
 
-  label {
-    user-select: none;
-  }
-
   label.character-edit__textarea-wrapper > textarea {
     width: calc(100% - 8px);
   }
@@ -122,22 +124,27 @@ html {
   ol {
     &.chat-list__font-size-0 {
       font-size: 1.0rem;
+      user-select: text;
     }
 
     &.chat-list__font-size-1 {
       font-size: 1.1rem;
+      user-select: text;
     }
 
     &.chat-list__font-size-2 {
       font-size: 1.2rem;
+      user-select: text;
     }
 
     &.chat-list__font-size-3 {
       font-size: 1.4rem;
+      user-select: text;
     }
 
     &.chat-list__font-size-4 {
       font-size: 1.8rem;
+      user-select: text;
     }
   }
 }

@@ -7,7 +7,6 @@
 
 <template>
   <div>
-    <span>{{ imageId }}</span>
     <ha-button
       v-if="navToImageManager && !images.length"
       @click="onOpenImageManager"

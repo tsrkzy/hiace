@@ -25,9 +25,6 @@
       stroke="black"
       fill="rgba(0,0,0,0.2)"
     ></rect>
-    <!-- ビルボード -->
-    <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
-    <text x="0" y="8" fill="white">{{ characterName }}</text>
     <!-- 控室 -->
     <path
       v-if="archived"
@@ -47,6 +44,9 @@
       :height="pawnSize"
       :href="imgSrc"
     ></image>
+    <!-- ビルボード -->
+    <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
+    <text x="0" y="8" fill="white">{{ characterName }}</text>
     <!-- ドラッグ中の当たり判定拡張 -->
     <rect
       v-if="dragged"
