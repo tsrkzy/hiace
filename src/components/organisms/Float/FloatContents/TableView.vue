@@ -16,7 +16,6 @@
         <option :value="null" disabled selected>テーブル選択</option>
       </ha-select>
       <ha-button @click="onCreateTable">作成</ha-button>
-      <ha-button @click="onDeleteTable">削除</ha-button>
     </div>
     <table-config :table-id="tableId" v-model="sortConfig" />
     <div v-if="tableMatrix">
@@ -122,12 +121,6 @@ export default {
       const roomId = this.room.id;
       const table = await FSTable.CreateDefault({ roomId });
       this.tableId = table.id;
-    },
-    async onDeleteTable() {
-      this.sortConfig = null;
-      const tableId = this.tableId;
-      await FSTable.Delete(tableId);
-      this.tableId = null;
     },
     async onInputCell(e, cell) {
       const { columnId, characterId, dataType, refPath } = cell;

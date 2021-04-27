@@ -67,7 +67,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   /* キャラクタを複製 */
   const copyCharacterItem = new ContextMenuChildItem({
     value: `copy_character_${pawnId}`,
-    text: "キャラクターを複製する",
+    text: "キャラクタを複製する",
     callback: async () => {
       const characterId = pawn.character;
       const character = await FSCharacter.Duplicate(characterId);
@@ -85,7 +85,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     }
   });
 
-  /* キャラクターを控室に入れる */
+  /* キャラクタを控室に入れる */
   const archiveCharacterItem = new ContextMenuChildItem({
     value: `archive_character_${pawnId}`,
     text: `控室に入れて隠す`,

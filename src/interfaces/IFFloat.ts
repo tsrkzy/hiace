@@ -4,6 +4,7 @@
  - tsrmix@gmail.com                                                           -
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
+import { HM_CHARACTER_ARCHIVE, HM_TABLE_COLUMN } from "@/message";
 
 interface IIFloat {
   id: number;
@@ -17,6 +18,7 @@ interface IIFloat {
   w: number;
 }
 
+/* contentId */
 export const UNSET = "UNSET";
 export const CHARACTER_LIST = "CHARACTER_LIST";
 export const CHARACTER_EDIT = "CHARACTER_EDIT";
@@ -53,6 +55,23 @@ const startUpList = [
   ROOM_MANAGER,
   ISSUE_WRITER
 ];
+
+/* help */
+export const FLOAT_HELP_MESSAGES = {
+  [UNSET]: [],
+  [CHARACTER_LIST]: [HM_CHARACTER_ARCHIVE],
+  [CHARACTER_EDIT]: [],
+  [BOARD_LIST]: [],
+  [MAP_EDIT]: [],
+  [CHAT_LIST]: [],
+  [TABLE_VIEW]: [HM_TABLE_COLUMN],
+  [IMAGE_MANAGER]: [],
+  [SOUND_MANAGER]: [],
+  [ROOM_MANAGER]: [],
+  [CHANNEL_LIST]: [],
+  [NOTE_MANAGER]: [],
+  [ISSUE_WRITER]: []
+};
 
 export function title(id: string) {
   switch (id) {
@@ -110,6 +129,11 @@ export class IFFloat implements IIFloat {
   w = 300;
   h = 200;
   args = null;
+
+  static GetById({ id }: { id: number }): IFFloat | null {
+    const instances: IFFloat[] = IFFloat.instances;
+    return instances.find((i: IFFloat) => i.id === id) || null;
+  }
 
   constructor(contentId: string, show?: boolean, args?: any) {
     const singleton = singletonList.indexOf(contentId) !== -1;

@@ -47,6 +47,13 @@
           </li>
         </ol>
       </fieldset>
+      <ha-checkbox
+        v-model="showDeleteButton"
+        label="このテーブルを完全に削除する"
+      ></ha-checkbox>
+      <ha-button v-if="showDeleteButton" @click="onDeleteTable"
+        >このテーブルを削除する</ha-button
+      >
     </details>
   </div>
 </template>
@@ -67,6 +74,11 @@ export default {
   model: {
     prop: "sortConfig",
     event: "change"
+  },
+  data() {
+    return {
+      showDeleteButton: false
+    };
   },
   computed: {
     tableMatrix() {
@@ -116,6 +128,11 @@ export default {
     },
     async onChangeOrder(columnId, order) {
       await FSColumn.Reorder(this.tableId, columnId, order);
+    },
+    async onDeleteTable() {
+      this.emitSort();
+      const tableId = this.tableId;
+      await FSTable.Delete(tableId);
     },
     async onDeleteColumn(columnId) {
       this.emitSort();

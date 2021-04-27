@@ -14,14 +14,17 @@
     >
       <span class="float-handle__title">{{ float.contentTitle }}</span>
       <div v-if="dragMove" class="move-hit-box"></div>
+
+      <button
+        v-if="!dragMove"
+        @mousedown.stop
+        @click="onClickClose($event)"
+        style="float:right;"
+      >
+        閉じる
+      </button>
+      <hint-container v-if="!dragMove" :float-id="floatId" />
     </div>
-    <button
-      v-if="!dragMove"
-      class="button__close z-10"
-      @click="onClickClose($event)"
-    >
-      -
-    </button>
     <!-- scale diagonal -->
     <div
       :id="`scale_se_handle_${floatId}`"
@@ -45,8 +48,11 @@
 </template>
 
 <script>
+import HintContainer from "@/components/organisms/Float/HintContainer";
+
 export default {
   name: "Float",
+  components: { HintContainer },
   props: {
     floatId: { type: Number, require: true }
   },

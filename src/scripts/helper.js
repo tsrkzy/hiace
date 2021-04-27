@@ -6,6 +6,8 @@
  -----------------------------------------------------------------------------*/
 
 import { BOOL, INT, STR } from "@/collections/Column";
+import { FLOAT_HELP_MESSAGES, IFFloat } from "@/interfaces/IFFloat";
+import { HELP_MESSAGE } from "@/message";
 import store from "@/store";
 
 export const getName = (entity, id) => {
@@ -41,7 +43,7 @@ export const isMacOS = () => {
 export const postfix = name => {
   const characters = store.getters["character/info"];
   const nameMap = new Map(characters.map(c => [c.name, true]));
-  /* 同名のキャラクターがいなければそのまま */
+  /* 同名のキャラクタがいなければそのまま */
   if (!nameMap.has(name)) {
     return name;
   }
@@ -130,4 +132,20 @@ export function tableCompare(vA, vB, config) {
   }
 
   return r * order;
+}
+
+export function getHelpMessage(floatId) {
+  const { contentId = null } = IFFloat.GetById({ id: floatId });
+  if (!contentId) return "";
+
+  const keys = FLOAT_HELP_MESSAGES[contentId];
+
+  const textList = [];
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const { header, content } = HELP_MESSAGE[key];
+    const text = `[${header}]\n${content}\n`;
+    textList.push(text);
+  }
+  return textList.join("\n");
 }
