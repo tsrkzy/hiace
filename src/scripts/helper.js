@@ -5,6 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+import { BOOL, INT, STR } from "@/collections/Column";
 import store from "@/store";
 
 export const getName = (entity, id) => {
@@ -97,4 +98,36 @@ export function washExcelNastyText(nastyText) {
   const a3 = a2.replace(/\n{3,}/g, "\n\n");
   const a4 = a3.replace(/^["\n\s]*/g, "");
   return a4;
+}
+
+export function tableCompare(vA, vB, config) {
+  const { type, order: o } = config;
+  const order = o === "asc" ? 1 : -1;
+  let r = 0;
+  switch (type) {
+    case INT: {
+      const a = isNaN(vA) ? 0 : vA;
+      const b = isNaN(vB) ? 0 : vB;
+      r = a > b ? 1 : -1;
+      break;
+    }
+    case STR: {
+      const a = !vA || !vA.trim() ? "" : vA.trim();
+      const b = !vB || !vB.trim() ? "" : vB.trim();
+      r = a > b ? 1 : -1;
+      break;
+    }
+    case BOOL: {
+      const a = !!vA;
+      const b = !!vB;
+      r = a > b ? 1 : -1;
+      break;
+    }
+    default: {
+      // do nothing
+      r = 0;
+    }
+  }
+
+  return r * order;
 }

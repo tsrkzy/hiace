@@ -33,6 +33,16 @@
               @click="onChangeOrder(c.id, +1)"
               >↓</ha-button
             >
+            <ha-button
+              :disabled="sortConfig === `${c.id}_desc`"
+              @click="onChangeSort(c.id, 'desc')"
+              >DESC</ha-button
+            >
+            <ha-button
+              :disabled="sortConfig === `${c.id}_asc`"
+              @click="onChangeSort(c.id, 'asc')"
+              >ASC</ha-button
+            >
             <span>{{ c.label }}</span>
           </li>
         </ol>
@@ -51,7 +61,12 @@ export default {
   name: "TableConfig",
   components: { HaCheckbox, HaButton, HaInputForm },
   props: {
-    tableId: { type: String, require: true }
+    tableId: { type: String, require: true },
+    sortConfig: { type: String }
+  },
+  model: {
+    prop: "sortConfig",
+    event: "change"
   },
   computed: {
     tableMatrix() {
@@ -96,13 +111,21 @@ export default {
     },
     async onChangeColumnShow(columnId, show = false) {
       console.log("TableView.onChangeColumnShow", columnId, show); // @DELETEME
+      this.emitSort();
       await FSColumn.Update(columnId, { show });
     },
     async onChangeOrder(columnId, order) {
       await FSColumn.Reorder(this.tableId, columnId, order);
     },
     async onDeleteColumn(columnId) {
+      this.emitSort();
       await FSColumn.Delete(columnId);
+    },
+    onChangeSort(columnId, order = "asc") {
+      this.emitSort(`${columnId}_${order}`);
+    },
+    emitSort(sortString = null) {
+      this.$emit("change", sortString);
     }
   }
 };

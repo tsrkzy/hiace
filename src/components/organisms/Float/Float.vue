@@ -240,10 +240,6 @@ $control-size: 10px;
 $ww: 200vw;
 $hh: 200vh;
 
-span.float-handle__title {
-  user-select: none;
-}
-
 div.float-content__shroud {
   z-index: 1;
   background: radial-gradient(

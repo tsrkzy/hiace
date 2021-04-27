@@ -18,12 +18,20 @@
       <ha-button @click="onCreateTable">作成</ha-button>
       <ha-button @click="onDeleteTable">削除</ha-button>
     </div>
-    <table-config :table-id="tableId" />
+    <table-config :table-id="tableId" v-model="sortConfig" />
     <div v-if="tableMatrix">
       <table style="width: 100%;">
         <thead>
           <tr>
-            <th v-for="c in columns" :key="c.id">
+            <th
+              v-for="c in columns"
+              :key="c.id"
+              :class="
+                `column--header 
+                ${sortConfig === `${c.id}_asc` && 'column--header__asc'}
+                ${sortConfig === `${c.id}_desc` && 'column--header__desc'}`
+              "
+            >
               <label>
                 <input
                   type="text"
@@ -41,7 +49,7 @@
             <td v-for="(cell, j) in filterWithHeader(row.cells)" :key="j">
               <div
                 v-if="cell.dataType === 'ref'"
-                style="background-color: ghostwhite;user-select: none;"
+                style="background-color: ghostwhite;text-overflow: ellipsis; white-space: nowrap; word-break: keep-all; "
                 @contextmenu="onContextmenu($event, cell.characterId)"
               >
                 {{ cell.value }}
@@ -86,6 +94,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import TableConfig from "@/components/organisms/Float/FloatContents/TableConfig";
 import { showContext } from "@/scripts/Contextmenu";
+import { tableCompare } from "@/scripts/helper";
 import { Notify } from "@/scripts/Notify";
 import { touchTable } from "@/scripts/touch";
 
@@ -100,7 +109,8 @@ export default {
   },
   data() {
     return {
-      tableId: null
+      tableId: null,
+      sortConfig: null
     };
   },
   methods: {
@@ -108,11 +118,13 @@ export default {
       this.tableId = tableId;
     },
     async onCreateTable() {
+      this.sortConfig = null;
       const roomId = this.room.id;
       const table = await FSTable.CreateDefault({ roomId });
       this.tableId = table.id;
     },
     async onDeleteTable() {
+      this.sortConfig = null;
       const tableId = this.tableId;
       await FSTable.Delete(tableId);
       this.tableId = null;
@@ -205,7 +217,25 @@ export default {
         return null;
       }
       const matrixList = this.$store.getters["table/matrixList"];
-      return matrixList.find(t => t.id === tableId);
+      const matrix = matrixList.find(t => t.id === tableId);
+
+      const sortConfig = this.sortConfig;
+      if (!sortConfig) {
+        return matrix;
+      }
+
+      // データ型
+      const [col, order] = sortConfig.split("_");
+      matrix.rows = matrix.rows.sort((rA, rB) => {
+        const cA = rA.cells.find(c => c.columnId === col);
+        const cB = rB.cells.find(c => c.columnId === col);
+        const dataType = cA.dataType;
+        const vA = cA.value;
+        const vB = cB.value;
+        return tableCompare(vA, vB, { type: dataType, order });
+      });
+
+      return matrix;
     },
     columns() {
       return (this.tableMatrix?.columns ?? []).filter(c => c.system || c.show);
