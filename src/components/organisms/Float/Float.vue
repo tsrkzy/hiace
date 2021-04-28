@@ -7,6 +7,7 @@
 
 <template>
   <div v-if="float.show" :style="floatStyle" class="float bs-5">
+    <!-- move -->
     <div
       :id="`move_handle_${floatId}`"
       :class="`move-handle z-10 ${top ? 'top' : ''}`"
@@ -27,15 +28,22 @@
     </div>
     <!-- scale diagonal -->
     <div
+      :id="`scale_nw_handle_${floatId}`"
+      class="scale-handle__nw z-10"
+      @mousedown="onScaleMouseDown($event, 'nw')"
+    >
+      <div v-if="scaleNw" class="scale-hit-box__nw"></div>
+    </div>
+    <div
       :id="`scale_se_handle_${floatId}`"
-      class="scale-handle__se"
+      class="scale-handle__se z-10"
       @mousedown="onScaleMouseDown($event, 'se')"
     >
       <div v-if="scaleSe" class="scale-hit-box__se"></div>
     </div>
     <div
       :id="`scale_sw_handle_${floatId}`"
-      class="scale-handle__sw"
+      class="scale-handle__sw z-10"
       @mousedown="onScaleMouseDown($event, 'sw')"
     >
       <div v-if="scaleSw" class="scale-hit-box__sw"></div>
@@ -59,6 +67,7 @@ export default {
   data() {
     return {
       dragMove: false,
+      scaleNw: false,
       scaleSe: false,
       scaleSw: false,
 
@@ -135,8 +144,11 @@ export default {
     },
     async onScaleMouseDown(e, direction = "sw") {
       console.log("Float.onScaleMouseDown", direction); // @DELETEME
+      const isNw = direction === "nw";
       const isSw = direction === "sw";
       const isSe = direction === "se";
+      const isN = isNw;
+      const isE = isSe;
 
       e.stopPropagation();
       await this.$store.dispatch("float/pop", { id: this.floatId });
@@ -150,6 +162,7 @@ export default {
 
       const downX = e.clientX;
       const downY = e.clientY;
+      this.scaleNw = isNw;
       this.scaleSw = isSw;
       this.scaleSe = isSe;
 
@@ -162,15 +175,15 @@ export default {
         const dx = e.clientX - downX;
         const dy = e.clientY - downY;
         /* 最小幅または最小高さを下回る場合は、最小幅または最小高さをセット */
-        const _w = isSe ? w0 + dx : w0 - dx;
-        const _h = h0 + dy;
+        const _w = isE ? w0 + dx : w0 - dx;
+        const _h = isN ? h0 - dy : h0 + dy;
 
         const tooSmallW = _w < 300;
         const tooSmallH = _h < 200;
 
         /* swの場合はxとwを変更、seの場合はwのみ */
-        const _x = isSe ? x0 : x0 + dx;
-        const _y = y0;
+        const _x = isE ? x0 : x0 + dx;
+        const _y = isN ? y0 + dy : y0;
 
         const w = tooSmallW ? 300 : _w;
         const h = tooSmallH ? 200 : _h;
@@ -202,6 +215,7 @@ export default {
         this.yt = null;
         this.wt = null;
         this.ht = null;
+        this.scaleNw = false;
         this.scaleSw = false;
         this.scaleSe = false;
         $el.removeEventListener("mousemove", onHandleMouseMove);
@@ -292,6 +306,7 @@ button.button__close {
   cursor: move;
 }
 
+.scale-hit-box__nw,
 .scale-hit-box__se,
 .scale-hit-box__sw {
   background-color: transparent;
@@ -301,6 +316,15 @@ button.button__close {
   left: calc(-1 * #{$ww} / 2);
   top: calc(-1 * #{$hh} / 2);
   cursor: grabbing;
+}
+
+.scale-handle__nw {
+  width: $control-size;
+  height: $control-size;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
 }
 
 .scale-handle__se {
