@@ -7,7 +7,8 @@
 import {
   HM_CHARACTER_ARCHIVE,
   HM_TABLE_COLUMN,
-  HM_CHAT_DICE_LOG
+  HM_CHAT_DICE_LOG,
+  HM_CHANNEL_MASK
 } from "@/message";
 
 interface IIFloat {
@@ -71,7 +72,7 @@ export const FLOAT_HELP_MESSAGES = {
   [TABLE_VIEW]: [HM_TABLE_COLUMN],
   [IMAGE_MANAGER]: [],
   [SOUND_MANAGER]: [],
-  [ROOM_MANAGER]: [],
+  [ROOM_MANAGER]: [HM_CHANNEL_MASK],
   [CHANNEL_LIST]: [],
   [NOTE_MANAGER]: [],
   [ISSUE_WRITER]: []

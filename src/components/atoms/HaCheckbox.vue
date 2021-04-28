@@ -1,5 +1,6 @@
 <template>
   <label>
+    <span v-if="frontLabel" :style="style">{{ label }}</span>
     <input
       type="checkbox"
       :value="value"
@@ -8,7 +9,7 @@
       @input="$emit('input', $event.currentTarget.checked)"
       @change="$emit('change', $event.currentTarget.checked)"
     />
-    <span :style="style">{{ label }}</span>
+    <span v-if="!frontLabel" :style="style">{{ label }}</span>
   </label>
 </template>
 
@@ -22,6 +23,7 @@ export default {
   props: {
     value: { type: Boolean, default: false },
     label: { type: String, default: "" },
+    frontLabel: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false }
   },
   computed: {

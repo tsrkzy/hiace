@@ -18,12 +18,6 @@
         label="発言内容を伏せる"
         :value="maskChannel"
         @change="onMaskHandler"
-      ></ha-checkbox
-      ><br />
-      <ha-checkbox
-        label="完全に非表示にする(実装中)"
-        :value="hideChannel"
-        @change="onHideHandler"
       ></ha-checkbox>
     </fieldset>
     <div v-if="iAmOwner">
@@ -172,8 +166,7 @@ export default {
   data() {
     return {
       enableBan: false,
-      maskChannel: this.$store.getters["localConfig/maskChannel"],
-      hideChannel: this.$store.getters["localConfig/hideChannel"]
+      maskChannel: this.$store.getters["localConfig/maskChannel"]
     };
   },
   methods: {
@@ -208,10 +201,6 @@ export default {
     async onMaskHandler(e) {
       const payload = { maskChannel: !!e };
       await this.$store.dispatch("localConfig/setMaskChannel", payload);
-    },
-    async onHideHandler(e) {
-      const payload = { hideChannel: !!e };
-      await this.$store.dispatch("localConfig/setHideChannel", payload);
     },
     isMe(userId) {
       return userId === this.$store.getters["auth/user"]?.id;

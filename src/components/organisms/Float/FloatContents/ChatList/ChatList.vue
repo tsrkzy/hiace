@@ -7,7 +7,7 @@
 
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
-    <alias-board></alias-board>
+    <alias-board v-if="showAlias"></alias-board>
     <chat-log-viewer
       :float-id="floatId"
       :channel-id="channelId"
@@ -27,7 +27,12 @@
           @change="onChangeDice"
         >
         </ha-select>
-        <span>文字サイズ: +{{ fontSize }}</span>
+        <ha-checkbox
+          front-label
+          label="立ち絵"
+          v-model="showAlias"
+        ></ha-checkbox>
+        <span>サイズ{{ fontSize }}</span>
         <ha-button @click="onClickLarge">+</ha-button>
         <ha-button @click="onClickSmall">-</ha-button>
       </div>
@@ -52,6 +57,7 @@ import { FSCharacter } from "@/collections/Character";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
@@ -64,6 +70,7 @@ import { ON_TYPE, Socket } from "@/scripts/Socket";
 export default {
   name: "ChatList",
   components: {
+    HaCheckbox,
     HaButton,
     OnTypeIndicator,
     AliasBoard,
@@ -126,6 +133,7 @@ export default {
       historyKey: -1,
       characterId: null,
       aliasId: null,
+      showAlias: true,
       fontSize: 0
     };
   },

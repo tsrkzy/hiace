@@ -6,6 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 export const HM_CHAT_DICE_LOG = "HM_CHAT_DICE_LOG";
+export const HM_CHANNEL_MASK = "HM_CHANNEL_MASK";
 export const HM_CHARACTER_ARCHIVE = "HM_CHARACTER_ARCHIVE";
 export const HM_TABLE_COLUMN = "HM_TABLE_COLUMN";
 
@@ -14,6 +15,11 @@ export const HELP_MESSAGE = {
     header: "チャット機能",
     content:
       "return: チャット送信\nshift+return: 改行を入力\n↑矢印: 直近10回分のBCDiceダイスヒストリを呼び出す"
+  },
+  [HM_CHANNEL_MASK]: {
+    header: "他チャンネル",
+    content:
+      "「発言内容を伏せる」にチェックを入れることで、現在表示しているチャンネル以外の発言を伏せることができる\n(全体) チャンネルの内容は伏せることができない"
   },
   [HM_CHARACTER_ARCHIVE]: {
     header: "控室",
