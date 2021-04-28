@@ -13,6 +13,18 @@
         :chat-color="chatColor"
         @change="onChangeColor"
       ></color-picker>
+      <p>個別のチャンネル(全体以外)への発言</p>
+      <ha-checkbox
+        label="発言内容を伏せる"
+        :value="maskChannel"
+        @change="onMaskHandler"
+      ></ha-checkbox
+      ><br />
+      <ha-checkbox
+        label="完全に非表示にする(実装中)"
+        :value="hideChannel"
+        @change="onHideHandler"
+      ></ha-checkbox>
     </fieldset>
     <div v-if="iAmOwner">
       <fieldset :key="r.id" v-for="r in requestItems">
@@ -41,17 +53,26 @@
       <ul>
         <li :key="u.id" v-for="u in userItems">
           <span
-            >{{ isOwner(u.id) ? "★" : "" }}{{ u.email
+            >{{ isOwner(u.id) ? "[admin] " : "" }}{{ u.email
             }}{{ isMe(u.id) ? "(自分)" : "" }}</span
           >
-          <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickDrop(u.id)"
+          <ha-button
+            v-if="enableBan && iAmOwner && !isMe(u.id)"
+            @click="onClickDrop(u.id)"
             >退室させる
           </ha-button>
-          <ha-button v-if="iAmOwner && !isMe(u.id)" @click="onClickKick(u.id)"
+          <ha-button
+            v-if="enableBan && iAmOwner && !isMe(u.id)"
+            @click="onClickKick(u.id)"
             >キック
           </ha-button>
         </li>
       </ul>
+      <ha-checkbox
+        v-if="iAmOwner"
+        v-model="enableBan"
+        label="追放操作を有効にする"
+      ></ha-checkbox>
     </fieldset>
     <fieldset>
       <legend>DL</legend>
@@ -79,13 +100,14 @@
 import { FSRoom } from "@/collections/Room";
 import { FSUser } from "@/collections/User";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import ColorPicker from "@/components/molecules/ColorPicker";
 import ChatDownloadButton from "@/components/organisms/Float/FloatContents/ChatDownloadButton";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "RoomManager",
-  components: { ChatDownloadButton, ColorPicker, HaButton },
+  components: { HaCheckbox, ChatDownloadButton, ColorPicker, HaButton },
   props: {
     floatId: {
       type: Number,
@@ -148,7 +170,11 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      enableBan: false,
+      maskChannel: this.$store.getters["localConfig/maskChannel"],
+      hideChannel: this.$store.getters["localConfig/hideChannel"]
+    };
   },
   methods: {
     async onChangeColor(color) {
@@ -178,6 +204,14 @@ export default {
         list.push({ id: userId, email });
       }
       await this.$store.dispatch("room/setRequest", { requests: list });
+    },
+    async onMaskHandler(e) {
+      const payload = { maskChannel: !!e };
+      await this.$store.dispatch("localConfig/setMaskChannel", payload);
+    },
+    async onHideHandler(e) {
+      const payload = { hideChannel: !!e };
+      await this.$store.dispatch("localConfig/setHideChannel", payload);
     },
     isMe(userId) {
       return userId === this.$store.getters["auth/user"]?.id;

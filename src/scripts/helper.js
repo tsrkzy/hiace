@@ -5,6 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { BOOL, INT, STR } from "@/collections/Column";
 import { FLOAT_HELP_MESSAGES, IFFloat } from "@/interfaces/IFFloat";
 import { HELP_MESSAGE } from "@/message";
@@ -148,4 +149,21 @@ export function getHelpMessage(floatId) {
     textList.push(text);
   }
   return textList.join("\n");
+}
+
+/**
+ * 文字列を受け取り、全て#に変換して返す
+ * @param {string} sourceText チャット本文
+ * @param {string} selectedChannel チャットウィンドウで選択中のチャンネル
+ * @param {string} channel チャットが紐付いているチャンネル
+ * @return {*}
+ */
+export function maskByChannel(sourceText = "", channel, selectedChannel) {
+  if (channel === selectedChannel || channel === SYSTEM_CHANNEL_ID) {
+    /* SYSTEMまたは現在選択中のチャンネルはマスクしない */
+    return sourceText;
+  }
+  const mask = store.getters["localConfig/maskChannel"];
+  const washed = sourceText.trim();
+  return mask ? washed.replace(/[^\s]/g, "#") : washed;
 }

@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 import { DICE, DICE_SECRET, FSChat, SYSTEM } from "@/collections/Chat";
-import { getName } from "@/scripts/helper";
+import { getName, maskByChannel } from "@/scripts/helper";
 import store from "@/store";
 
 function createChannelSpan(c, activeChannel) {
@@ -23,25 +23,28 @@ function createChannelSpan(c, activeChannel) {
   return $ch;
 }
 
-function createSpeakerSpan(c) {
+function createSpeakerSpan(c, activeChannel) {
   const $s = document.createElement("SPAN");
-  const { type, character, owner } = c;
+  const { type, character, owner, channel } = c;
   if (type === SYSTEM) {
     $s.textContent = "$ hiace > ";
   } else {
     const characterName = getName("character", character);
     const userName = getName("user", owner);
     const speakerName = characterName || userName;
-    $s.textContent = `${speakerName}: `;
+    const s = maskByChannel(speakerName, channel, activeChannel);
+
+    $s.textContent = `${s}: `;
   }
   return $s;
 }
 
-function createTextSpan(c) {
+function createTextSpan(c, activeChannel) {
   const $t = document.createElement("SPAN");
   const {
     type,
-    value: { result = "", text = "", secret = false }
+    value: { result = "", text = "", secret = false },
+    channel
   } = c;
 
   /* 公開前のシークレットダイスの場合 */
@@ -78,7 +81,7 @@ function createTextSpan(c) {
   }
 
   if (textList.length === 1) {
-    $t.textContent = textList[0];
+    $t.textContent = maskByChannel(textList[0], channel, activeChannel);
   } else {
     for (let i = 0; i < textList.length; i++) {
       const t = textList[i];
@@ -87,7 +90,7 @@ function createTextSpan(c) {
       $tt.style.marginLeft = "0.5rem";
       $tt.style.paddingLeft = "0.5rem";
       $tt.style.borderLeft = "1px solid lightgray";
-      $tt.textContent = t;
+      $tt.textContent = maskByChannel(t, channel, activeChannel);
 
       $t.append($br, $tt);
     }

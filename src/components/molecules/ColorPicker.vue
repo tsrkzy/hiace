@@ -7,7 +7,7 @@
 
 <template>
   <label>
-    <span>文字色</span>
+    <span>{{ label || "文字色" }}</span>
     <input type="color" :value="chatColor" @change="onChangeColor($event)" />
   </label>
 </template>
@@ -15,6 +15,7 @@
 export default {
   name: "color-picker",
   props: {
+    label: { type: String, default: "" },
     chatColor: { type: String, require: true }
   },
   methods: {
