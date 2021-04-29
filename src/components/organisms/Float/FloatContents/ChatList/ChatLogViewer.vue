@@ -13,7 +13,7 @@
         v-model="pageSelect"
         @change="onChangePage"
       >
-        <option disabled value="-1">ページ移動</option>
+        <option disabled value="-1">ページ移動(1)</option>
       </ha-select>
     </div>
     <div v-if="!onBottom || !read" class="scroll-bottom__button">
@@ -36,7 +36,7 @@ import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
 
-const SCROLL_MARGIN = 40;
+const SCROLL_MARGIN = 80;
 const LPP = 200; // lines per page
 
 export default {
