@@ -24,6 +24,7 @@
       >
         閉じる
       </button>
+      <float-duplicator v-if="!dragMove" :float-id="floatId" />
       <hint-container v-if="!dragMove" :float-id="floatId" />
     </div>
     <!-- scale diagonal -->
@@ -56,11 +57,12 @@
 </template>
 
 <script>
+import FloatDuplicator from "@/components/organisms/Float/FloatDuplicator";
 import HintContainer from "@/components/organisms/Float/HintContainer";
 
 export default {
   name: "Float",
-  components: { HintContainer },
+  components: { FloatDuplicator, HintContainer },
   props: {
     floatId: { type: Number, require: true }
   },

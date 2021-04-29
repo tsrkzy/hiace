@@ -39,10 +39,9 @@ export const NOTE_MANAGER = "NOTE_MANAGER";
 export const ISSUE_WRITER = "ISSUE_WRITER";
 
 /* floatを複数枚作成しないもの */
-const singletonList = [
+export const FLOAT_SINGLETON_LIST = [
   CHARACTER_LIST,
   BOARD_LIST,
-  TABLE_VIEW,
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
@@ -141,7 +140,7 @@ export class IFFloat implements IIFloat {
   }
 
   constructor(contentId: string, show?: boolean, args?: any) {
-    const singleton = singletonList.indexOf(contentId) !== -1;
+    const singleton = FLOAT_SINGLETON_LIST.indexOf(contentId) !== -1;
     const t = IFFloat.instances.find(t => t.contentId === contentId);
     if (singleton && t) {
       t.args = args;
