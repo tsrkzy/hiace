@@ -96,7 +96,7 @@ function next(postfix = "") {
  * @param nastyText {string}
  */
 export function washExcelNastyText(nastyText) {
-  const a1 = nastyText.replace(/[\s]*\n/g, "\n");
+  const a1 = nastyText.replace(/[ 　]*\n/g, "\n");
   const a2 = a1.replace(/\n"/g, "\n");
   const a3 = a2.replace(/\n{3,}/g, "\n\n");
   const a4 = a3.replace(/^["\n\s]*/g, "");
