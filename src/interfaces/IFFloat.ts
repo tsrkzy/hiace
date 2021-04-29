@@ -131,8 +131,8 @@ export class IFFloat implements IIFloat {
   x = 100;
   y = 100;
   z = 1;
-  w = 300;
-  h = 200;
+  w = 600;
+  h = 400;
   args = null;
 
   static GetById({ id }: { id: number }): IFFloat | null {
