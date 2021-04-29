@@ -13,7 +13,7 @@
         v-model="pageSelect"
         @change="onChangePage"
       >
-        <option disabled value="-1">ページ移動(1)</option>
+        <option disabled value="-1">ページ移動</option>
       </ha-select>
     </div>
     <div v-if="!onBottom || !read" class="scroll-bottom__button">
@@ -57,8 +57,10 @@ export default {
     scroll({ top = false, rough = false } = {}) {
       const f = this.floatId;
       const $parent = document.getElementById(`chat-list--scroll-parent__${f}`);
+      const scrollPx = $parent.scrollHeight - $parent.clientHeight;
+      console.log("ChatLogViewer.scroll", scrollPx);
       $parent.scrollTo({
-        top: top ? 0 : $parent.scrollHeight - $parent.clientHeight,
+        top: top ? 0 : scrollPx + SCROLL_MARGIN, // @FIXME
         left: 0,
         behavior: rough ? "auto" : "smooth"
       });
