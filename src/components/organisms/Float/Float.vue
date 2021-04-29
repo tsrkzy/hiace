@@ -256,7 +256,8 @@ export default {
 
 <style lang="scss" scoped>
 $handle-height: 2rem;
-$control-size: 10px;
+$control-size: 15px;
+$edge: 3px solid steelblue;
 $ww: 200vw;
 $hh: 200vh;
 
@@ -325,6 +326,10 @@ button.button__close {
   top: 0;
   left: 0;
   cursor: nwse-resize;
+  &:hover {
+    border-top: $edge;
+    border-left: $edge;
+  }
 }
 
 .scale-handle__se {
@@ -334,6 +339,10 @@ button.button__close {
   bottom: 0;
   right: 0;
   cursor: nwse-resize;
+  &:hover {
+    border-bottom: $edge;
+    border-right: $edge;
+  }
 }
 
 .scale-handle__sw {
@@ -343,6 +352,10 @@ button.button__close {
   bottom: 0;
   left: 0;
   cursor: nesw-resize;
+  &:hover {
+    border-bottom: $edge;
+    border-left: $edge;
+  }
 }
 
 .content-slot {
