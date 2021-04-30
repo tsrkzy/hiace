@@ -209,7 +209,6 @@ export class FSCharacter {
   }
 
   static async Delete(characterId: string) {
-    /* @FIXME CharacterはDeleteよりArchiveの方が良さそう？ */
     const db = firebase.firestore();
     const docRef = await db
       .collection("character")

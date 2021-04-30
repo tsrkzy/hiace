@@ -167,3 +167,8 @@ export function maskByChannel(sourceText = "", channel, selectedChannel) {
   const washed = sourceText.trim();
   return mask ? washed.replace(/[^\s]/g, "#") : washed;
 }
+
+export function ver() {
+  const { VUE_APP_VERSION_STRING } = process.env;
+  return VUE_APP_VERSION_STRING || "failed to get revision.";
+}

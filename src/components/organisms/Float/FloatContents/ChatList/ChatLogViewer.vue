@@ -58,12 +58,15 @@ export default {
       const f = this.floatId;
       const $parent = document.getElementById(`chat-list--scroll-parent__${f}`);
       const scrollPx = $parent.scrollHeight - $parent.clientHeight;
-      console.log("ChatLogViewer.scroll", scrollPx);
-      $parent.scrollTo({
-        top: top ? 0 : scrollPx + SCROLL_MARGIN, // @FIXME
-        left: 0,
-        behavior: rough ? "auto" : "smooth"
-      });
+      setTimeout(() => {
+        /* @SEE https://github.com/tsrkzy/hiace/issues/61 */
+        /* @FIXME */
+        $parent.scrollTo({
+          top: top ? 0 : scrollPx,
+          left: 0,
+          behavior: rough ? "auto" : "smooth"
+        });
+      }, 100);
     },
     add(chatList = [], { flush = false } = {}) {
       const channel = this.channelId;
