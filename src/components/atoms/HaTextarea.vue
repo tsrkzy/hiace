@@ -9,7 +9,8 @@
       :placeholder="placeholder"
       :rows="rows"
       :class="{
-        resizeable
+        resizeable,
+        'full-width': fullWidth
       }"
     />
   </label>
@@ -27,7 +28,8 @@ export default {
     placeholder: { type: String, default: "" },
     disabled: { type: Boolean, default: false },
     rows: { type: String, default: "2" },
-    resizeable: { type: Boolean, default: false }
+    resizeable: { type: Boolean, default: false },
+    fullWidth: { type: Boolean, default: false }
   }
 };
 </script>
@@ -37,6 +39,9 @@ textarea {
   resize: none;
   &.resizeable {
     resize: both;
+  }
+  &.full-width {
+    width: 100%;
   }
 }
 </style>

@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
-import { callDiceBot } from "@/scripts/diceBot";
+import { callDiceBot, easyDiceCheck } from "@/scripts/diceBot";
 import { diceroll } from "@/scripts/diceroll";
 import { ring } from "@/scripts/DoorBell";
 import { ver } from "@/scripts/helper";
@@ -203,9 +203,8 @@ export class FSChat {
     /* TRPGシステムを指定しない */
     const noSystem = typeof system !== "string" || !system;
 
-    /* 簡易DiceBotコマンド判定: 任意の半角英数字記号の2文字以上の繰り返しで始まる文字列 */
-    const diceBotRegex = /^[a-zA-Z0-9!-/:-@¥[-`{-~]{2,}/;
-    const isCommand = diceBotRegex.test(text);
+    /* 簡易構文チェック */
+    const isCommand = easyDiceCheck(text);
 
     let type = TEXT;
     if (noSystem || !isCommand) {

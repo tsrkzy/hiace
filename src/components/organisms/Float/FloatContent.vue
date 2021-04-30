@@ -26,6 +26,10 @@
     ></chat-list>
     <table-view v-else-if="contentId === TABLE_VIEW" :float-id="floatId">
     </table-view>
+    <chat-pallete
+      v-else-if="contentId === CHAT_PALETTE"
+      :float-id="floatId"
+    ></chat-pallete>
     <image-manager
       v-else-if="contentId === IMAGE_MANAGER"
       :float-id="floatId"
@@ -48,6 +52,7 @@
 
 <script>
 import ChannelList from "@/components/organisms/Float/FloatContents/ChannelList";
+import ChatPallete from "@/components/organisms/Float/FloatContents/ChatPalette";
 import IssueWriter from "@/components/organisms/Float/FloatContents/IssueWriter";
 import NoteManager from "@/components/organisms/Float/FloatContents/NoteManager";
 import RoomManager from "@/components/organisms/Float/FloatContents/RoomManager";
@@ -66,6 +71,7 @@ import {
   MAP_EDIT,
   CHAT_LIST,
   TABLE_VIEW,
+  CHAT_PALETTE,
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
@@ -77,6 +83,7 @@ import {
 export default {
   name: "FloatContent",
   components: {
+    ChatPallete,
     IssueWriter,
     NoteManager,
     ChannelList,
@@ -98,6 +105,7 @@ export default {
       MAP_EDIT,
       CHAT_LIST,
       TABLE_VIEW,
+      CHAT_PALETTE,
       IMAGE_MANAGER,
       SOUND_MANAGER,
       ROOM_MANAGER,

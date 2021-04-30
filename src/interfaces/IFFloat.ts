@@ -31,6 +31,7 @@ export const BOARD_LIST = "BOARD_LIST";
 export const MAP_EDIT = "MAP_EDIT";
 export const CHAT_LIST = "CHAT_LIST";
 export const TABLE_VIEW = "TABLE_VIEW";
+export const CHAT_PALETTE = "CHAT_PALETTE";
 export const IMAGE_MANAGER = "IMAGE_MANAGER";
 export const SOUND_MANAGER = "SOUND_MANAGER";
 export const ROOM_MANAGER = "ROOM_MANAGER";
@@ -42,6 +43,7 @@ export const ISSUE_WRITER = "ISSUE_WRITER";
 export const FLOAT_SINGLETON_LIST = [
   CHARACTER_LIST,
   BOARD_LIST,
+  CHAT_PALETTE,
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
@@ -54,6 +56,7 @@ const startUpList = [
   BOARD_LIST,
   CHAT_LIST,
   TABLE_VIEW,
+  CHAT_PALETTE,
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
@@ -69,6 +72,7 @@ export const FLOAT_HELP_MESSAGES = {
   [MAP_EDIT]: [],
   [CHAT_LIST]: [HM_CHAT_DICE_LOG],
   [TABLE_VIEW]: [HM_TABLE_COLUMN],
+  [CHAT_PALETTE]: [],
   [IMAGE_MANAGER]: [],
   [SOUND_MANAGER]: [],
   [ROOM_MANAGER]: [HM_CHANNEL_MASK],
@@ -96,6 +100,9 @@ export function title(id: string) {
     }
     case TABLE_VIEW: {
       return "データテーブル";
+    }
+    case CHAT_PALETTE: {
+      return "定型チャット";
     }
     case IMAGE_MANAGER: {
       return "画像管理";

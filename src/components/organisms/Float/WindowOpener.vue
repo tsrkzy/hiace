@@ -28,7 +28,8 @@ import {
   NOTE_MANAGER,
   title,
   UNSET,
-  ISSUE_WRITER
+  ISSUE_WRITER,
+  CHAT_PALETTE
 } from "@/interfaces/IFFloat";
 
 export default {
@@ -48,6 +49,7 @@ export default {
         BOARD_LIST,
         CHAT_LIST,
         TABLE_VIEW,
+        CHAT_PALETTE,
         IMAGE_MANAGER,
         SOUND_MANAGER,
         ROOM_MANAGER,

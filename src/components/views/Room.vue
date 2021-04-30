@@ -42,6 +42,7 @@ import { FSImage } from "@/collections/Image";
 import { FSMap } from "@/collections/Map";
 import { FSNote } from "@/collections/Note";
 import { FSPawn } from "@/collections/Pawn";
+import { FSPhrase } from "@/collections/Phrase";
 import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import { FSTable } from "@/collections/Table";
@@ -110,6 +111,7 @@ export default {
     FSTable.RemoveListener(this.roomId);
     FSColumn.RemoveListener(this.roomId);
     FSNote.RemoveListener(this.roomId);
+    FSPhrase.RemoveListener(this.user.id);
 
     Socket.Dispose();
     this.$store.dispatch("room/leaveRoom");
@@ -127,6 +129,7 @@ export default {
     async afterJoined() {
       /* google認証、入室申請受理済み */
       const roomId = this.roomId;
+      const userId = this.user.id;
 
       FSUser.SetListener(roomId);
       FSChat.SetListener(roomId);
@@ -142,6 +145,7 @@ export default {
       FSTable.SetListener(roomId);
       FSColumn.SetListener(roomId);
       FSNote.SetListener(roomId);
+      FSPhrase.SetListener(userId);
 
       const user = this.$store.getters["auth/user"];
       await FSChat.BroadcastLoggedIn({ roomId, user });

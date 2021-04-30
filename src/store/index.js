@@ -17,6 +17,7 @@ import { dice } from "@/store/dice";
 import { table } from "@/store/table";
 import { column } from "@/store/column";
 import { note } from "@/store/note";
+import { phrase } from "@/store/phrase";
 import { notice } from "@/store/notice";
 import { smoke } from "@/store/smoke";
 import { contextmenu } from "@/store/contextmenu";
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     table,
     column,
     note,
+    phrase,
     notice,
     smoke,
     contextmenu,

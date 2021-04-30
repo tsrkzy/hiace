@@ -24,6 +24,16 @@ const config = {
 const axios_instance = axios.create(config);
 
 /**
+ * 簡易DiceBotコマンド判定: 任意の半角英数字記号の2文字以上の繰り返しで始まる文字列
+ * @param {string} text
+ * @return {boolean}
+ */
+export function easyDiceCheck(text) {
+  const diceBotRegex = /^[a-zA-Z0-9!-/:-@¥[-`{-~]{2,}/;
+  return diceBotRegex.test(text);
+}
+
+/**
  * @param system {string} ゲームシステム
  * @param command {string} コマンド文字列
  * @return {Promise<{result?: string, reason?: string, secret?: boolean, ok: boolean, dices:{faces:number, value:number}[]}>}
@@ -43,4 +53,22 @@ export async function callDiceBot(system, command) {
     secret,
     reason
   };
+}
+
+/**
+ * 試しにBCDice叩いて妥当なコマンドかチェックする
+ * @param {string} system
+ * @param {string} command
+ * @return {Promise<boolean>}
+ */
+export async function dryRun(system, command) {
+  try {
+    if (!easyDiceCheck(command)) {
+      return false;
+    }
+    const { ok } = await callDiceBot(system, command);
+    return ok;
+  } catch (e) {
+    return false;
+  }
 }
