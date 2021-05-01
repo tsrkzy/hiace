@@ -57,6 +57,7 @@ export async function callDiceBot(system, command) {
 
 /**
  * 試しにBCDice叩いて妥当なコマンドかチェックする
+ * 200かつokが返ればtrue それ以外はfalse
  * @param {string} system
  * @param {string} command
  * @return {Promise<boolean>}

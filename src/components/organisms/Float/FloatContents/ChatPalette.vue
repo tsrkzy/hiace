@@ -29,12 +29,28 @@
           @change="onChangeLabel($event)"
         ></ha-input-form>
       </div>
+      <div>
+        <ha-button @click="tryIt">試行</ha-button>
+        <p>{{ result }}</p>
+      </div>
+      <div>
+        <details>
+          <summary>ダイス履歴</summary>
+          <ha-button @click="updateDiceLog">再取得</ha-button>
+          <p :key="d.key" v-for="d in diceLog" class="text-selectable">
+            {{ d.text }}
+          </p>
+        </details>
+      </div>
     </fieldset>
     <ha-button @click="onCreatePhrase">新規作成</ha-button>
     <div :key="p.id" v-for="p in phraseList" class="phrase--container">
       <ha-button @click="executePhrase(p.text, p.gameSystem)">実行</ha-button>
       <ha-button v-if="!another(p.gameSystem)" @click="editPhrase(p.id)"
         >編集</ha-button
+      >
+      <ha-button v-if="!another(p.gameSystem)" @click="duplicatePhrase(p.id)"
+        >複製</ha-button
       >
       <ha-button v-if="!another(p.gameSystem)" @click="dropPhrase(p.id)"
         >削除</ha-button
@@ -46,12 +62,19 @@
         >↓</ha-button
       >
       <span :class="{ 'phrase-ok': p.ok }">({{ p.gameSystem }})&nbsp;</span>
-      <span class="phrase--header">{{ p.label || p.text }}</span>
+      <span
+        :class="{
+          'phrase--header': true,
+          'phrase--header__edit': editId === p.id
+        }"
+        >{{ editId === p.id ? "[編集中]" : "" }}{{ p.label || p.text }}</span
+      >
     </div>
   </div>
 </template>
 
 <script>
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSPhrase } from "@/collections/Phrase";
 import HaButton from "@/components/atoms/HaButton";
@@ -59,8 +82,7 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
 import CharacterSwitcher from "@/components/molecules/CharacterSwitcher";
-import { dryRun } from "@/scripts/diceBot";
-import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { callDiceBot, dryRun, easyDiceCheck } from "@/scripts/diceBot";
 
 export default {
   name: "ChatPallete",
@@ -84,7 +106,9 @@ export default {
       channelId: SYSTEM_CHANNEL_ID,
       editId: null,
       text: "",
-      label: ""
+      label: "",
+      diceLog: [],
+      result: ""
     };
   },
   computed: {
@@ -116,6 +140,11 @@ export default {
     }
   },
   methods: {
+    updateDiceLog() {
+      const historyJSON = localStorage.getItem("history") || "{}";
+      const history = JSON.parse(historyJSON) || [];
+      this.diceLog = history;
+    },
     getSpeaker() {
       /* 子コンポーネントから選択中のcharacterとaliasを取得 */
       const { aliasId, characterId } = this.$refs.cs.getIdCharacterAndAlias();
@@ -125,10 +154,18 @@ export default {
       return this.$store.getters["room/gameSystem"] !== gameSystem;
     },
     async onCreatePhrase() {
-      await this.createPhrase();
+      const phrase = await this.createPhrase();
+      const { id } = phrase;
+      this.editId = id;
     },
     async createPhrase() {
-      await FSPhrase.Create({ text: "", label: "" });
+      return await FSPhrase.Create({ text: "", label: "" });
+    },
+    async duplicatePhrase(phraseId) {
+      console.log("ChatPalette.duplicatePhrase");
+      const phrase = await FSPhrase.Duplicate(phraseId);
+      const { id } = phrase;
+      this.editId = id;
     },
     async dropPhrase(phraseId) {
       console.log("ChatPalette.dropPhrase");
@@ -161,6 +198,25 @@ export default {
 
       await FSPhrase.Swap(pA, pB);
     },
+    async tryIt() {
+      await this.$nextTick();
+      const command = this.text;
+      if (!easyDiceCheck(command)) {
+        return false;
+      }
+
+      const gameSystem = this.$store.getters["room/gameSystem"];
+      try {
+        const { ok, result } = await callDiceBot(gameSystem, command);
+        if (!ok) {
+          throw new Error("not ok");
+        }
+        this.result = `${result}`;
+      } catch (e) {
+        console.error(e);
+        this.result = "NG";
+      }
+    },
     async executePhrase(text, gameSystem) {
       const { characterId, aliasId } = this.getSpeaker();
       const { channelId } = this;
@@ -187,9 +243,9 @@ export default {
     editPhrase(phraseId) {
       this.editId = phraseId;
       const { label, text } = this.phrase;
-      console.log(label, text); // @DELETEME
       this.label = label;
       this.text = text;
+      this.result = "";
     },
     async onChangeText(text) {
       console.log("ChatPalette.onChangeText");
@@ -221,6 +277,9 @@ export default {
 .phrase--header {
   white-space: nowrap;
   word-break: keep-all;
+  &.phrase--header__edit {
+    font-weight: bold;
+  }
 }
 .phrase-ok {
   font-weight: bold;

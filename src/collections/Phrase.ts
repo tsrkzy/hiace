@@ -2,11 +2,46 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
+type TPhrase = {
+  id: string;
+  owner: string;
+  index: number;
+  text: string;
+  label: string;
+  ok: boolean;
+};
+
 export class FSPhrase {
   static unsubscribeMap = new Map();
 
-  static async Create(params: { text: string; label: string | null }) {
-    const { text, label = "" } = params;
+  static async GetById({ id }: { id: string }): Promise<TPhrase | null> {
+    const db = firebase.firestore();
+    const docRef = await db
+      .collection("phrase")
+      .doc(id)
+      .get();
+
+    const phrase = docRef.data();
+    if (!phrase) {
+      return null;
+    }
+
+    return {
+      id,
+      owner: phrase.owner,
+      index: phrase.index,
+      text: phrase.text,
+      label: phrase.label,
+      ok: phrase.ok
+    };
+  }
+
+  static async Create(params: {
+    text: string;
+    label: string | null;
+    ok?: boolean;
+  }) {
+    const { text, label = "", ok = false } = params;
 
     const indexList = store.getters["phrase/info"].map(
       (p: { index: number }) => p.index
@@ -20,13 +55,22 @@ export class FSPhrase {
       text,
       label,
       gameSystem,
-      ok: false
+      ok
     };
     const db = firebase.firestore();
     const docRef = await db.collection("phrase").add(p);
     const id = docRef.id;
 
     return { id, ...p };
+  }
+
+  static async Duplicate(phraseId: string) {
+    const phrase = await FSPhrase.GetById({ id: phraseId });
+    if (!phrase) {
+      throw new Error(`phrase not found: ${phraseId}`);
+    }
+
+    return await FSPhrase.Create(phrase);
   }
 
   static async Swap(
