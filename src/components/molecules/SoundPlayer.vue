@@ -17,7 +17,7 @@
     <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
     <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
     <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
-    <ha-button v-if="sound" @click="onDelete">削除</ha-button>
+    <ha-button v-if="deleteBtn" @click="onDelete">削除</ha-button>
     <span>{{ soundName }}</span>
   </div>
 </template>
@@ -92,6 +92,11 @@ export default {
     },
     pauseBtn() {
       return this.roomMusic === this.soundId && !this.testPlay;
+    },
+    deleteBtn() {
+      return (
+        this.sound && this.sound.owner === this.$store.getters["auth/user"].id
+      );
     }
   },
   methods: {
