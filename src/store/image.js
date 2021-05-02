@@ -16,7 +16,10 @@ export const image = {
   },
   getters: {
     info(state) {
-      return state.images;
+      const { images = [] } = state;
+      return images.sort((a, b) => {
+        return a.timestamp > b.timestamp ? -1 : 1;
+      });
     },
     nameMap(state) {
       const nameMap = {};

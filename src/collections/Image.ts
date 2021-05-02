@@ -152,6 +152,7 @@ export class FSImage {
       );
     });
 
+    const timestamp = Date.now();
     const image = {
       path,
       url,
@@ -160,7 +161,8 @@ export class FSImage {
       room: roomId,
       hidden: true,
       width,
-      height
+      height,
+      timestamp
     };
     const db = firebase.firestore();
     const imageDocRef = await db.collection("image").add(image);
