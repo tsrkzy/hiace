@@ -49,8 +49,27 @@ export const sound = {
     }
   },
   getters: {
-    info(state) {
-      return state.sounds;
+    info(state, getters, rootState, rootGetters) {
+      const me = rootGetters["auth/user"].id;
+      const { sounds = [] } = state;
+      sounds.sort((a, b) => {
+        /* 自分のアップロードしたsoundは先頭へ */
+        if (a.owner === me && b.owner !== me) {
+          return -1;
+        }
+        if (a.owner !== me && b.owner === me) {
+          return 1;
+        }
+
+        /* ownerごとにまとめる */
+        if (a.owner !== b.owner) {
+          return a.owner > b.owner ? 1 : -1;
+        }
+
+        return a.name > b.name ? 1 : -1;
+      });
+
+      return sounds;
     },
     playing(state) {
       return state.playing;

@@ -15,6 +15,9 @@
       @change="onClickFileUploadHandler"
     />
     <hr />
+    <div>
+      <volume-slider />
+    </div>
     <sound-editor :key="s.id" v-for="s in sounds" :sound-id="s.id">
     </sound-editor>
   </div>
@@ -23,9 +26,11 @@
 <script>
 import { FSSound } from "@/collections/Sound";
 import SoundEditor from "@/components/molecules/SoundPlayer";
+import VolumeSlider from "@/components/organisms/Float/FloatContents/VolumeSlider";
+
 export default {
   name: "SoundManager",
-  components: { SoundEditor },
+  components: { VolumeSlider, SoundEditor },
   props: {
     floatId: {
       type: Number,
@@ -58,5 +63,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

@@ -6,35 +6,20 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <fieldset :class="{ playing }">
-    <legend>{{ soundName }}</legend>
-    <div>
-      <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
-      <ha-checkbox
-        label="繰返"
-        @input="onInputLoop"
-        :value="sound.loop"
-      ></ha-checkbox>
-      <ha-button v-if="testPlayBtn" @click="onPlay">試聴開始</ha-button>
-      <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
-      <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
-      <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
-      <ha-button v-if="sound" @click="onDelete">削除</ha-button>
-    </div>
-    <div>
-      <label>
-        <span>音量: </span>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.05"
-          value="0.1"
-          @change="onInputVolume"
-        />
-      </label>
-    </div>
-  </fieldset>
+  <div>
+    <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
+    <ha-checkbox
+      label="繰返"
+      @input="onInputLoop"
+      :value="sound.loop"
+    ></ha-checkbox>
+    <ha-button v-if="testPlayBtn" @click="onPlay">試聴開始</ha-button>
+    <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
+    <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
+    <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
+    <ha-button v-if="sound" @click="onDelete">削除</ha-button>
+    <span>{{ soundName }}</span>
+  </div>
 </template>
 
 <script>
@@ -42,6 +27,7 @@ import { FSRoom } from "@/collections/Room";
 import { FSSound } from "@/collections/Sound";
 import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
+import { getName } from "@/scripts/helper";
 import { Sound } from "@/scripts/Sound";
 import { touch } from "@/scripts/touch";
 import store from "@/store";
@@ -77,7 +63,7 @@ export default {
       return this.$store.getters["sound/info"].find(s => s.id === this.soundId);
     },
     soundName() {
-      return this.sound?.name;
+      return `(${getName("user", this.sound.owner)})${this.sound?.name}`;
     },
     loop() {
       return this.sound?.loop;
@@ -129,11 +115,6 @@ export default {
     async onPause() {
       this.pause(true);
       this.testPlay = false;
-    },
-    onInputVolume(e) {
-      const v = e.currentTarget.value;
-      const $a = Sound.GetById(this.soundId);
-      $a.volume = parseFloat(v);
     },
     onInputMute(checked) {
       const $a = Sound.GetById(this.soundId);

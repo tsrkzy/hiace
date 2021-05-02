@@ -18,6 +18,7 @@ export class Sound {
   retry = true;
   _loop = false;
   _volume = 0.1;
+  static _Volume = 0.1;
   _muted = false;
 
   /* get/set */
@@ -27,6 +28,19 @@ export class Sound {
   set volume(v) {
     this._volume = parseFloat(v);
     this.$el.volume = this._volume;
+  }
+
+  static get Volume() {
+    return Sound._Volume;
+  }
+  static set Volume(vol) {
+    const v = parseFloat(vol);
+    Sound._Volume = vol;
+    const sounds = Sound.Instances;
+    for (let i = 0; i < sounds.length; i++) {
+      const s = sounds[i];
+      s.$el.volume = vol;
+    }
   }
 
   get muted() {
