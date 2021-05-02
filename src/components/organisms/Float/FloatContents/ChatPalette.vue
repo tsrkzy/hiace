@@ -34,6 +34,12 @@
         <p>{{ result }}</p>
       </div>
       <div>
+        <ha-checkbox label="削除する" v-model="showDeleteBtn"></ha-checkbox>
+        <ha-button v-if="showDeleteBtn" @click="dropPhrase(editId)"
+          >削除</ha-button
+        >
+      </div>
+      <div>
         <details>
           <summary>ダイス履歴</summary>
           <ha-button @click="updateDiceLog">再取得</ha-button>
@@ -51,9 +57,6 @@
       >
       <ha-button v-if="!another(p.gameSystem)" @click="duplicatePhrase(p.id)"
         >複製</ha-button
-      >
-      <ha-button v-if="!another(p.gameSystem)" @click="dropPhrase(p.id)"
-        >削除</ha-button
       >
       <ha-button v-if="!another(p.gameSystem)" @click="toFront(p.id)"
         >↑</ha-button
@@ -78,6 +81,7 @@ import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
 import { FSChat } from "@/collections/Chat";
 import { FSPhrase } from "@/collections/Phrase";
 import HaButton from "@/components/atoms/HaButton";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import HaTextarea from "@/components/atoms/HaTextarea";
@@ -87,6 +91,7 @@ import { callDiceBot, dryRun, easyDiceCheck } from "@/scripts/diceBot";
 export default {
   name: "ChatPallete",
   components: {
+    HaCheckbox,
     CharacterSwitcher,
     HaTextarea,
     HaSelect,
@@ -108,7 +113,8 @@ export default {
       text: "",
       label: "",
       diceLog: [],
-      result: ""
+      result: "",
+      showDeleteBtn: false
     };
   },
   computed: {
@@ -246,6 +252,7 @@ export default {
       this.label = label;
       this.text = text;
       this.result = "";
+      this.showDeleteBtn = false;
     },
     async onChangeText(text) {
       console.log("ChatPalette.onChangeText");
