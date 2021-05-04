@@ -162,7 +162,7 @@ export default {
     async onCreatePhrase() {
       const phrase = await this.createPhrase();
       const { id } = phrase;
-      this.editId = id;
+      this.editPhrase(id);
     },
     async createPhrase() {
       return await FSPhrase.Create({ text: "", label: "" });
@@ -171,7 +171,7 @@ export default {
       console.log("ChatPalette.duplicatePhrase");
       const phrase = await FSPhrase.Duplicate(phraseId);
       const { id } = phrase;
-      this.editId = id;
+      this.editPhrase(id);
     },
     async dropPhrase(phraseId) {
       console.log("ChatPalette.dropPhrase");

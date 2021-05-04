@@ -159,6 +159,7 @@ export class Sound {
       $el.onended = null;
     };
 
+    this.$el.volume = Sound.Volume;
     await $el.play();
     this.playing = true;
     const { loop } = store.getters["sound/info"].find(s => s.id === this.id);
