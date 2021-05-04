@@ -8,6 +8,7 @@ export const room = {
   state: {
     room: {
       id: null,
+      name: "",
       owner: null,
       keepers: [],
       requests: [],
@@ -40,11 +41,13 @@ export const room = {
     setRoom({ commit }, { room = {} }) {
       console.log("room.setRoom", room); // @DELETEME
       commit("setRoom", { room });
+      document.title = room?.name ?? "hiace";
     },
     leaveRoom({ commit }) {
       console.log("room.leaveRoom"); // @DELETEME
       const room = {
         id: null,
+        name: "",
         owner: null,
         keepers: [],
         requests: [],
@@ -60,6 +63,7 @@ export const room = {
         music: null
       };
       commit("setRoom", { room });
+      document.title = "hiace";
     },
     setRequest({ commit }, { requests = [] }) {
       console.log("room.setRequest", requests); // @DELETEME

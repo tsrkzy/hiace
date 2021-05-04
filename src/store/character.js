@@ -20,7 +20,12 @@ export const character = {
     },
     mine(state, getters, rootState, rootGetters) {
       const myUserId = rootGetters["auth/user"]?.id;
-      return state.characters.filter(c => c.owner === myUserId);
+      const characters = state.characters.filter(c => c.owner === myUserId);
+      return characters.sort((a, b) => {
+        const { name: nA } = a;
+        const { name: nB } = b;
+        return nA > nB ? 1 : -1;
+      })
     },
     nameMap(state) {
       const nameMap = {};
