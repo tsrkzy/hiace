@@ -25,7 +25,7 @@ export const character = {
         const { name: nA } = a;
         const { name: nB } = b;
         return nA > nB ? 1 : -1;
-      })
+      });
     },
     nameMap(state) {
       const nameMap = {};
