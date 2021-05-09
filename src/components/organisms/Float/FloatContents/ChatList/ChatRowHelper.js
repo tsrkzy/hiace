@@ -98,10 +98,13 @@ function createTextSpan(c, activeChannel) {
   return $t;
 }
 
-export function createChatRowDom(chat, activeChannel) {
+export function createChatRowDom(chat, activeChannel, floatId) {
   const $li = document.createElement("LI");
   const { type, color, id } = chat;
   const system = type === SYSTEM;
+
+  const idString = generateChatRowId(floatId, id);
+  $li.setAttribute("id", idString);
   $li.dataset.chatId = id;
   $li.style.margin = "0";
   $li.style.wordBreak = "break-word";
@@ -115,4 +118,7 @@ export function createChatRowDom(chat, activeChannel) {
   $li.append($ch, $s, $t);
 
   return $li;
+}
+export function generateChatRowId(floatId, chatId) {
+  return `chat-row__${floatId}_${chatId}`;
 }

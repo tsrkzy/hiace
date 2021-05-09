@@ -35,6 +35,7 @@
 import HaButton from "@/components/atoms/HaButton";
 import HaSelect from "@/components/atoms/HaSelect";
 import ChatRow from "@/components/organisms/Float/FloatContents/ChatList/ChatRow";
+import { generateChatRowId } from "@/components/organisms/Float/FloatContents/ChatList/ChatRowHelper";
 
 const SCROLL_MARGIN = 80;
 const LPP = 200; // lines per page
@@ -54,19 +55,23 @@ export default {
     this.scroll();
   },
   methods: {
-    scroll({ top = false, rough = false } = {}) {
-      const f = this.floatId;
-      const $parent = document.getElementById(`chat-list--scroll-parent__${f}`);
-      const scrollPx = $parent.scrollHeight - $parent.clientHeight;
-      setTimeout(() => {
-        /* @SEE https://github.com/tsrkzy/hiace/issues/61 */
-        /* @FIXME */
-        $parent.scrollTo({
-          top: top ? 0 : scrollPx,
-          left: 0,
-          behavior: rough ? "auto" : "smooth"
-        });
-      }, 100);
+    scroll() {
+      /* 最下部にスクロール */
+      if (this.chatList.length === 0) {
+        console.log("ChatLogViewer.scroll - no chat to scroll");
+        return false;
+      }
+
+      const { id: chatId } = this.chatList[this.chatList.length - 1];
+      const floatId = this.floatId;
+      const chatRowId = generateChatRowId(floatId, chatId);
+      const $cr = document.getElementById(chatRowId);
+      if (!$cr) {
+        console.warn(`cannot get element ${chatRowId}`); // @DELETEME
+        return false;
+      }
+
+      $cr.scrollIntoView();
     },
     add(chatList = [], { flush = false } = {}) {
       const channel = this.channelId;

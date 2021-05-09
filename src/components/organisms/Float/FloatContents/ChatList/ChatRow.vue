@@ -43,9 +43,10 @@ export default {
       }
 
       const $liList = [];
+      const floatId = this.floatId;
       for (let i = 0; i < chatList.length; i++) {
         const c = chatList[i];
-        const $li = createChatRowDom(c, channel);
+        const $li = createChatRowDom(c, channel, floatId);
         $liList.push($li);
       }
       $ol.append(...$liList);
