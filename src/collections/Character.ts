@@ -164,8 +164,9 @@ export class FSCharacter {
       activeAlias
     } = c;
 
+    const me = store.getters["auth/user"].id;
     const newCharacter = await FSCharacter.CreateOrphan({
-      owner,
+      owner: me,
       name: postfix(name),
       room,
       text,
