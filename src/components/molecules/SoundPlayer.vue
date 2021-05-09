@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div>
+  <div class="text--force_clip">
     <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
     <ha-checkbox
       label="繰返"

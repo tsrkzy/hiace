@@ -50,7 +50,7 @@
       </div>
     </fieldset>
     <ha-button @click="onCreatePhrase">新規作成</ha-button>
-    <div :key="p.id" v-for="p in phraseList" class="phrase--container">
+    <div :key="p.id" v-for="p in phraseList" class="text--force_clip">
       <ha-button @click="executePhrase(p.text, p.gameSystem)">実行</ha-button>
       <ha-button v-if="!another(p.gameSystem)" @click="editPhrase(p.id)"
         >編集</ha-button
@@ -273,12 +273,6 @@ export default {
 <style lang="scss" scoped>
 .phrase--text__textarea {
   width: 100%;
-}
-.phrase--container {
-  word-break: keep-all;
-  white-space: nowrap;
-  //width: 300px;
-  overflow-x: hidden;
 }
 
 .phrase--header {

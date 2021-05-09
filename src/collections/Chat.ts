@@ -6,7 +6,7 @@ import { FSCharacter } from "@/collections/Character";
 import { callDiceBot, easyDiceCheck } from "@/scripts/diceBot";
 import { diceroll } from "@/scripts/diceroll";
 import { ring } from "@/scripts/DoorBell";
-import { ver } from "@/scripts/helper";
+import { isSilent, ver } from "@/scripts/helper";
 
 export const TEXT = "TEXT";
 export const DICE = "DICE";
@@ -113,6 +113,9 @@ export class FSChat {
     roomId: string;
     user: { id: string; email: string };
   }) {
+    const s = isSilent();
+    if (s) return false;
+
     const { id: userId, email } = user;
     const c = {
       type: SYSTEM,

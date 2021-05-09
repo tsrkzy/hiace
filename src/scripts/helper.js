@@ -172,3 +172,17 @@ export function ver() {
   const { VUE_APP_VERSION_STRING } = process.env;
   return VUE_APP_VERSION_STRING || "failed to get revision.";
 }
+
+/**
+ * クエリパラメータ silent が指定されていればtrue
+ * ?silent
+ * ?silent=false
+ *  → どちらもtrue
+ * @return {boolean}
+ */
+export function isSilent() {
+  const qs = location.search;
+  const q = new URLSearchParams(qs);
+  const qSilent = q.get("silent");
+  return qSilent !== null;
+}

@@ -10,19 +10,30 @@
     <create-character-form></create-character-form>
     <container>
       <column cols="2"><h5>自分のキャラクタ</h5></column>
-      <column cols="1" :key="c.id" v-for="c in categolizedCharacters.own">
+      <column
+        cols="1"
+        class="text--force_clip"
+        :key="c.id"
+        v-for="c in categolizedCharacters.own"
+      >
         <CharacterListChip :character-id="c.id" />
       </column>
       <column cols="2"><h5>自分の控室</h5></column>
       <column
         cols="1"
+        class="text--force_clip"
         :key="c.id"
         v-for="c in categolizedCharacters.ownArchived"
       >
         <CharacterListChip :character-id="c.id" />
       </column>
       <column cols="2"><h5>その他</h5></column>
-      <column cols="1" :key="c.id" v-for="c in categolizedCharacters.others">
+      <column
+        cols="1"
+        class="text--force_clip"
+        :key="c.id"
+        v-for="c in categolizedCharacters.others"
+      >
         <CharacterListChip :character-id="c.id" />
       </column>
     </container>
@@ -79,4 +90,5 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+</style>

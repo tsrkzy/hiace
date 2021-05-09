@@ -86,6 +86,13 @@ html {
     user-select: text;
   }
 
+  .text--force_clip {
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+  }
+
   .bs-5 {
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.5);
   }
