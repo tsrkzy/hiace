@@ -34,12 +34,6 @@
         <p>{{ result }}</p>
       </div>
       <div>
-        <ha-checkbox label="削除する" v-model="showDeleteBtn"></ha-checkbox>
-        <ha-button v-if="showDeleteBtn" @click="dropPhrase(editId)"
-          >削除</ha-button
-        >
-      </div>
-      <div>
         <details>
           <summary>ダイス履歴</summary>
           <ha-button @click="updateDiceLog">再取得</ha-button>
@@ -49,21 +43,34 @@
         </details>
       </div>
     </fieldset>
-    <ha-button @click="onCreatePhrase">新規作成</ha-button>
+    <div>
+      <ha-button @click="onCreatePhrase">新規作成</ha-button>
+    </div>
+    <div>
+      <ha-checkbox
+        v-model="deleteMode"
+        label="定形チャットを削除する"
+      ></ha-checkbox>
+    </div>
     <div :key="p.id" v-for="p in phraseList" class="text--force_clip">
-      <ha-button @click="executePhrase(p.text, p.gameSystem)">実行</ha-button>
-      <ha-button v-if="!another(p.gameSystem)" @click="editPhrase(p.id)"
-        >編集</ha-button
-      >
-      <ha-button v-if="!another(p.gameSystem)" @click="duplicatePhrase(p.id)"
-        >複製</ha-button
-      >
-      <ha-button v-if="!another(p.gameSystem)" @click="toFront(p.id)"
-        >↑</ha-button
-      >
-      <ha-button v-if="!another(p.gameSystem)" @click="toBack(p.id)"
-        >↓</ha-button
-      >
+      <span v-if="deleteMode">
+        <ha-button @click="dropPhrase(p.id)">削除</ha-button>
+      </span>
+      <span v-if="!deleteMode">
+        <ha-button @click="executePhrase(p.text, p.gameSystem)">実行</ha-button>
+        <ha-button v-if="!another(p.gameSystem)" @click="editPhrase(p.id)"
+          >編集</ha-button
+        >
+        <ha-button v-if="!another(p.gameSystem)" @click="duplicatePhrase(p.id)"
+          >複製</ha-button
+        >
+        <ha-button v-if="!another(p.gameSystem)" @click="toFront(p.id)"
+          >↑</ha-button
+        >
+        <ha-button v-if="!another(p.gameSystem)" @click="toBack(p.id)"
+          >↓</ha-button
+        >
+      </span>
       <span :class="{ 'phrase-ok': p.ok }">({{ p.gameSystem }})&nbsp;</span>
       <span
         :class="{
@@ -107,6 +114,7 @@ export default {
   created() {},
   data() {
     return {
+      deleteMode: false,
       SYSTEM_CHANNEL_ID,
       channelId: SYSTEM_CHANNEL_ID,
       editId: null,

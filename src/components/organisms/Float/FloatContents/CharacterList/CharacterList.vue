@@ -8,6 +8,10 @@
 <template>
   <div style="width: 100%;height: 100%;overflow-y: scroll;">
     <create-character-form></create-character-form>
+    <ha-checkbox
+      label="キャラクタを完全に削除する"
+      v-model="deleteMode"
+    ></ha-checkbox>
     <container>
       <column cols="2"><h5>自分のキャラクタ</h5></column>
       <column
@@ -16,7 +20,7 @@
         :key="c.id"
         v-for="c in categolizedCharacters.own"
       >
-        <CharacterListChip :character-id="c.id" />
+        <CharacterListChip :character-id="c.id" :deletable="deleteMode" />
       </column>
       <column cols="2"><h5>自分の控室</h5></column>
       <column
@@ -25,7 +29,7 @@
         :key="c.id"
         v-for="c in categolizedCharacters.ownArchived"
       >
-        <CharacterListChip :character-id="c.id" />
+        <CharacterListChip :character-id="c.id" :deletable="deleteMode" />
       </column>
       <column cols="2"><h5>その他</h5></column>
       <column
@@ -45,12 +49,24 @@ import { FSCharacter } from "@/collections/Character";
 import { FSPawn } from "@/collections/Pawn";
 import Column from "@/components/atoms/flex/Column";
 import Container from "@/components/atoms/flex/Container";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import CharacterListChip from "@/components/organisms/Float/FloatContents/CharacterList/CharacterListChip";
 import CreateCharacterForm from "@/components/organisms/Float/FloatContents/CharacterList/CreateCharacterForm";
 
 export default {
   name: "CharacterList",
-  components: { Column, Container, CreateCharacterForm, CharacterListChip },
+  components: {
+    HaCheckbox,
+    Column,
+    Container,
+    CreateCharacterForm,
+    CharacterListChip
+  },
+  data() {
+    return {
+      deleteMode: false
+    };
+  },
   computed: {
     categolizedCharacters() {
       const result = { own: [], ownArchived: [], others: [] };
@@ -90,5 +106,4 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

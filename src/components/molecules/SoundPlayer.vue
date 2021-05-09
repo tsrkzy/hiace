@@ -7,17 +7,21 @@
 
 <template>
   <div class="text--force_clip">
-    <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
-    <ha-checkbox
-      label="繰返"
-      @input="onInputLoop"
-      :value="sound.loop"
-    ></ha-checkbox>
-    <ha-button v-if="testPlayBtn" @click="onPlay">試聴開始</ha-button>
-    <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
-    <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
-    <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
-    <ha-button v-if="deleteBtn" @click="onDelete">削除</ha-button>
+    <span v-if="deletable">
+      <ha-button v-if="deleteBtn" @click="onDelete">削除</ha-button>
+    </span>
+    <span v-if="!deletable">
+      <ha-checkbox label="消音" @input="onInputMute"></ha-checkbox>
+      <ha-checkbox
+        label="繰返"
+        @input="onInputLoop"
+        :value="sound.loop"
+      ></ha-checkbox>
+      <ha-button v-if="testPlayBtn" @click="onPlay">試聴開始</ha-button>
+      <ha-button v-if="testPauseBtn" @click="onPause">試聴停止</ha-button>
+      <ha-button v-if="playBtn" @click="onBroadcast">再生</ha-button>
+      <ha-button v-if="pauseBtn" @click="onStopBroadcast">停止</ha-button>
+    </span>
     <span>{{ soundName }}</span>
   </div>
 </template>
@@ -36,7 +40,8 @@ export default {
   name: "SoundEditor",
   components: { HaCheckbox, HaButton },
   props: {
-    soundId: { type: String, require: true }
+    soundId: { type: String, require: true },
+    deletable: { type: Boolean, default: false }
   },
   async created() {
     const $a = new Sound(this.soundId);

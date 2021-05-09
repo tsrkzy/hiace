@@ -18,19 +18,28 @@
     <div>
       <volume-slider />
     </div>
-    <sound-editor :key="s.id" v-for="s in sounds" :sound-id="s.id">
+    <div>
+      <ha-checkbox v-model="deleteMode" label="音源を削除する"></ha-checkbox>
+    </div>
+    <sound-editor
+      :key="s.id"
+      v-for="s in sounds"
+      :sound-id="s.id"
+      :deletable="deleteMode"
+    >
     </sound-editor>
   </div>
 </template>
 
 <script>
 import { FSSound } from "@/collections/Sound";
+import HaCheckbox from "@/components/atoms/HaCheckbox";
 import SoundEditor from "@/components/molecules/SoundPlayer";
 import VolumeSlider from "@/components/organisms/Float/FloatContents/VolumeSlider";
 
 export default {
   name: "SoundManager",
-  components: { VolumeSlider, SoundEditor },
+  components: { HaCheckbox, VolumeSlider, SoundEditor },
   props: {
     floatId: {
       type: Number,
@@ -39,6 +48,7 @@ export default {
   },
   data() {
     return {
+      deleteMode: false,
       inputFiles: null
     };
   },

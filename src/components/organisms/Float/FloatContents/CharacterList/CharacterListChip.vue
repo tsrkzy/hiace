@@ -7,16 +7,21 @@
 
 <template>
   <div>
-    <ha-button @click="onClickEditCharacter">編集 </ha-button>
-    <ha-button @click="onDuplicateCharacter">複製</ha-button>
-    <ha-button v-if="hasAlias" @click="onClickAddPawn">コマ追加</ha-button>
-    <ha-button v-else disabled>立ち絵なし</ha-button>
-    <ha-button v-if="own && archived" @click="onArchiveTo(false)"
-      >控室から出す</ha-button
-    >
-    <ha-button v-if="own && !archived" @click="onArchiveTo(true)"
-      >控室に入れる</ha-button
-    >
+    <span v-if="deletable">
+      <ha-button @click="onClickDeleteCharacter">削除</ha-button>
+    </span>
+    <span v-if="!deletable">
+      <ha-button @click="onClickEditCharacter">編集</ha-button>
+      <ha-button @click="onDuplicateCharacter">複製</ha-button>
+      <ha-button v-if="hasAlias" @click="onClickAddPawn">コマ追加</ha-button>
+      <ha-button v-else disabled>立ち絵なし</ha-button>
+      <ha-button v-if="own && archived" @click="onArchiveTo(false)"
+        >控室から出す</ha-button
+      >
+      <ha-button v-if="own && !archived" @click="onArchiveTo(true)"
+        >控室に入れる</ha-button
+      >
+    </span>
     <span>{{ `${characterName}${own ? "" : `(${owner})`}` || "ERROR" }}</span>
   </div>
 </template>
@@ -32,7 +37,8 @@ export default {
   name: "CharacterListChip",
   components: { HaButton },
   props: {
-    characterId: { type: String, require: true }
+    characterId: { type: String, require: true },
+    deletable: { type: Boolean, default: false }
   },
   computed: {
     character() {
@@ -69,6 +75,10 @@ export default {
     }
   },
   methods: {
+    async onClickDeleteCharacter() {
+      const { characterId } = this;
+      await FSCharacter.Delete(characterId);
+    },
     async onClickEditCharacter() {
       const contentId = CHARACTER_EDIT;
       const show = true;
