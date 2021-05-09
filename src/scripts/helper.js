@@ -21,7 +21,7 @@ export const getName = (entity, id) => {
     throw new Error("implement error");
   }
 
-  return nameMap[id] ?? "";
+  return nameMap[id] ?? "(削除)";
 };
 
 export const extractAccountFromEmail = email => {
@@ -185,4 +185,15 @@ export function isSilent() {
   const q = new URLSearchParams(qs);
   const qSilent = q.get("silent");
   return qSilent !== null;
+}
+
+export function nowDatetime() {
+  const d = new Date();
+  const yyyy = d.getUTCFullYear();
+  const mm = d.getUTCMonth();
+  const dd = d.getUTCDay();
+  const hh = d.getUTCHours();
+  const ii = d.getUTCMinutes();
+  const ss = d.getUTCSeconds();
+  return { yyyy, mm, dd, hh, ii, ss };
 }

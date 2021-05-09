@@ -6,14 +6,16 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <ha-button @click="onCLick">チャットログ(未実装)</ha-button>
+  <span>
+    <ha-button @click="onCLick">TSV</ha-button>
+  </span>
 </template>
 <script>
 import { FSAlias } from "@/collections/Alias";
 import { FSCharacter } from "@/collections/Character";
 import { DICE } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
-import { Notify } from "@/scripts/Notify";
+import { nowDatetime } from "@/scripts/helper";
 import store from "@/store";
 import HaButton from "@/components/atoms/HaButton";
 
@@ -22,12 +24,8 @@ export default {
   components: { HaButton },
   methods: {
     onCLick() {
-      const jsonObj = aggregate();
-      console.log(jsonObj); // @DELETEME
-      Notify.Log("フォーマット悩んでて未実装。とりあえずconsoleに吐いたよ");
-      console.log(
-        "右クリック → Store as global variable → copy(temp1)でクリップボードにコピーしたりしなかったりしろ"
-      ); // @DELETEME
+      const textList = aggregate();
+      downloadAsTsv(textList);
     }
   }
 };
@@ -45,15 +43,20 @@ function aggregate() {
       /* chat.js: TEXT, SYSTEM, DICE */
       type
     } = chatList[i];
-    const a = FSAlias.Who(alias);
-    const c = FSCharacter.Who(character);
-    const u = FSUser.Who(owner, true);
+    const a = alias ? FSAlias.Who(alias) : null;
+    const c = character ? FSCharacter.Who(character) : null;
+    const u = owner ? FSUser.Who(owner) : null;
     const { result = "", text = "" } = value;
     const isDice = type === DICE;
     const t = isDice ? `${text} → ${result}` : text;
+
     /* 改行をエスケープシーケンスから文字列の"\n"へ */
     const tt = t.replace(/\n/g, "\\n");
-    const l = `"${u}","${c}","${a}","${tt}"`;
+
+    /* タブを文字列の"\t"へ */
+    const ttt = tt.replace(/\t/g, "\\t");
+
+    const l = `"${u}"\t"${c}"\t"${a}"\t"${ttt}"`;
 
     logs.push({
       user: u,
@@ -65,6 +68,20 @@ function aggregate() {
       result
     });
   }
+
   return logs;
+}
+
+function downloadAsTsv(textList = []) {
+  const roomId = store.getters["room/info"].id;
+  const { yyyy, mm, dd, hh, ii, ss } = nowDatetime();
+  const timestamp = `${yyyy}-${mm}-${dd}-${hh}-${ii}-${ss}`;
+  const text = textList.map(t => t.formatted).join("\n");
+  const blob = new Blob([text], { type: "text/tsv" });
+  const $a = document.createElement("A");
+  $a.href = URL.createObjectURL(blob);
+  $a.setAttribute("download", `${roomId}_${timestamp}.tsv`);
+
+  $a.dispatchEvent(new MouseEvent("click"));
 }
 </script>
