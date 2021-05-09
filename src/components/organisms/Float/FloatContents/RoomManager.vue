@@ -71,6 +71,7 @@
     <fieldset>
       <legend>DL</legend>
       <chat-download-button />
+      <chat-truncate-button />
     </fieldset>
     <fieldset>
       <legend>外部サイト</legend>
@@ -97,11 +98,18 @@ import HaButton from "@/components/atoms/HaButton";
 import HaCheckbox from "@/components/atoms/HaCheckbox";
 import ColorPicker from "@/components/molecules/ColorPicker";
 import ChatDownloadButton from "@/components/organisms/Float/FloatContents/ChatDownloadButton";
+import ChatTruncateButton from "@/components/organisms/Float/FloatContents/ChatTruncateButton";
 import { JOINED, KICKED, NO_REQUEST, WAITING } from "@/store/room";
 
 export default {
   name: "RoomManager",
-  components: { HaCheckbox, ChatDownloadButton, ColorPicker, HaButton },
+  components: {
+    ChatTruncateButton,
+    HaCheckbox,
+    ChatDownloadButton,
+    ColorPicker,
+    HaButton
+  },
   props: {
     floatId: {
       type: Number,

@@ -265,6 +265,39 @@ export class FSChat {
     return filteredHistoryList;
   }
 
+  static async Truncate(roomId: string) {
+    const db = firebase.firestore();
+    const querySnapshot = await db
+      .collection("chat")
+      .where("room", "==", roomId)
+      .get();
+
+    let count = 0;
+    const batchList: firebase.firestore.WriteBatch[] = [];
+    let batch: firebase.firestore.WriteBatch | null = null;
+    querySnapshot.forEach(docSnapshot => {
+      if (!batch) {
+        batch = db.batch();
+      }
+      batch.delete(docSnapshot.ref);
+      count++;
+      if (count >= 500) {
+        batchList.push(batch);
+        batch = null;
+        count = 0;
+      }
+    });
+
+    if (batch) {
+      batchList.push(batch);
+    }
+
+    for (let i = 0; i < batchList.length; i++) {
+      const b = batchList[i];
+      await b.commit();
+    }
+  }
+
   static SetListener(roomId: string) {
     console.log("Chat.SetListener", roomId); // @DELETEME
 

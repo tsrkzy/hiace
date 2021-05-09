@@ -21,7 +21,7 @@ export const getName = (entity, id) => {
     throw new Error("implement error");
   }
 
-  return nameMap[id] ?? "(削除)";
+  return nameMap[id] ?? "";
 };
 
 export const extractAccountFromEmail = email => {
