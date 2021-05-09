@@ -148,6 +148,13 @@ export default {
     characters() {
       return this.$store.getters["character/info"];
     },
+    dragging() {
+      const m = !!this.$store.getters["map/dragging"];
+      const p = !!this.$store.getters["pawn/dragging"];
+      const b = !!this.$store.getters["board/dragging"];
+      const d = !!this.$store.getters["dice/dragging"];
+      return m || p || b || d;
+    },
     /**
      * ページング用のオブジェクトの配列を返す
      * chatId: ページングオブジェクトの中で最も新しいchat
@@ -212,6 +219,17 @@ export default {
     channelId() {
       /* 閲覧中のチャンネル(props.channelId)を変更したら、先頭のページに戻る */
       this.onChangePage("0");
+    },
+    dragging(isDragging) {
+      if (isDragging) {
+        return false;
+      }
+
+      /* ドラッグ終了時、最下部かつ既読フラグが立っている場合は最下部へスクロール */
+      if (this.read && this.onBottom) {
+        /* スクロール位置をvueのAPIを使用せずに制御しているため、ドラッグ時から復帰した時にスクロール位置がvueの記憶した位置になる */
+        this.scroll();
+      }
     }
   }
 };
