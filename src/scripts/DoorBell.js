@@ -21,6 +21,11 @@ async function doorBell(e) {
 }
 
 export function ring() {
+  const enable = store.getters["localConfig/ring"];
+  if (!enable) {
+    return false;
+  }
+
   /* 0〜1 */
   const i = Math.floor(Math.random() * 2);
   const d = [d1, d2][i];

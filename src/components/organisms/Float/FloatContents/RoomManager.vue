@@ -13,11 +13,17 @@
         :chat-color="chatColor"
         @change="onChangeColor"
       ></color-picker>
-      <p>個別のチャンネル(全体以外)への発言</p>
+      <h5>個別のチャンネル(全体以外)への発言</h5>
       <ha-checkbox
         label="発言内容を伏せる"
         :value="maskChannel"
         @change="onMaskHandler"
+      ></ha-checkbox>
+      <h5>タブが非アクティブの時に通知音を鳴らす</h5>
+      <ha-checkbox
+          label="新着チャットを通知する"
+          :value="ring"
+          @change="onRingHandler"
       ></ha-checkbox>
     </fieldset>
     <div v-if="iAmOwner">
@@ -174,7 +180,8 @@ export default {
   data() {
     return {
       enableBan: false,
-      maskChannel: this.$store.getters["localConfig/maskChannel"]
+      maskChannel: this.$store.getters["localConfig/maskChannel"],
+      ring: this.$store.getters["localConfig/ring"]
     };
   },
   methods: {
@@ -209,6 +216,10 @@ export default {
     async onMaskHandler(e) {
       const payload = { maskChannel: !!e };
       await this.$store.dispatch("localConfig/setMaskChannel", payload);
+    },
+    async onRingHandler(e){
+      const payload = { ring: !!e };
+      await this.$store.dispatch("localConfig/setRing", payload);
     },
     isMe(userId) {
       return userId === this.$store.getters["auth/user"]?.id;
