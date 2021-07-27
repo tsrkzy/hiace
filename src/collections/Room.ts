@@ -209,11 +209,19 @@ export class FSRoom {
       throw new Error("already joined.");
     }
 
+    /* 通常のフロー */
     const requests = room.requests.slice();
     requests.push(userId);
     const db = firebase.firestore();
     const doc = db.collection("room").doc(room.id);
     await doc.update({ requests });
+
+    /* レプラボお試し用 入室扱いにする */
+    const freeRooms = ["LMEtgTqRiQ2TnSihiLav"];
+    if (freeRooms.indexOf(room.id) !== -1) {
+      console.log("skip room request authentication"); // @DELETEME
+      await FSRoom.GrantRequest(userId);
+    }
   }
 
   static SetListener(roomId: string) {
