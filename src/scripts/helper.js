@@ -5,8 +5,13 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+import { FSAlias } from "@/collections/Alias";
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSCharacter } from "@/collections/Character";
+import { DICE } from "@/collections/Chat";
 import { BOOL, INT, STR } from "@/collections/Column";
+import { FSUser } from "@/collections/User";
+import { createChatRowDom } from "@/components/organisms/Float/FloatContents/ChatList/ChatRowHelper";
 import { FLOAT_HELP_MESSAGES, IFFloat } from "@/interfaces/IFFloat";
 import { HELP_MESSAGE } from "@/message";
 import store from "@/store";
@@ -196,4 +201,191 @@ export function nowDatetime() {
   const ii = d.getUTCMinutes();
   const ss = d.getUTCSeconds();
   return { yyyy, mm, dd, hh, ii, ss };
+}
+
+export function toyyyymmddhhiissd(d) {
+  if (!(d instanceof Date)) {
+    console.error(d);
+    throw new Error("d must be instance of Date");
+  }
+
+  const yyyy = `${d.getUTCFullYear()}`.padStart(4, "0");
+  const mm = `${d.getUTCMonth()}`.padStart(2, "0");
+  const dd = `${d.getUTCDay()}`.padStart(2, "0");
+  const hh = `${d.getUTCHours()}`.padStart(2, "0");
+  const ii = `${d.getUTCMinutes()}`.padStart(2, "0");
+  const day = "日月火水木金土"[d.getDay()];
+  return `${yyyy}/${mm}/${dd} ${hh}:${ii} (${day})`;
+}
+
+export function logToTsv() {
+  console.log("ChatDownloadButton.logToTsv"); // @DELETEME
+  const chatList = store.getters["chat/info"];
+  const logs = [];
+  for (let i = 0; i < chatList.length; i++) {
+    const {
+      alias,
+      character,
+      owner,
+      value = {},
+      /* chat.js: TEXT, SYSTEM, DICE */
+      type
+    } = chatList[i];
+    const a = alias ? FSAlias.Who(alias) : null;
+    const c = character ? FSCharacter.Who(character) : null;
+    const u = owner ? FSUser.Who(owner) : null;
+    const { result = "", text = "" } = value;
+    const isDice = type === DICE;
+    const t = isDice ? `${text} → ${result}` : text;
+
+    /* 改行をエスケープシーケンスから文字列の"\n"へ */
+    const tt = t.replace(/\n/g, "\\n");
+
+    /* タブを文字列の"\t"へ */
+    const ttt = tt.replace(/\t/g, "\\t");
+
+    const l = `"${u}"\t"${c}"\t"${a}"\t"${ttt}"`;
+
+    logs.push({
+      user: u,
+      character: c,
+      alias: a,
+      type,
+      formatted: l,
+      text,
+      result
+    });
+  }
+
+  return logs;
+}
+
+export function logToHtml() {
+  console.log("helper.logToHtml");
+
+  /* HTML HEAD BODY */
+  const $html = document.createElement("HTML");
+  const $head = document.createElement("HEAD");
+  const $body = document.createElement("BODY");
+  $html.setAttribute("lang", "ja");
+  $html.append($head);
+  $html.append($body);
+
+  /* ルームへのリンク */
+  const roomId = store.getters["room/info"].id;
+  const roomName = store.getters["room/info"].name;
+  const uri = `https://hiace-50544.web.app/r/${roomId}`;
+  const $roomAnchor = document.createElement("A");
+  $roomAnchor.setAttribute("href", uri);
+  $roomAnchor.setAttribute("target", "_brank");
+  $roomAnchor.textContent = `link: ${roomName} (${roomId})`;
+  $body.append($roomAnchor);
+
+  /* ログ */
+  const $logHeader = document.createElement("h1");
+  $logHeader.textContent = "セッション別ログ";
+  $body.append($logHeader);
+  const $logDetailList = createLogDetailDOM();
+  $body.append(...$logDetailList);
+
+  /* STYLE */
+  const $style = document.createElement("STYLE");
+  $style.setAttribute("rel", "stylesheet");
+  const normalizeCssCdn =
+    "https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css";
+  $style.setAttribute("href", normalizeCssCdn);
+  $body.append($style);
+
+  return $html.outerHTML;
+}
+
+function createLogDetailDOM() {
+  const chatList = store.getters["chat/info"];
+  const chunks = chatListToChunks(chatList);
+
+  const detailsList = [];
+
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    const { timestamp: tsFrom } = chunk[0];
+    const { timestamp: tsTo } = chunk[chunk.length - 1];
+
+    const from = toyyyymmddhhiissd(new Date(tsFrom));
+    const to = toyyyymmddhhiissd(new Date(tsTo));
+
+    const $details = document.createElement("DETAILS");
+    detailsList.push($details);
+    const $summary = document.createElement("SUMMARY");
+    $summary.textContent = `${from} 〜 ${to} (${chunk.length})`;
+    $details.append($summary);
+
+    const $ul = document.createElement("UL");
+    for (let j = 0; j < chunk.length; j++) {
+      const chat = chunk[j];
+      const {
+        /* id,*/
+        alias,
+        character,
+        owner,
+        value = {},
+        type
+        /* ,color */
+      } = chat;
+      const a = alias ? FSAlias.Who(alias) : null;
+      const c = character ? FSCharacter.Who(character) : null;
+      const u = owner ? FSUser.Who(owner) : null;
+      const { result = "", text = "" } = value;
+      const isDice = type === DICE;
+      const t = isDice ? `${text} → ${result}` : text;
+
+      /* 改行をエスケープシーケンスから文字列の"\n"へ */
+      const tt = t.replace(/\n/g, "\\n");
+
+      /* タブを文字列の"\t"へ */
+      const ttt = tt.replace(/\t/g, "\\t");
+
+      const $li = createChatRowDom(chat);
+      $li.style.listStyle = "none";
+
+      const $p = document.createElement("P");
+      $p.textContent = `${c}(${a}): ${ttt}`;
+      $ul.append($li);
+    }
+
+    $details.append($ul);
+  }
+
+  return detailsList;
+}
+
+function chatListToChunks(chatList = []) {
+  let lastTS = 0;
+  const chunks = [];
+  let chunk = [];
+  for (let i = 0; i < chatList.length; i++) {
+    const c = chatList[i];
+    const { timestamp } = c;
+
+    if (!lastTS) {
+      chunk.push(c);
+      lastTS = timestamp;
+      continue;
+    }
+
+    if (timestamp - lastTS >= 1000 * 60 * 60 * 4) {
+      /* 4h空いたら新しくchunkを作る */
+      chunks.push(chunk);
+      chunk = [];
+    }
+
+    chunk.push(c);
+    lastTS = timestamp;
+
+    /* 最新chunk */
+    if (i === chatList.length - 1) {
+      chunks.push(chunk);
+    }
+  }
+
+  return chunks;
 }
