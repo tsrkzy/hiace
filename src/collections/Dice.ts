@@ -2,7 +2,7 @@ import store from "@/store";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-export const DICE_SIZE = 40;
+export const DICE_SIZE = 100;
 export class FSDice {
   static unsubscribeMap = new Map();
 
