@@ -142,15 +142,16 @@ export default {
       /* globalの座標系をboard,mapの座標系へ変換する行列 */
       const $b = document.getElementById(`board_${this.activeBoard.id}`);
       const $$b = $b.getCTM(); // global -> board
-      const $$m = $m.getCTM(); // global -> map
-      const $$bm = $$b.inverse().multiply($$m); // board -> map
+      const $$m = $m.getCTM(); // board -> map
+      const $$bm = $$b.inverse().multiply($$m); // global -> map
 
       function globalToLocal(dx, dy) {
         /* 変位をglobalからDOMローカルの座標系へ変換 */
-        return new DOMMatrix([1, 0, 0, 1, dx / $$m.a, dy / $$m.a]).translate(
-          $$bm.e,
-          $$bm.f
-        );
+        const init = [$$bm.a, $$bm.b, $$bm.c, $$bm.d, $$bm.e, $$bm.f];
+        const $$r = new DOMMatrix(init);
+        const dxx = dx / $$m.a;
+        const dyy = dy / $$m.a;
+        return $$r.translate(dxx, dyy);
       }
 
       const onMove = e => {
