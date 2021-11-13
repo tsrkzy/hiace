@@ -34,7 +34,16 @@
 </template>
 
 <script>
-import { DICE_EYE_COLOR, DICE_SIZE } from "@/collections/Dice";
+import {
+  DICE_EYE_COLOR,
+  DICE_SIZE,
+  DICE_VALUE_FIVE,
+  DICE_VALUE_FOUR,
+  DICE_VALUE_ONE,
+  DICE_VALUE_SIX,
+  DICE_VALUE_THREE,
+  DICE_VALUE_TWO
+} from "@/collections/Dice";
 
 export default {
   name: "Die",
@@ -53,29 +62,29 @@ export default {
       const p = d / 24;
       const result = [];
       switch (dice) {
-        case "ONE": {
+        case DICE_VALUE_ONE: {
           result.push([d / 5, d / 2, d / 2]);
           break;
         }
-        case "TWO": {
+        case DICE_VALUE_TWO: {
           result.push([d / 8, p + d / 5, p + d / 5]);
           result.push([d / 8, d - (p + d / 5), d - (p + d / 5)]);
           break;
         }
-        case "THREE": {
+        case DICE_VALUE_THREE: {
           result.push([d / 8, p + d / 5, p + d / 5]);
           result.push([d / 8, d / 2, d / 2]);
           result.push([d / 8, d - (p + d / 5), d - (p + d / 5)]);
           break;
         }
-        case "FOUR": {
+        case DICE_VALUE_FOUR: {
           result.push([d / 8, p + d / 5, p + d / 5]);
           result.push([d / 8, d - (p + d / 5), p + d / 5]);
           result.push([d / 8, p + d / 5, d - (p + d / 5)]);
           result.push([d / 8, d - (p + d / 5), d - (p + d / 5)]);
           break;
         }
-        case "FIVE": {
+        case DICE_VALUE_FIVE: {
           result.push([d / 8, p + d / 5, p + d / 5]);
           result.push([d / 8, d - (p + d / 5), p + d / 5]);
           result.push([d / 8, d / 2, d / 2]);
@@ -83,7 +92,7 @@ export default {
           result.push([d / 8, d - (p + d / 5), d - (p + d / 5)]);
           break;
         }
-        case "SIX": {
+        case DICE_VALUE_SIX: {
           result.push([d / 8, 2 * p + d / 5, p + d / 5]);
           result.push([d / 8, d - (2 * p + d / 5), p + d / 5]);
           result.push([d / 8, 2 * p + d / 5, d / 2]);

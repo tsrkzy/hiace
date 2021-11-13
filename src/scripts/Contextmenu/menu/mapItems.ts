@@ -12,7 +12,7 @@ import {
 import store from "@/store";
 import { MAP_EDIT } from "@/interfaces/IFFloat";
 import { FSMap } from "@/collections/Map";
-import { DICE_BLACK, FSDice } from "@/collections/Dice";
+import { DICE_BLACK, DICE_VALUE_ASTER, FSDice } from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
 
 export function mapItems(mapId: string): ContextMenuItem[] {
@@ -75,7 +75,7 @@ export function mapItems(mapId: string): ContextMenuItem[] {
       transform.b = 0;
       transform.c = 0;
       transform.d = 1;
-      const face = "*";
+      const face = DICE_VALUE_ASTER;
       const color = DICE_BLACK;
       await FSDice.Create({
         boardId,

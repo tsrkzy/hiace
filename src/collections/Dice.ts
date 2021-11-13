@@ -3,6 +3,8 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 export const DICE_SIZE = 100;
+
+/* dice color */
 export const DICE_BLACK = "black";
 export const DICE_RED = "red";
 export const DICE_WHITE = "white";
@@ -11,6 +13,80 @@ export const DICE_EYE_COLOR = {
   [DICE_RED]: "white",
   [DICE_WHITE]: "black"
 };
+
+/* die */
+
+export const DICE_VALUE_ONE = "ONE";
+export const DICE_VALUE_TWO = "TWO";
+export const DICE_VALUE_THREE = "THREE";
+export const DICE_VALUE_FOUR = "FOUR";
+export const DICE_VALUE_FIVE = "FIVE";
+export const DICE_VALUE_SIX = "SIX";
+export const DICE_VALUE_ASTER = "ASTER";
+export const DICE_LABEL_ONE = "1";
+export const DICE_LABEL_TWO = "2";
+export const DICE_LABEL_THREE = "3";
+export const DICE_LABEL_FOUR = "4";
+export const DICE_LABEL_FIVE = "5";
+export const DICE_LABEL_SIX = "6";
+export const DICE_LABEL_ASTER = "*";
+
+export function faceLabelToValue(l: string) {
+  let v = "";
+  switch (l) {
+    case DICE_LABEL_ONE:
+      v = DICE_VALUE_ONE;
+      break;
+    case DICE_LABEL_TWO:
+      v = DICE_VALUE_TWO;
+      break;
+    case DICE_LABEL_THREE:
+      v = DICE_VALUE_THREE;
+      break;
+    case DICE_LABEL_FOUR:
+      v = DICE_VALUE_FOUR;
+      break;
+    case DICE_LABEL_FIVE:
+      v = DICE_VALUE_FIVE;
+      break;
+    case DICE_LABEL_SIX:
+      v = DICE_VALUE_SIX;
+      break;
+    case DICE_LABEL_ASTER:
+      v = DICE_VALUE_ASTER;
+      break;
+  }
+
+  return v;
+}
+export function faceValueToLabel(n: string) {
+  let l = "";
+  switch (n) {
+    case DICE_VALUE_ONE:
+      l = DICE_LABEL_ONE;
+      break;
+    case DICE_VALUE_TWO:
+      l = DICE_LABEL_TWO;
+      break;
+    case DICE_VALUE_THREE:
+      l = DICE_LABEL_THREE;
+      break;
+    case DICE_VALUE_FOUR:
+      l = DICE_LABEL_FOUR;
+      break;
+    case DICE_VALUE_FIVE:
+      l = DICE_LABEL_FIVE;
+      break;
+    case DICE_VALUE_SIX:
+      l = DICE_LABEL_SIX;
+      break;
+    case DICE_VALUE_ASTER:
+      l = DICE_LABEL_ASTER;
+      break;
+  }
+
+  return l;
+}
 
 export class FSDice {
   static unsubscribeMap = new Map();
@@ -59,7 +135,7 @@ export class FSDice {
       owner: userId,
       transform: `${transform ?? new DOMMatrix()}`,
       color: color ?? DICE_BLACK,
-      face: face ?? "*",
+      face: face ?? DICE_VALUE_ASTER,
       hidden: false,
       updatedAt: Date.now()
     };
@@ -75,6 +151,21 @@ export class FSDice {
     const db = firebase.firestore();
     const docRef = await db.collection("dice").doc(diceId);
     return await docRef.update(criteria);
+  }
+
+  static async Roll(diceId: string) {
+    /* ダイスの目をランダムに変更する */
+    const _newFace = `${(Math.floor(Math.random() * 10) % 6) + 1}`;
+    const newFace = faceLabelToValue(_newFace);
+    const { face: oldFace } = store.getters["dice/info"].find(
+      (d: { id: string; face: string }) => d.id === diceId
+    );
+
+    const criteria = { face: newFace };
+    await FSDice.Update(diceId, criteria);
+    const newFaceLabel = faceValueToLabel(newFace);
+    const oldFaceLabel = faceValueToLabel(oldFace);
+    return { newFace: newFaceLabel, oldFace: oldFaceLabel };
   }
 
   static async Touch(diceId: string) {

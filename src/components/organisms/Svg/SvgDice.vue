@@ -11,6 +11,7 @@
     v-if="shadowHandler"
     :style="{ transform: `${transform}` }"
     class="token-transition"
+    :class="`dice_${faceStore}`"
     @mousedown="onMouseDown($event)"
   >
     <!-- 外枠 -->
@@ -23,7 +24,7 @@
     <!-- ダイスの面と目 -->
     <g v-if="!shadow">
       <aster
-        v-if="faceStore === '*'"
+        v-if="faceIsAster"
         :color="colorStore"
         :dice-size="diceSize"
       ></aster>
@@ -52,6 +53,7 @@ import {
   DICE_BLACK,
   DICE_EYE_COLOR,
   DICE_SIZE,
+  DICE_VALUE_ASTER,
   FSDice
 } from "@/collections/Dice";
 import Aster from "@/components/organisms/Svg/face/Aster";
@@ -91,8 +93,11 @@ export default {
     transformStore() {
       return this?.dice.transform || new DOMMatrix();
     },
+    faceIsAster() {
+      return this.faceStore === DICE_VALUE_ASTER;
+    },
     faceStore() {
-      return this?.dice.face || "*";
+      return this?.dice.face || DICE_VALUE_ASTER;
     },
     colorStore() {
       return this?.dice.color || DICE_BLACK;

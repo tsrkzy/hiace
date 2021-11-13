@@ -16,9 +16,20 @@ import {
   DICE_RED,
   DICE_SIZE,
   DICE_WHITE,
-  FSDice
+  faceValueToLabel,
+  FSDice,
+  DICE_VALUE_ASTER,
+  DICE_LABEL_ONE,
+  DICE_LABEL_TWO,
+  DICE_LABEL_THREE,
+  DICE_LABEL_FOUR,
+  DICE_LABEL_FIVE,
+  DICE_LABEL_SIX,
+  DICE_LABEL_ASTER, DICE_VALUE_ONE, DICE_VALUE_TWO, DICE_VALUE_THREE, DICE_VALUE_FOUR, DICE_VALUE_FIVE, DICE_VALUE_SIX
 } from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
+import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
+import { FSChat } from "@/collections/Chat";
 
 export function diceItems(diceId: string): ContextMenuItem[] {
   const boardId = store.getters["room/activeBoard"];
@@ -43,13 +54,13 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   });
 
   const faces = [
-    [1, "ONE"],
-    [2, "TWO"],
-    [3, "THREE"],
-    [4, "FOUR"],
-    [5, "FIVE"],
-    [6, "SIX"],
-    ["*", "*"]
+    [DICE_LABEL_ONE, DICE_VALUE_ONE],
+    [DICE_LABEL_TWO, DICE_VALUE_TWO],
+    [DICE_LABEL_THREE, DICE_VALUE_THREE],
+    [DICE_LABEL_FOUR, DICE_VALUE_FOUR],
+    [DICE_LABEL_FIVE, DICE_VALUE_FIVE],
+    [DICE_LABEL_SIX, DICE_VALUE_SIX],
+    [DICE_LABEL_ASTER, DICE_VALUE_ASTER]
   ];
   changeFace.children = faces.map(f => {
     return new ContextMenuChildItem({
@@ -57,10 +68,42 @@ export function diceItems(diceId: string): ContextMenuItem[] {
       text: `「${f[0]}」`,
       callback: async () => {
         await FSDice.Update(diceId, { face: f[1] });
-        touchFree(`ダイスの目を${f[0]}に変更しました`);
+        const oldFace = faceValueToLabel(face);
+        const msg = `ダイスの目を「${oldFace}」から「${f[0]}」に変更しました`;
+        const chatParams = {
+          room: roomId,
+          channel: SYSTEM_CHANNEL_ID,
+          owner: userId,
+          character: null,
+          alias: null,
+          value: { text: msg }
+        };
+        await FSChat.Chat(chatParams);
+        touchFree(msg);
       }
     });
   });
+
+  /* ダイスを振る */
+  const rollDice = new ContextMenuChildItem({
+    value: `roll_dice_${diceId}`,
+    text: `ダイスを振る`,
+    callback: async () => {
+      const { newFace: n, oldFace: o } = await FSDice.Roll(diceId);
+      const msg = `ダイスを振り、「${o}」が「${n}」になりました`;
+      const chatParams = {
+        room: roomId,
+        channel: SYSTEM_CHANNEL_ID,
+        owner: userId,
+        character: null,
+        alias: null,
+        value: { text: msg }
+      };
+      await FSChat.Chat(chatParams);
+      touchFree(msg);
+    }
+  });
+
   /* ダイスの色を変更 */
   const changeColor = new ContextMenuParentItem({
     value: `change_color_${diceId}`,
@@ -115,6 +158,7 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   });
 
   result.push(changeFace);
+  result.push(rollDice);
   result.push(changeColor);
   result.push(createDiceItem);
   result.push(deleteDiceItem);

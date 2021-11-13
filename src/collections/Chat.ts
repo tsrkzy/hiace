@@ -55,6 +55,7 @@ export class FSChat {
 
     const color = FSChat.getColor(owner, character);
 
+
     const c = {
       type,
       color,
