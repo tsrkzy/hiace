@@ -5,13 +5,27 @@ import "firebase/firestore";
 export const DICE_SIZE = 100;
 
 /* dice color */
-export const DICE_BLACK = "black";
-export const DICE_RED = "red";
-export const DICE_WHITE = "white";
+export const DICE_BLACK = "DICE_BLACK";
+export const DICE_RED = "DICE_RED";
+export const DICE_WHITE = "DICE_WHITE";
+export const DICE_HALLOWEEN = "DICE_HALLOWEEN";
+
+export const DICE_BASE_BLACK = "black";
+export const DICE_BASE_RED = "red";
+export const DICE_BASE_WHITE = "white";
+export const DICE_BASE_HALLOWEEN = "black";
+
+export const DICE_BASE_COLOR = {
+  [DICE_BLACK]: DICE_BASE_BLACK,
+  [DICE_RED]: DICE_BASE_RED,
+  [DICE_WHITE]: DICE_BASE_WHITE,
+  [DICE_HALLOWEEN]: DICE_BASE_HALLOWEEN
+};
 export const DICE_EYE_COLOR = {
   [DICE_BLACK]: "white",
   [DICE_RED]: "white",
-  [DICE_WHITE]: "black"
+  [DICE_WHITE]: "black",
+  [DICE_HALLOWEEN]: "orangered"
 };
 
 /* die */

@@ -25,13 +25,15 @@
     <g v-if="!shadow">
       <aster
         v-if="faceIsAster"
-        :color="colorStore"
+        :class="colorPatternStore"
+        :color="colorPatternStore"
         :dice-size="diceSize"
       ></aster>
       <die
         v-else
         :dice="faceStore"
-        :color="colorStore"
+        :class="colorPatternStore"
+        :color="colorPatternStore"
         :dice-size="diceSize"
       ></die>
     </g>
@@ -99,11 +101,11 @@ export default {
     faceStore() {
       return this?.dice.face || DICE_VALUE_ASTER;
     },
-    colorStore() {
+    colorPatternStore() {
       return this?.dice.color || DICE_BLACK;
     },
     frameColor() {
-      return DICE_EYE_COLOR[this.colorStore];
+      return DICE_EYE_COLOR[this.colorPatternStore];
     },
     shadowHandler() {
       /* マップの位置変更中は非表示 */

@@ -8,9 +8,10 @@
 <template>
   <g>
     <rect
-      :stroke="color"
+      :stroke="baseColor"
       stroke-width="1"
-      :fill="color"
+      :fill="baseColor"
+      :class="baseColor"
       fill-opacity=".9"
       x="0"
       y="0"
@@ -27,6 +28,7 @@
       :r="d[0]"
       :cx="d[1]"
       :cy="d[2]"
+      :class="eyeColor"
       :fill="eyeColor"
       fill-opacity=".95"
     ></circle>
@@ -35,6 +37,7 @@
 
 <script>
 import {
+  DICE_BASE_COLOR,
   DICE_EYE_COLOR,
   DICE_SIZE,
   DICE_VALUE_FIVE,
@@ -53,6 +56,9 @@ export default {
     diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
+    baseColor() {
+      return DICE_BASE_COLOR[this.color];
+    },
     eyeColor() {
       return DICE_EYE_COLOR[this.color];
     },

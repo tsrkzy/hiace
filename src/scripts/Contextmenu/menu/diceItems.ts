@@ -25,7 +25,14 @@ import {
   DICE_LABEL_FOUR,
   DICE_LABEL_FIVE,
   DICE_LABEL_SIX,
-  DICE_LABEL_ASTER, DICE_VALUE_ONE, DICE_VALUE_TWO, DICE_VALUE_THREE, DICE_VALUE_FOUR, DICE_VALUE_FIVE, DICE_VALUE_SIX
+  DICE_LABEL_ASTER,
+  DICE_VALUE_ONE,
+  DICE_VALUE_TWO,
+  DICE_VALUE_THREE,
+  DICE_VALUE_FOUR,
+  DICE_VALUE_FIVE,
+  DICE_VALUE_SIX,
+  DICE_HALLOWEEN
 } from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
@@ -111,16 +118,17 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   });
 
   const colors = [
-    ["白", DICE_WHITE],
-    ["黒", DICE_BLACK],
-    ["赤", DICE_RED]
+    ["白", "DICE_WHITE", DICE_WHITE],
+    ["黒", "DICE_BLACK", DICE_BLACK],
+    ["赤", "DICE_RED", DICE_RED],
+    ["ハロウィン", "DICE_HALLOWEEN", DICE_HALLOWEEN]
   ];
   changeColor.children = colors.map(c => {
     return new ContextMenuChildItem({
       value: `change_color_${c[1]}_${diceId}`,
       text: `「${c[0]}」`,
       callback: async () => {
-        await FSDice.Update(diceId, { color: c[1] });
+        await FSDice.Update(diceId, { color: c[2] });
         touchFree(`ダイスの色を${c[0]}に変更しました`);
       }
     });

@@ -8,9 +8,9 @@
 <template>
   <g>
     <rect
-      :stroke="color"
+      :stroke="baseColor"
       stroke-width="1"
-      :fill="color"
+      :fill="baseColor"
       fill-opacity=".9"
       x="0"
       y="0"
@@ -22,7 +22,7 @@
     <path
       :stroke="eyeColor"
       stroke-opacity=".95"
-      stroke-width="10"
+      stroke-width="15"
       stroke-linecap="round"
       stroke-linejoin="round"
       :d="d"
@@ -31,7 +31,12 @@
 </template>
 
 <script>
-import { DICE_BLACK, DICE_EYE_COLOR, DICE_SIZE } from "@/collections/Dice";
+import {
+  DICE_BASE_COLOR,
+  DICE_BLACK,
+  DICE_EYE_COLOR,
+  DICE_SIZE
+} from "@/collections/Dice";
 
 export default {
   name: "Aster",
@@ -40,6 +45,9 @@ export default {
     diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
+    baseColor() {
+      return DICE_BASE_COLOR[this.color];
+    },
     eyeColor() {
       return DICE_EYE_COLOR[this.color];
     },
