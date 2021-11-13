@@ -3,6 +3,15 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 
 export const DICE_SIZE = 100;
+export const DICE_BLACK = "black";
+export const DICE_RED = "red";
+export const DICE_WHITE = "white";
+export const DICE_EYE_COLOR = {
+  [DICE_BLACK]: "white",
+  [DICE_RED]: "white",
+  [DICE_WHITE]: "black"
+};
+
 export class FSDice {
   static unsubscribeMap = new Map();
 
@@ -49,7 +58,7 @@ export class FSDice {
       room: roomId,
       owner: userId,
       transform: `${transform ?? new DOMMatrix()}`,
-      color: color ?? "black",
+      color: color ?? DICE_BLACK,
       face: face ?? "*",
       hidden: false,
       updatedAt: Date.now()

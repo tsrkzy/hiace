@@ -17,7 +17,7 @@
     <rect
       :width="diceSize"
       :height="diceSize"
-      stroke="rgba(0,0,0,0.2)"
+      :stroke="frameColor"
       fill="rgba(0,0,0,0.2)"
     ></rect>
     <!-- ダイスの面と目 -->
@@ -48,7 +48,12 @@
 </template>
 
 <script>
-import { DICE_SIZE, FSDice } from "@/collections/Dice";
+import {
+  DICE_BLACK,
+  DICE_EYE_COLOR,
+  DICE_SIZE,
+  FSDice
+} from "@/collections/Dice";
 import Aster from "@/components/organisms/Svg/face/Aster";
 import Die from "@/components/organisms/Svg/face/Die";
 import { showContext } from "@/scripts/Contextmenu";
@@ -90,7 +95,10 @@ export default {
       return this?.dice.face || "*";
     },
     colorStore() {
-      return this?.dice.color || "black";
+      return this?.dice.color || DICE_BLACK;
+    },
+    frameColor() {
+      return DICE_EYE_COLOR[this.colorStore];
     },
     shadowHandler() {
       /* マップの位置変更中は非表示 */

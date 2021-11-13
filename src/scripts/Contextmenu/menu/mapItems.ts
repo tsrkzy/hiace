@@ -12,15 +12,25 @@ import {
 import store from "@/store";
 import { MAP_EDIT } from "@/interfaces/IFFloat";
 import { FSMap } from "@/collections/Map";
+import { DICE_BLACK, FSDice } from "@/collections/Dice";
+import { touchFree } from "@/scripts/touch";
 
 export function mapItems(mapId: string): ContextMenuItem[] {
+  const boardId = store.getters["room/activeBoard"];
+  if (!boardId) {
+    throw new Error("no active-boardId found");
+  }
+
   const map = store.getters["map/info"].find(
     (m: { id: string }) => m.id === mapId
   );
-
   if (!map) {
     throw new Error(`no map exists: ${mapId}`);
   }
+  const { transform: _transform } = map;
+
+  const roomId = store.getters["room/info"].id;
+  const userId = store.getters["auth/user"].id;
 
   const result: ContextMenuItem[] = [];
 
@@ -54,9 +64,35 @@ export function mapItems(mapId: string): ContextMenuItem[] {
     }
   });
 
+  /* ダイスを追加 */
+  const createDiceItem = new ContextMenuChildItem({
+    value: `create_dice_on_map_${mapId}`,
+    text: "ダイスを追加",
+    callback: async () => {
+      const transform = new DOMMatrix(_transform);
+      /* 拡縮をリセット */
+      transform.a = 1;
+      transform.b = 0;
+      transform.c = 0;
+      transform.d = 1;
+      const face = "*";
+      const color = DICE_BLACK;
+      await FSDice.Create({
+        boardId,
+        roomId,
+        userId,
+        face,
+        color,
+        transform
+      });
+      touchFree(`ダイスを追加しました`);
+    }
+  });
+
   result.push(editMapItem);
   result.push(toggleLockMapItem);
   result.push(deleteMapItem);
+  result.push(createDiceItem);
 
   return result;
 }

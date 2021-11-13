@@ -11,7 +11,7 @@
       :stroke="color"
       stroke-width="1"
       :fill="color"
-      fill-opacity=".8"
+      fill-opacity=".9"
       x="0"
       y="0"
       :rx="diceSize / 6"
@@ -20,7 +20,7 @@
       :height="diceSize"
     ></rect>
     <path
-      stroke="white"
+      :stroke="eyeColor"
       stroke-opacity=".95"
       stroke-width="10"
       stroke-linecap="round"
@@ -31,15 +31,18 @@
 </template>
 
 <script>
-import { DICE_SIZE } from "@/collections/Dice";
+import { DICE_BLACK, DICE_EYE_COLOR, DICE_SIZE } from "@/collections/Dice";
 
 export default {
   name: "Aster",
   props: {
-    color: { type: String, default: "black" },
+    color: { type: String, default: DICE_BLACK },
     diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
+    eyeColor() {
+      return DICE_EYE_COLOR[this.color];
+    },
     d() {
       const s = this.diceSize;
       const p = s / 4;

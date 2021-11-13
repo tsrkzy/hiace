@@ -11,7 +11,13 @@ import {
   ContextMenuParentItem
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
-import { DICE_SIZE, FSDice } from "@/collections/Dice";
+import {
+  DICE_BLACK,
+  DICE_RED,
+  DICE_SIZE,
+  DICE_WHITE,
+  FSDice
+} from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
 
 export function diceItems(diceId: string): ContextMenuItem[] {
@@ -62,8 +68,9 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   });
 
   const colors = [
-    ["黒", "black"],
-    ["赤", "red"]
+    ["白", DICE_WHITE],
+    ["黒", DICE_BLACK],
+    ["赤", DICE_RED]
   ];
   changeColor.children = colors.map(c => {
     return new ContextMenuChildItem({
@@ -82,6 +89,7 @@ export function diceItems(diceId: string): ContextMenuItem[] {
     text: "ダイスを追加",
     callback: async () => {
       const transform = new DOMMatrix(_transform);
+      /* 座標をダイス1個分だけ右下にずらして作成 */
       transform.e += DICE_SIZE;
       transform.f += DICE_SIZE;
       await FSDice.Create({

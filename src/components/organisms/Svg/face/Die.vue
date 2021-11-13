@@ -11,7 +11,7 @@
       :stroke="color"
       stroke-width="1"
       :fill="color"
-      fill-opacity=".8"
+      fill-opacity=".9"
       x="0"
       y="0"
       :rx="diceSize / 6"
@@ -27,14 +27,14 @@
       :r="d[0]"
       :cx="d[1]"
       :cy="d[2]"
-      fill="white"
+      :fill="eyeColor"
       fill-opacity=".95"
     ></circle>
   </g>
 </template>
 
 <script>
-import { DICE_SIZE } from "@/collections/Dice";
+import { DICE_EYE_COLOR, DICE_SIZE } from "@/collections/Dice";
 
 export default {
   name: "Die",
@@ -44,6 +44,9 @@ export default {
     diceSize: { type: Number, default: DICE_SIZE }
   },
   computed: {
+    eyeColor() {
+      return DICE_EYE_COLOR[this.color];
+    },
     eyes() {
       const dice = this.dice;
       const d = this.diceSize;
