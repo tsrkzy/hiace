@@ -206,6 +206,8 @@ export class FSChat {
     /* TRPGシステムを指定しない場合 */
     const noSystem = typeof system !== "string" || !system;
 
+    /* インライン構文の処理 */
+
     /* 簡易構文チェック */
     const isCommand = noSystem && easyDiceCheck(text);
 
