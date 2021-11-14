@@ -197,17 +197,17 @@ export class FSChat {
     /* trim済みの文字列を渡す */
     const { text = "" } = params.value;
 
-    /* 内容が空文字または空白文字のみ */
+    /* 内容が空文字または空白文字のみの場合は何もしない */
     const emptyText = text.trim().length === 0;
     if (emptyText) {
       return;
     }
 
-    /* TRPGシステムを指定しない */
+    /* TRPGシステムを指定しない場合 */
     const noSystem = typeof system !== "string" || !system;
 
     /* 簡易構文チェック */
-    const isCommand = easyDiceCheck(text);
+    const isCommand = noSystem && easyDiceCheck(text);
 
     let type = TEXT;
     if (noSystem || !isCommand) {

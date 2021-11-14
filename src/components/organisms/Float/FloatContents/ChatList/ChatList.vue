@@ -181,6 +181,11 @@ export default {
         console.error(e);
       }
     },
+    sendChatter() {
+      const { characterId } = this.getSpeaker();
+      const userName = this.$store.getters["auth/user"].name;
+      Socket.Send(ON_TYPE, { userName, characterId });
+    },
     async onKeydown(e) {
       const { code, isComposing, shiftKey, currentTarget } = e;
       const { value: value = "", selectionStart } = currentTarget;
@@ -219,10 +224,8 @@ export default {
         await this.sendChat();
       }
 
-      const { characterId } = this.getSpeaker();
-
-      const userName = this.$store.getters["auth/user"].name;
-      Socket.Send(ON_TYPE, { userName, characterId });
+      /* 〜が入力中 */
+      this.sendChatter();
     },
     onClickLarge() {
       if (this.fontSize < 4) this.fontSize++;
