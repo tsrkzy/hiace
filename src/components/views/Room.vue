@@ -10,6 +10,12 @@
     <character-detail class="z-4" />
     <div style="position: fixed; top: 0;left:0;">
       <window-opener v-if="authenticated && joined"></window-opener>
+      <button v-if="authenticated && joined" @click="htmlFontSizeHandler(12)">
+        12px
+      </button>
+      <button v-if="authenticated && joined" @click="htmlFontSizeHandler(16)">
+        16px
+      </button>
       <google-authorizer></google-authorizer>
       <ha-checkbox v-if="false" label="debug:" v-model="debug"></ha-checkbox>
       <debug-indicator v-if="debug"></debug-indicator>
@@ -117,6 +123,10 @@ export default {
     this.$store.dispatch("room/leaveRoom");
   },
   methods: {
+    htmlFontSizeHandler(px) {
+      const $html = document.querySelectorAll("html")[0];
+      $html.style.fontSize = `${px}px`;
+    },
     async trackRoomInfo(roomId) {
       /* google未認証のユーザには部屋情報を渡さない */
       if (!this.authenticated) {
