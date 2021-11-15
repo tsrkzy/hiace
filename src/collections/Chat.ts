@@ -209,7 +209,7 @@ export class FSChat {
     /* インライン構文の処理 */
 
     /* 簡易構文チェック */
-    const isCommand = noSystem && easyDiceCheck(text);
+    const isCommand = easyDiceCheck(text);
 
     let type = TEXT;
     if (noSystem || !isCommand) {
