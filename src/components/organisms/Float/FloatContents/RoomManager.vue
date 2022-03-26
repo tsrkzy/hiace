@@ -21,9 +21,9 @@
       ></ha-checkbox>
       <h5>タブが非アクティブの時に通知音を鳴らす</h5>
       <ha-checkbox
-          label="新着チャットを通知する"
-          :value="ring"
-          @change="onRingHandler"
+        label="新着チャットを通知する"
+        :value="ring"
+        @change="onRingHandler"
       ></ha-checkbox>
     </fieldset>
     <div v-if="iAmOwner">
@@ -217,7 +217,7 @@ export default {
       const payload = { maskChannel: !!e };
       await this.$store.dispatch("localConfig/setMaskChannel", payload);
     },
-    async onRingHandler(e){
+    async onRingHandler(e) {
       const payload = { ring: !!e };
       await this.$store.dispatch("localConfig/setRing", payload);
     },
