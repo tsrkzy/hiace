@@ -86,14 +86,23 @@ export default {
           continue;
         }
 
-        /* 直近で発言した10名のcharacterのみ */
+        /* 同じキャラの発言は、最も(逆順で)直近の発言に対して立ち絵を表示 */
         if (cMap.has(characterId)) {
           continue;
         }
         cMap.set(characterId, true);
 
         for (let j = 0; j < characters.length; j++) {
-          const { id, activeAlias, chatPosition } = characters[j];
+          const {
+            id,
+            activeAlias,
+            chatPosition,
+            archived = false
+          } = characters[j];
+
+          if (archived) {
+            continue;
+          }
 
           if (characterId !== id) {
             continue;
@@ -120,7 +129,7 @@ export default {
         }
 
         /* 直近で発言した10名のcharacterのみ */
-        if (Array.from(cMap.keys()).length >= 10) {
+        if (items.length >= 10) {
           break;
         }
       }
