@@ -69,14 +69,23 @@ export default {
   },
   computed: {
     categolizedCharacters() {
-      const result = { own: [], ownArchived: [], others: [] };
+      const result = {
+        own: [],
+        ownArchived: [],
+        others: [],
+        othersArchived: []
+      };
       const userId = this.$store.getters["auth/user"].id;
       const characters = this.$store.getters["character/info"];
 
       for (let i = 0; i < characters.length; i++) {
         const c = characters[i];
         if (c.owner !== userId) {
-          result.others.push(c);
+          if (c.archived) {
+            result.othersArchived.push(c);
+          } else {
+            result.others.push(c);
+          }
         } else if (c.archived) {
           result.ownArchived.push(c);
         } else {
