@@ -17,7 +17,7 @@
         <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
         <ha-button @click="onClickDeleteMap(m.id)">削除</ha-button>
       </fieldset>
-      <fieldset v-for="p in b.pawns" :key="p.id">
+      <fieldset v-for="p in b.pawns.filter(p => isMine(p.owner))" :key="p.id">
         <legend>コマ: {{ whoIsPawn(p.id) }}({{ whosePawn(p.owner) }})</legend>
         <ha-button @click="onClickResetPawn(p.id)">原点へ戻す</ha-button>
         <ha-button @click="onClickDeletePawn(p.id)">削除</ha-button>
@@ -49,6 +49,10 @@ export default {
     },
     whosePawn(ownerId) {
       return FSUser.Who(ownerId);
+    },
+    isMine(ownerId) {
+      const userId = this.$store.getters["auth/user"].id;
+      return ownerId === userId;
     },
     async onClickAddBoard() {
       const userId = this.$store.getters["auth/user"].id;
