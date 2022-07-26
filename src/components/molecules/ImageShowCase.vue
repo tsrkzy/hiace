@@ -49,6 +49,12 @@
           style="position:absolute;left:0;top:0;color:white;background-color: red;"
           >個人</span
         >
+        <ha-button
+          v-if="deleteMode"
+          style="position: absolute;right:0;bottom:0;"
+          @click="onClickDeleteImage(image.id)"
+          >削除</ha-button
+        >
       </div>
     </label>
   </div>
@@ -58,6 +64,7 @@
 import { FSImage } from "@/collections/Image";
 import HaButton from "@/components/atoms/HaButton";
 import { IMAGE_MANAGER } from "@/interfaces/IFFloat";
+import { Smoke } from "@/scripts/Smoke";
 
 export default {
   name: "ImageShowCase",
@@ -66,13 +73,10 @@ export default {
     imageId: { type: String },
     onlyMine: { type: Boolean, default: false },
     navToImageManager: { type: Boolean, default: false },
+    deleteMode: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     showNull: { type: Boolean, default: false }
   },
-  // model: {
-  //   prop: "imageId",
-  //   event: "selectImage"
-  // },
   methods: {
     onChangeSelectImage(e) {
       const { value } = e.currentTarget;
@@ -86,6 +90,12 @@ export default {
         contentId: IMAGE_MANAGER,
         show: true
       });
+    },
+    async onClickDeleteImage(imageId) {
+      console.log("ImageShowCase.onClickDeleteImage", imageId);
+      await Smoke.on();
+      await FSImage.Archive(imageId);
+      await Smoke.off();
     }
   },
   computed: {
@@ -94,8 +104,12 @@ export default {
     },
     images() {
       const images = this.$store.getters["image/info"].filter(img => {
-        /* 自分の所有しないhidden属性付きの画像は表示しない */
-        return !(img.owner !== this.me && img.hidden);
+        return (
+          /* 自分の所有しないhidden属性付きの画像は表示しない */
+          !(img.owner !== this.me && img.hidden) &&
+          /* アーカイブされていない画像のみ表示する */
+          img.archived !== true
+        );
       });
 
       /* 「自分の画像だけ表示」オプション */

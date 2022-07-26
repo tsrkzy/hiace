@@ -178,6 +178,10 @@ export class FSImage {
     return await doc.update(criteria);
   }
 
+  static async Archive(id: string) {
+    return FSImage.Update(id, { archived: true });
+  }
+
   static async Tag(id: string, tagName: string, toggle: boolean) {
     const image = store.getters["image/info"].find(
       (img: { id: string; tags: string[] }) => img.id === id

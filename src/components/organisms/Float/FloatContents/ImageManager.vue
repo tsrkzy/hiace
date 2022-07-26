@@ -14,6 +14,11 @@
       :value="inputFiles"
       @change="onClickFileUploadHandler"
     />
+    <ha-checkbox
+      label="削除ボタンを表示する"
+      :value="deleteImageMode"
+      @input="onClickDeleteMode"
+    ></ha-checkbox>
     <fieldset v-show="image">
       <legend>画像の情報</legend>
       <ul v-if="isMine && imageId">
@@ -55,6 +60,7 @@
       :image-id="imageId"
       @selectImage="onChangeSelectedImage"
       :only-mine="onlyMine"
+      :delete-mode="deleteImageMode"
     ></image-show-case>
   </div>
 </template>
@@ -76,7 +82,8 @@ export default {
     return {
       imageId: null,
       inputFiles: null,
-      onlyMine: false
+      onlyMine: false,
+      deleteImageMode: false
     };
   },
   computed: {
@@ -94,6 +101,11 @@ export default {
   methods: {
     whose(imageId) {
       return FSImage.Whose(imageId);
+    },
+    onClickDeleteMode(e) {
+      console.log("ImageManager.onClickDeleteMode");
+      console.log(e); // @DELETEME
+      this.deleteImageMode = e;
     },
     async onClickFileUploadHandler(e) {
       console.log("ImageManager.onClickFileUploadHandler"); // @DELETEME
