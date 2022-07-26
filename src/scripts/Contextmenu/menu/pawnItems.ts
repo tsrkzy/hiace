@@ -131,7 +131,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   /* コマを大きくする */
   const pawnSizeUp = new ContextMenuChildItem({
     value: `pawn_size_up_${pawnId}`,
-    text: `コマを大きくする(${characterName})`,
+    text: `コマを大きくする`,
     callback: async () => {
       await FSCharacter.Update(character.id, { pawnSize: pawnSize + 1 });
     },
@@ -142,13 +142,22 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   /* コマを小さくする */
   const pawnSizeDown = new ContextMenuChildItem({
     value: `pawn_size_down_${pawnId}`,
-    text: `コマを縮める(${characterName})`,
+    text: `コマを縮める`,
     callback: async () => {
       await FSCharacter.Update(character.id, { pawnSize: pawnSize - 1 });
     },
     disabled: pawnSize <= 1
   });
   changePawnSize.children.push(pawnSizeDown);
+
+  /* コマの重ね順を一番下にする */
+  const toBottomPawnItem = new ContextMenuChildItem({
+    value: `to_bottom_pawn_${pawnId}`,
+    text: `コマの重ね順を一番下にする`,
+    callback: async () => {
+      await FSPawn.ToBottom(pawnId);
+    }
+  });
 
   result.push(resetPosItem);
   result.push(editCharacterItem);
@@ -159,6 +168,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   result.push(copyPawnItem);
   result.push(deletePawnItem);
   result.push(changePawnSize);
+  result.push(toBottomPawnItem);
 
   return result;
 }

@@ -95,6 +95,26 @@ export class FSPawn {
     return await docRef.update(params);
   }
 
+  static async ToBottom(pawnId: string) {
+    console.log("Pawn.ToBottom", pawnId);
+    /* pawnsはupdatedAtの降順 */
+    const pawns = store.getters["pawn/info"];
+    const db = firebase.firestore();
+    const batch = db.batch();
+
+    /* 他のpawnsの順番を変えないよう、現在時刻 - 1[msec] から過去に 1[msec] ずつずらしてtouch */
+    const now = Date.now();
+    for (let i = 0; i < pawns.length; i++) {
+      const { id } = pawns[i];
+      const delta = pawnId === id ? pawns.length : i;
+      const updatedAt = now - delta;
+
+      const docRef = await db.collection("pawn").doc(id);
+      batch.update(docRef, { updatedAt });
+    }
+    await batch.commit();
+  }
+
   static async ResetTransform(pawnIdList: string[]) {
     const db = firebase.firestore();
     const batch = db.batch();
