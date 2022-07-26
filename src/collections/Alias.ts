@@ -81,7 +81,6 @@ export class FSAlias {
   }
 
   static async Delete(aliasId: string) {
-
     /* もし削除対象のaliasをcharacterが参照していたら、他のaliasをセットする */
     const db = firebase.firestore();
     const { character: characterId = "" } =
