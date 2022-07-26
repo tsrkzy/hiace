@@ -52,7 +52,7 @@
     </fieldset>
     <hr />
     <image-show-case
-      v-model="imageId"
+      :image-id="imageId"
       @selectImage="onChangeSelectedImage"
       :only-mine="onlyMine"
     ></image-show-case>
