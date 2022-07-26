@@ -53,11 +53,11 @@
         </ha-select>
       </div>
       <ha-checkbox
-        v-if="showDelete"
-        v-model="showDeleteButton"
+        v-if="myCharacter"
+        v-model="characterDeleteMode"
         label="キャラクタを完全に削除する"
       ></ha-checkbox>
-      <ha-button v-if="showDeleteButton" @click="onDeleteCharacter"
+      <ha-button v-if="characterDeleteMode" @click="onDeleteCharacter"
         >キャラクタを削除</ha-button
       >
     </fieldset>
@@ -85,8 +85,18 @@
             :value="a.name"
             @change="onAliasNameChange(a.id, $event)"
           ></ha-input-form>
+          <ha-button
+            v-if="aliasDeleteMode && aliases.length > 1"
+            @click="onDeleteAlias(a.id, $event)"
+            >削除</ha-button
+          >
         </li>
       </ul>
+      <ha-checkbox
+        v-if="myCharacter && aliases.length > 1"
+        v-model="aliasDeleteMode"
+        label="立ち絵を完全に削除する"
+      ></ha-checkbox>
     </fieldset>
     <fieldset>
       <legend>画像の割り当て</legend>
@@ -168,7 +178,8 @@ export default {
       chatPosition: "0",
       pawnSizeStr: "1",
       chatColor: SYSTEM_COLOR,
-      showDeleteButton: false
+      characterDeleteMode: false,
+      aliasDeleteMode: false
     };
   },
   async created() {
@@ -295,6 +306,16 @@ export default {
       await FSCharacter.Delete(characterId);
       await this.$store.dispatch("float/close", { id: this.floatId });
       await Smoke.off();
+    },
+    async onDeleteAlias(aliasId) {
+      await Smoke.on();
+      await FSAlias.Delete(aliasId);
+      /* 削除したaliasを使用していたcharacterに別のaliasが付くので再取得 */
+      const { activeAlias = null } = this.$store.getters["character/info"].find(
+        c => c.id === this.characterId
+      );
+      this.aliasId = activeAlias;
+      await Smoke.off();
     }
   },
   computed: {
@@ -312,10 +333,8 @@ export default {
       );
     },
     aliases() {
-      return (
-        this.$store.getters["alias/info"].filter(
-          a => a.character === this.characterId
-        ) || {}
+      return this.$store.getters["alias/info"].filter(
+        a => a.character === this.characterId
       );
     },
     aliasItems() {
@@ -335,7 +354,7 @@ export default {
     showOnInitiative() {
       return !!this.character.showOnInitiative;
     },
-    showDelete() {
+    myCharacter() {
       const owner = this.character?.owner;
       const myUserId = this.$store.getters["auth/user"].id;
       return owner === myUserId;
