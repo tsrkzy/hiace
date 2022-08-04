@@ -74,6 +74,7 @@ export default {
     onlyMine: { type: Boolean, default: false },
     onlyMap: { type: Boolean, default: false },
     onlyCharacter: { type: Boolean, default: false },
+    onlyUntagged: { type: Boolean, default: false },
     navToImageManager: { type: Boolean, default: false },
     deleteMode: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
@@ -117,16 +118,18 @@ export default {
       /* フィルタオプション
        *「自分の画像」
        *「マップ」
-       *「キャラクタ」*/
-      const { onlyMine, onlyMap, onlyCharacter } = this;
+       *「キャラクタ」
+       *「未タグ付け」*/
+      const { onlyMine, onlyMap, onlyCharacter, onlyUntagged } = this;
       return images.filter(img => {
         const isMine = onlyMine ? img.owner === this.me : true;
         const isMap = onlyMap ? img.tags.indexOf("map") !== -1 : true;
         const isCharacter = onlyCharacter
           ? img.tags.indexOf("character") !== -1
           : true;
+        const isUntagged = onlyUntagged && img.tags.length === 0;
 
-        return isMine && isMap && isCharacter;
+        return isMine && (onlyUntagged ? isUntagged : isMap && isCharacter);
       });
     }
   },

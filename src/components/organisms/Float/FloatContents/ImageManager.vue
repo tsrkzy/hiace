@@ -61,12 +61,20 @@
           <ha-checkbox
             label="#マップ"
             @input="onChangeOnlyMap($event)"
+            :disabled="onlyUntagged"
           ></ha-checkbox>
         </li>
         <li>
           <ha-checkbox
             label="#キャラクタ"
             @input="onChangeOnlyCharacter($event)"
+            :disabled="onlyUntagged"
+          ></ha-checkbox>
+        </li>
+        <li>
+          <ha-checkbox
+            label="#タグなし"
+            @input="onChangeOnlyUntagged($event)"
           ></ha-checkbox>
         </li>
       </ul>
@@ -78,6 +86,7 @@
       :only-mine="onlyMine"
       :only-map="onlyMap"
       :only-character="onlyCharacter"
+      :only-untagged="onlyUntagged"
       :delete-mode="deleteImageMode"
     ></image-show-case>
   </div>
@@ -103,6 +112,7 @@ export default {
       onlyMine: false,
       onlyMap: false,
       onlyCharacter: false,
+      onlyUntagged: false,
       deleteImageMode: false
     };
   },
@@ -151,6 +161,10 @@ export default {
     onChangeOnlyCharacter(v) {
       console.log("ImageManager.onChangeOnlyCharacter", v);
       this.onlyCharacter = v;
+    },
+    onChangeOnlyUntagged(v) {
+      console.log("ImageManager.onChangeOnlyUntagged", v);
+      this.onlyUntagged = v;
     },
     onChangeSelectedImage(imageId) {
       console.log("ImageManager.onChangeSelectedImage", imageId); // @DELETEME
