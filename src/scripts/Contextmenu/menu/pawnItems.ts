@@ -160,9 +160,17 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
 
   /* 他のコマへ引く */
   for (let i = 0; i < pawnList.length; i++) {
-    const { id: pawnIdTo } = pawnList[i];
+    const { id: pawnIdTo, character: characterId } = pawnList[i];
     if (pawnId === pawnIdTo) {
       /* 自分自身には引かない */
+      continue;
+    }
+
+    const character = store.getters["character/info"].find(
+      (c: { id: string; archived: boolean }) => c.id === characterId
+    );
+    /* 控室のコマには引かない */
+    if (character.archived) {
       continue;
     }
 
