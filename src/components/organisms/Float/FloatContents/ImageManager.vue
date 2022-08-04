@@ -35,31 +35,49 @@
         <li>
           <ha-checkbox
             :value="image.tags.indexOf('map') !== -1"
-            label="マップとしてタグ付け(フィルタ機能が未実装)"
+            label="#マップ"
             @input="onMakeMap(imageId, $event)"
           ></ha-checkbox>
         </li>
         <li>
           <ha-checkbox
             :value="image.tags.indexOf('character') !== -1"
-            label="キャラクタとしてタグ付け(フィルタ機能が未実装)"
+            label="#キャラクタ"
             @input="onMakeCharacter(imageId, $event)"
           ></ha-checkbox>
         </li>
       </ul>
     </fieldset>
     <fieldset>
-      <legend>フィルタ設定</legend>
-      <ha-checkbox
-        label="自分の画像だけ表示"
-        @input="onChangeOnlyMine($event)"
-      ></ha-checkbox>
+      <legend>フィルタ設定(AND)</legend>
+      <ul>
+        <li>
+          <ha-checkbox
+            label="自分の画像"
+            @input="onChangeOnlyMine($event)"
+          ></ha-checkbox>
+        </li>
+        <li>
+          <ha-checkbox
+            label="#マップ"
+            @input="onChangeOnlyMap($event)"
+          ></ha-checkbox>
+        </li>
+        <li>
+          <ha-checkbox
+            label="#キャラクタ"
+            @input="onChangeOnlyCharacter($event)"
+          ></ha-checkbox>
+        </li>
+      </ul>
     </fieldset>
     <hr />
     <image-show-case
       :image-id="imageId"
       @selectImage="onChangeSelectedImage"
       :only-mine="onlyMine"
+      :only-map="onlyMap"
+      :only-character="onlyCharacter"
       :delete-mode="deleteImageMode"
     ></image-show-case>
   </div>
@@ -83,6 +101,8 @@ export default {
       imageId: null,
       inputFiles: null,
       onlyMine: false,
+      onlyMap: false,
+      onlyCharacter: false,
       deleteImageMode: false
     };
   },
@@ -123,6 +143,14 @@ export default {
     onChangeOnlyMine(v) {
       console.log("ImageManager.onChangeOnlyMine", v); // @DELETEME
       this.onlyMine = v;
+    },
+    onChangeOnlyMap(v) {
+      console.log("ImageManager.onChangeOnlyMap", v);
+      this.onlyMap = v;
+    },
+    onChangeOnlyCharacter(v) {
+      console.log("ImageManager.onChangeOnlyCharacter", v);
+      this.onlyCharacter = v;
     },
     onChangeSelectedImage(imageId) {
       console.log("ImageManager.onChangeSelectedImage", imageId); // @DELETEME

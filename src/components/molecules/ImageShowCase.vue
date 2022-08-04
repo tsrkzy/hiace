@@ -72,6 +72,8 @@ export default {
   props: {
     imageId: { type: String },
     onlyMine: { type: Boolean, default: false },
+    onlyMap: { type: Boolean, default: false },
+    onlyCharacter: { type: Boolean, default: false },
     navToImageManager: { type: Boolean, default: false },
     deleteMode: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
@@ -112,10 +114,20 @@ export default {
         );
       });
 
-      /* 「自分の画像だけ表示」オプション */
-      return this.onlyMine
-        ? images.filter(img => img.owner === this.me)
-        : images;
+      /* フィルタオプション
+       *「自分の画像」
+       *「マップ」
+       *「キャラクタ」*/
+      const { onlyMine, onlyMap, onlyCharacter } = this;
+      return images.filter(img => {
+        const isMine = onlyMine ? img.owner === this.me : true;
+        const isMap = onlyMap ? img.tags.indexOf("map") !== -1 : true;
+        const isCharacter = onlyCharacter
+          ? img.tags.indexOf("character") !== -1
+          : true;
+
+        return isMine && isMap && isCharacter;
+      });
     }
   },
   watch: {
