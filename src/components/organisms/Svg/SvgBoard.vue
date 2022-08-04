@@ -41,6 +41,7 @@
           :key="`shadow_${d.id}`"
           :dice-id="d.id"
         ></svg-dice>
+        <svg-arrow v-for="a in arrows" :key="a.id" :arrow-id="a.id"></svg-arrow>
         <svg-pawn v-for="p in pawns" :key="p.id" :pawn-id="p.id"></svg-pawn>
         <svg-dice v-for="d in dices" :key="d.id" :dice-id="d.id"></svg-dice>
       </g>
@@ -57,6 +58,7 @@
 import SvgDice from "@/components/organisms/Svg/SvgDice";
 import SvgMap from "@/components/organisms/Svg/SvgMap";
 import SvgPawn from "@/components/organisms/Svg/SvgPawn";
+import SvgArrow from "@/components/organisms/Svg/SvgArrow";
 import { showContext } from "@/scripts/Contextmenu";
 import { isMacOS } from "@/scripts/helper";
 
@@ -64,7 +66,7 @@ const W = 20;
 
 export default {
   name: "SvgBoard",
-  components: { SvgDice, SvgPawn, SvgMap },
+  components: { SvgDice, SvgPawn, SvgMap, SvgArrow },
   methods: {
     updateWeathercock(transform) {
       const { e, f } = new DOMMatrix(transform);
@@ -203,6 +205,9 @@ export default {
       return this.$store.getters["map/info"].filter(
         m => m.board === activeBoardId
       );
+    },
+    arrows() {
+      return this.$store.getters["arrow/info"];
     },
     pawns() {
       const activeBoardId = this.activeBoard?.id;

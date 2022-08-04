@@ -15,14 +15,16 @@ import { getName } from "@/scripts/helper";
 import { FSPawn, PAWN_UNIT_SIZE } from "@/collections/Pawn";
 import { CHARACTER_EDIT } from "@/interfaces/IFFloat";
 import { FSCharacter } from "@/collections/Character";
+import { FSArrow } from "@/collections/Arrow";
 
 export function pawnItems(pawnId: string): ContextMenuItem[] {
-  const pawn = store.getters["pawn/info"].find(
-    (p: { id: string }) => p.id === pawnId
-  );
+  const pawnList = store.getters["pawn/info"];
+  const pawn = pawnList.find((p: { id: string }) => p.id === pawnId);
   if (!pawn) {
     throw new Error(`no pawn exists: ${pawnId}`);
   }
+
+  const arrowList = store.getters["arrow/info"];
   const character = store.getters["character/info"].find(
     (c: { id: string }) => c.id === pawn.character
   );
@@ -150,6 +152,59 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   });
   changePawnSize.children.push(pawnSizeDown);
 
+  /* Arrow作成 */
+  const arrowMenu = new ContextMenuParentItem({
+    value: `arrow_menu_${pawnId}`,
+    text: "線"
+  });
+
+  /* 他のコマへ引く */
+  for (let i = 0; i < pawnList.length; i++) {
+    const { id: pawnIdTo } = pawnList[i];
+    if (pawnId === pawnIdTo) {
+      /* 自分自身には引かない */
+      continue;
+    }
+
+    /* 対象のコマとの間に既に同じ向きで存在する場合は非活性化 */
+    const alreadyExists = arrowList.some(
+      (a: { pawnFrom: string; pawnTo: string }) =>
+        a.pawnFrom === pawnId && a.pawnTo === pawnIdTo
+    );
+
+    const pawnName = getName("pawn", pawnIdTo);
+
+    const draw_arrow_to = new ContextMenuChildItem({
+      value: `draw_arrow_to_${pawnId}_${pawnIdTo}`,
+      text: `${pawnName}(${pawnIdTo.slice(0, 3)})へ引く`,
+      callback: async () => {
+        await FSArrow.Create({
+          roomId,
+          userId,
+          pawnIdFrom: pawnId,
+          pawnIdTo: pawnIdTo
+        });
+      },
+      disabled: alreadyExists
+    });
+    arrowMenu.children.push(draw_arrow_to);
+  }
+
+  /* 対象のPawnに接続しているArrowをすべて消す */
+  const existDeletable = arrowList.some(
+    (a: { pawnFrom: string; pawnTo: string }) =>
+      a.pawnFrom === pawnId || a.pawnTo === pawnId
+  );
+  const clear_arrows = new ContextMenuChildItem({
+    value: `clear_arrows_${pawnId}`,
+    text: `消す`,
+    callback: async () => {
+      await FSArrow.DeleteByPawn(pawnId);
+    },
+    disabled: !existDeletable
+  });
+  arrowMenu.children.push(clear_arrows);
+
   /* コマの重ね順を一番下にする */
   const toBottomPawnItem = new ContextMenuChildItem({
     value: `to_bottom_pawn_${pawnId}`,
@@ -168,6 +223,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
   result.push(copyPawnItem);
   result.push(deletePawnItem);
   result.push(changePawnSize);
+  result.push(arrowMenu);
   result.push(toBottomPawnItem);
 
   return result;

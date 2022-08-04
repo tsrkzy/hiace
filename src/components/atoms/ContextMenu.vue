@@ -49,7 +49,13 @@
             :key="child.value"
             @click.stop="onClickItem(child)"
           >
-            <div class="contextmenu contextmenu-child__item">
+            <div
+              :class="{
+                contextmenu: true,
+                'contextmenu-child__item': true,
+                disabled: child.disabled
+              }"
+            >
               {{ child.text }}
             </div>
           </div>

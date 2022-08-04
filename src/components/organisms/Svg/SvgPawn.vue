@@ -45,8 +45,11 @@
       :href="imgSrc"
     ></image>
     <!-- ビルボード -->
-    <rect :width="pawnSize" height="10" stroke="black" fill="black"></rect>
-    <text x="0" y="8" fill="white">{{ characterName }}</text>
+    <rect :width="pawnSize" height="12" stroke="black" fill="black"></rect>
+    <text x="0" y="12" fill="lightgray"
+      >{{ characterName }} #{{ pawnId.slice(0, 3) }}</text
+    >
+    <text x="0" y="12" fill="white">{{ characterName }}</text>
     <!-- ドラッグ中の当たり判定拡張 -->
     <rect
       v-if="dragged"

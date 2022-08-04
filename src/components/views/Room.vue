@@ -38,6 +38,7 @@
 
 <script>
 import { FSAlias } from "@/collections/Alias";
+import { FSArrow } from "@/collections/Arrow";
 import { FSBoard } from "@/collections/Board";
 import { FSChannel } from "@/collections/Channel";
 import { FSCharacter } from "@/collections/Character";
@@ -113,6 +114,7 @@ export default {
     FSBoard.RemoveListener(this.roomId);
     FSMap.RemoveListener(this.roomId);
     FSPawn.RemoveListener(this.roomId);
+    FSArrow.RemoveListener(this.roomId);
     FSDice.RemoveListener(this.roomId);
     FSTable.RemoveListener(this.roomId);
     FSColumn.RemoveListener(this.roomId);
@@ -151,6 +153,7 @@ export default {
       FSBoard.SetListener(roomId);
       FSMap.SetListener(roomId);
       FSPawn.SetListener(roomId);
+      FSArrow.SetListener(roomId);
       FSDice.SetListener(roomId);
       FSTable.SetListener(roomId);
       FSColumn.SetListener(roomId);
