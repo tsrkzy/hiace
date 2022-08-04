@@ -55,12 +55,18 @@ export default {
       }
       const {
         transform: transformFrom = "",
-        pawnSize: pawnSizeFrom = 1
+        character: characterIdFrom
       } = this.pawnFrom;
       const {
         transform: transformTo = "",
-        pawnSize: pawnSizeTo = 1
+        character: characterIdTo
       } = this.pawnTo;
+      const characters = this.$store.getters["character/info"];
+      const characterFrom = characters.find(c => c.id === characterIdFrom);
+      const characterTo = characters.find(c => c.id === characterIdTo);
+      const pawnSizeFrom = characterFrom.pawnSize;
+      const pawnSizeTo = characterTo.pawnSize;
+
       const tFrom = new DOMMatrix(transformFrom);
       const tTo = new DOMMatrix(transformTo);
 
