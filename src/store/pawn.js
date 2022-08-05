@@ -32,12 +32,12 @@ export const pawn = {
     },
     dragStart({ commit }, { pawnId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      $elList.forEach($e => ($e.style.display = "none"));
+      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
       commit("setDrag", { drag: pawnId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      $elList.forEach($e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { pawnId, transform }) {

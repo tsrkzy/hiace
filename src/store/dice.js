@@ -30,12 +30,12 @@ export const dice = {
     },
     dragStart({ commit }, { diceId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      $elList.forEach($e => ($e.style.display = "none"));
+      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
       commit("setDrag", { drag: diceId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      $elList.forEach($e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { diceId, transform }) {

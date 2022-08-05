@@ -142,7 +142,7 @@ export default {
       const { files = [] } = e.currentTarget;
 
       const promiseList = [];
-      files.forEach(f => {
+      Array.prototype.forEach.call(files, f => {
         promiseList.push(FSImage.Create(f));
       });
       await Promise.all(promiseList);

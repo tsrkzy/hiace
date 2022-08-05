@@ -57,7 +57,7 @@ export default {
       const { files = [] } = e.currentTarget;
 
       const promiseList = [];
-      files.forEach(f => {
+      Array.prototype.forEach.call(files, f => {
         promiseList.push(FSSound.Create(f));
       });
       await Promise.all(promiseList);

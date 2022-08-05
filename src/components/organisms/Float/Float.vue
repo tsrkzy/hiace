@@ -104,7 +104,7 @@ export default {
       this.dragMove = true;
 
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      $elList.forEach($e => ($e.style.display = "none"));
+      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
 
       const $el = document.getElementById(`move_handle_${this.floatId}`);
 
@@ -131,7 +131,7 @@ export default {
         this.dragMove = false;
 
         const $elList = document.getElementsByClassName("__hide_on_drag");
-        $elList.forEach($e => ($e.style.display = ""));
+        Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
 
         $el.removeEventListener("mousemove", onHandleMouseMove);
         $el.removeEventListener("mouseup", onHandleMouseUp);
