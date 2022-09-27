@@ -8,7 +8,7 @@
 export default {
   name: "HaButton",
   props: {
-    disabled: { type: Boolean, default: false }
-  }
+    disabled: { type: Boolean, default: false },
+  },
 };
 </script>

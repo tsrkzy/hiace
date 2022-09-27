@@ -27,7 +27,7 @@ export default {
     onInputVolume(e) {
       const v = e.currentTarget.value;
       Sound.Volume = parseFloat(v);
-    }
-  }
+    },
+  },
 };
 </script>

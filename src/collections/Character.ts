@@ -1,7 +1,7 @@
 import { FSAlias } from "@/collections/Alias";
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { FSPawn } from "@/collections/Pawn";
 import { getName, postfix } from "@/scripts/helper";
 import { SYSTEM_COLOR } from "@/collections/Chat";
@@ -31,10 +31,7 @@ export class FSCharacter {
 
   static async GetById({ id }: { id: string }): Promise<TCharacter | null> {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("character")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("character").doc(id).get();
 
     const character = docRef.data();
     if (!character) {
@@ -52,7 +49,7 @@ export class FSCharacter {
       pawnSize: character.pawnSize,
       color: character.color,
       archived: character.archived,
-      activeAlias: character.activeAlias
+      activeAlias: character.activeAlias,
     };
   }
 
@@ -79,7 +76,7 @@ export class FSCharacter {
       chatPosition: params.chatPosition ?? 0,
       pawnSize: params.pawnSize ?? 1,
       color: params.color ?? SYSTEM_COLOR,
-      archived: params.archived ?? false
+      archived: params.archived ?? false,
     });
     const id = character.id;
 
@@ -87,7 +84,7 @@ export class FSCharacter {
     const alias = await FSAlias.CreateDefault({
       roomId: params.roomId,
       characterId: id,
-      imageId: params.imageId
+      imageId: params.imageId,
     });
     await FSCharacter.SetActiveAlias(id, alias.id);
 
@@ -116,7 +113,7 @@ export class FSCharacter {
       chatPosition = 0,
       pawnSize = 1,
       color = SYSTEM_COLOR,
-      archived = false
+      archived = false,
     } = params;
 
     if (!owner) {
@@ -136,7 +133,7 @@ export class FSCharacter {
       chatPosition,
       pawnSize,
       color,
-      archived
+      archived,
     };
     const db = firebase.firestore();
     const characterDocRef = await db.collection("character").add(c);
@@ -161,7 +158,7 @@ export class FSCharacter {
       pawnSize,
       color,
       archived,
-      activeAlias
+      activeAlias,
     } = c;
 
     const me = store.getters["auth/user"].id;
@@ -175,7 +172,7 @@ export class FSCharacter {
       chatPosition,
       pawnSize,
       color,
-      archived
+      archived,
     });
     const newCharacterId = newCharacter.id;
 
@@ -188,7 +185,7 @@ export class FSCharacter {
         roomId: room,
         characterId: newCharacterId,
         imageId: a.image,
-        name: a.name
+        name: a.name,
       });
       if (a.id === activeAlias) {
         await FSCharacter.SetActiveAlias(newCharacterId, newAlias.id);
@@ -211,10 +208,7 @@ export class FSCharacter {
 
   static async Delete(characterId: string) {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("character")
-      .doc(characterId)
-      .delete();
+    const docRef = await db.collection("character").doc(characterId).delete();
 
     /* 紐づくAliasも削除 */
     await FSAlias.DeleteByCharacter(characterId);
@@ -256,9 +250,9 @@ export class FSCharacter {
     const db = firebase.firestore();
     const docsRef = db.collection("character").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const characters: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const character = doc.data();
         character.id = doc.id;
         characters.push(character);

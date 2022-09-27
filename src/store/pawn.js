@@ -8,7 +8,7 @@ export const pawn = {
        * @SEE collections/Pawn.ts#SetListener
        *  */
     ],
-    drag: null
+    drag: null,
   },
   mutations: {
     setPawns(state, payload) {
@@ -18,12 +18,12 @@ export const pawn = {
       state.drag = payload.drag;
     },
     setTransform(state, { pawnId, transform }) {
-      const pawn = state.pawns.find(p => p.id === pawnId);
+      const pawn = state.pawns.find((p) => p.id === pawnId);
       if (!pawn) {
         return false;
       }
       pawn.transform = transform;
-    }
+    },
   },
   actions: {
     setPawns({ commit }, { pawns }) {
@@ -32,12 +32,15 @@ export const pawn = {
     },
     dragStart({ commit }, { pawnId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
+      Array.prototype.forEach.call(
+        $elList,
+        ($e) => ($e.style.display = "none")
+      );
       commit("setDrag", { drag: pawnId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, ($e) => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { pawnId, transform }) {
@@ -47,7 +50,7 @@ export const pawn = {
     resetTrasform({ commit }, { pawnId }) {
       console.log("pawn.resetTrasform", pawnId); // @DELETEME
       commit("setTransform", { pawnId, transform: `${new DOMMatrix()}` });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -64,6 +67,6 @@ export const pawn = {
         nameMap[id] = FSCharacter.Who(character);
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

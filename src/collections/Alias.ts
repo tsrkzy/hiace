@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { getName } from "@/scripts/helper";
 import { FSCharacter } from "@/collections/Character";
@@ -22,10 +22,7 @@ export class FSAlias {
 
   static async GetById({ id }: { id: string }): Promise<TAlias | null> {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("alias")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("alias").doc(id).get();
     if (!docRef.exists) {
       return null;
     }
@@ -43,14 +40,14 @@ export class FSAlias {
       roomId: room,
       characterId: character,
       imageId: image = DEFAULT_CHARACTER_IMAGE,
-      name
+      name,
     } = params;
 
     const alias = {
       room,
       character,
       image,
-      name
+      name,
     };
     const db = firebase.firestore();
     const docRef = await db.collection("alias").add(alias);
@@ -70,7 +67,7 @@ export class FSAlias {
       roomId,
       characterId,
       imageId,
-      name
+      name,
     });
   }
 
@@ -98,10 +95,7 @@ export class FSAlias {
     const replaceAliasId = aliases[0].id;
 
     await FSCharacter.SetActiveAlias(characterId, replaceAliasId);
-    const docRef = await db
-      .collection("alias")
-      .doc(aliasId)
-      .delete();
+    const docRef = await db.collection("alias").doc(aliasId).delete();
 
     return docRef;
   }
@@ -114,7 +108,7 @@ export class FSAlias {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -136,9 +130,9 @@ export class FSAlias {
     const db = firebase.firestore();
     const docsRef = db.collection("alias").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const aliases: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const alias = doc.data();
         alias.id = doc.id;
         aliases.push(alias);

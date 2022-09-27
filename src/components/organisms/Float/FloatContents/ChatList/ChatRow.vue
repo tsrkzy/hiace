@@ -22,7 +22,7 @@ export default {
   name: "ChatRow",
   props: {
     floatId: { type: Number, require: true },
-    fontSize: { type: Number, default: 0 }
+    fontSize: { type: Number, default: 0 },
   },
   computed: {},
   methods: {
@@ -57,8 +57,8 @@ export default {
           $ol.removeChild($ol.firstChild);
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

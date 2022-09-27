@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <ha-button v-if="false" @click="onClickAddBoard">ボードを追加</ha-button>
     <fieldset v-for="b in boardItems" :key="b.id">
       <legend>ボード: {{ b.id }}</legend>
@@ -17,7 +17,7 @@
         <ha-button @click="onClickMapEdit(m.id)">編集</ha-button>
         <ha-button @click="onClickDeleteMap(m.id)">削除</ha-button>
       </fieldset>
-      <fieldset v-for="p in b.pawns.filter(p => isMine(p.owner))" :key="p.id">
+      <fieldset v-for="p in b.pawns.filter((p) => isMine(p.owner))" :key="p.id">
         <legend>コマ: {{ whoIsPawn(p.id) }}({{ whosePawn(p.owner) }})</legend>
         <ha-button @click="onClickResetPawn(p.id)">原点へ戻す</ha-button>
         <ha-button @click="onClickDeletePawn(p.id)">削除</ha-button>
@@ -41,7 +41,7 @@ export default {
   computed: {
     boardItems() {
       return this.$store.getters["board/divisions"];
-    }
+    },
   },
   methods: {
     whoIsPawn(pawnId) {
@@ -88,8 +88,8 @@ export default {
     },
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
-    }
-  }
+    },
+  },
 };
 </script>
 

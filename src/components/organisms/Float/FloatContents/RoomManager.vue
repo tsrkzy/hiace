@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <fieldset>
       <legend>個人設定</legend>
       <color-picker
@@ -114,13 +114,13 @@ export default {
     HaCheckbox,
     ChatDownloadButton,
     ColorPicker,
-    HaButton
+    HaButton,
   },
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   async created() {
     await this.fetchUser(this.requests);
@@ -171,17 +171,17 @@ export default {
       return this.$store.getters["room/requests"];
     },
     userItems() {
-      return this.$store.getters["user/info"].map(u => ({
+      return this.$store.getters["user/info"].map((u) => ({
         id: u.id,
-        email: u.email
+        email: u.email,
       }));
-    }
+    },
   },
   data() {
     return {
       enableBan: false,
       maskChannel: this.$store.getters["localConfig/maskChannel"],
-      ring: this.$store.getters["localConfig/ring"]
+      ring: this.$store.getters["localConfig/ring"],
     };
   },
   methods: {
@@ -207,7 +207,7 @@ export default {
       for (let i = 0; i < userIdList.length; i++) {
         const userId = userIdList[i];
         const { email } = await FSUser.GetById({
-          id: userId
+          id: userId,
         });
         list.push({ id: userId, email });
       }
@@ -226,12 +226,12 @@ export default {
     },
     isOwner(userId) {
       return this.room.owner === userId;
-    }
+    },
   },
   watch: {
     requests(requests) {
       this.fetchUser(requests);
-    }
-  }
+    },
+  },
 };
 </script>

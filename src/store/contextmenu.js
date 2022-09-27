@@ -16,7 +16,7 @@ export const contextmenu = {
     /* ネストした項目の展開状態 */
     open: null,
 
-    itemGroups: []
+    itemGroups: [],
   },
   mutations: {
     setPos(state, { x = 0, y = 0 }) {
@@ -31,7 +31,7 @@ export const contextmenu = {
     },
     setItemGroups(state, { itemGroups = [] }) {
       state.itemGroups = itemGroups;
-    }
+    },
   },
   actions: {
     open({ commit }, { open }) {
@@ -48,7 +48,7 @@ export const contextmenu = {
       console.log("contextmenu.off"); // @DELETEME
       commit("setShow", { show: false });
       commit("setOpen", { open: null });
-    }
+    },
   },
   getters: {
     show(state) {
@@ -65,6 +65,6 @@ export const contextmenu = {
     },
     itemGroups(state) {
       return state.itemGroups;
-    }
-  }
+    },
+  },
 };

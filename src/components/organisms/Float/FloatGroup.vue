@@ -42,15 +42,15 @@ export default {
     },
     loggedIn() {
       return this.$store.getters["auth/loggedIn"];
-    }
+    },
   },
   methods: {
     floatStyle(f) {
       return {
-        zIndex: f.z
+        zIndex: f.z,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

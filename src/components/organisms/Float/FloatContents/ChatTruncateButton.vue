@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       disabled: false,
-      deleteMode: false
+      deleteMode: false,
     };
   },
   methods: {
@@ -40,7 +40,7 @@ export default {
       this.disabled = true;
       await FSChat.Truncate(roomId);
       this.disabled = false;
-    }
-  }
+    },
+  },
 };
 </script>

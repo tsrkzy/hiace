@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 10vh 30vw 0 30vw; width: 40vw;">
+  <div style="margin: 10vh 30vw 0 30vw; width: 40vw">
     <span>Privacy Policy（プライバシーポリシー)</span>
     <pre>
 const privacyPolicy = {
@@ -37,7 +37,7 @@ const privacyPolicy = {
 
 <script>
 export default {
-  name: "PrivacyPolicy"
+  name: "PrivacyPolicy",
 };
 </script>
 

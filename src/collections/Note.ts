@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 export class FSNote {
   static unsubscribeMap = new Map();
@@ -10,7 +10,7 @@ export class FSNote {
     const n = {
       room: roomId,
       name,
-      text
+      text,
     };
 
     if (!roomId) {
@@ -36,9 +36,9 @@ export class FSNote {
     const db = firebase.firestore();
     const docsRef = db.collection("note").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const notes: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const note = doc.data();
         note.id = doc.id;
         notes.push(note);

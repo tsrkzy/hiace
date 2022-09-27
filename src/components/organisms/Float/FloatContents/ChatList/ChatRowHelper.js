@@ -44,7 +44,7 @@ function createTextSpan(c, activeChannel) {
   const {
     type,
     value: { result = "", text = "", secret = false },
-    channel
+    channel,
   } = c;
 
   /* 公開前のシークレットダイスの場合 */

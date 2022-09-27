@@ -13,8 +13,8 @@
 export default {
   name: "Column",
   props: {
-    cols: { type: String, default: "2" }
-  }
+    cols: { type: String, default: "2" },
+  },
 };
 </script>
 

@@ -16,7 +16,7 @@
       :style="{
         height: `${height}px`,
         width: '100%',
-        backgroundColor: 'rgba(0,0,0,0.2)'
+        backgroundColor: 'rgba(0,0,0,0.2)',
       }"
     >
       <alias
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       height: 200,
-      timeoutId: null
+      timeoutId: null,
     };
   },
   methods: {
@@ -56,7 +56,7 @@ export default {
       function onTimeout() {
         $el.style.opacity = "1";
       }
-    }
+    },
   },
   computed: {
     characters() {
@@ -97,7 +97,7 @@ export default {
             id,
             activeAlias,
             chatPosition,
-            archived = false
+            archived = false,
           } = characters[j];
 
           if (archived) {
@@ -121,7 +121,7 @@ export default {
                 aliasId: a.id,
                 chatPosition,
                 image: a.image,
-                top
+                top,
               });
               break;
             }
@@ -136,8 +136,8 @@ export default {
 
       items.reverse();
       return items;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

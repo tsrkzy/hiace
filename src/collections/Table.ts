@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import store from "@/store";
 import { FSColumn } from "@/collections/Column";
 
@@ -16,7 +16,7 @@ export class FSTable {
       roomId,
       filterColumns = [],
       filterCharacters = [],
-      name = "table_name"
+      name = "table_name",
     } = params;
     if (!roomId) {
       throw new Error("no roomId given");
@@ -25,7 +25,7 @@ export class FSTable {
       room: roomId,
       name,
       filterColumns,
-      filterCharacters
+      filterCharacters,
     };
 
     const db = firebase.firestore();
@@ -41,7 +41,7 @@ export class FSTable {
       roomId,
       name: `table_${Date.now()}`,
       filterColumns: [],
-      filterCharacters: []
+      filterCharacters: [],
     };
     return await FSTable.Create(t);
   }
@@ -54,10 +54,7 @@ export class FSTable {
 
   static async Delete(tableId: string) {
     const db = firebase.firestore();
-    const docRef = db
-      .collection("table")
-      .doc(tableId)
-      .delete();
+    const docRef = db.collection("table").doc(tableId).delete();
     /* 紐づくcolumnを削除 */
     await FSColumn.DeleteByTable(tableId);
 
@@ -75,9 +72,9 @@ export class FSTable {
     const db = firebase.firestore();
     const docsRef = db.collection("table").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const tables: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const table = doc.data();
         table.id = doc.id;
         tables.push(table);

@@ -4,7 +4,7 @@ export const board = {
   namespaced: true,
   state: {
     boards: [],
-    drag: null
+    drag: null,
   },
   mutations: {
     setBoards(state, payload) {
@@ -12,7 +12,7 @@ export const board = {
     },
     setDrag(state, payload) {
       state.drag = payload.drag;
-    }
+    },
   },
   actions: {
     setBoards({ commit }, { boards }) {
@@ -21,14 +21,17 @@ export const board = {
     },
     dragStart({ commit }, { boardId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
+      Array.prototype.forEach.call(
+        $elList,
+        ($e) => ($e.style.display = "none")
+      );
       commit("setDrag", { drag: boardId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, ($e) => ($e.style.display = ""));
       commit("setDrag", { drag: null });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -43,7 +46,7 @@ export const board = {
       for (let i = 0; i < boards.length; i++) {
         const b = boards[i];
         const pawns = pawnList
-          .filter(p => p.board === b.id)
+          .filter((p) => p.board === b.id)
           .sort((a, b) => {
             if (a.owner !== me && b.owner === me) return 1;
             if (a.owner === me && b.owner !== me) return -1;
@@ -55,7 +58,7 @@ export const board = {
             if (aName < bName) return -1;
             return 0;
           });
-        const maps = mapList.filter(m => m.board === b.id);
+        const maps = mapList.filter((m) => m.board === b.id);
         divisions.push({ id: b.id, pawns, maps });
       }
 
@@ -66,10 +69,10 @@ export const board = {
       if (!activeBoard) {
         return null;
       }
-      return state.boards.find(b => b.id === activeBoard);
+      return state.boards.find((b) => b.id === activeBoard);
     },
     dragging(state) {
       return state.drag;
-    }
-  }
+    },
+  },
 };

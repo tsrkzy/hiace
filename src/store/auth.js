@@ -7,15 +7,15 @@ export const auth = {
     auth: {
       name: null,
       photoUrl: null,
-      email: null
+      email: null,
     },
     /* firestore.user */
     user: {
       id: null,
       name: null,
       photoUrl: null,
-      email: null
-    }
+      email: null,
+    },
   },
   mutations: {
     setAuth(state, payload) {
@@ -23,7 +23,7 @@ export const auth = {
     },
     setUser(state, payload) {
       state.user = payload.user;
-    }
+    },
   },
   actions: {
     setAuth({ commit }, { auth }) {
@@ -35,7 +35,7 @@ export const auth = {
       const auth = {
         name: null,
         photoUrl: null,
-        email: null
+        email: null,
       };
       commit("setAuth", { auth });
     },
@@ -48,10 +48,10 @@ export const auth = {
         id: null,
         name: null,
         photoUrl: null,
-        email: null
+        email: null,
       };
       commit("setUser", { user });
-    }
+    },
   },
   getters: {
     authenticated(state) {
@@ -72,7 +72,7 @@ export const auth = {
     },
     photoUrl(state) {
       return state.user.photoUrl;
-    }
+    },
   },
-  modules: {}
+  modules: {},
 };

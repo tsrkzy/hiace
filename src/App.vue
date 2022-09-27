@@ -8,7 +8,7 @@
 import Smoke from "@/components/atoms/Smoke";
 import "@/scripts/DoorBell";
 export default {
-  components: { Smoke }
+  components: { Smoke },
 };
 </script>
 <style></style>

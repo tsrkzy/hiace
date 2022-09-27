@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
 
 import store from "@/store";
 import { getName, mask } from "@/scripts/helper";
@@ -22,10 +22,7 @@ export class FSUser {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("user")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("user").doc(id).get();
     if (!docRef.exists) {
       return null;
     }
@@ -35,7 +32,7 @@ export class FSUser {
   }
 
   static async GetByEmail({
-    email
+    email,
   }: {
     email: string;
   }): Promise<null | { id: string; email: string; photoURL: string | null }> {
@@ -50,7 +47,7 @@ export class FSUser {
     }
 
     let result: any = null;
-    snapshot.forEach(d => {
+    snapshot.forEach((d) => {
       result = d.data();
       result.id = d.id;
     });
@@ -81,7 +78,7 @@ export class FSUser {
       email: me?.email,
       lastPing: Date.now(),
       color: SYSTEM_COLOR,
-      joinTo: []
+      joinTo: [],
     };
     const ref = await db.collection("user").add(u);
     const id = ref.id;
@@ -150,9 +147,9 @@ export class FSUser {
       .collection("user")
       .where("joinTo", "array-contains", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const users: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const user = doc.data();
         user.id = doc.id;
         users.push(user);

@@ -21,10 +21,10 @@ export const room = {
       activeBoard: null,
       maps: [],
       soundEffects: [],
-      music: null
+      music: null,
     },
     requests: [],
-    background: false
+    background: false,
   },
   mutations: {
     setRoom(state, payload) {
@@ -35,7 +35,7 @@ export const room = {
     },
     setBackground(state, payload) {
       state.background = payload.background;
-    }
+    },
   },
   actions: {
     setRoom({ commit }, { room = {} }) {
@@ -60,7 +60,7 @@ export const room = {
         activeMap: null,
         maps: [],
         soundEffects: [],
-        music: null
+        music: null,
       };
       commit("setRoom", { room });
       document.title = "hiace";
@@ -74,7 +74,7 @@ export const room = {
     },
     windowFocus({ commit }) {
       commit("setBackground", { background: false });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -111,6 +111,6 @@ export const room = {
     },
     windowInBackground(state) {
       return state?.background;
-    }
-  }
+    },
+  },
 };

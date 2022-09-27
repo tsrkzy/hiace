@@ -74,7 +74,7 @@ export default {
   name: "SvgPawn",
   props: {
     pawnId: { type: String, require: true },
-    shadow: { type: Boolean, default: false }
+    shadow: { type: Boolean, default: false },
   },
   async created() {
     if (!this.pawnId) {
@@ -82,7 +82,7 @@ export default {
     }
 
     const { character, transform } = await FSPawn.GetById({
-      id: this.pawnId
+      id: this.pawnId,
     });
     const image = await FSCharacter.GetAliasImage(character);
 
@@ -105,17 +105,20 @@ export default {
   computed: {
     image() {
       const id = this.imageId;
-      return this.$store.getters["image/info"].find(img => img.id === id) || {};
+      return (
+        this.$store.getters["image/info"].find((img) => img.id === id) || {}
+      );
     },
     pawn() {
       const id = this.pawnId;
-      return this.$store.getters["pawn/info"].find(p => p.id === id) || {};
+      return this.$store.getters["pawn/info"].find((p) => p.id === id) || {};
     },
     character() {
       const { character: characterId } = this.pawn;
       return (
-        this.$store.getters["character/info"].find(c => c.id === characterId) ||
-        {}
+        this.$store.getters["character/info"].find(
+          (c) => c.id === characterId
+        ) || {}
       );
     },
     archived() {
@@ -132,7 +135,8 @@ export default {
     alias() {
       const { activeAlias = "" } = this.character;
       return (
-        this.$store.getters["alias/info"].find(a => a.id === activeAlias) || {}
+        this.$store.getters["alias/info"].find((a) => a.id === activeAlias) ||
+        {}
       );
     },
     imgSrc() {
@@ -142,7 +146,7 @@ export default {
       }
 
       const { url = "" } = this.$store.getters["image/info"].find(
-        i => i.id === image
+        (i) => i.id === image
       );
       return url || this.href;
     },
@@ -174,7 +178,7 @@ export default {
     },
     dragged() {
       return this.$store.getters["pawn/dragging"] === this.pawnId;
-    }
+    },
   },
   methods: {
     onMouseDown(e) {
@@ -209,7 +213,7 @@ export default {
       await this.$store.dispatch("detail/setContent", { text, side });
 
       const $p = document.getElementById(`pawn_${this.pawnId}`);
-      const onLeave = async e => {
+      const onLeave = async (e) => {
         e.stopPropagation();
         await this.$store.dispatch("detail/off");
         $p.removeEventListener("mouseleave", onLeave);
@@ -250,13 +254,13 @@ export default {
         );
       }
 
-      const onMove = e => {
+      const onMove = (e) => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         $p.style.transform = `${t}`;
       };
 
-      const onMouseUp = async e => {
+      const onMouseUp = async (e) => {
         e.stopPropagation();
         console.log("SvgPawn.onMouseUp"); // @DELETEME
         await this.$store.dispatch("pawn/dragFinish");
@@ -278,7 +282,7 @@ export default {
       $p.addEventListener("mouseleave", onMouseUp, false);
 
       return false;
-    }
+    },
   },
   data() {
     return {
@@ -290,15 +294,15 @@ export default {
       height: 0,
       href: null,
 
-      loaded: false
+      loaded: false,
     };
   },
   watch: {
     transformStore(transform) {
       console.log("update store.pawn.transform", transform); // @DELETEME
       this.transform = transform;
-    }
-  }
+    },
+  },
 };
 </script>
 

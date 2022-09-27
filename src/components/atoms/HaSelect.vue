@@ -9,16 +9,17 @@
       @change="$emit('change', $event.currentTarget.value)"
     >
       <slot>
-        <option :disabled="mandatory" selected :value="null"
-          >選択してください</option
-        >
+        <option :disabled="mandatory" selected :value="null">
+          選択してください
+        </option>
       </slot>
       <option
         v-for="item in items"
         :key="item.value"
         :value="item.value"
         :selected="item.value === value"
-        >{{ item.text }}
+      >
+        {{ item.text }}
       </option>
     </select>
   </label>
@@ -29,15 +30,15 @@ export default {
   name: "HaSelect",
   model: {
     prop: "value",
-    event: "change"
+    event: "change",
   },
   props: {
     label: { type: String },
     items: { type: Array, default: () => [] },
     value: { type: String },
     disabled: { type: Boolean, default: false },
-    mandatory: { type: Boolean, default: false }
-  }
+    mandatory: { type: Boolean, default: false },
+  },
 };
 </script>
 

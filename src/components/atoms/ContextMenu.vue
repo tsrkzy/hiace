@@ -16,7 +16,7 @@
       class="contextmenu contextmenu-parent__accordion"
       :style="{
         top: `${y + 5}px`,
-        left: `${x + 5}px`
+        left: `${x + 5}px`,
       }"
     >
       <div
@@ -28,7 +28,7 @@
           :class="{
             contextmenu: true,
             'contextmenu-parent__item': true,
-            disabled: item.disabled
+            disabled: item.disabled,
           }"
         >
           <span>{{ item.text }}</span
@@ -41,7 +41,7 @@
           :class="{
             contextmenu: true,
             'contextmenu-child__accordion': true,
-            disabled: item.disabled
+            disabled: item.disabled,
           }"
         >
           <div
@@ -53,7 +53,7 @@
               :class="{
                 contextmenu: true,
                 'contextmenu-child__item': true,
-                disabled: child.disabled
+                disabled: child.disabled,
               }"
             >
               {{ child.text }}
@@ -68,7 +68,7 @@
 <script>
 import {
   ContextMenuChildItem,
-  ContextMenuParentItem
+  ContextMenuParentItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 
 export default {
@@ -92,7 +92,7 @@ export default {
     },
     hasChild(item) {
       return item.children && item.children.length > 0;
-    }
+    },
   },
   computed: {
     show() {
@@ -113,12 +113,12 @@ export default {
       },
       set(open) {
         this.$store.dispatch("contextmenu/open", { open });
-      }
+      },
     },
     itemList() {
       return this.itemGroups;
-    }
-  }
+    },
+  },
 };
 </script>
 

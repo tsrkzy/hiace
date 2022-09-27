@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 type TPhrase = {
   id: string;
@@ -16,10 +16,7 @@ export class FSPhrase {
 
   static async GetById({ id }: { id: string }): Promise<TPhrase | null> {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("phrase")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("phrase").doc(id).get();
 
     const phrase = docRef.data();
     if (!phrase) {
@@ -32,7 +29,7 @@ export class FSPhrase {
       index: phrase.index,
       text: phrase.text,
       label: phrase.label,
-      ok: phrase.ok
+      ok: phrase.ok,
     };
   }
 
@@ -55,7 +52,7 @@ export class FSPhrase {
       text,
       label,
       gameSystem,
-      ok
+      ok,
     };
     const db = firebase.firestore();
     const docRef = await db.collection("phrase").add(p);
@@ -100,10 +97,7 @@ export class FSPhrase {
 
   static async Delete(phraseId: string) {
     const db = firebase.firestore();
-    return db
-      .collection("phrase")
-      .doc(phraseId)
-      .delete();
+    return db.collection("phrase").doc(phraseId).delete();
   }
 
   static SetListener(userId: string) {
@@ -117,9 +111,9 @@ export class FSPhrase {
     const db = firebase.firestore();
     const docsRef = db.collection("phrase").where("owner", "==", userId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const phrases: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const phrase = doc.data();
         phrase.id = doc.id;
         phrases.push(phrase);

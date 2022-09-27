@@ -3,18 +3,18 @@ import { BOOL, INT, REF, STR } from "@/collections/Column";
 export const table = {
   namespaced: true,
   state: {
-    tables: []
+    tables: [],
   },
   mutations: {
     setTables(state, payload) {
       state.tables = payload.tables;
-    }
+    },
   },
   actions: {
     setTables({ commit }, { tables }) {
       console.log("table.setTables", tables); // @DELETEME
       commit("setTables", { tables });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -40,7 +40,7 @@ export const table = {
         const m = {
           id: t.id,
           columns: [],
-          rows: []
+          rows: [],
         };
 
         /* ヘッダの作成 */
@@ -64,7 +64,7 @@ export const table = {
           label: "#name",
           dataType: REF,
           refPath: "character.name",
-          dataMap: {}
+          dataMap: {},
         };
         m.columns.push(/*idColumn,*/ nameColumn);
         for (let j = 0; j < columns.length; j++) {
@@ -82,7 +82,7 @@ export const table = {
           const row = {
             characterId: character.id,
             show: character.showOnInitiative && !character.archived,
-            cells: []
+            cells: [],
           };
           /* 列要素を作成 */
           for (let j = 0; j < m.columns.length; j++) {
@@ -91,7 +91,7 @@ export const table = {
               system = false,
               dataType,
               refPath,
-              dataMap
+              dataMap,
             } = m.columns[j];
 
             const cell = {
@@ -100,14 +100,14 @@ export const table = {
               characterId: character.id,
               value: null,
               dataType,
-              refPath
+              refPath,
             };
             if (dataType === REF) {
               /* characterの参照 */
               const [collection, field] = refPath.split(".");
               const infoList = rootGetters[`${collection}/info`];
               /* 今の所characterのみ */
-              const info = infoList.find(i => i.id === character.id);
+              const info = infoList.find((i) => i.id === character.id);
               cell.value = info[field];
             } else {
               const _v = dataMap[character.id];
@@ -126,6 +126,6 @@ export const table = {
         matrixList.push(m);
       }
       return matrixList;
-    }
-  }
+    },
+  },
 };

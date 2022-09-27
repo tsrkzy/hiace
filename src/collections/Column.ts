@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import store from "@/store";
 
 export const INT = "int";
@@ -10,11 +10,7 @@ export const REF = "ref";
 export class FSColumn {
   static unsubscribeMap = new Map();
 
-  static async GetById({
-    id
-  }: {
-    id: string;
-  }): Promise<{
+  static async GetById({ id }: { id: string }): Promise<{
     id: string;
     room: string;
     table: string;
@@ -26,10 +22,7 @@ export class FSColumn {
     order: number;
   } | null> {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("column")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("column").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -45,7 +38,7 @@ export class FSColumn {
       dataType: column?.dataType,
       refPath: column?.refPath,
       dataMap: column?.dataMap ?? {},
-      order: column?.order ?? 0
+      order: column?.order ?? 0,
     };
   }
 
@@ -65,7 +58,7 @@ export class FSColumn {
       show = true,
       dataType,
       refPath,
-      dataMap = {}
+      dataMap = {},
     } = params;
 
     if (!roomId) {
@@ -90,7 +83,7 @@ export class FSColumn {
       dataType,
       refPath,
       dataMap,
-      order
+      order,
     };
 
     const db = firebase.firestore();
@@ -109,7 +102,7 @@ export class FSColumn {
       show: true,
       dataType: REF,
       refPath: "character.id",
-      dataMap: {}
+      dataMap: {},
     };
     return await FSColumn.Create(c);
   }
@@ -133,10 +126,7 @@ export class FSColumn {
     }
 
     const db = firebase.firestore();
-    await db
-      .collection("column")
-      .doc(columnId)
-      .update({ dataMap });
+    await db.collection("column").doc(columnId).update({ dataMap });
   }
 
   static async Reorder(tableId: string, columnId: string, order: number) {
@@ -181,10 +171,7 @@ export class FSColumn {
 
   static async Delete(columnId: string) {
     const db = firebase.firestore();
-    return await db
-      .collection("column")
-      .doc(columnId)
-      .delete();
+    return await db.collection("column").doc(columnId).delete();
   }
 
   static async DeleteByTable(tableId: string) {
@@ -195,7 +182,7 @@ export class FSColumn {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -211,9 +198,9 @@ export class FSColumn {
     const db = firebase.firestore();
     const docsRef = db.collection("column").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const columns: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const column = doc.data();
         column.id = doc.id;
         columns.push(column);

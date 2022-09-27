@@ -8,7 +8,7 @@ import {
   HM_CHARACTER_ARCHIVE,
   HM_TABLE_COLUMN,
   HM_CHAT_DICE_LOG,
-  HM_CHANNEL_MASK
+  HM_CHANNEL_MASK,
 } from "@/message";
 
 interface IIFloat {
@@ -47,7 +47,7 @@ export const FLOAT_SINGLETON_LIST = [
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
-  ISSUE_WRITER
+  ISSUE_WRITER,
 ];
 
 /* 場所を記憶する、つまりアプリ開始時に表示可能なもの */
@@ -60,7 +60,7 @@ const startUpList = [
   IMAGE_MANAGER,
   SOUND_MANAGER,
   ROOM_MANAGER,
-  ISSUE_WRITER
+  ISSUE_WRITER,
 ];
 
 /* help */
@@ -78,7 +78,7 @@ export const FLOAT_HELP_MESSAGES = {
   [ROOM_MANAGER]: [HM_CHANNEL_MASK],
   [CHANNEL_LIST]: [],
   [NOTE_MANAGER]: [],
-  [ISSUE_WRITER]: []
+  [ISSUE_WRITER]: [],
 };
 
 export function title(id: string) {
@@ -148,7 +148,7 @@ export class IFFloat implements IIFloat {
 
   constructor(contentId: string, show?: boolean, args?: any) {
     const singleton = FLOAT_SINGLETON_LIST.indexOf(contentId) !== -1;
-    const t = IFFloat.instances.find(t => t.contentId === contentId);
+    const t = IFFloat.instances.find((t) => t.contentId === contentId);
     if (singleton && t) {
       t.args = args;
       IFFloat.Pop(t.id);
@@ -216,7 +216,7 @@ export class IFFloat implements IIFloat {
       z,
       w,
       h,
-      args
+      args,
     };
   }
 

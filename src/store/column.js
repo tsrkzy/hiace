@@ -1,18 +1,18 @@
 export const column = {
   namespaced: true,
   state: {
-    columns: []
+    columns: [],
   },
   mutations: {
     setColumns(state, payload) {
       state.columns = payload.columns;
-    }
+    },
   },
   actions: {
     setColumns({ commit }, { columns }) {
       console.log("column.setColumns", columns); // @DELETEME
       commit("setColumns", { columns });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -25,6 +25,6 @@ export const column = {
         nameMap[id] = state.columns[i].label;
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

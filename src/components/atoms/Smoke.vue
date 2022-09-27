@@ -15,8 +15,8 @@ export default {
   computed: {
     show() {
       return this.$store.getters["smoke/show"];
-    }
-  }
+    },
+  },
 };
 </script>
 

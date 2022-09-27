@@ -91,7 +91,7 @@ export class Sound {
     this.$src = null;
     this.$el.remove();
     this.$el = null;
-    const index = Sound.Instances.findIndex(i => i === this);
+    const index = Sound.Instances.findIndex((i) => i === this);
     Sound.Instances.splice(index, 1);
   }
 
@@ -111,7 +111,7 @@ export class Sound {
         resolve();
       };
 
-      $el.onerror = e => {
+      $el.onerror = (e) => {
         console.error(`failed to load sound: ${this.id}`);
         reject(e);
       };
@@ -162,7 +162,7 @@ export class Sound {
     this.$el.volume = Sound.Volume;
     await $el.play();
     this.playing = true;
-    const { loop } = store.getters["sound/info"].find(s => s.id === this.id);
+    const { loop } = store.getters["sound/info"].find((s) => s.id === this.id);
     this.loop = loop;
     if (!testPlay) {
       await store.dispatch("sound/setPlaying", { playing: this.id });

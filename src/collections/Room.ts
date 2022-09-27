@@ -1,8 +1,8 @@
 import { FSBoard } from "@/collections/Board";
 import { FSChat } from "@/collections/Chat";
 import { FSUser } from "@/collections/User";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import store from "@/store";
 
 export class FSRoom {
@@ -18,10 +18,7 @@ export class FSRoom {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("room")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("room").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -56,7 +53,7 @@ export class FSRoom {
   static async Create({
     name,
     owner,
-    gameSystem
+    gameSystem,
   }: {
     name: string;
     owner: string;
@@ -75,7 +72,7 @@ export class FSRoom {
       users: [owner], // 初期値ownerのみ、追加可能
       gameSystem,
       activeBoard: null,
-      music: null
+      music: null,
     };
     const room = await FSRoom.Add(r);
     const id = room.id;
@@ -85,7 +82,7 @@ export class FSRoom {
     /* 開始時デフォルトのBoardを作成してactiveに指定 */
     const b = await FSBoard.CreateDefault({
       roomId: id,
-      userId: owner
+      userId: owner,
     });
     await FSRoom.SetActiveBoard(id, b.id);
 
@@ -228,7 +225,7 @@ export class FSRoom {
     console.log("Room.SetListener"); // @DELETEME
     const db = firebase.firestore();
     const docRef = db.collection("room").doc(roomId);
-    const unsubscribe = docRef.onSnapshot(doc => {
+    const unsubscribe = docRef.onSnapshot((doc) => {
       const room = doc.data();
 
       store.dispatch("room/setRoom", { room: { id: roomId, ...room } });

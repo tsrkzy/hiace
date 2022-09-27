@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { DEFAULT_MAP_IMAGE } from "@/collections/Image";
 
 export class FSMap {
@@ -11,10 +11,7 @@ export class FSMap {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("map")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("map").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -52,9 +49,9 @@ export class FSMap {
         cols: 15,
         rows: 15,
         color: "#000000",
-        snap: true
+        snap: true,
       },
-      backgroundColor: "#101010"
+      backgroundColor: "#101010",
     };
 
     const db = firebase.firestore();
@@ -90,10 +87,7 @@ export class FSMap {
 
   static async Delete(mapId: string) {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("map")
-      .doc(mapId)
-      .delete();
+    const docRef = await db.collection("map").doc(mapId).delete();
     return docRef;
   }
 
@@ -105,7 +99,7 @@ export class FSMap {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -123,9 +117,9 @@ export class FSMap {
     const db = firebase.firestore();
     const docsRef = db.collection("map").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const maps: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const map = doc.data();
         map.id = doc.id;
         maps.push(map);

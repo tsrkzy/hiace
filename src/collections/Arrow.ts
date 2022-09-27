@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 export class FSArrow {
   static unsubscribeMap = new Map();
@@ -10,10 +10,7 @@ export class FSArrow {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("arrow")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("arrow").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -61,7 +58,7 @@ export class FSArrow {
     if (existsInvert) {
       return await FSArrow.Update(existsInvert.id, {
         pawnFrom: pawnIdFrom,
-        pawnTo: pawnIdTo
+        pawnTo: pawnIdTo,
       });
     }
 
@@ -69,7 +66,7 @@ export class FSArrow {
       room: roomId,
       owner: userId,
       pawnFrom: pawnIdFrom,
-      pawnTo: pawnIdTo
+      pawnTo: pawnIdTo,
     };
 
     const db = firebase.firestore();
@@ -87,16 +84,13 @@ export class FSArrow {
     const docRef = await db.collection("arrow").doc(arrowId);
     const criteria = {
       pawnFrom,
-      pawnTo
+      pawnTo,
     };
     return await docRef.update(criteria);
   }
   static async Delete(arrowId: string) {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("arrow")
-      .doc(arrowId)
-      .delete();
+    const docRef = await db.collection("arrow").doc(arrowId).delete();
     return docRef;
   }
 
@@ -123,9 +117,9 @@ export class FSArrow {
     const db = firebase.firestore();
     const docsRef = db.collection("arrow").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const arrows: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const arrow = doc.data();
         arrow.id = doc.id;
         arrows.push(arrow);

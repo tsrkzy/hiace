@@ -12,7 +12,7 @@ export const sound = {
 
     /* グローバルミュート */
     mute: false,
-    playing: null
+    playing: null,
   },
   mutations: {
     setSounds(state, payload) {
@@ -24,7 +24,7 @@ export const sound = {
     setPlaying(state, payload) {
       console.warn("sound.setPlaying", payload.playing);
       state.playing = payload.playing;
-    }
+    },
   },
   actions: {
     setSounds({ commit }, { sounds }) {
@@ -46,7 +46,7 @@ export const sound = {
     unsetPlaying({ commit }) {
       console.log("sound.unsetPlaying"); // @DELETEME
       commit("setPlaying", { playing: null });
-    }
+    },
   },
   getters: {
     info(state, getters, rootState, rootGetters) {
@@ -81,6 +81,6 @@ export const sound = {
         nameMap[id] = state.sounds[i].name;
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

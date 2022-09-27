@@ -13,7 +13,7 @@
       position: 'absolute',
       top: 0,
       left: `calc(${chatPosition} * 90% / 12)`,
-      height: `${height}px`
+      height: `${height}px`,
     }"
     :class="{ alias: true, top }"
   >
@@ -42,7 +42,7 @@ export default {
     aliasId: { type: String, require: true },
     chatPosition: { type: Number, require: true },
     image: { type: String, require: true },
-    top: { type: Boolean, default: false }
+    top: { type: Boolean, default: false },
   },
   async created() {
     await this.reloadImage(this.image);
@@ -51,7 +51,7 @@ export default {
     return {
       width: null,
       height: null,
-      srcUrl: null
+      srcUrl: null,
     };
   },
   computed: {
@@ -61,7 +61,7 @@ export default {
       const cName = getName("character", characterId);
       const aName = getName("alias", aliasId);
       return `${cName}(${aName})`;
-    }
+    },
   },
   methods: {
     async reloadImage(image) {
@@ -72,13 +72,13 @@ export default {
       this.width = width;
       this.height = height;
       this.srcUrl = url;
-    }
+    },
   },
   watch: {
     async image(image) {
       await this.reloadImage(image);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

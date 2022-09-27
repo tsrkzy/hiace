@@ -6,14 +6,14 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width:100%; height: 100%;">
+  <div style="width: 100%; height: 100%">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       id="svg-table"
       :style="{
         backgroundColor: 'ghostwhite',
         width: '100%',
-        height: '100%'
+        height: '100%',
       }"
       @mousedown="onMouseDown($event)"
       @wheel="onWheel($event)"
@@ -23,10 +23,10 @@
         v-if="activeBoard"
         :style="{ transform: `${transform}` }"
       >
-        <text x="0" y="-3" style="fill: black;">O</text>
+        <text x="0" y="-3" style="fill: black">O</text>
         <path
           :d="crossHair"
-          style="fill: none;stroke: dimgray; stroke-width: 1px;"
+          style="fill: none; stroke: dimgray; stroke-width: 1px"
         />
         <svg-map v-for="m in maps" :key="m.id" :map-id="m.id"></svg-map>
         <svg-pawn
@@ -47,7 +47,12 @@
       </g>
       <path
         id="weathercock"
-        style="stroke: gray; fill: lightgray; fill-opacity: .8; transform: matrix(1,0,0,1,20,20);"
+        style="
+          stroke: gray;
+          fill: lightgray;
+          fill-opacity: 0.8;
+          transform: matrix(1, 0, 0, 1, 20, 20);
+        "
         :d="weathercockPath"
       ></path>
     </svg>
@@ -144,7 +149,7 @@ export default {
     },
     async moveStart(e) {
       await this.$store.dispatch("board/dragStart", {
-        boardId: this.activeBoard.id
+        boardId: this.activeBoard.id,
       });
 
       const $el = document.getElementById("svg-table");
@@ -162,7 +167,7 @@ export default {
         return new DOMMatrix([1, 0, 0, 1, dx, dy]).multiply(ctm);
       }
 
-      const onMove = e => {
+      const onMove = (e) => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
 
@@ -170,7 +175,7 @@ export default {
         $.style.transform = `${t}`;
       };
 
-      const onMouseUp = async e => {
+      const onMouseUp = async (e) => {
         e.stopPropagation();
         console.log("SvgBoard.onMouseUp"); // @DELETEME
         const t = globalToLocal(e.clientX - downX, e.clientY - downY, $$);
@@ -191,7 +196,7 @@ export default {
     showContext(e) {
       console.log("SvgBoard.showContext");
       showContext(e, "board", null);
-    }
+    },
   },
   computed: {
     activeBoard() {
@@ -203,7 +208,7 @@ export default {
         return [];
       }
       return this.$store.getters["map/info"].filter(
-        m => m.board === activeBoardId
+        (m) => m.board === activeBoardId
       );
     },
     arrows() {
@@ -218,7 +223,7 @@ export default {
        * HTMLの兄弟要素の重ね順は後勝ちなので、
        * filterで新しい配列を作った後にreverse()する */
       return this.$store.getters["pawn/info"]
-        .filter(p => p.board === activeBoardId)
+        .filter((p) => p.board === activeBoardId)
         .reverse();
     },
     dices() {
@@ -230,7 +235,7 @@ export default {
        * HTMLの兄弟要素の重ね順は後勝ちなので、
        * filterで新しい配列を作った後にreverse()する */
       return this.$store.getters["dice/info"]
-        .filter(d => d.board === activeBoardId)
+        .filter((d) => d.board === activeBoardId)
         .reverse();
     },
     crossHair() {
@@ -248,9 +253,10 @@ export default {
     },
     weathercockPath() {
       const h = W / 2;
-      return `M -${W / 2},-${h / 2} l ${W},${h / 2} l -${W},${h / 2} l 0,-${W /
-        2} z`;
-    }
+      return `M -${W / 2},-${h / 2} l ${W},${h / 2} l -${W},${h / 2} l 0,-${
+        W / 2
+      } z`;
+    },
   },
   data() {
     const zoom = 100;
@@ -258,9 +264,9 @@ export default {
     const m = new DOMMatrix([z, 0, 0, z, 0, 0]).inverse();
     const defaultTransform = `${m}`;
     return {
-      transform: defaultTransform
+      transform: defaultTransform,
     };
-  }
+  },
 };
 </script>
 

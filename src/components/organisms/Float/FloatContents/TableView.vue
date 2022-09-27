@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <div>
       <ha-select
         :value="tableId"
@@ -19,17 +19,15 @@
     </div>
     <table-config :table-id="tableId" v-model="sortConfig" />
     <div v-if="tableMatrix">
-      <table style="width: 100%;">
+      <table style="width: 100%">
         <thead>
           <tr>
             <th
               v-for="c in columns"
               :key="c.id"
-              :class="
-                `column--header 
+              :class="`column--header 
                 ${sortConfig === `${c.id}_asc` && 'column--header__asc'}
-                ${sortConfig === `${c.id}_desc` && 'column--header__desc'}`
-              "
+                ${sortConfig === `${c.id}_desc` && 'column--header__desc'}`"
             >
               <label>
                 <input
@@ -37,7 +35,7 @@
                   :value="c.label"
                   :disabled="c.system"
                   @change="onInputHeader($event, c)"
-                  style="width: calc(100% - 4px);font-weight: bold;"
+                  style="width: calc(100% - 4px); font-weight: bold"
                 />
               </label>
             </th>
@@ -48,7 +46,12 @@
             <td v-for="(cell, j) in filterWithHeader(row.cells)" :key="j">
               <div
                 v-if="cell.dataType === 'ref'"
-                style="background-color: ghostwhite;text-overflow: ellipsis; white-space: nowrap; word-break: keep-all; "
+                style="
+                  background-color: ghostwhite;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  word-break: keep-all;
+                "
                 @contextmenu="onContextmenu($event, cell.characterId)"
               >
                 {{ cell.value }}
@@ -60,7 +63,7 @@
                   :value="cell.value"
                   :disabled="cell.columnId.startsWith('system')"
                   @change="onInputCell($event, cell)"
-                  style="width: calc(100% - 4px);"
+                  style="width: calc(100% - 4px)"
                 />
                 <input
                   v-else-if="cell.dataType === 'bool'"
@@ -75,7 +78,7 @@
                   :value="cell.value"
                   :disabled="cell.columnId.startsWith('system')"
                   @change="onInputCell($event, cell)"
-                  style="width: calc(100% - 4px);"
+                  style="width: calc(100% - 4px)"
                 />
               </label>
             </td>
@@ -103,13 +106,13 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
       tableId: null,
-      sortConfig: null
+      sortConfig: null,
     };
   },
   methods: {
@@ -181,9 +184,9 @@ export default {
     },
     filterWithHeader(cells) {
       const dispColumnIdList = this.columns
-        .filter(c => c.system || c.show)
-        .map(c => c.id);
-      return cells.filter(c => dispColumnIdList.indexOf(c.columnId) !== -1);
+        .filter((c) => c.system || c.show)
+        .map((c) => c.id);
+      return cells.filter((c) => dispColumnIdList.indexOf(c.columnId) !== -1);
     },
     onContextmenu(e, characterId) {
       console.log("TableView.onContextmenu", e, characterId);
@@ -193,7 +196,7 @@ export default {
       e.stopPropagation();
       e.preventDefault();
       showContext(e, "table_row", characterId);
-    }
+    },
   },
   computed: {
     characters() {
@@ -202,7 +205,7 @@ export default {
 
     tableItems() {
       const matrixList = this.$store.getters["table/info"];
-      return matrixList.map(t => ({ value: t.id, text: t.name }));
+      return matrixList.map((t) => ({ value: t.id, text: t.name }));
     },
     tableMatrix() {
       const { tableId } = this;
@@ -210,7 +213,7 @@ export default {
         return null;
       }
       const matrixList = this.$store.getters["table/matrixList"];
-      const matrix = matrixList.find(t => t.id === tableId);
+      const matrix = matrixList.find((t) => t.id === tableId);
 
       const sortConfig = this.sortConfig;
       if (!sortConfig) {
@@ -220,8 +223,8 @@ export default {
       // データ型
       const [col, order] = sortConfig.split("_");
       matrix.rows = matrix.rows.sort((rA, rB) => {
-        const cA = rA.cells.find(c => c.columnId === col);
-        const cB = rB.cells.find(c => c.columnId === col);
+        const cA = rA.cells.find((c) => c.columnId === col);
+        const cB = rB.cells.find((c) => c.columnId === col);
         const dataType = cA.dataType;
         const vA = cA.value;
         const vB = cB.value;
@@ -231,21 +234,23 @@ export default {
       return matrix;
     },
     columns() {
-      return (this.tableMatrix?.columns ?? []).filter(c => c.system || c.show);
+      return (this.tableMatrix?.columns ?? []).filter(
+        (c) => c.system || c.show
+      );
     },
     rows() {
-      return (this.tableMatrix?.rows ?? []).filter(r => r.show);
+      return (this.tableMatrix?.rows ?? []).filter((r) => r.show);
     },
     room() {
       return this.$store.getters["room/info"];
-    }
+    },
   },
   watch: {
     tableItems(tableItems) {
-      if (tableItems.findIndex(t => t.value === this.tableId) === -1) {
+      if (tableItems.findIndex((t) => t.value === this.tableId) === -1) {
         this.tableId = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>

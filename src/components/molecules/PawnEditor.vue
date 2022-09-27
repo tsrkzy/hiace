@@ -25,12 +25,12 @@ export default {
   props: {
     pawnId: {
       type: String,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
-      image: null
+      image: null,
     };
   },
   async created() {
@@ -49,17 +49,17 @@ export default {
   },
   computed: {
     pawn() {
-      return this.$store.getters["pawn/info"].find(p => p.id === this.pawnId);
+      return this.$store.getters["pawn/info"].find((p) => p.id === this.pawnId);
     },
     imageUrl() {
       return this.image ? this.image.url : "";
-    }
+    },
   },
   methods: {
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
-    }
-  }
+    },
+  },
 };
 </script>
 

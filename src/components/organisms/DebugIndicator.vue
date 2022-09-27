@@ -20,7 +20,7 @@ import { Smoke } from "@/scripts/Smoke";
 export default {
   name: "DebugIndicator",
   components: {
-    HaButton
+    HaButton,
   },
   computed: {
     room() {
@@ -34,7 +34,7 @@ export default {
     },
     playing() {
       return this.$store.getters["sound/playing"];
-    }
+    },
   },
   methods: {
     async onAddDice() {
@@ -44,7 +44,7 @@ export default {
       await FSDice.Create({
         boardId,
         roomId,
-        userId
+        userId,
       });
     },
     async onClickSmoke() {
@@ -66,8 +66,8 @@ export default {
     async onResetWindow() {
       console.log("DebugIndicator.onResetWindow");
       window.localStorage.removeItem("config");
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -6,9 +6,9 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <details
-    ><summary>画像を選択する</summary>
-    <div style="width: 100%;max-height:192px;overflow-y: scroll;">
+  <details>
+    <summary>画像を選択する</summary>
+    <div style="width: 100%; max-height: 192px; overflow-y: scroll">
       <slot></slot>
     </div>
   </details>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "ScrollSummary"
+  name: "ScrollSummary",
 };
 </script>
 

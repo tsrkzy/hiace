@@ -46,7 +46,7 @@ export default {
   props: {
     floatId: { type: Number, require: true },
     channelId: { type: String, require: true },
-    fontSize: { type: Number, default: 0 }
+    fontSize: { type: Number, default: 0 },
   },
   mounted() {
     const chatList = this.chatList;
@@ -115,7 +115,7 @@ export default {
       }
 
       const chatList = this.chatList;
-      const index = chatList.findIndex(c => c.id === chatId);
+      const index = chatList.findIndex((c) => c.id === chatId);
 
       const to = index + 1;
       const from = to - LPP < 0 ? 0 : to - LPP;
@@ -123,7 +123,7 @@ export default {
 
       this.add(slice, { flush: true });
       this.scroll();
-    }
+    },
   },
   data() {
     return {
@@ -138,7 +138,7 @@ export default {
       /* ページングセレクタの制御用 */
       pageSelect: "0",
       /* ページング */
-      page: 0
+      page: 0,
     };
   },
   computed: {
@@ -171,12 +171,12 @@ export default {
         const p = {
           chatId: c.id,
           value: `${i / LPP}`,
-          text: `${i}〜${i + LPP}${i === 0 ? "(最新)" : ""}`
+          text: `${i}〜${i + LPP}${i === 0 ? "(最新)" : ""}`,
         };
         items.push(p);
       }
       return items;
-    }
+    },
   },
   watch: {
     chatList(newList) {
@@ -230,8 +230,8 @@ export default {
         /* スクロール位置をvueのAPIを使用せずに制御しているため、ドラッグ時から復帰した時にスクロール位置がvueの記憶した位置になる */
         this.scroll();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

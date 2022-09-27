@@ -1,7 +1,7 @@
 export const note = {
   namespaced: true,
   state: {
-    notes: []
+    notes: [],
   },
   mutations: {
     setNotes(state, payload) {
@@ -9,7 +9,7 @@ export const note = {
     },
     addNote(state, payload) {
       state.notes.push(payload.note);
-    }
+    },
   },
   actions: {
     setNotes({ commit }, { notes }) {
@@ -19,7 +19,7 @@ export const note = {
     addNote({ commit }, { note }) {
       console.log("note.addNote"); // @DELETEME
       commit("addNote", { note });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -32,6 +32,6 @@ export const note = {
         nameMap[id] = state.notes[i].name;
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

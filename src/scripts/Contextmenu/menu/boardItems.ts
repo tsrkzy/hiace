@@ -7,7 +7,7 @@
 
 import {
   ContextMenuChildItem,
-  ContextMenuItem
+  ContextMenuItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 
@@ -26,7 +26,7 @@ export function boardItems(): ContextMenuItem[] {
     text: "ウィンドウの位置をリセット",
     callback: async () => {
       await store.dispatch("float/reset");
-    }
+    },
   });
 
   result.push(resetFloatWindows);

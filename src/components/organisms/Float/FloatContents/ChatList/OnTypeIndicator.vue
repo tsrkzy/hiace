@@ -14,8 +14,8 @@ export default {
   props: {
     debug: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   created() {
     this.intervalId = window.setInterval(this.updateText, 1000);
@@ -28,7 +28,7 @@ export default {
   computed: {
     me() {
       return this.$store.getters["auth/user"];
-    }
+    },
   },
   methods: {
     updateText() {
@@ -47,15 +47,15 @@ export default {
         }
       }
 
-      this.text = onTypeList.map(u => u.name).join(", ");
-    }
+      this.text = onTypeList.map((u) => u.name).join(", ");
+    },
   },
   data() {
     return {
       intervalId: null,
-      text: " "
+      text: " ",
     };
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -125,7 +125,9 @@ function onMessageHandler(e: MessageEvent) {
 
 function popBalloon(characterId: string) {
   const $$s = `div.balloon-holder.alias-${characterId}`;
-  const $elList = Array.from(document.querySelectorAll($$s)).filter($e => !!$e);
+  const $elList = Array.from(document.querySelectorAll($$s)).filter(
+    ($e) => !!$e
+  );
   const cls = "dimming";
   for (let i = 0; i < $elList.length; i++) {
     const $el = $elList[i];

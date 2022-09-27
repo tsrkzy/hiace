@@ -45,7 +45,7 @@ import {
   DICE_VALUE_ONE,
   DICE_VALUE_SIX,
   DICE_VALUE_THREE,
-  DICE_VALUE_TWO
+  DICE_VALUE_TWO,
 } from "@/collections/Dice";
 
 export default {
@@ -53,7 +53,7 @@ export default {
   props: {
     color: { type: String, default: "black" },
     dice: { type: String, require: true },
-    diceSize: { type: Number, default: DICE_SIZE }
+    diceSize: { type: Number, default: DICE_SIZE },
   },
   computed: {
     baseColor() {
@@ -110,7 +110,7 @@ export default {
       }
 
       return result;
-    }
-  }
+    },
+  },
 };
 </script>

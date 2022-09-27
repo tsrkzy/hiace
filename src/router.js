@@ -1,4 +1,4 @@
-import "firebase/auth";
+import "firebase/compat/auth";
 import Vue from "vue";
 import Room from "@/components/views/Room";
 import RoomCreate from "@/components/views/RoomCreate";
@@ -13,21 +13,21 @@ const router = new Router({
   routes: [
     {
       path: "/",
-      component: RoomCreate
+      component: RoomCreate,
     },
     {
       path: "/r/:room_id",
-      component: Room
+      component: Room,
     },
     {
       path: "/terms-of-service",
-      component: TermsOfService
+      component: TermsOfService,
     },
     {
       path: "/privacy-policy",
-      component: PrivacyPolicy
-    }
-  ]
+      component: PrivacyPolicy,
+    },
+  ],
 });
 
 export default router;

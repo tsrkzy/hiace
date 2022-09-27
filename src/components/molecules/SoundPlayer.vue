@@ -41,7 +41,7 @@ export default {
   components: { HaCheckbox, HaButton },
   props: {
     soundId: { type: String, require: true },
-    deletable: { type: Boolean, default: false }
+    deletable: { type: Boolean, default: false },
   },
   async created() {
     const $a = new Sound(this.soundId);
@@ -60,12 +60,14 @@ export default {
 
       testPlay: false,
 
-      url: null
+      url: null,
     };
   },
   computed: {
     sound() {
-      return this.$store.getters["sound/info"].find(s => s.id === this.soundId);
+      return this.$store.getters["sound/info"].find(
+        (s) => s.id === this.soundId
+      );
     },
     soundName() {
       return `(${getName("user", this.sound.owner)})${this.sound?.name}`;
@@ -102,7 +104,7 @@ export default {
       return (
         this.sound && this.sound.owner === this.$store.getters["auth/user"].id
       );
-    }
+    },
   },
   methods: {
     async onBroadcast() {
@@ -143,7 +145,7 @@ export default {
       const $a = Sound.GetById(this.soundId);
       this.testPlay = false;
       $a.pause();
-    }
+    },
   },
   watch: {
     loop(loop) {
@@ -162,8 +164,8 @@ export default {
       if (!music) {
         store.dispatch("sound/unsetPlaying");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -14,7 +14,7 @@ import {
   // IMAGE_MANAGER,
   // BOARD_LIST,
   ROOM_MANAGER,
-  ISSUE_WRITER
+  ISSUE_WRITER,
 } from "@/interfaces/IFFloat";
 
 export const float = {
@@ -22,7 +22,7 @@ export const float = {
   state: {
     floats: [
       /* IFFloat[] */
-    ]
+    ],
   },
   mutations: {
     initialize(state) {
@@ -31,10 +31,10 @@ export const float = {
         state.floats = [
           new IFFloat(ROOM_MANAGER, true),
           new IFFloat(CHAT_LIST, true),
-          new IFFloat(ISSUE_WRITER, true)
+          new IFFloat(ISSUE_WRITER, true),
         ];
       } else {
-        if (!importedList.find(f => f.contentId === ISSUE_WRITER)) {
+        if (!importedList.find((f) => f.contentId === ISSUE_WRITER)) {
           importedList.push(new IFFloat(ISSUE_WRITER, true));
         }
         state.floats = importedList;
@@ -47,7 +47,7 @@ export const float = {
     },
     move(state, payload) {
       const { id, x = 0, y = 0 } = payload;
-      const float = state.floats.find(f => f.id === id);
+      const float = state.floats.find((f) => f.id === id);
       if (!float) {
         throw new Error(`no float-window found: ${id}`);
       }
@@ -58,7 +58,7 @@ export const float = {
     },
     scale(state, payload) {
       const { id, w, h } = payload;
-      const float = state.floats.find(f => f.id === id);
+      const float = state.floats.find((f) => f.id === id);
       if (!float) {
         throw new Error(`no float-window found: ${id}`);
       }
@@ -79,7 +79,7 @@ export const float = {
       const { contentId = UNSET, show = false, args } = payload;
       const float = new IFFloat(contentId, show, args);
       /* singletonの場合はidが同じ */
-      const index = state.floats.findIndex(f => f.id === float.id);
+      const index = state.floats.findIndex((f) => f.id === float.id);
       if (index !== -1) {
         state.floats[index].show = true;
         return false;
@@ -91,7 +91,7 @@ export const float = {
     setShow(state, payload) {
       const { id, show } = payload;
       console.log("float.setShow", id, show); // @DELETEME
-      const float = state.floats.find(f => f.id === id);
+      const float = state.floats.find((f) => f.id === id);
       float.show = show;
     },
     remove(state, payload) {
@@ -114,7 +114,7 @@ export const float = {
     reset(state) {
       IFFloat.Reset();
       IFFloat.Export();
-    }
+    },
   },
   actions: {
     initialize({ commit }) {
@@ -152,7 +152,7 @@ export const float = {
     },
     reset({ commit }) {
       commit("reset");
-    }
+    },
   },
   getters: {
     info(state) {
@@ -160,11 +160,11 @@ export const float = {
     },
     top(state) {
       const { floats = [] } = state;
-      const shownFloats = floats.filter(f => f.show);
+      const shownFloats = floats.filter((f) => f.show);
       if (shownFloats.length === 0) {
         return null;
       }
       return shownFloats.reduce((a, b) => (a.z > b.z ? a : b));
-    }
-  }
+    },
+  },
 };

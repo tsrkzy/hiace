@@ -2,7 +2,7 @@ export const map = {
   namespaced: true,
   state: {
     maps: [],
-    drag: null
+    drag: null,
   },
   mutations: {
     setMaps(state, payload) {
@@ -12,12 +12,12 @@ export const map = {
       state.drag = payload.drag;
     },
     setTransform(state, { mapId, transform }) {
-      const map = state.maps.find(m => m.id === mapId);
+      const map = state.maps.find((m) => m.id === mapId);
       if (!map) {
         return false;
       }
       map.transform = transform;
-    }
+    },
   },
   actions: {
     setMaps({ commit }, { maps }) {
@@ -26,12 +26,15 @@ export const map = {
     },
     dragStart({ commit }, { mapId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
+      Array.prototype.forEach.call(
+        $elList,
+        ($e) => ($e.style.display = "none")
+      );
       commit("setDrag", { drag: mapId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, ($e) => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { mapId, transform }) {
@@ -41,7 +44,7 @@ export const map = {
     resetTrasform({ commit }, { mapId }) {
       console.log("map.resetTrasform", mapId); // @DELETEME
       commit("setTransform", { mapId, transform: `${new DOMMatrix()}` });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -49,6 +52,6 @@ export const map = {
     },
     dragging(state) {
       return state.drag;
-    }
-  }
+    },
+  },
 };

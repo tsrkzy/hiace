@@ -6,8 +6,8 @@
       v-model="characterId"
       @change="onChangeCharacterHandler"
     >
-      <option selected :value="CHARACTER_NOT_SELECTED"
-        >{{ userName }}(PL)
+      <option selected :value="CHARACTER_NOT_SELECTED">
+        {{ userName }}(PL)
       </option>
     </ha-select>
     <ha-select
@@ -32,9 +32,9 @@ export default {
   components: { HaSelect },
   computed: {
     characterItems() {
-      return this.$store.getters["character/mine"].map(c => ({
+      return this.$store.getters["character/mine"].map((c) => ({
         value: c.id,
-        text: c.name
+        text: c.name,
       }));
     },
     aliasItems() {
@@ -44,11 +44,11 @@ export default {
       }
 
       const aliases = this.$store.getters["alias/info"].filter(
-        a => a.character === characterId
+        (a) => a.character === characterId
       );
-      return aliases.map(a => ({
+      return aliases.map((a) => ({
         value: a.id,
-        text: a.name
+        text: a.name,
       }));
     },
     userName() {
@@ -56,7 +56,7 @@ export default {
     },
     disableAlias() {
       return (this.aliasItems || []).length === 0;
-    }
+    },
   },
   methods: {
     /**
@@ -68,7 +68,7 @@ export default {
       return {
         characterId:
           characterId === CHARACTER_NOT_SELECTED ? null : characterId,
-        aliasId: aliasId === ALIAS_NOT_SELECTED ? null : aliasId
+        aliasId: aliasId === ALIAS_NOT_SELECTED ? null : aliasId,
       };
     },
     async onChangeCharacterHandler() {
@@ -80,7 +80,7 @@ export default {
       }
 
       const { activeAlias } = this.$store.getters["character/info"].find(
-        c => c.id === characterId
+        (c) => c.id === characterId
       );
 
       this.aliasId = activeAlias;
@@ -99,7 +99,7 @@ export default {
       const characterId = this.characterId;
       const aliasId = this.aliasId;
       this.$emit("changed", { characterId, aliasId });
-    }
+    },
   },
   data() {
     return {
@@ -107,9 +107,9 @@ export default {
       ALIAS_NOT_SELECTED,
       characterId: CHARACTER_NOT_SELECTED,
       imageId: null,
-      aliasId: ALIAS_NOT_SELECTED
+      aliasId: ALIAS_NOT_SELECTED,
     };
-  }
+  },
 };
 </script>
 

@@ -10,7 +10,7 @@
       :rows="rows"
       :class="{
         resizeable,
-        'full-width': fullWidth
+        'full-width': fullWidth,
       }"
     />
   </label>
@@ -21,7 +21,7 @@ export default {
   name: "HaTextarea",
   model: {
     prop: "value",
-    event: "input"
+    event: "input",
   },
   props: {
     value: { type: String },
@@ -29,8 +29,8 @@ export default {
     disabled: { type: Boolean, default: false },
     rows: { type: String, default: "2" },
     resizeable: { type: Boolean, default: false },
-    fullWidth: { type: Boolean, default: false }
-  }
+    fullWidth: { type: Boolean, default: false },
+  },
 };
 </script>
 

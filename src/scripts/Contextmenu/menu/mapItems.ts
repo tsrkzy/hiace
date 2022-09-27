@@ -7,7 +7,7 @@
 
 import {
   ContextMenuChildItem,
-  ContextMenuItem
+  ContextMenuItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 import { MAP_EDIT } from "@/interfaces/IFFloat";
@@ -43,7 +43,7 @@ export function mapItems(mapId: string): ContextMenuItem[] {
       const show = true;
       const args = { mapId };
       await store.dispatch("float/create", { contentId, show, args });
-    }
+    },
   });
 
   /* マップの位置を固定 */
@@ -53,7 +53,7 @@ export function mapItems(mapId: string): ContextMenuItem[] {
     text: locked ? "マップを移動可能にする" : "マップの位置を固定する",
     callback: async () => {
       await FSMap.Update(mapId, { dragLock: !locked });
-    }
+    },
   });
   /* マップの削除 */
   const deleteMapItem = new ContextMenuChildItem({
@@ -61,7 +61,7 @@ export function mapItems(mapId: string): ContextMenuItem[] {
     text: "マップを削除する",
     callback: async () => {
       await FSMap.Delete(mapId);
-    }
+    },
   });
 
   /* ダイスを追加 */
@@ -83,10 +83,10 @@ export function mapItems(mapId: string): ContextMenuItem[] {
         userId,
         face,
         color,
-        transform
+        transform,
       });
       touchFree(`ダイスを追加しました`);
-    }
+    },
   });
 
   result.push(editMapItem);

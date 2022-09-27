@@ -8,7 +8,7 @@
 export const notice = {
   namespaced: true,
   state: {
-    notices: []
+    notices: [],
   },
   mutations: {
     addNotices(state, { notice }) {
@@ -16,12 +16,12 @@ export const notice = {
     },
     deleteNotice(state, { id }) {
       const { notices = [] } = state;
-      const index = notices.findIndex(n => n.id === id);
+      const index = notices.findIndex((n) => n.id === id);
       if (index === -1) {
         return false;
       }
       notices.splice(index, 1);
-    }
+    },
   },
   actions: {
     add({ commit }, { notice }) {
@@ -29,11 +29,11 @@ export const notice = {
     },
     delete({ commit }, { id }) {
       commit("deleteNotice", { id });
-    }
+    },
   },
   getters: {
     info(state) {
       return state.notices;
-    }
-  }
+    },
+  },
 };

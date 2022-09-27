@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <input
       type="file"
       multiple
@@ -102,8 +102,8 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
@@ -113,20 +113,20 @@ export default {
       onlyMap: false,
       onlyCharacter: false,
       onlyUntagged: false,
-      deleteImageMode: false
+      deleteImageMode: false,
     };
   },
   computed: {
     image() {
       return this.$store.getters["image/info"].find(
-        img => img.id === this.imageId
+        (img) => img.id === this.imageId
       );
     },
     isMine() {
       return (
         this.image && this.image.owner === this.$store.getters["auth/user"].id
       );
-    }
+    },
   },
   methods: {
     whose(imageId) {
@@ -142,7 +142,7 @@ export default {
       const { files = [] } = e.currentTarget;
 
       const promiseList = [];
-      Array.prototype.forEach.call(files, f => {
+      Array.prototype.forEach.call(files, (f) => {
         promiseList.push(FSImage.Create(f));
       });
       await Promise.all(promiseList);
@@ -181,8 +181,8 @@ export default {
     async onMakeCharacter(imageId, value) {
       console.log("ImageManager.onMakeCharacter"); // @DELETEME
       await FSImage.Tag(imageId, "character", value);
-    }
-  }
+    },
+  },
 };
 </script>
 

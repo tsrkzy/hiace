@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <alias-board v-if="showAlias"></alias-board>
     <chat-log-viewer
       :float-id="floatId"
@@ -15,7 +15,7 @@
     />
     <fieldset>
       <legend>チャット設定</legend>
-      <div style="white-space: nowrap;">
+      <div style="white-space: nowrap">
         <character-switcher ref="cs" @changed="onChangeCS"></character-switcher>
         <ha-select label="チャンネル" :items="channelItems" v-model="channelId">
           <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
@@ -77,13 +77,13 @@ export default {
     ChatLogViewer,
     HaTextarea,
     HaSelect,
-    CharacterSwitcher
+    CharacterSwitcher,
   },
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   created() {},
   computed: {
@@ -91,9 +91,9 @@ export default {
       return this.innerDiceSystem ?? this.$store.getters["room/gameSystem"];
     },
     channelItems() {
-      return this.$store.getters["channel/info"].map(c => ({
+      return this.$store.getters["channel/info"].map((c) => ({
         text: c.name,
-        value: c.id
+        value: c.id,
       }));
     },
     diceBotItems() {
@@ -122,7 +122,7 @@ export default {
       const speaker = c ? `(${c}@${a})` : `(${u}@PL)`;
       const to = ch ? ` → ${ch}` : ``;
       return `${speaker}${to}`;
-    }
+    },
   },
   data() {
     return {
@@ -134,7 +134,7 @@ export default {
       characterId: null,
       aliasId: null,
       showAlias: true,
-      fontSize: 0
+      fontSize: 0,
     };
   },
   methods: {
@@ -170,8 +170,8 @@ export default {
         character: characterId,
         alias: aliasId,
         value: {
-          text: chatText
-        }
+          text: chatText,
+        },
       };
       this.chatText = "";
       try {
@@ -208,7 +208,7 @@ export default {
         this.historyKey++;
         this.historyKey =
           this.historyKey >= historyLength ? 0 : this.historyKey;
-        const history = historyList.find(h => h.key === this.historyKey);
+        const history = historyList.find((h) => h.key === this.historyKey);
         if (history) {
           this.chatText = history.text;
           return false;
@@ -232,7 +232,7 @@ export default {
     },
     onClickSmall() {
       if (this.fontSize > 0) this.fontSize--;
-    }
-  }
+    },
+  },
 };
 </script>

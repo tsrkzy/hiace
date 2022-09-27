@@ -8,9 +8,9 @@
 <template>
   <label>
     <select v-model="contentId" @change="onWindowOpener">
-      <option v-for="c in contents" :key="c.id" :value="c.id">{{
-        c.text
-      }}</option>
+      <option v-for="c in contents" :key="c.id" :value="c.id">
+        {{ c.text }}
+      </option>
     </select>
   </label>
 </template>
@@ -29,7 +29,7 @@ import {
   title,
   UNSET,
   ISSUE_WRITER,
-  CHAT_PALETTE
+  CHAT_PALETTE,
 } from "@/interfaces/IFFloat";
 
 export default {
@@ -40,7 +40,7 @@ export default {
       console.log("Room.onWindowOpener", contentId); // @DELETEME
       await this.$store.dispatch("float/create", { contentId, show: true });
       this.contentId = UNSET;
-    }
+    },
   },
   computed: {
     contents() {
@@ -55,19 +55,19 @@ export default {
         ROOM_MANAGER,
         CHANNEL_LIST,
         NOTE_MANAGER,
-        ISSUE_WRITER
+        ISSUE_WRITER,
       ];
 
-      const contents = contentList.map(id => ({ id, text: title(id) }));
+      const contents = contentList.map((id) => ({ id, text: title(id) }));
       contents.unshift({ id: UNSET, text: "ウィンドウを開く" });
       return contents;
-    }
+    },
   },
   data() {
     return {
-      contentId: UNSET
+      contentId: UNSET,
     };
-  }
+  },
 };
 </script>
 

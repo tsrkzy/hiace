@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <ha-checkbox
       label="位置を固定する"
       :value="dragLock"
@@ -44,7 +44,7 @@
     <img
       :alt="imageId"
       :src="srcUrl"
-      style="max-height: 200px;max-width: 200px;"
+      style="max-height: 200px; max-width: 200px"
     />
     <scroll-summary>
       <image-show-case
@@ -69,17 +69,17 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   async created() {
     const float = this.$store.getters["float/info"].find(
-      f => f.id === this.floatId
+      (f) => f.id === this.floatId
     );
     const mapId = float?.args?.mapId ?? MAP_NOT_SELECTED;
     this.mapId = mapId;
 
-    const map = this.$store.getters["map/info"].find(m => m.id === mapId);
+    const map = this.$store.getters["map/info"].find((m) => m.id === mapId);
     if (!map) {
       throw new Error(`no map found: ${mapId}`);
     }
@@ -94,7 +94,7 @@ export default {
       originTransform: new DOMMatrix(),
       /* 拡大率(%) */
       scaleValue: 100,
-      dragLock: true
+      dragLock: true,
     };
   },
   methods: {
@@ -136,18 +136,18 @@ export default {
       this.imageId = imageId;
       const { url } = await FSImage.GetById({ id: imageId });
       this.srcUrl = url;
-    }
+    },
   },
   computed: {
     map() {
-      return this.$store.getters["map/info"].find(m => m.id === this.mapId);
-    }
+      return this.$store.getters["map/info"].find((m) => m.id === this.mapId);
+    },
   },
   watch: {
     map(map) {
       this.reloadMap(map);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -12,7 +12,7 @@
       @click="onOpenImageManager"
       >画像をアップロード</ha-button
     >
-    <label v-if="showNull && images.length" style="display: inline-block;">
+    <label v-if="showNull && images.length" style="display: inline-block">
       <!-- 外枠 -->
       <div :class="`image-frame ${imageId ? '' : 'selected'}`">
         <input
@@ -31,7 +31,7 @@
     <label
       v-for="image in images"
       :key="image.id"
-      style="display: inline-block;"
+      style="display: inline-block"
     >
       <!-- 外枠 -->
       <div :class="`image-frame ${imageId === image.id ? 'selected' : ''}`">
@@ -46,12 +46,18 @@
         <img :alt="image.id" :src="image.url" />
         <span
           v-if="isHidden(image)"
-          style="position:absolute;left:0;top:0;color:white;background-color: red;"
+          style="
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: white;
+            background-color: red;
+          "
           >個人</span
         >
         <ha-button
           v-if="deleteMode"
-          style="position: absolute;right:0;bottom:0;"
+          style="position: absolute; right: 0; bottom: 0"
           @click="onClickDeleteImage(image.id)"
           >削除</ha-button
         >
@@ -78,7 +84,7 @@ export default {
     navToImageManager: { type: Boolean, default: false },
     deleteMode: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
-    showNull: { type: Boolean, default: false }
+    showNull: { type: Boolean, default: false },
   },
   methods: {
     onChangeSelectImage(e) {
@@ -91,7 +97,7 @@ export default {
     onOpenImageManager() {
       this.$store.dispatch("float/create", {
         contentId: IMAGE_MANAGER,
-        show: true
+        show: true,
       });
     },
     async onClickDeleteImage(imageId) {
@@ -99,14 +105,14 @@ export default {
       await Smoke.on();
       await FSImage.Archive(imageId);
       await Smoke.off();
-    }
+    },
   },
   computed: {
     me() {
       return this.$store.getters["auth/user"].id;
     },
     images() {
-      const images = this.$store.getters["image/info"].filter(img => {
+      const images = this.$store.getters["image/info"].filter((img) => {
         return (
           /* 自分の所有しないhidden属性付きの画像は表示しない */
           !(img.owner !== this.me && img.hidden) &&
@@ -121,7 +127,7 @@ export default {
        *「キャラクタ」
        *「未タグ付け」*/
       const { onlyMine, onlyMap, onlyCharacter, onlyUntagged } = this;
-      return images.filter(img => {
+      return images.filter((img) => {
         const isMine = onlyMine ? img.owner === this.me : true;
         const isMap = onlyMap ? img.tags.indexOf("map") !== -1 : true;
         const isCharacter = onlyCharacter
@@ -131,7 +137,7 @@ export default {
 
         return isMine && (onlyUntagged ? isUntagged : isMap && isCharacter);
       });
-    }
+    },
   },
   watch: {
     imageItems() {
@@ -140,8 +146,8 @@ export default {
         const { id } = images[i];
         FSImage.SafeReloadUrl(id);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

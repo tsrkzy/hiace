@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <ha-select
       :value="characterId"
       :items="characterItemList"
@@ -79,7 +79,7 @@
       <div>
         <ha-button @click="onCreateAlias">立ち絵の追加</ha-button>
       </div>
-      <ul style="padding-left: 0;margin: 0;">
+      <ul style="padding-left: 0; margin: 0">
         <li v-for="a in aliases" :key="a.id">
           <ha-input-form
             :value="a.name"
@@ -115,7 +115,7 @@
           v-if="aliasId"
           :src="srcUrl"
           :alt="imgAlt"
-          style="max-width: 128px;max-height: 128px;"
+          style="max-width: 128px; max-height: 128px"
         />
         <span v-else>立ち絵を選択してください</span>
       </div>
@@ -160,13 +160,13 @@ export default {
     HaSelect,
     ImageShowCase,
     HaTextarea,
-    HaInputForm
+    HaInputForm,
   },
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
@@ -179,18 +179,18 @@ export default {
       pawnSizeStr: "1",
       chatColor: SYSTEM_COLOR,
       characterDeleteMode: false,
-      aliasDeleteMode: false
+      aliasDeleteMode: false,
     };
   },
   async created() {
     const float = this.$store.getters["float/info"].find(
-      f => f.id === this.floatId
+      (f) => f.id === this.floatId
     );
     this.characterId = float?.args?.characterId ?? CHARACTER_NOT_SELECTED;
     this.syncAlias();
 
     const { image } = this.$store.getters["alias/info"].find(
-      a => a.id === this.aliasId
+      (a) => a.id === this.aliasId
     );
 
     if (!image) {
@@ -203,7 +203,7 @@ export default {
       const characterId = this.characterId;
       console.log("DebugIndicator.onClickCreateAliasToCharacter", characterId); // @DELETEME
       const character = this.$store.getters["character/info"].find(
-        c => c.id === characterId
+        (c) => c.id === characterId
       );
 
       const roomId = this.$store.getters["room/info"].id;
@@ -215,7 +215,7 @@ export default {
         characterId,
         imageId: null,
         name,
-        position
+        position,
       };
 
       await FSAlias.Create(a);
@@ -225,7 +225,7 @@ export default {
       this.syncAlias();
 
       const { image } = this.$store.getters["alias/info"].find(
-        a => a.id === this.aliasId
+        (a) => a.id === this.aliasId
       );
       await this.reloadImage(image);
     },
@@ -251,20 +251,20 @@ export default {
       const chatPositionStr = e.currentTarget.value || "0";
       const chatPosition = parseInt(chatPositionStr, 10);
       await FSCharacter.Update(this.characterId, {
-        chatPosition
+        chatPosition,
       });
       this.chatPosition = chatPositionStr;
     },
     async onChangePawnSize(pawnSizeStr) {
       console.log("CharacterEdit.onChangePawnSize", pawnSizeStr); // @DELETEME
       await FSCharacter.Update(this.characterId, {
-        pawnSize: parseInt(pawnSizeStr, 10)
+        pawnSize: parseInt(pawnSizeStr, 10),
       });
       this.pawnSizeStr = pawnSizeStr;
     },
     async onChangeAlias(aliasId) {
       const { image } = this.$store.getters["alias/info"].find(
-        a => a.id === aliasId
+        (a) => a.id === aliasId
       );
       await this.reloadImage(image);
     },
@@ -291,9 +291,9 @@ export default {
         activeAlias = null,
         chatPosition = 0,
         pawnSize = 1,
-        color = SYSTEM_COLOR
+        color = SYSTEM_COLOR,
       } = this.$store.getters["character/info"].find(
-        c => c.id === this.characterId
+        (c) => c.id === this.characterId
       );
       this.aliasId = activeAlias;
       this.chatPosition = `${chatPosition}`;
@@ -312,44 +312,44 @@ export default {
       await FSAlias.Delete(aliasId);
       /* 削除したaliasを使用していたcharacterに別のaliasが付くので再取得 */
       const { activeAlias = null } = this.$store.getters["character/info"].find(
-        c => c.id === this.characterId
+        (c) => c.id === this.characterId
       );
       this.aliasId = activeAlias;
       await Smoke.off();
-    }
+    },
   },
   computed: {
     characterItemList() {
-      return this.$store.getters["character/info"].map(c => ({
+      return this.$store.getters["character/info"].map((c) => ({
         text: c.name,
-        value: c.id
+        value: c.id,
       }));
     },
     character() {
       return (
         this.$store.getters["character/info"].find(
-          c => c.id === this.characterId
+          (c) => c.id === this.characterId
         ) || {}
       );
     },
     aliases() {
       return this.$store.getters["alias/info"].filter(
-        a => a.character === this.characterId
+        (a) => a.character === this.characterId
       );
     },
     aliasItems() {
       return this.$store.getters["alias/info"]
-        .filter(a => a.character === this.characterId)
-        .map(a => ({
+        .filter((a) => a.character === this.characterId)
+        .map((a) => ({
           value: a.id,
-          text: a.name
+          text: a.name,
         }));
     },
     pawnSizeItems() {
       const size = Array(10)
         .fill(0)
         .map((_, i) => i + 1);
-      return size.map(i => ({ value: `${i}`, text: `x${i}` }));
+      return size.map((i) => ({ value: `${i}`, text: `x${i}` }));
     },
     showOnInitiative() {
       return !!this.character.showOnInitiative;
@@ -358,7 +358,7 @@ export default {
       const owner = this.character?.owner;
       const myUserId = this.$store.getters["auth/user"].id;
       return owner === myUserId;
-    }
-  }
+    },
+  },
 };
 </script>

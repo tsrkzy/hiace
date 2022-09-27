@@ -26,8 +26,8 @@ export default {
     },
     leftSide() {
       return this.$store.getters["detail/leftSide"];
-    }
-  }
+    },
+  },
 };
 </script>
 

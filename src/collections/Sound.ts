@@ -1,12 +1,12 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
 import store from "@/store";
 import { Sound } from "@/scripts/Sound";
 
 async function validateAudioUrl(url: string) {
-  return await new Promise(resolve => {
+  return await new Promise((resolve) => {
     const $aud = new Audio();
     $aud.onloadedmetadata = () => resolve(true);
     $aud.onerror = () => resolve(false);
@@ -23,10 +23,7 @@ export class FSSound {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("sound")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("sound").doc(id).get();
     if (!docRef.exists) {
       return null;
     }
@@ -77,7 +74,7 @@ export class FSSound {
         resolve({ duration });
       };
 
-      audio.onerror = e => {
+      audio.onerror = (e) => {
         reject(e);
       };
       audio.src = url;
@@ -114,7 +111,7 @@ export class FSSound {
       name,
       size,
       contentType,
-      duration
+      duration,
     };
 
     /* upload to Cloud Storage */
@@ -123,11 +120,11 @@ export class FSSound {
       const uploadTask = soundRef.put(file, metadata);
       uploadTask.on(
         "state_changed",
-        snapshot => {
+        (snapshot) => {
           /* progress observer */
           console.log(`uploading ${name},`, snapshot.state); // @DELETEME
         },
-        e => {
+        (e) => {
           /* on error */
           reject(e);
         },
@@ -149,7 +146,7 @@ export class FSSound {
       hidden: false,
       duration,
       loop: false,
-      name
+      name,
     };
     const db = firebase.firestore();
     const soundDocRef = await db.collection("sound").add(sound);
@@ -170,10 +167,7 @@ export class FSSound {
     sound.dispose();
 
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("sound")
-      .doc(soundId)
-      .delete();
+    const docRef = await db.collection("sound").doc(soundId).delete();
 
     return docRef;
   }
@@ -189,9 +183,9 @@ export class FSSound {
     const db = firebase.firestore();
     const docsRef = db.collection("sound").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const sounds: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const sound = doc.data();
         sound.id = doc.id;
         sounds.push(sound);

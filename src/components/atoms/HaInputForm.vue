@@ -19,14 +19,14 @@ export default {
   name: "HaInputForm",
   model: {
     prop: "value",
-    event: "input"
+    event: "input",
   },
   props: {
     label: { type: String },
     value: { type: String },
     disabled: { type: Boolean },
-    placeholder: { type: String, default: "" }
-  }
+    placeholder: { type: String, default: "" },
+  },
 };
 </script>
 

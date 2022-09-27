@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <button v-if="content" class="help" disabled style="float:right;">
+  <button v-if="content" class="help" disabled style="float: right">
     ？
     <pre class="tooltip">{{ content }}</pre>
   </button>
@@ -17,13 +17,13 @@ import { getHelpMessage } from "@/scripts/helper";
 export default {
   name: "hint-container",
   props: {
-    floatId: { type: Number, require: true }
+    floatId: { type: Number, require: true },
   },
   computed: {
     content() {
       return getHelpMessage(this.floatId);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -7,7 +7,7 @@
 
 import {
   ContextMenuChildItem,
-  ContextMenuItem
+  ContextMenuItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 import { getName } from "@/scripts/helper";
@@ -34,7 +34,7 @@ export function tableRowItems(characterId: string): ContextMenuItem[] {
       await Smoke.on();
       await FSCharacter.Update(characterId, { showOnInitiative: false });
       await Smoke.off();
-    }
+    },
   });
 
   result.push(hideOnInitiative);

@@ -24,25 +24,25 @@ export default {
   name: "CharacterShowCase",
   components: { HaButton },
   props: {
-    characterId: { type: String }
+    characterId: { type: String },
   },
   model: {
     prop: "characterId",
-    event: "selectCharacter"
+    event: "selectCharacter",
   },
   methods: {
     onClickSelectCharacter(characterId) {
       this.$emit("selectCharacter", characterId);
-    }
+    },
   },
   computed: {
     characterItems() {
-      return this.$store.getters["character/info"].map(c => ({
+      return this.$store.getters["character/info"].map((c) => ({
         id: c.id,
-        url: c.url
+        url: c.url,
       }));
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -8,7 +8,7 @@
 import {
   ContextMenuChildItem,
   ContextMenuItem,
-  ContextMenuParentItem
+  ContextMenuParentItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 import { getName } from "@/scripts/helper";
@@ -38,7 +38,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     board: boardId,
     image: imageId,
     character: characterId,
-    transform: _transform
+    transform: _transform,
   } = pawn;
 
   const characterName: string = getName("character", pawn.character);
@@ -51,7 +51,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     text: `コマを原点に戻す`,
     callback: async () => {
       await FSPawn.ResetTransform([pawnId]);
-    }
+    },
   });
 
   /* キャラクタ編集 */
@@ -63,7 +63,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
       const show = true;
       const args = { characterId: pawn.character };
       await store.dispatch("float/create", { contentId, show, args });
-    }
+    },
   });
 
   /* キャラクタを複製 */
@@ -82,9 +82,9 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
         boardId,
         imageId,
         characterId: character.id,
-        transform
+        transform,
       });
-    }
+    },
   });
 
   /* キャラクタを控室に入れる */
@@ -93,7 +93,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     text: `控室に入れて隠す`,
     callback: async () => {
       await FSCharacter.Update(characterId, { archived: true });
-    }
+    },
   });
 
   /* コマ複製 */
@@ -110,9 +110,9 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
         boardId,
         imageId,
         characterId,
-        transform
+        transform,
       });
-    }
+    },
   });
 
   /* コマ削除 */
@@ -121,13 +121,13 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     text: `コマの削除(${characterName})`,
     callback: async () => {
       await FSPawn.Delete(pawnId);
-    }
+    },
   });
 
   /* コマの大きさ変更 */
   const changePawnSize = new ContextMenuParentItem({
     value: `change_pawn_size_${pawnId}`,
-    text: "コマの大きさを変更する"
+    text: "コマの大きさを変更する",
   });
 
   /* コマを大きくする */
@@ -137,7 +137,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     callback: async () => {
       await FSCharacter.Update(character.id, { pawnSize: pawnSize + 1 });
     },
-    disabled: pawnSize >= 8
+    disabled: pawnSize >= 8,
   });
   changePawnSize.children.push(pawnSizeUp);
 
@@ -148,14 +148,14 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     callback: async () => {
       await FSCharacter.Update(character.id, { pawnSize: pawnSize - 1 });
     },
-    disabled: pawnSize <= 1
+    disabled: pawnSize <= 1,
   });
   changePawnSize.children.push(pawnSizeDown);
 
   /* Arrow作成 */
   const arrowMenu = new ContextMenuParentItem({
     value: `arrow_menu_${pawnId}`,
-    text: "線"
+    text: "線",
   });
 
   /* 他のコマへ引く */
@@ -190,10 +190,10 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
           roomId,
           userId,
           pawnIdFrom: pawnId,
-          pawnIdTo: pawnIdTo
+          pawnIdTo: pawnIdTo,
         });
       },
-      disabled: alreadyExists
+      disabled: alreadyExists,
     });
     arrowMenu.children.push(draw_arrow_to);
   }
@@ -209,7 +209,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     callback: async () => {
       await FSArrow.DeleteByPawn(pawnId);
     },
-    disabled: !existDeletable
+    disabled: !existDeletable,
   });
   arrowMenu.children.push(clear_arrows);
 
@@ -219,7 +219,7 @@ export function pawnItems(pawnId: string): ContextMenuItem[] {
     text: `コマの重ね順を一番下にする`,
     callback: async () => {
       await FSPawn.ToBottom(pawnId);
-    }
+    },
   });
 
   result.push(resetPosItem);

@@ -1,6 +1,6 @@
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import store from "@/store";
 import { FSCharacter } from "@/collections/Character";
 import { callDiceBot, easyDiceCheck } from "@/scripts/diceBot";
@@ -39,7 +39,7 @@ export class FSChat {
       owner,
       character = null,
       alias = null,
-      value = {}
+      value = {},
     } = params;
 
     if (!room) {
@@ -64,7 +64,7 @@ export class FSChat {
       character,
       alias,
       value,
-      timestamp
+      timestamp,
     };
     const chatDocRef = await db.collection("chat").add(c);
     const id = chatDocRef.id;
@@ -85,7 +85,7 @@ export class FSChat {
       owner: owner,
       character: null,
       alias: null,
-      value: { text: "welcome to hiace!" }
+      value: { text: "welcome to hiace!" },
     };
     await FSChat.Create(c);
   }
@@ -108,7 +108,7 @@ export class FSChat {
 
   static async BroadcastLoggedIn({
     roomId,
-    user
+    user,
   }: {
     roomId: string;
     user: { id: string; email: string };
@@ -124,7 +124,7 @@ export class FSChat {
       owner: userId,
       character: null,
       alias: null,
-      value: { text: `logged in :${email} on ${ver()}` }
+      value: { text: `logged in :${email} on ${ver()}` },
     };
     return await FSChat.Create(c);
   }
@@ -140,7 +140,7 @@ export class FSChat {
       character,
       alias,
       value: _value,
-      color
+      color,
     } = store.getters["chat/info"].find((c: { id: string }) => c.id === chatId);
     if (owner !== userId) {
       throw new Error("only owner can change secret status");
@@ -157,8 +157,8 @@ export class FSChat {
         command,
         result,
         text: `シークレットダイス(公開済): ${text}`,
-        secret: false
-      }
+        secret: false,
+      },
     });
 
     const c = {
@@ -173,9 +173,9 @@ export class FSChat {
         command,
         result,
         text: `公開: ${text}`,
-        secret: false
+        secret: false,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     /* 新しく同じ内容でDICEを再投稿 */
     const chatRef = db.collection("chat").doc();
@@ -216,7 +216,7 @@ export class FSChat {
       /* 通常チャットとして扱う */
       const c = {
         type,
-        ...params
+        ...params,
       };
       return await FSChat.Create(c);
     }
@@ -258,7 +258,7 @@ export class FSChat {
     /* 先頭に追加して重複を削除、10個に絞ってkey振り直し */
     historyList.unshift({ key: 0, text: command });
     const filteredHistoryList = historyList
-      .filter((v, i, a) => a.findIndex(w => w.text === v.text) === i)
+      .filter((v, i, a) => a.findIndex((w) => w.text === v.text) === i)
       .slice(0, 10);
     filteredHistoryList.forEach((v, i) => {
       v.key = i;
@@ -277,7 +277,7 @@ export class FSChat {
     let count = 0;
     const batchList: firebase.firestore.WriteBatch[] = [];
     let batch: firebase.firestore.WriteBatch | null = null;
-    querySnapshot.forEach(docSnapshot => {
+    querySnapshot.forEach((docSnapshot) => {
       if (!batch) {
         batch = db.batch();
       }
@@ -314,7 +314,7 @@ export class FSChat {
       .where("room", "==", roomId)
       .orderBy("timestamp", "asc");
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       /* リスナ付与後、初回にハンドラはクエリに対する全ドキュメントをsnapshotとして受け取る
        * それらはchange.type==="added"のため、type==="added"のHookは画面呼出直後にバーストする
        *
@@ -333,7 +333,7 @@ export class FSChat {
       } else {
         /* = chat[] */
         const chats: any[] = [];
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           const chat = doc.data();
           chat.id = doc.id;
           chats.push(chat);
@@ -377,7 +377,7 @@ export class FSChat {
         character: null,
         alias: null,
         value: { text: `bulk inserted: ${i}` },
-        timestamp: Date.now() - (BATCH_LIMIT - i)
+        timestamp: Date.now() - (BATCH_LIMIT - i),
       };
       batch.set(newChatRef, c);
     }

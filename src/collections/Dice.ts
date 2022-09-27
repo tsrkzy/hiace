@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 export const DICE_SIZE = 100;
 
@@ -19,13 +19,13 @@ export const DICE_BASE_COLOR = {
   [DICE_BLACK]: DICE_BASE_BLACK,
   [DICE_RED]: DICE_BASE_RED,
   [DICE_WHITE]: DICE_BASE_WHITE,
-  [DICE_HALLOWEEN]: DICE_BASE_HALLOWEEN
+  [DICE_HALLOWEEN]: DICE_BASE_HALLOWEEN,
 };
 export const DICE_EYE_COLOR = {
   [DICE_BLACK]: "white",
   [DICE_RED]: "white",
   [DICE_WHITE]: "black",
-  [DICE_HALLOWEEN]: "orangered"
+  [DICE_HALLOWEEN]: "orangered",
 };
 
 /* die */
@@ -110,10 +110,7 @@ export class FSDice {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("dice")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("dice").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -151,7 +148,7 @@ export class FSDice {
       color: color ?? DICE_BLACK,
       face: face ?? DICE_VALUE_ASTER,
       hidden: false,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     const db = firebase.firestore();
@@ -186,7 +183,7 @@ export class FSDice {
     const db = firebase.firestore();
     const docRef = await db.collection("dice").doc(diceId);
     const params = {
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
     return await docRef.update(params);
   }
@@ -199,7 +196,7 @@ export class FSDice {
       const docRef = await db.collection("dice").doc(diceId);
       batch.update(docRef, {
         transform: `${new DOMMatrix()}`,
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       });
     }
 
@@ -208,10 +205,7 @@ export class FSDice {
 
   static async Delete(diceId: string) {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("dice")
-      .doc(diceId)
-      .delete();
+    const docRef = await db.collection("dice").doc(diceId).delete();
     return docRef;
   }
 
@@ -223,7 +217,7 @@ export class FSDice {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -238,9 +232,9 @@ export class FSDice {
       .where("room", "==", roomId)
       .orderBy("updatedAt", "desc");
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const dices: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const dice = doc.data();
         dice.id = doc.id;
         dices.push(dice);

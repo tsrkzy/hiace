@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <div>
       <ha-select
         :items="noteItems"
@@ -49,14 +49,14 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
       noteId: null,
       name: "",
-      text: ""
+      text: "",
     };
   },
   methods: {
@@ -69,7 +69,7 @@ export default {
     },
     reloadNoteContent(noteId) {
       this.noteId = noteId;
-      const { name, text } = this.notes.find(n => n.id === noteId);
+      const { name, text } = this.notes.find((n) => n.id === noteId);
       this.name = name;
       this.text = text;
     },
@@ -84,7 +84,7 @@ export default {
       this.text = text;
       await FSNote.Update(this.noteId, { text });
       touch("共有メモ", "note", this.noteId);
-    }
+    },
   },
   computed: {
     room() {
@@ -94,9 +94,9 @@ export default {
       return this.$store.getters["note/info"];
     },
     noteItems() {
-      return this.notes.map(n => ({ value: n.id, text: n.name }));
-    }
-  }
+      return this.notes.map((n) => ({ value: n.id, text: n.name }));
+    },
+  },
 };
 </script>
 

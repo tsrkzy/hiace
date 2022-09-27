@@ -10,7 +10,7 @@
     :id="`map_${this.mapId}`"
     v-if="loaded"
     :style="{
-      transform: `${transform}`
+      transform: `${transform}`,
     }"
     @mousedown="onMouseDown($event)"
   >
@@ -49,7 +49,7 @@ import { Notify } from "@/scripts/Notify";
 export default {
   name: "SvgMap",
   props: {
-    mapId: { type: String, require: true }
+    mapId: { type: String, require: true },
   },
   async created() {
     if (!this.mapId) {
@@ -57,7 +57,7 @@ export default {
     }
 
     const { image, transform = new DOMMatrix() } = await FSMap.GetById({
-      id: this.mapId
+      id: this.mapId,
     });
 
     this.transform = transform;
@@ -79,11 +79,11 @@ export default {
     },
     image() {
       const id = this.imageId;
-      return this.$store.getters["image/info"].find(img => img.id === id);
+      return this.$store.getters["image/info"].find((img) => img.id === id);
     },
     map() {
       const id = this.mapId;
-      return this.$store.getters["map/info"].find(m => m.id === id);
+      return this.$store.getters["map/info"].find((m) => m.id === id);
     },
     activeBoard() {
       return this.$store.getters["board/active"];
@@ -96,13 +96,13 @@ export default {
     },
     locked() {
       return !!this?.map?.dragLock;
-    }
+    },
   },
   methods: {
     async fetchImage(imageId) {
       this.imageId = imageId;
       const { url, width, height } = await FSImage.GetById({
-        id: this.imageId
+        id: this.imageId,
       });
 
       this.width = width;
@@ -154,13 +154,13 @@ export default {
         return $$r.translate(dxx, dyy);
       }
 
-      const onMove = e => {
+      const onMove = (e) => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         $m.style.transform = `${t}`;
       };
 
-      const onMouseUp = async e => {
+      const onMouseUp = async (e) => {
         e.stopPropagation();
         console.log("SvgMap.onMouseUp"); // @DELETEME
         await this.$store.dispatch("map/dragFinish");
@@ -181,7 +181,7 @@ export default {
     showContext(e) {
       console.log("SvgMap.showContext");
       showContext(e, "map", this.mapId);
-    }
+    },
   },
   data() {
     return {
@@ -193,7 +193,7 @@ export default {
       height: 0,
       href: null,
 
-      loaded: false
+      loaded: false,
     };
   },
   watch: {
@@ -211,13 +211,13 @@ export default {
           .then(() => {
             this.loaded = true;
           })
-          .catch(e => {
+          .catch((e) => {
             console.error(e);
             Notify.Log("マップ画像の読み込みに失敗");
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

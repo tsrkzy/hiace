@@ -35,14 +35,14 @@ import {
   DICE_BASE_COLOR,
   DICE_BLACK,
   DICE_EYE_COLOR,
-  DICE_SIZE
+  DICE_SIZE,
 } from "@/collections/Dice";
 
 export default {
   name: "Aster",
   props: {
     color: { type: String, default: DICE_BLACK },
-    diceSize: { type: Number, default: DICE_SIZE }
+    diceSize: { type: Number, default: DICE_SIZE },
   },
   computed: {
     baseColor() {
@@ -59,11 +59,11 @@ export default {
 
       const D90 = Math.PI / 2;
       const D360 = 2 * Math.PI;
-      const nodes = [0, 1, 2].map(i => [
+      const nodes = [0, 1, 2].map((i) => [
         c + l * Math.cos(D90 + (D360 * i) / 6),
         c + l * Math.sin(D90 + (D360 * i) / 6),
         c + l * Math.cos(D90 + (D360 * i) / 6) * -1,
-        c + l * Math.sin(D90 + (D360 * i) / 6) * -1
+        c + l * Math.sin(D90 + (D360 * i) / 6) * -1,
       ]);
 
       return `
@@ -74,7 +74,7 @@ export default {
       M ${nodes[2][0]},${nodes[2][1]}
       L ${nodes[2][2]},${nodes[2][3]}
       Z`;
-    }
-  }
+    },
+  },
 };
 </script>

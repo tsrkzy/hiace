@@ -77,7 +77,7 @@ import {
   ROOM_MANAGER,
   CHANNEL_LIST,
   NOTE_MANAGER,
-  ISSUE_WRITER
+  ISSUE_WRITER,
 } from "@/interfaces/IFFloat";
 
 export default {
@@ -95,7 +95,7 @@ export default {
     CharacterEdit,
     ChatList,
     BoardList,
-    CharacterList
+    CharacterList,
   },
   data() {
     return {
@@ -111,19 +111,19 @@ export default {
       ROOM_MANAGER,
       CHANNEL_LIST,
       NOTE_MANAGER,
-      ISSUE_WRITER
+      ISSUE_WRITER,
     };
   },
   props: {
     floatId: {
       type: Number,
-      require: true
+      require: true,
     },
     contentId: {
       type: String,
-      require: true
-    }
-  }
+      require: true,
+    },
+  },
 };
 </script>
 

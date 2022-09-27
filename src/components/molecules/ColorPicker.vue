@@ -16,13 +16,13 @@ export default {
   name: "color-picker",
   props: {
     label: { type: String, default: "" },
-    chatColor: { type: String, require: true }
+    chatColor: { type: String, require: true },
   },
   methods: {
     onChangeColor(e) {
       const color = e.currentTarget.value;
       this.$emit("change", color);
-    }
-  }
+    },
+  },
 };
 </script>

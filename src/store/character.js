@@ -1,18 +1,18 @@
 export const character = {
   namespaced: true,
   state: {
-    characters: []
+    characters: [],
   },
   mutations: {
     setCharacters(state, payload) {
       state.characters = payload.characters;
-    }
+    },
   },
   actions: {
     setCharacters({ commit }, { characters }) {
       console.log("character.setCharacters", characters); // @DELETEME
       commit("setCharacters", { characters });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -20,7 +20,7 @@ export const character = {
     },
     mine(state, getters, rootState, rootGetters) {
       const myUserId = rootGetters["auth/user"]?.id;
-      const characters = state.characters.filter(c => c.owner === myUserId);
+      const characters = state.characters.filter((c) => c.owner === myUserId);
       return characters.sort((a, b) => {
         const { name: nA } = a;
         const { name: nB } = b;
@@ -34,6 +34,6 @@ export const character = {
         nameMap[id] = state.characters[i].name;
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

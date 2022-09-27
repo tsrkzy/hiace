@@ -13,12 +13,12 @@ export const GAME_SYSTEMS = [
   { system: "Kamigakari", name: "神我狩" },
   { system: "SwordWorld", name: "ソードワールドRPG" },
   { system: "SwordWorld2.0", name: "ソードワールド2.0" },
-  { system: "SwordWorld2.5", name: "ソードワールド2.5" }
-].map(g => ({ value: g.system, text: g.name }));
+  { system: "SwordWorld2.5", name: "ソードワールド2.5" },
+].map((g) => ({ value: g.system, text: g.name }));
 
 const config = {
   baseURL: "https://bcdice.onlinesession.app/v1/",
-  timeout: 3000
+  timeout: 3000,
 };
 
 const axios_instance = axios.create(config);
@@ -41,7 +41,7 @@ export function easyDiceCheck(text) {
 export async function callDiceBot(system, command) {
   const qo = {
     system,
-    command
+    command,
   };
   const q = qs.stringify(qo);
   const r = await axios_instance.get(`/diceroll?${q}`);
@@ -51,7 +51,7 @@ export async function callDiceBot(system, command) {
     result,
     dices,
     secret,
-    reason
+    reason,
   };
 }
 

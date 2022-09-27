@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <create-character-form></create-character-form>
     <ha-checkbox
       label="キャラクタを完全に削除する"
@@ -60,11 +60,11 @@ export default {
     Column,
     Container,
     CreateCharacterForm,
-    CharacterListChip
+    CharacterListChip,
   },
   data() {
     return {
-      deleteMode: false
+      deleteMode: false,
     };
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
         own: [],
         ownArchived: [],
         others: [],
-        othersArchived: []
+        othersArchived: [],
       };
       const userId = this.$store.getters["auth/user"].id;
       const characters = this.$store.getters["character/info"];
@@ -103,7 +103,7 @@ export default {
       result.ownArchived.sort((a, b) => (a.name > b.name ? 1 : -1));
       result.own.sort((a, b) => (a.name > b.name ? 1 : -1));
       return result;
-    }
+    },
   },
   methods: {
     async onClickActivateAlias(characterId, aliasId) {
@@ -111,8 +111,8 @@ export default {
     },
     async onClickDeletePawn(pawnId) {
       await FSPawn.Delete(pawnId);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped lang="scss"></style>

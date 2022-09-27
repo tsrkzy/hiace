@@ -38,7 +38,7 @@ export function ring() {
     await $a.play();
   };
 
-  $a.onerror = e => {
+  $a.onerror = (e) => {
     $a.error = null;
     console.error(e);
     throw new Error(`failed to load sound: ${this.soundId}`);

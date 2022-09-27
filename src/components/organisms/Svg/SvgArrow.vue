@@ -23,7 +23,7 @@ import { FSPawn, PAWN_UNIT_SIZE } from "@/collections/Pawn";
 export default {
   name: "SvgArrow",
   props: {
-    arrowId: { type: String, require: true }
+    arrowId: { type: String, require: true },
   },
   async created() {
     if (!this.arrowId) {
@@ -31,15 +31,15 @@ export default {
     }
 
     const { pawnFrom, pawnTo } = await FSArrow.GetById({
-      id: this.arrowId
+      id: this.arrowId,
     });
 
     /* archived済みのcharacterのpawnは無視するため控えておく */
     const { character: characterFrom } = await FSPawn.GetById({
-      id: pawnFrom
+      id: pawnFrom,
     });
     const { character: characterTo } = await FSPawn.GetById({
-      id: pawnTo
+      id: pawnTo,
     });
 
     /* 存在しないPawnを参照していたらArrowを消す */
@@ -53,17 +53,13 @@ export default {
       if (!this.pawnFrom || !this.pawnTo) {
         return null;
       }
-      const {
-        transform: transformFrom = "",
-        character: characterIdFrom
-      } = this.pawnFrom;
-      const {
-        transform: transformTo = "",
-        character: characterIdTo
-      } = this.pawnTo;
+      const { transform: transformFrom = "", character: characterIdFrom } =
+        this.pawnFrom;
+      const { transform: transformTo = "", character: characterIdTo } =
+        this.pawnTo;
       const characters = this.$store.getters["character/info"];
-      const characterFrom = characters.find(c => c.id === characterIdFrom);
-      const characterTo = characters.find(c => c.id === characterIdTo);
+      const characterFrom = characters.find((c) => c.id === characterIdFrom);
+      const characterTo = characters.find((c) => c.id === characterIdTo);
       const pawnSizeFrom = characterFrom.pawnSize;
       const pawnSizeTo = characterTo.pawnSize;
 
@@ -87,20 +83,22 @@ export default {
     },
     pawnFrom() {
       return this.$store.getters["pawn/info"].find(
-        p => p.id === this.pawnIdFrom
+        (p) => p.id === this.pawnIdFrom
       );
     },
     pawnTo() {
-      return this.$store.getters["pawn/info"].find(p => p.id === this.pawnIdTo);
+      return this.$store.getters["pawn/info"].find(
+        (p) => p.id === this.pawnIdTo
+      );
     },
     characterFrom() {
       return this.$store.getters["character/info"].find(
-        c => c.id === this.characterIdFrom
+        (c) => c.id === this.characterIdFrom
       );
     },
     characterTo() {
       return this.$store.getters["character/info"].find(
-        c => c.id === this.characterIdTo
+        (c) => c.id === this.characterIdTo
       );
     },
     archived() {
@@ -113,7 +111,7 @@ export default {
     },
     mapDragging() {
       return this.$store.getters["map/dragging"];
-    }
+    },
   },
   methods: {},
   data() {
@@ -122,9 +120,9 @@ export default {
       pawnIdTo: null,
       characterIdFrom: null,
       characterIdTo: null,
-      loaded: false
+      loaded: false,
     };
-  }
+  },
 };
 </script>
 

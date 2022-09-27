@@ -56,7 +56,7 @@ import {
   DICE_EYE_COLOR,
   DICE_SIZE,
   DICE_VALUE_ASTER,
-  FSDice
+  FSDice,
 } from "@/collections/Dice";
 import Aster from "@/components/organisms/Svg/face/Aster";
 import Die from "@/components/organisms/Svg/face/Die";
@@ -68,7 +68,7 @@ export default {
   components: { Die, Aster },
   props: {
     diceId: { type: String, require: true },
-    shadow: { type: Boolean, default: false }
+    shadow: { type: Boolean, default: false },
   },
   async created() {
     if (!this.diceId) {
@@ -76,7 +76,7 @@ export default {
     }
 
     const { transform } = await FSDice.GetById({
-      id: this.diceId
+      id: this.diceId,
     });
 
     this.transform = transform;
@@ -84,7 +84,7 @@ export default {
   computed: {
     dice() {
       const id = this.diceId;
-      return this.$store.getters["dice/info"].find(d => d.id === id) || {};
+      return this.$store.getters["dice/info"].find((d) => d.id === id) || {};
     },
     diceSize() {
       return DICE_SIZE;
@@ -135,7 +135,7 @@ export default {
     },
     dragged() {
       return this.$store.getters["dice/dragging"] === this.diceId;
-    }
+    },
   },
   methods: {
     onMouseDown(e) {
@@ -185,13 +185,13 @@ export default {
         );
       }
 
-      const onMove = e => {
+      const onMove = (e) => {
         e.stopPropagation();
         const t = globalToLocal(e.clientX - downX, e.clientY - downY);
         $d.style.transform = `${t}`;
       };
 
-      const onMouseUp = async e => {
+      const onMouseUp = async (e) => {
         e.stopPropagation();
         await this.$store.dispatch("dice/dragFinish");
         $d.classList.add("token-transition");
@@ -212,18 +212,18 @@ export default {
       $d.addEventListener("mouseleave", onMouseUp, false);
 
       return false;
-    }
+    },
   },
   data() {
     return {
-      transform: `${new DOMMatrix()}`
+      transform: `${new DOMMatrix()}`,
     };
   },
   watch: {
     transformStore(transform) {
       this.transform = transform;
-    }
-  }
+    },
+  },
 };
 </script>
 

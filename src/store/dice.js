@@ -6,7 +6,7 @@ export const dice = {
        * @SEE collections/Dice.ts#SetListener
        *  */
     ],
-    drag: null
+    drag: null,
   },
   mutations: {
     setDices(state, payload) {
@@ -16,12 +16,12 @@ export const dice = {
       state.drag = payload.drag;
     },
     setTransform(state, { diceId, transform }) {
-      const dice = state.dices.find(p => p.id === diceId);
+      const dice = state.dices.find((p) => p.id === diceId);
       if (!dice) {
         return false;
       }
       dice.transform = transform;
-    }
+    },
   },
   actions: {
     setDices({ commit }, { dices }) {
@@ -30,12 +30,15 @@ export const dice = {
     },
     dragStart({ commit }, { diceId }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
+      Array.prototype.forEach.call(
+        $elList,
+        ($e) => ($e.style.display = "none")
+      );
       commit("setDrag", { drag: diceId });
     },
     dragFinish({ commit }) {
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
+      Array.prototype.forEach.call($elList, ($e) => ($e.style.display = ""));
       commit("setDrag", { drag: null });
     },
     updateTransform({ commit }, { diceId, transform }) {
@@ -45,7 +48,7 @@ export const dice = {
     resetTrasform({ commit }, { diceId }) {
       console.log("dice.resetTrasform", diceId); // @DELETEME
       commit("setTransform", { diceId, transform: `${new DOMMatrix()}` });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -53,6 +56,6 @@ export const dice = {
     },
     dragging(state) {
       return state.drag;
-    }
-  }
+    },
+  },
 };

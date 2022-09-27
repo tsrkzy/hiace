@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { getName } from "@/scripts/helper";
 
 /* chat.channelのnull大体 */
@@ -28,7 +28,7 @@ export class FSChannel {
     const c = {
       type,
       name,
-      room
+      room,
     };
     const db = firebase.firestore();
     const docRef = await db.collection("channel").add(c);
@@ -45,19 +45,16 @@ export class FSChannel {
 
   static async Delete(channelId: string) {
     const db = firebase.firestore();
-    return db
-      .collection("channel")
-      .doc(channelId)
-      .delete();
+    return db.collection("channel").doc(channelId).delete();
   }
 
   static SetListener(roomId: string) {
     console.log("Channel.SetListener"); // @DELETEME
     const db = firebase.firestore();
     const docRef = db.collection("channel").where("room", "==", roomId);
-    const unsubscribe = docRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docRef.onSnapshot((querySnapshot) => {
       const channels: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const channel = doc.data();
         channel.id = doc.id;
         channels.push(channel);

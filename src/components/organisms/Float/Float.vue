@@ -20,7 +20,7 @@
         v-if="!dragMove"
         @mousedown.stop
         @click="onClickClose($event)"
-        style="float:right;"
+        style="float: right"
       >
         閉じる
       </button>
@@ -64,7 +64,7 @@ export default {
   name: "Float",
   components: { FloatDuplicator, HintContainer },
   props: {
-    floatId: { type: Number, require: true }
+    floatId: { type: Number, require: true },
   },
   data() {
     return {
@@ -78,7 +78,7 @@ export default {
       xt: null,
       yt: null,
       wt: null,
-      ht: null
+      ht: null,
     };
   },
   methods: {
@@ -104,11 +104,14 @@ export default {
       this.dragMove = true;
 
       const $elList = document.getElementsByClassName("__hide_on_drag");
-      Array.prototype.forEach.call($elList, $e => ($e.style.display = "none"));
+      Array.prototype.forEach.call(
+        $elList,
+        ($e) => ($e.style.display = "none")
+      );
 
       const $el = document.getElementById(`move_handle_${this.floatId}`);
 
-      const onHandleMouseMove = e => {
+      const onHandleMouseMove = (e) => {
         e.stopPropagation();
         const dx = e.clientX - downX;
         const dy = e.clientY - downY;
@@ -118,12 +121,12 @@ export default {
         this.yt = y;
       };
 
-      const onHandleMouseUp = async e => {
+      const onHandleMouseUp = async (e) => {
         e.stopPropagation();
         await this.$store.dispatch("float/move", {
           id: this.floatId,
           x: this.xt,
-          y: this.yt
+          y: this.yt,
         });
         this.xt = null;
         this.yt = null;
@@ -131,7 +134,7 @@ export default {
         this.dragMove = false;
 
         const $elList = document.getElementsByClassName("__hide_on_drag");
-        Array.prototype.forEach.call($elList, $e => ($e.style.display = ""));
+        Array.prototype.forEach.call($elList, ($e) => ($e.style.display = ""));
 
         $el.removeEventListener("mousemove", onHandleMouseMove);
         $el.removeEventListener("mouseup", onHandleMouseUp);
@@ -172,7 +175,7 @@ export default {
         `scale_${direction}_handle_${this.floatId}`
       );
 
-      const onHandleMouseMove = e => {
+      const onHandleMouseMove = (e) => {
         e.stopPropagation();
         const dx = e.clientX - downX;
         const dy = e.clientY - downY;
@@ -199,19 +202,19 @@ export default {
         this.ht = h;
       };
 
-      const onHandleMouseUp = async e => {
+      const onHandleMouseUp = async (e) => {
         console.log("Float.onHandleMouseUp"); // @DELETEME
         e.stopPropagation();
 
         this.$store.dispatch("float/scale", {
           id: this.floatId,
           w: this.wt,
-          h: this.ht
+          h: this.ht,
         });
         this.$store.dispatch("float/move", {
           id: this.floatId,
           x: this.xt,
-          y: this.yt
+          y: this.yt,
         });
         this.xt = null;
         this.yt = null;
@@ -230,11 +233,13 @@ export default {
       $el.addEventListener("mouseleave", onHandleMouseUp, false);
 
       return false;
-    }
+    },
   },
   computed: {
     float() {
-      return this.$store.getters["float/info"].find(f => f.id === this.floatId);
+      return this.$store.getters["float/info"].find(
+        (f) => f.id === this.floatId
+      );
     },
     top() {
       return this.$store.getters["float/top"]?.id === this.floatId;
@@ -249,10 +254,10 @@ export default {
         width: `${wt ?? w}px`,
         height: `${ht ?? h}px`,
         border: "1px solid dimgray",
-        backgroundColor: "transparent"
+        backgroundColor: "transparent",
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

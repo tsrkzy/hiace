@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <p>
       <a href="https://github.com/tsrkzy/hiace/issues" target="_blank"
         >不具合・要望一覧(Github/Issue)</a
@@ -62,11 +62,11 @@ const BUG = { id: 1262032686, label: "不具合", raw: "bug" };
 const ENHANCEMENT = { id: 1262032688, label: "機能追加", raw: "enhancement" };
 const CATEGORY_LABEL = {
   [BUG.id]: BUG.label,
-  [ENHANCEMENT.id]: ENHANCEMENT.label
+  [ENHANCEMENT.id]: ENHANCEMENT.label,
 };
 const CATEGORY_RAW = {
   [BUG.id]: BUG.raw,
-  [ENHANCEMENT.id]: ENHANCEMENT.raw
+  [ENHANCEMENT.id]: ENHANCEMENT.raw,
 };
 
 export default {
@@ -75,8 +75,8 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   async created() {
     this.issueList = await this.fetchIssues();
@@ -86,7 +86,7 @@ export default {
       category: null,
       title: "",
       body: "",
-      issueList: []
+      issueList: [],
     };
   },
   methods: {
@@ -98,7 +98,7 @@ export default {
           state: "open",
           sort: "updated",
           direction: "desc",
-          per_page: 40
+          per_page: 40,
         });
         console.log(r.data); // @DELETEME
         return r.data;
@@ -110,13 +110,13 @@ export default {
       console.log("IssueWriter.onClickCreateIssue"); // @DELETEME
       const title = this.title;
       const body = this.issueJson;
-      const labels = [CATEGORY_RAW[this.category]].filter(l => !!l);
+      const labels = [CATEGORY_RAW[this.category]].filter((l) => !!l);
       await octokit.request("POST /repos/{owner}/{repo}/issues", {
         owner: "tsrkzy",
         repo: "hiace",
         title,
         body,
-        labels
+        labels,
       });
       this.clear();
       this.issueList = await this.fetchIssues();
@@ -129,13 +129,13 @@ export default {
     onCategory(category) {
       console.log("IssueWriter.onCategory", category); // @DELETEME
       this.category = category;
-    }
+    },
   },
   computed: {
     categoryItems() {
       return [
         { value: `${BUG.id}`, text: `${BUG.label}` },
-        { value: `${ENHANCEMENT.id}`, text: `${ENHANCEMENT.label}` }
+        { value: `${ENHANCEMENT.id}`, text: `${ENHANCEMENT.label}` },
       ];
     },
     issueJson() {
@@ -152,17 +152,17 @@ export default {
       return !category || !title || !body;
     },
     issueItems() {
-      return this.issueList.map(issue => {
+      return this.issueList.map((issue) => {
         const { number, title, html_url, labels } = issue;
-        const isBug = labels.some(l => l.id === BUG.id);
+        const isBug = labels.some((l) => l.id === BUG.id);
         const bug = isBug ? " [bug]" : "";
         return {
           text: `#${number}${bug}: ${title}`,
-          url: html_url
+          url: html_url,
         };
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

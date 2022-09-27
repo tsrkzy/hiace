@@ -1,6 +1,6 @@
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { DEFAULT_CHARACTER_IMAGE } from "@/collections/Image";
 import { getName } from "@/scripts/helper";
 
@@ -17,10 +17,7 @@ export class FSPawn {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("pawn")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("pawn").doc(id).get();
 
     if (!docRef.exists) {
       return null;
@@ -60,7 +57,7 @@ export class FSPawn {
       image: imageId ?? DEFAULT_CHARACTER_IMAGE,
       character: characterId,
       transform: `${transform ?? new DOMMatrix()}`,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     const db = firebase.firestore();
@@ -80,7 +77,7 @@ export class FSPawn {
     const docRef = await db.collection("pawn").doc(pawnId);
     const params = {
       transform: p.transform,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     return await docRef.update(params);
@@ -90,7 +87,7 @@ export class FSPawn {
     const db = firebase.firestore();
     const docRef = await db.collection("pawn").doc(pawnId);
     const params = {
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
     return await docRef.update(params);
   }
@@ -123,7 +120,7 @@ export class FSPawn {
       const docRef = await db.collection("pawn").doc(pawnId);
       batch.update(docRef, {
         transform: `${new DOMMatrix()}`,
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       });
     }
 
@@ -132,10 +129,7 @@ export class FSPawn {
 
   static async Delete(pawnId: string) {
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("pawn")
-      .doc(pawnId)
-      .delete();
+    const docRef = await db.collection("pawn").doc(pawnId).delete();
     return docRef;
   }
 
@@ -147,7 +141,7 @@ export class FSPawn {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -160,7 +154,7 @@ export class FSPawn {
       .get();
 
     const batch = db.batch();
-    querySnapshot.forEach(doc => batch.delete(doc.ref));
+    querySnapshot.forEach((doc) => batch.delete(doc.ref));
 
     await batch.commit();
   }
@@ -175,9 +169,9 @@ export class FSPawn {
       .where("room", "==", roomId)
       .orderBy("updatedAt", "desc");
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const pawns: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const pawn = doc.data();
         pawn.id = doc.id;
         pawns.push(pawn);

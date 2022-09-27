@@ -8,12 +8,12 @@
 export const smoke = {
   namespaced: true,
   state: {
-    show: false
+    show: false,
   },
   mutations: {
     setShow(state, { show }) {
       state.show = show;
-    }
+    },
   },
   actions: {
     on({ commit }) {
@@ -23,11 +23,11 @@ export const smoke = {
     off({ commit }) {
       console.log("smoke.off"); // @DELETEME
       commit("setShow", { show: false });
-    }
+    },
   },
   getters: {
     show(state) {
       return state.show;
-    }
-  }
+    },
+  },
 };

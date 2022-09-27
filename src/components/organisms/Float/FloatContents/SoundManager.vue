@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <input
       type="file"
       multiple
@@ -43,13 +43,13 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
       deleteMode: false,
-      inputFiles: null
+      inputFiles: null,
     };
   },
   methods: {
@@ -57,19 +57,19 @@ export default {
       const { files = [] } = e.currentTarget;
 
       const promiseList = [];
-      Array.prototype.forEach.call(files, f => {
+      Array.prototype.forEach.call(files, (f) => {
         promiseList.push(FSSound.Create(f));
       });
       await Promise.all(promiseList);
 
       /* アップロードに成功したら空にする */
       this.inputFiles = null;
-    }
+    },
   },
   computed: {
     sounds() {
       return this.$store.getters["sound/info"];
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,8 +1,8 @@
 import { FSMap } from "@/collections/Map";
 import { FSPawn } from "@/collections/Pawn";
 import store from "@/store";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { FSDice } from "@/collections/Dice";
 
 export class FSBoard {
@@ -12,7 +12,7 @@ export class FSBoard {
     const { roomId, userId } = params;
     const m = {
       room: roomId,
-      owner: userId
+      owner: userId,
     };
 
     if (!roomId) {
@@ -43,10 +43,7 @@ export class FSBoard {
     }
 
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("board")
-      .doc(boardId)
-      .delete();
+    const docRef = await db.collection("board").doc(boardId).delete();
 
     /* 紐づくMapも削除 */
     await FSMap.DeleteByBoard(boardId);
@@ -67,9 +64,9 @@ export class FSBoard {
     const db = firebase.firestore();
     const docsRef = db.collection("board").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const boards: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const board = doc.data();
         board.id = doc.id;
         boards.push(board);

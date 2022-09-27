@@ -56,6 +56,6 @@ export default new Vuex.Store({
     contextmenu,
     float,
     detail,
-    localConfig
-  }
+    localConfig,
+  },
 });

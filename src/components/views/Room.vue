@@ -8,7 +8,7 @@
   <div id="floor" class="floor_container">
     <notice class="z-5"></notice>
     <character-detail class="z-4" />
-    <div style="position: fixed; top: 0;left:0;">
+    <div style="position: fixed; top: 0; left: 0">
       <window-opener v-if="authenticated && joined"></window-opener>
       <button v-if="authenticated && joined" @click="htmlFontSizeHandler(12)">
         12px
@@ -84,7 +84,7 @@ export default {
     SvgBoard,
     GoogleAuthorizer,
     HaButton,
-    DebugIndicator
+    DebugIndicator,
   },
   async created() {
     await Smoke.on();
@@ -194,7 +194,7 @@ export default {
     async makeRequest() {
       const userId = this.user.id;
       await FSRoom.MakeRequest(userId);
-    }
+    },
   },
   computed: {
     authenticated() {
@@ -219,12 +219,12 @@ export default {
     },
     grantState() {
       return this.$store.getters["room/grant"].state;
-    }
+    },
   },
   data() {
     return {
       roomId: null,
-      debug: false
+      debug: false,
     };
   },
   watch: {
@@ -250,8 +250,8 @@ export default {
       /* FS上にGoogle認証と対応するユーザを作成、または取得 */
       const user = await FSUser.Create();
       await this.$store.dispatch("auth/logInAs", { user });
-    }
-  }
+    },
+  },
 };
 </script>
 

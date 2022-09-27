@@ -4,7 +4,7 @@ import router from "@/router";
 import store from "@/store";
 import "@/scripts/styles";
 
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 
 const {
   VUE_APP_API_KEY: API_KEY,
@@ -14,7 +14,7 @@ const {
   VUE_APP_STORAGE_BUCKET: STORAGE_BUCKET,
   VUE_APP_MESSAGING_SENDER_ID: MESSAGING_SENDER_ID,
   VUE_APP_APP_ID: APP_ID,
-  VUE_APP_MEASUREMENT_ID: MEASUREMENT_ID
+  VUE_APP_MEASUREMENT_ID: MEASUREMENT_ID,
 } = process.env;
 
 /* initialize firebase */
@@ -26,7 +26,7 @@ const firebaseConfig = {
   storageBucket: STORAGE_BUCKET,
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  measurementId: MEASUREMENT_ID,
 };
 firebase.initializeApp(firebaseConfig);
 
@@ -35,5 +35,5 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

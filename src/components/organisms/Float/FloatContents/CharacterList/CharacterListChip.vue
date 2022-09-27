@@ -38,13 +38,13 @@ export default {
   components: { HaButton },
   props: {
     characterId: { type: String, require: true },
-    deletable: { type: Boolean, default: false }
+    deletable: { type: Boolean, default: false },
   },
   computed: {
     character() {
       const characterId = this.characterId;
       return this.$store.getters["character/info"].find(
-        c => c.id === characterId
+        (c) => c.id === characterId
       );
     },
     characterName() {
@@ -61,18 +61,18 @@ export default {
     },
     aliases() {
       return this.$store.getters["alias/info"].filter(
-        a => a.character === this.characterId
+        (a) => a.character === this.characterId
       );
     },
     hasAlias() {
-      const active = this.aliases.find(a => a.id === this.activeAlias);
+      const active = this.aliases.find((a) => a.id === this.activeAlias);
       return !!active?.image;
     },
     own() {
       const owner = this.character?.owner;
       const myUserId = this.$store.getters["auth/user"].id;
       return owner === myUserId;
-    }
+    },
   },
   methods: {
     async onClickDeleteCharacter() {
@@ -96,22 +96,22 @@ export default {
       const roomId = this.$store.getters["room/info"].id;
       const boardId = this.$store.getters["room/activeBoard"];
       const { activeAlias } = this.$store.getters["character/info"].find(
-        c => c.id === characterId
+        (c) => c.id === characterId
       );
       const { image } = this.$store.getters["alias/info"].find(
-        a => a.id === activeAlias
+        (a) => a.id === activeAlias
       );
       await FSPawn.Create({
         userId,
         roomId,
         boardId,
         imageId: image,
-        characterId
+        characterId,
       });
     },
     async onArchiveTo(archived) {
       await FSCharacter.Update(this.characterId, { archived: !!archived });
-    }
-  }
+    },
+  },
 };
 </script>

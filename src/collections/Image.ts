@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
 import store from "@/store";
 import { getName } from "@/scripts/helper";
@@ -9,7 +9,7 @@ export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
 export const DEFAULT_CHARACTER_IMAGE = "wG5tOfKAW3trnsApUNRy";
 
 async function validateImageUrl(url: string) {
-  return await new Promise(resolve => {
+  return await new Promise((resolve) => {
     const $img = new Image();
     $img.onload = () => resolve(true);
     $img.onerror = () => resolve(false);
@@ -30,10 +30,7 @@ export class FSImage {
       return null;
     }
     const db = firebase.firestore();
-    const docRef = await db
-      .collection("image")
-      .doc(id)
-      .get();
+    const docRef = await db.collection("image").doc(id).get();
     if (!docRef.exists) {
       return null;
     }
@@ -92,7 +89,7 @@ export class FSImage {
         const { width, height } = image;
         resolve({ width, height });
       };
-      image.onerror = e => {
+      image.onerror = (e) => {
         reject(e);
       };
       image.src = url;
@@ -128,18 +125,18 @@ export class FSImage {
     const metadata = {
       name,
       size,
-      contentType
+      contentType,
     };
     const url = await new Promise((resolve, reject) => {
       /* upload */
       const uploadTask = imageRef.put(file, metadata);
       uploadTask.on(
         "state_changed",
-        snapshot => {
+        (snapshot) => {
           /* progress observer */
           console.log(`uploading ${name},`, snapshot.state); // @DELETEME
         },
-        e => {
+        (e) => {
           /* on error */
           reject(e);
         },
@@ -162,7 +159,7 @@ export class FSImage {
       hidden: true,
       width,
       height,
-      timestamp
+      timestamp,
     };
     const db = firebase.firestore();
     const imageDocRef = await db.collection("image").add(image);
@@ -211,9 +208,9 @@ export class FSImage {
     const db = firebase.firestore();
     const docsRef = db.collection("image").where("room", "==", roomId);
 
-    const unsubscribe = docsRef.onSnapshot(querySnapshot => {
+    const unsubscribe = docsRef.onSnapshot((querySnapshot) => {
       const images: any[] = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const image = doc.data();
         image.id = doc.id;
         images.push(image);

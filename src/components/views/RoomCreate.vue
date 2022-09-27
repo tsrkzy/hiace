@@ -2,14 +2,18 @@
   <div class="container">
     <fieldset class="create-room__fieldset">
       <legend>部屋の作成</legend>
-      <ha-input-form
-        label="部屋名"
-        v-model="roomName"
-        placeholder="必須"
-      ></ha-input-form>
-      <ha-select label="システム" v-model="gameSystem" :items="systemList">
-        <option :value="null" selected disabled>ダイスシステム(必須)</option>
-      </ha-select>
+      <div>
+        <ha-input-form
+          label="部屋名"
+          v-model="roomName"
+          placeholder="必須"
+        ></ha-input-form>
+      </div>
+      <div>
+        <ha-select label="システム" v-model="gameSystem" :items="systemList">
+          <option :value="null" selected disabled>ダイスシステム(必須)</option>
+        </ha-select>
+      </div>
       <div>
         <ha-button
           :disabled="!activateCreateRoomButton"
@@ -21,6 +25,9 @@
       <powered-by />
     </fieldset>
     <google-authorizer></google-authorizer>
+    <div class="news">
+      <News></News>
+    </div>
   </div>
 </template>
 
@@ -32,6 +39,7 @@ import HaInputForm from "@/components/atoms/HaInputForm";
 import HaSelect from "@/components/atoms/HaSelect";
 import GoogleAuthorizer from "@/components/molecules/GoogleAuthorizer";
 import PoweredBy from "@/components/views/PoweredBy";
+import News from "@/components/views/News";
 import { GAME_SYSTEMS } from "@/scripts/diceBot";
 import { Notify } from "@/scripts/Notify";
 import { Smoke } from "@/scripts/Smoke";
@@ -44,7 +52,8 @@ export default {
     GoogleAuthorizer,
     HaInputForm,
     HaSelect,
-    HaButton
+    HaButton,
+    News,
   },
   methods: {
     async onClickCreateRoomButtonHandler() {
@@ -59,7 +68,7 @@ export default {
         const room = await FSRoom.Create({
           name: roomName,
           owner: user.id,
-          gameSystem: this.gameSystem
+          gameSystem: this.gameSystem,
         });
 
         await FSUser.JoinRoom(user.id, room.id);
@@ -77,7 +86,7 @@ export default {
         Notify.Log("ルームの作成に失敗");
       }
       await Smoke.off();
-    }
+    },
   },
   computed: {
     activateCreateRoomButton() {
@@ -89,20 +98,24 @@ export default {
     },
     authenticated() {
       return this.$store.getters["auth/authenticated"];
-    }
+    },
   },
   data() {
     return {
       roomName: "",
       gameSystem: null,
-      systemList: GAME_SYSTEMS
+      systemList: GAME_SYSTEMS,
     };
-  }
+  },
 };
 </script>
 
 <style scoped lang="scss">
 fieldset.create-room__fieldset {
+  width: 40vw;
+  margin: 5vh 30vw;
+}
+div.news {
   width: 40vw;
   margin: 5vh 30vw;
 }

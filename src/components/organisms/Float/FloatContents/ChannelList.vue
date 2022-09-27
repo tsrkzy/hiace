@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <ha-button @click="onCreateChannel">新規作成</ha-button>
     <ul>
       <li v-for="c in channels" :key="c.id">
@@ -30,8 +30,8 @@ export default {
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   methods: {
     async onChangeName(name, channelId) {
@@ -48,7 +48,7 @@ export default {
     async onDeleteChannel(channelId) {
       console.log("ChannelList.onClickDelete", channelId); // @DELETEME
       await FSChannel.Delete(channelId);
-    }
+    },
   },
   computed: {
     room() {
@@ -56,11 +56,11 @@ export default {
     },
     channels() {
       return this.$store.getters["channel/info"];
-    }
+    },
   },
   data() {
     return {};
-  }
+  },
 };
 </script>
 

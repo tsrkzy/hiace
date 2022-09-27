@@ -1,7 +1,7 @@
 export const channel = {
   namespaced: true,
   state: {
-    channels: []
+    channels: [],
   },
   mutations: {
     setChannels(state, payload) {
@@ -9,7 +9,7 @@ export const channel = {
     },
     addChannel(state, payload) {
       state.channels.push(payload.channel);
-    }
+    },
   },
   actions: {
     setChannels({ commit }, { channels }) {
@@ -19,7 +19,7 @@ export const channel = {
     addChannel({ commit }, { channel }) {
       console.log("channel.addChannel"); // @DELETEME
       commit("addChannel", { channel });
-    }
+    },
   },
   getters: {
     info(state) {
@@ -32,6 +32,6 @@ export const channel = {
         nameMap[id] = state.channels[i].name;
       }
       return nameMap;
-    }
-  }
+    },
+  },
 };

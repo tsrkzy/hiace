@@ -27,15 +27,15 @@ export default {
     onCLickHtml() {
       const html = logToHtml();
       downloadAsHtml(html);
-    }
-  }
+    },
+  },
 };
 
 function downloadAsTsv(textList = []) {
   const roomId = store.getters["room/info"].id;
   const { yyyy, mm, dd, hh, ii, ss } = nowDatetime();
   const timestamp = `${yyyy}-${mm}-${dd}-${hh}-${ii}-${ss}`;
-  const text = textList.map(t => t.formatted).join("\n");
+  const text = textList.map((t) => t.formatted).join("\n");
   const blob = new Blob([text], { type: "text/tsv" });
   const $a = document.createElement("A");
   $a.href = URL.createObjectURL(blob);

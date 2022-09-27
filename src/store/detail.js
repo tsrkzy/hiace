@@ -3,7 +3,7 @@ export const detail = {
   state: {
     text: "",
     side: "left",
-    show: false
+    show: false,
   },
   mutations: {
     setSide(state, payload) {
@@ -14,7 +14,7 @@ export const detail = {
     },
     setShow(state, payload) {
       state.show = payload.show;
-    }
+    },
   },
   actions: {
     setContent({ commit }, { text = "", side = "left" }) {
@@ -25,7 +25,7 @@ export const detail = {
     off({ commit }) {
       commit("setText", { text: "" });
       commit("setShow", { show: false });
-    }
+    },
   },
   getters: {
     leftSide(state) {
@@ -36,6 +36,6 @@ export const detail = {
     },
     show(state) {
       return state.show;
-    }
-  }
+    },
+  },
 };

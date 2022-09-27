@@ -69,15 +69,15 @@ export default {
   components: { HaCheckbox, HaButton, HaInputForm },
   props: {
     tableId: { type: String, require: true },
-    sortConfig: { type: String }
+    sortConfig: { type: String },
   },
   model: {
     prop: "sortConfig",
-    event: "change"
+    event: "change",
   },
   data() {
     return {
-      showDeleteButton: false
+      showDeleteButton: false,
     };
   },
   computed: {
@@ -87,21 +87,22 @@ export default {
         return null;
       }
       const matrixList = this.$store.getters["table/matrixList"];
-      return matrixList.find(t => t.id === tableId);
+      return matrixList.find((t) => t.id === tableId);
     },
     tableName() {
-      return this.$store.getters["table/info"].find(t => t.id === this.tableId)
-        ?.name;
+      return this.$store.getters["table/info"].find(
+        (t) => t.id === this.tableId
+      )?.name;
     },
     togglableColumns() {
-      return this.allColumns.filter(c => !c.system);
+      return this.allColumns.filter((c) => !c.system);
     },
     allColumns() {
       return this.tableMatrix?.columns ?? [];
     },
     room() {
       return this.$store.getters["room/info"];
-    }
+    },
   },
   methods: {
     async onTableName(name) {
@@ -118,7 +119,7 @@ export default {
         label: dataType,
         dataType,
         refPath: dataType === REF ? "character.id" : null,
-        dataMap: {}
+        dataMap: {},
       });
     },
     async onChangeColumnShow(columnId, show = false) {
@@ -143,7 +144,7 @@ export default {
     },
     emitSort(sortString = null) {
       this.$emit("change", sortString);
-    }
-  }
+    },
+  },
 };
 </script>

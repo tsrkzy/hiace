@@ -34,13 +34,13 @@ export default {
   components: { HaInputForm, HaButton },
   data() {
     return {
-      characterName: ""
+      characterName: "",
     };
   },
   computed: {
     characterCreateButton() {
       return !this.characterName.trim();
-    }
+    },
   },
   methods: {
     async onCreateMyCharacter(archived) {
@@ -55,13 +55,13 @@ export default {
         name: characterName ?? `${userName}_c${t}`,
         roomId,
         imageId: null,
-        archived
+        archived,
       };
       await Smoke.on();
       await FSCharacter.Create(c);
       await Smoke.off();
       this.characterName = "";
-    }
-  }
+    },
+  },
 };
 </script>

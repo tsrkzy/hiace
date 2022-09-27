@@ -8,7 +8,7 @@
 import {
   ContextMenuChildItem,
   ContextMenuItem,
-  ContextMenuParentItem
+  ContextMenuParentItem,
 } from "@/scripts/Contextmenu/ContextMenu";
 import store from "@/store";
 import {
@@ -32,7 +32,7 @@ import {
   DICE_VALUE_FOUR,
   DICE_VALUE_FIVE,
   DICE_VALUE_SIX,
-  DICE_HALLOWEEN
+  DICE_HALLOWEEN,
 } from "@/collections/Dice";
 import { touchFree } from "@/scripts/touch";
 import { SYSTEM_CHANNEL_ID } from "@/collections/Channel";
@@ -57,7 +57,7 @@ export function diceItems(diceId: string): ContextMenuItem[] {
   /* ダイスの面を変更 */
   const changeFace = new ContextMenuParentItem({
     value: `change_face_${diceId}`,
-    text: `ダイスの目を変更`
+    text: `ダイスの目を変更`,
   });
 
   const faces = [
@@ -67,9 +67,9 @@ export function diceItems(diceId: string): ContextMenuItem[] {
     [DICE_LABEL_FOUR, DICE_VALUE_FOUR],
     [DICE_LABEL_FIVE, DICE_VALUE_FIVE],
     [DICE_LABEL_SIX, DICE_VALUE_SIX],
-    [DICE_LABEL_ASTER, DICE_VALUE_ASTER]
+    [DICE_LABEL_ASTER, DICE_VALUE_ASTER],
   ];
-  changeFace.children = faces.map(f => {
+  changeFace.children = faces.map((f) => {
     return new ContextMenuChildItem({
       value: `change_face_${f[0]}_${diceId}`,
       text: `「${f[0]}」`,
@@ -83,11 +83,11 @@ export function diceItems(diceId: string): ContextMenuItem[] {
           owner: userId,
           character: null,
           alias: null,
-          value: { text: msg }
+          value: { text: msg },
         };
         await FSChat.Chat(chatParams);
         touchFree(msg);
-      }
+      },
     });
   });
 
@@ -104,33 +104,33 @@ export function diceItems(diceId: string): ContextMenuItem[] {
         owner: userId,
         character: null,
         alias: null,
-        value: { text: msg }
+        value: { text: msg },
       };
       await FSChat.Chat(chatParams);
       touchFree(msg);
-    }
+    },
   });
 
   /* ダイスの色を変更 */
   const changeColor = new ContextMenuParentItem({
     value: `change_color_${diceId}`,
-    text: `ダイスの色を変更`
+    text: `ダイスの色を変更`,
   });
 
   const colors = [
     ["白", "DICE_WHITE", DICE_WHITE],
     ["黒", "DICE_BLACK", DICE_BLACK],
     ["赤", "DICE_RED", DICE_RED],
-    ["ハロウィン", "DICE_HALLOWEEN", DICE_HALLOWEEN]
+    ["ハロウィン", "DICE_HALLOWEEN", DICE_HALLOWEEN],
   ];
-  changeColor.children = colors.map(c => {
+  changeColor.children = colors.map((c) => {
     return new ContextMenuChildItem({
       value: `change_color_${c[1]}_${diceId}`,
       text: `「${c[0]}」`,
       callback: async () => {
         await FSDice.Update(diceId, { color: c[2] });
         touchFree(`ダイスの色を${c[0]}に変更しました`);
-      }
+      },
     });
   });
 
@@ -149,10 +149,10 @@ export function diceItems(diceId: string): ContextMenuItem[] {
         userId,
         face,
         color,
-        transform
+        transform,
       });
       touchFree(`ダイスを追加しました`);
-    }
+    },
   });
 
   /* ダイスを削除 */
@@ -162,7 +162,7 @@ export function diceItems(diceId: string): ContextMenuItem[] {
     callback: async () => {
       await FSDice.Delete(diceId);
       touchFree(`ダイスを削除しました`);
-    }
+    },
   });
 
   result.push(changeFace);

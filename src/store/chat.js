@@ -1,7 +1,7 @@
 export const chat = {
   namespaced: true,
   state: {
-    chats: []
+    chats: [],
   },
   mutations: {
     setChats(state, payload) {
@@ -9,7 +9,7 @@ export const chat = {
     },
     addChat(state, payload) {
       state.chats.push(payload.chat);
-    }
+    },
   },
   actions: {
     setChats({ commit }, { chats }) {
@@ -23,11 +23,11 @@ export const chat = {
     flush({ commit }) {
       console.log("chat.flush");
       commit("setChats", { chats: [] });
-    }
+    },
   },
   getters: {
     info(state) {
       return state.chats;
-    }
-  }
+    },
+  },
 };

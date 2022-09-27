@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-  <div style="width: 100%;height: 100%;overflow-y: scroll;">
+  <div style="width: 100%; height: 100%; overflow-y: scroll">
     <character-switcher ref="cs"></character-switcher>
     <ha-select label="チャンネル" :items="channelItems" v-model="channelId">
       <option selected :value="SYSTEM_CHANNEL_ID">全体</option>
@@ -75,7 +75,7 @@
       <span
         :class="{
           'phrase--header': true,
-          'phrase--header__edit': editId === p.id
+          'phrase--header__edit': editId === p.id,
         }"
         >{{ editId === p.id ? "[編集中]" : "" }}{{ p.label || p.text }}</span
       >
@@ -103,13 +103,13 @@ export default {
     HaTextarea,
     HaSelect,
     HaInputForm,
-    HaButton
+    HaButton,
   },
   props: {
     floatId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   created() {},
   data() {
@@ -122,14 +122,14 @@ export default {
       label: "",
       diceLog: [],
       result: "",
-      showDeleteBtn: false
+      showDeleteBtn: false,
     };
   },
   computed: {
     channelItems() {
-      return this.$store.getters["channel/info"].map(c => ({
+      return this.$store.getters["channel/info"].map((c) => ({
         text: c.name,
-        value: c.id
+        value: c.id,
       }));
     },
     phraseList() {
@@ -147,11 +147,11 @@ export default {
       });
     },
     phrase() {
-      return this.phraseList.find(p => p.id === this.editId);
+      return this.phraseList.find((p) => p.id === this.editId);
     },
     disableEdit() {
       return !this.editId;
-    }
+    },
   },
   methods: {
     updateDiceLog() {
@@ -187,7 +187,7 @@ export default {
       await FSPhrase.Delete(phraseId);
     },
     async toFront(phraseId) {
-      const index = this.phraseList.findIndex(p => p.id === phraseId);
+      const index = this.phraseList.findIndex((p) => p.id === phraseId);
       if (index === 0) {
         return false;
       }
@@ -200,7 +200,7 @@ export default {
       await FSPhrase.Swap(pA, pB);
     },
     async toBack(phraseId) {
-      const index = this.phraseList.findIndex(p => p.id === phraseId);
+      const index = this.phraseList.findIndex((p) => p.id === phraseId);
       if (index === this.phraseList.length - 1) {
         return false;
       }
@@ -245,8 +245,8 @@ export default {
         character: characterId,
         alias: aliasId,
         value: {
-          text: chatText
-        }
+          text: chatText,
+        },
       };
       try {
         await FSChat.Chat(c, gameSystem);
@@ -273,8 +273,8 @@ export default {
       console.log("ChatPalette.onChangeLabel");
       this.label = label;
       await FSPhrase.Update(this.editId, { label });
-    }
-  }
+    },
+  },
 };
 </script>
 

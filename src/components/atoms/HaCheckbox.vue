@@ -18,13 +18,13 @@ export default {
   name: "HaCheckbox",
   model: {
     prop: "value",
-    event: "input"
+    event: "input",
   },
   props: {
     value: { type: Boolean, default: false },
     label: { type: String, default: "" },
     frontLabel: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
   },
   computed: {
     style() {
@@ -33,8 +33,8 @@ export default {
         style.color = "lightgray";
       }
       return style;
-    }
-  }
+    },
+  },
 };
 </script>
 

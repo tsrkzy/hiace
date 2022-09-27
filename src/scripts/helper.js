@@ -29,11 +29,11 @@ export const getName = (entity, id) => {
   return nameMap[id] ?? "";
 };
 
-export const extractAccountFromEmail = email => {
+export const extractAccountFromEmail = (email) => {
   return email.substring(0, email.indexOf("@"));
 };
 
-export const mask = account => {
+export const mask = (account) => {
   return Array.from(account)
     .map((s, i) => {
       return i % 4 < 2 ? s : "#";
@@ -46,9 +46,9 @@ export const isMacOS = () => {
   return ua.indexOf("mac") > 0 && ua.indexOf("os") > 0;
 };
 
-export const postfix = name => {
+export const postfix = (name) => {
   const characters = store.getters["character/info"];
-  const nameMap = new Map(characters.map(c => [c.name, true]));
+  const nameMap = new Map(characters.map((c) => [c.name, true]));
   /* 同名のキャラクタがいなければそのまま */
   if (!nameMap.has(name)) {
     return name;
@@ -229,7 +229,7 @@ export function logToTsv() {
       owner,
       value = {},
       /* chat.js: TEXT, SYSTEM, DICE */
-      type
+      type,
     } = chatList[i];
     const a = alias ? FSAlias.Who(alias) : null;
     const c = character ? FSCharacter.Who(character) : null;
@@ -253,7 +253,7 @@ export function logToTsv() {
       type,
       formatted: l,
       text,
-      result
+      result,
     });
   }
 
@@ -328,7 +328,7 @@ function createLogDetailDOM() {
         character,
         owner,
         value = {},
-        type
+        type,
         /* ,color */
       } = chat;
       const a = alias ? FSAlias.Who(alias) : null;
