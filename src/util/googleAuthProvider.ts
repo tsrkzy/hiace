@@ -15,9 +15,9 @@ export const authenticateWithPopUp = async (): Promise<Auth> => {
         }
       } = r;
       return new Auth({
-        name: displayName,
-        photoUrl: photoURL,
-        email
+        name: displayName || "",
+        photoUrl: photoURL || "",
+        email: email || ""
       })
     })
 }

@@ -1,13 +1,12 @@
 <script lang="ts">
 
   import { useAuth } from "./store/auth";
-  import { Auth } from "./model/Auth";
   import { authenticateWithPopUp } from "./util/googleAuthProvider";
 
   export let loggedIn = false;
   const { subscribe, setAuth } = useAuth();
-  subscribe((a: Auth) => {
-    loggedIn = (!!a.Name);
+  subscribe((a) => {
+    loggedIn = (!!a.LoggedIn);
   })
 
   export const handleClick = () => {

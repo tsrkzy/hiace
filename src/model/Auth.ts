@@ -39,4 +39,8 @@ export class Auth {
     this._email = email
   }
 
+  get LoggedIn(): boolean {
+    return !!this._name && !!this._email
+  }
+
 }
