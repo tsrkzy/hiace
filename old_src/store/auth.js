@@ -3,19 +3,19 @@ import { extractAccountFromEmail } from "@/scripts/helper";
 export const auth = {
   namespaced: true,
   state: {
-    /* firestore.auth */
-    auth: {
-      name: null,
-      photoUrl: null,
-      email: null,
-    },
-    /* firestore.user */
-    user: {
-      id: null,
-      name: null,
-      photoUrl: null,
-      email: null,
-    },
+  /* firestore.auth */
+  auth: {
+    name: null,
+    photoUrl: null,
+    email: null,
+  },
+  /* firestore.user */
+  user: {
+    id: null,
+    name: null,
+    photoUrl: null,
+    email: null,
+  },
   },
   mutations: {
     setAuth(state, payload) {

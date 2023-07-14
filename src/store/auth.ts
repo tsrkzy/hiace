@@ -1,21 +1,15 @@
 import { writable } from "svelte/store";
+import { Auth } from "../model/Auth";
 
-export const auth = writable({
-  /* firestore.auth */
-  auth: {
-    name: null,
-    photoUrl: null,
-    email: null,
-  },
-  /* firestore.user */
-  user: {
-    id: null,
-    name: null,
-    photoUrl: null,
-    email: null,
-  },
-});
+const auth = writable<Auth>({});
 
 auth.subscribe((a) => {
   console.log("auth", a); // @DELETEME
 })
+
+export const useAuth = () => {
+  return {
+    subscribe: auth.subscribe,
+    setAuth: auth.set
+  }
+}
