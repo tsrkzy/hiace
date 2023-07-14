@@ -2,7 +2,7 @@ type AuthProps = {
   name: string;
   photoUrl: string;
   email: string;
-}
+};
 
 export class Auth {
   get Email(): string {
@@ -34,13 +34,12 @@ export class Auth {
   private _email: string;
 
   constructor({ name, photoUrl, email }: AuthProps) {
-    this._name = name
-    this._photoUrl = photoUrl
-    this._email = email
+    this._name = name;
+    this._photoUrl = photoUrl;
+    this._email = email;
   }
 
   get LoggedIn(): boolean {
-    return !!this._name && !!this._email
+    return !!this._name && !!this._email;
   }
-
 }

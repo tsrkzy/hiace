@@ -9,7 +9,7 @@ const {
   VITE_MESSAGING_SENDER_ID: MESSAGING_SENDER_ID,
   VITE_APP_ID: APP_ID,
   VITE_MEASUREMENT_ID: MEASUREMENT_ID,
-} = import.meta.env
+} = import.meta.env;
 
 /* initialize firebase */
 const firebaseConfig = {
@@ -24,4 +24,4 @@ const firebaseConfig = {
 };
 
 console.log("initialized"); // @DELETEME
-export const firebaseApp = initializeApp(firebaseConfig)
+export const firebaseApp = initializeApp(firebaseConfig);
