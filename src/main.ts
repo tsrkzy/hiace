@@ -1,21 +1,19 @@
-import Vue from "vue";
-import App from "@/App.vue";
-import router from "@/router";
-import store from "@/store";
-import "@/scripts/styles";
-
-import firebase from "firebase/compat/app";
+import './app.css'
+import { initializeApp } from "firebase/app";
+import { GoogleAuthProvider, getAuth, signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
+import App from './App.svelte'
+import { auth } from "./store/auth";
 
 const {
-  VUE_APP_API_KEY: API_KEY,
-  VUE_APP_AUTH_DOMAIN: AUTH_DOMAIN,
-  VUE_APP_DATABASE_URL: DATABASE_URL,
-  VUE_APP_PROJECT_ID: PROJECT_ID,
-  VUE_APP_STORAGE_BUCKET: STORAGE_BUCKET,
-  VUE_APP_MESSAGING_SENDER_ID: MESSAGING_SENDER_ID,
-  VUE_APP_APP_ID: APP_ID,
-  VUE_APP_MEASUREMENT_ID: MEASUREMENT_ID,
-} = process.env;
+  VITE_API_KEY: API_KEY,
+  VITE_AUTH_DOMAIN: AUTH_DOMAIN,
+  VITE_DATABASE_URL: DATABASE_URL,
+  VITE_PROJECT_ID: PROJECT_ID,
+  VITE_STORAGE_BUCKET: STORAGE_BUCKET,
+  VITE_MESSAGING_SENDER_ID: MESSAGING_SENDER_ID,
+  VITE_APP_ID: APP_ID,
+  VITE_MEASUREMENT_ID: MEASUREMENT_ID,
+} = import.meta.env
 
 /* initialize firebase */
 const firebaseConfig = {
@@ -28,12 +26,36 @@ const firebaseConfig = {
   appId: APP_ID,
   measurementId: MEASUREMENT_ID,
 };
-firebase.initializeApp(firebaseConfig);
+const fb = initializeApp(firebaseConfig);
+const provider = new GoogleAuthProvider();
+signInWithPopup(getAuth(), provider)
+  .then(r => {
+    console.log("logged in");
+    const {
+      user: {
+        displayName,
+        photoURL,
+        email
+      }
+    } = r;
+    auth.set({
+      auth: {
+        name: displayName,
+        photoUrl: photoURL,
+        email
+      },
+      user: {
 
-Vue.config.productionTip = false;
+      }
+    })
+  })
+  .catch((e) => {
+    console.error("failed to log in", e);
+  });
 
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+
+const app = new App({
+  target: document.getElementById('app'),
+})
+
+export default app

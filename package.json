@@ -1,71 +1,24 @@
 {
   "name": "hiace",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "NODE_ENV=production vue-cli-service build && firebase deploy",
-    "build-watch": "vue-cli-service build --watch"
-  },
-  "dependencies": {
-    "@octokit/rest": "^18.1.0",
-    "axios": "^0.21.2",
-    "core-js": "^3.6.5",
-    "dotenv": "^8.2.0",
-    "firebase": "9.10.0",
-    "firebaseui": "^6.0.1",
-    "qs": "^6.9.4",
-    "skeleton-css": "^2.0.4",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0",
-    "ws": "^6.2.2"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "deploy": "firebase deploy"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.33.0",
-    "@typescript-eslint/parser": "^2.33.0",
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
-    "@vue/cli-plugin-router": "^4.4.6",
-    "@vue/cli-plugin-typescript": "^4.5.7",
-    "@vue/cli-plugin-vuex": "^4.4.6",
-    "@vue/cli-service": "^4.5.13",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "@vue/eslint-config-typescript": "^5.0.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-vue": "^6.2.2",
-    "prettier-eslint": "^11.0.0",
-    "sass": "^1.26.10",
-    "sass-loader": "^9.0.3",
-    "scss-loader": "0.0.1",
-    "typescript": "~3.9.3",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tsconfig/svelte": "^5.0.0",
+    "firebase": "^10.0.0",
+    "svelte": "^4.0.3",
+    "svelte-check": "^3.4.4",
+    "svelte-spa-router": "^3.3.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0"
+  }
 }
