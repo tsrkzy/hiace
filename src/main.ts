@@ -1,6 +1,7 @@
 import "./app.css";
 import App from "./App.svelte";
 import "./util/firebaseApp";
+import "./util/firestore";
 import "./scss/index.scss";
 
 const app = new App({
