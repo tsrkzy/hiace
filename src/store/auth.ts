@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 import { Auth } from "../model/Auth";
 
 const auth = writable<Auth>(
@@ -17,5 +17,7 @@ export const useAuth = () => {
   return {
     subscribe: auth.subscribe,
     setAuth: auth.set,
+    /** Googleログイン済みであることを示す */
+    authorized: derived(auth, $auth => $auth.LoggedIn),
   };
 };

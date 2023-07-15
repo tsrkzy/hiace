@@ -3,11 +3,7 @@
   import { useAuth } from "./store/auth";
   import { authenticateWithPopUp } from "./util/googleAuthProvider";
 
-  export let loggedIn = false;
-  const { subscribe, setAuth } = useAuth();
-  subscribe((a) => {
-    loggedIn = (!!a.LoggedIn);
-  })
+  const { setAuth, authorized } = useAuth();
 
   export const handleClick = () => {
     return authenticateWithPopUp()
@@ -24,7 +20,7 @@
 <main>
   <h1>Auth</h1>
   <button on:click={handleClick}>loggin</button>
-  {loggedIn}
+  {$authorized}
 </main>
 
 <style>

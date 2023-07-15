@@ -54,9 +54,19 @@ export const auth = {
     },
   },
   getters: {
+    /**
+     * Googleの認証済み
+     * @param state
+     * @returns {boolean}
+     */
     authenticated(state) {
       return !!state.auth.email;
     },
+    /**
+     * 入室申請が通り入室済み
+     * @param state
+     * @returns {boolean}
+     */
     loggedIn(state) {
       return !!state.user.id;
     },
