@@ -1,36 +1,20 @@
 <script lang="ts">
+  import { Router, Route, Link } from "svelte-routing";
+  import Room from "./pages/Room.svelte";
 
-  import { useAuth } from "./store/auth";
-  import { authenticateWithPopUp } from "./util/googleAuthProvider";
-  import { FSUser } from "./collection/user";
-
-  const { setAuth, authorized, name } = useAuth();
-  const { fetchUserByEmail } = FSUser()
-
-
-  export const handleClick = () => {
-    return authenticateWithPopUp()
-      .then(async (a) => {
-        setAuth(a)
-        const user = await fetchUserByEmail(a.Email)
-        console.log(user);
-      })
-      .catch(e => {
-        console.error(e);
-      })
-
-  }
+  export let url = new URL(document.URL).pathname;
 </script>
 
-<main>
-  <h1>Auth</h1>
-  <button on:click={handleClick}>loggin</button>
-  <p>authorized: {$authorized}</p>
-  {#if $authorized}
-    <p>name: {$name}</p>
-  {/if}
-
-</main>
-
+<Router {url}>
+  <nav>
+    <Link to="/">index</Link>
+    <Link to="/r/aaaaa">/r/aaaa</Link>
+  </nav>
+  <Route path="/r/:id" let:params>
+    <Room roomId="{params.id}"></Room>
+  </Route>
+  <Route path="/">index</Route>
+  <Route path="*">not found</Route>
+</Router>
 <style>
 </style>
