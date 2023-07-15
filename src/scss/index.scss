@@ -1,0 +1,172 @@
+html {
+  body {
+    user-select: none;
+    overflow: hidden;
+  }
+
+  font-size: 16px;
+  font-family: Roboto, monospace;
+
+  div.container > button {
+    &:disabled {
+      cursor: not-allowed;
+      color: lightgray;
+
+      &:hover {
+        color: lightgray;
+      }
+    }
+  }
+
+  table {
+    thead > tr > th.column--header {
+      background-color: lightcyan;
+
+      input {
+        background-color: lightcyan;
+      }
+
+      &.column--header__asc,
+      &.column--header__desc {
+        background-color: lightsalmon;
+
+        input {
+          background-color: lightsalmon;
+        }
+      }
+    }
+
+    thead > tr > th,
+    tbody > tr > td {
+      border: 1px solid gray;
+
+      input {
+        &[type="text"],
+        &[type="number"] {
+          border: none;
+        }
+      }
+    }
+  }
+
+  details {
+    summary {
+      display: list-item;
+      background-color: lightgray;
+    }
+  }
+
+  .token-transition {
+    transition: transform 90ms;
+  }
+
+  .z-1 {
+    z-index: 1;
+  }
+
+  .z-2 {
+    z-index: 2;
+  }
+
+  .z-3 {
+    z-index: 3;
+  }
+
+  .z-4 {
+    z-index: 4;
+  }
+
+  .z-5 {
+    z-index: 5;
+  }
+
+  .z-10 {
+    z-index: 10;
+  }
+
+  .text-selectable {
+    user-select: text;
+  }
+
+  .text--force_clip {
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+  }
+
+  .bs-5 {
+    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  ol,
+  ul {
+    margin: 0;
+    padding: 0 2rem;
+  }
+
+  button {
+    &.ha {
+      padding: 0 2px;
+      line-height: 1.4rem;
+
+      &:disabled {
+        color: dimgray;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  h5 {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  pre {
+    font-size: 1rem;
+    font-family: monospace;
+  }
+
+  label.character-edit__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
+  label.chat-list__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
+  label.note-manager__textarea-wrapper > textarea {
+    width: calc(100% - 8px);
+  }
+
+  ol {
+    &.chat-list__font-size-0 {
+      font-size: 1rem;
+      user-select: text;
+    }
+
+    &.chat-list__font-size-1 {
+      font-size: 1.1rem;
+      user-select: text;
+    }
+
+    &.chat-list__font-size-2 {
+      font-size: 1.2rem;
+      user-select: text;
+    }
+
+    &.chat-list__font-size-3 {
+      font-size: 1.4rem;
+      user-select: text;
+    }
+
+    &.chat-list__font-size-4 {
+      font-size: 1.8rem;
+      user-select: text;
+    }
+  }
+}

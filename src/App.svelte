@@ -3,7 +3,7 @@
   import { useAuth } from "./store/auth";
   import { authenticateWithPopUp } from "./util/googleAuthProvider";
 
-  const { setAuth, authorized } = useAuth();
+  const { setAuth, authorized, name } = useAuth();
 
   export const handleClick = () => {
     return authenticateWithPopUp()
@@ -20,7 +20,11 @@
 <main>
   <h1>Auth</h1>
   <button on:click={handleClick}>loggin</button>
-  {$authorized}
+  <p>authorized: {$authorized}</p>
+  {#if $authorized}
+    <p>name: {$name}</p>
+  {/if}
+
 </main>
 
 <style>
