@@ -1,4 +1,5 @@
 type UserProps = {
+  id: string;
   color: string;
   email: string;
   name: string;
@@ -8,6 +9,13 @@ type UserProps = {
 };
 
 export class User {
+  get ID(): string {
+    return this._id;
+  }
+
+  set ID(value: string) {
+    this._id = value;
+  }
   get Color(): string {
     return this._color;
   }
@@ -56,6 +64,7 @@ export class User {
     this._joinTo = value;
   }
 
+  private _id: string;
   private _color: string;
   private _email: string;
   private _name: string;
@@ -63,7 +72,8 @@ export class User {
   private _lastPing: Date;
   private _joinTo: string[];
 
-  constructor({ color, email, name, photoUrl, lastPing, joinTo }: UserProps) {
+  constructor({ id, color, email, name, photoUrl, lastPing, joinTo }: UserProps) {
+    this._id = id;
     this._color = color;
     this._email = email;
     this._name = name;

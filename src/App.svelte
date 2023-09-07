@@ -8,7 +8,7 @@
 <Router {url}>
   <nav>
     <Link to="/">index</Link>
-    <Link to="/r/aaaaa">/r/aaaa</Link>
+    <Link to="/r/Pu08wfIJOH29cq3L7hMO">/r/Pu08wfIJOH29cq3L7hMO</Link>
   </nav>
   <Route path="/r/:id" let:params>
     <Room roomId="{params.id}"></Room>
