@@ -1,10 +1,10 @@
-type AuthProps = {
+type AuthStoreProps = {
   name: string;
   photoUrl: string;
   email: string;
 };
 
-export class Auth {
+export class AuthStore {
   get Email(): string {
     return this._email;
   }
@@ -33,7 +33,7 @@ export class Auth {
   private _photoUrl: string;
   private _email: string;
 
-  constructor({ name, photoUrl, email }: AuthProps) {
+  constructor({ name, photoUrl, email }: AuthStoreProps) {
     this._name = name;
     this._photoUrl = photoUrl;
     this._email = email;

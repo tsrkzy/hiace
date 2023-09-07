@@ -46,7 +46,6 @@
         } else {
           state = "NO_REQUEST"
         }
-
       })
       .catch(e => {
         console.error(e);

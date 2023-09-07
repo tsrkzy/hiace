@@ -1,8 +1,8 @@
 import { writable, derived } from "svelte/store";
-import { Auth } from "../model/store/Auth";
+import { AuthStore } from "../model/store/AuthStore";
 
-const auth = writable<Auth>(
-  new Auth({
+const auth = writable<AuthStore>(
+  new AuthStore({
     name: "",
     photoUrl: "",
     email: "",
