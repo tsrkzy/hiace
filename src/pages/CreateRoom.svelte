@@ -1,7 +1,33 @@
 <script lang="ts">
   import { useAuth } from "../store/auth";
+  import { authenticateWithPopUp } from "../util/googleAuthProvider";
+  import { UserCollectionService } from "../service/collection/UserCollectionService";
 
-  const { authorized } = useAuth();
+  const { authorized, setAuth } = useAuth();
+  const { fetchUserByEmail, createUser } = UserCollectionService()
+
+  export const handleClick = () => {
+    return authenticateWithPopUp()
+      .then(async (a) => {
+        /* Googleログイン後 */
+        setAuth(a)
+
+        /* ユーザ情報があれば取得し、なければ作る */
+        let user = await fetchUserByEmail(a.Email)
+        if (!user) {
+          console.log("no user found by Email.");
+          user = await createUser(a);
+          console.log("user created.", user);
+        }
+
+        /* 部屋の作成 */
+      })
+      .catch(e => {
+        console.error(e);
+      })
+
+  }
+
 </script>
 
 <main>
@@ -22,6 +48,7 @@
       <div>
         <button
             disabled="{$authorized}"
+            on:click={handleClick}
         >作成
         </button>
       </div>

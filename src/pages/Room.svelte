@@ -1,14 +1,14 @@
 <script lang="ts">
   import { useAuth } from "../store/auth";
-  import { FSUser } from "../collection/user";
+  import { UserCollectionService } from "../service/collection/UserCollectionService";
+  import { RoomCollectionService } from "../service/collection/RoomCollectionService";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
-  import { FSRoom } from "../collection/room";
 
   export let roomId = "";
 
   const { setAuth, authorized, name } = useAuth();
-  const { fetchUserByEmail, createUser } = FSUser()
-  const { fetchRoomByID } = FSRoom()
+  const { fetchUserByEmail, createUser } = UserCollectionService()
+  const { fetchRoomByID } = RoomCollectionService()
 
   $: state = "";
   $: photoUrl = "";

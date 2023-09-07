@@ -1,4 +1,4 @@
-export type UserProps = {
+export type UserCollectionProps = {
   id: string;
   color: string;
   email: string;
@@ -8,7 +8,7 @@ export type UserProps = {
   joinTo: string[];
 };
 
-export class User {
+export class UserCollection {
   get ID(): string {
     return this._id;
   }
@@ -81,7 +81,7 @@ export class User {
     photoUrl,
     lastPing,
     joinTo,
-  }: UserProps) {
+  }: UserCollectionProps) {
     this._id = id;
     this._color = color;
     this._email = email;

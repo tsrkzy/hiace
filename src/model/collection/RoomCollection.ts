@@ -1,4 +1,11 @@
-type RoomProps = {
+/*-----------------------------------------------------------------------------
+ - Copyright (c) 2023.                                                        -
+ - @tsrkzy/Github.                                                            -
+ - tsrmix@gmail.com                                                           -
+ - All rights reserved.                                                       -
+ -----------------------------------------------------------------------------*/
+
+type RoomCollectionProps = {
   id: string;
   name: string;
   owner: string;
@@ -6,14 +13,11 @@ type RoomProps = {
   requests: string[];
   kicked: string[];
   users: string[];
-  characters: string[];
-  resources: string[];
   gameSystem: string;
-  maps: string[];
   music: string;
 };
 
-export class Room {
+export class RoomCollection {
   get ID(): string {
     return this._id;
   }
@@ -70,36 +74,12 @@ export class Room {
     this._users = value;
   }
 
-  get Characters(): string[] {
-    return this._characters;
-  }
-
-  set Characters(value: string[]) {
-    this._characters = value;
-  }
-
-  get Resources(): string[] {
-    return this._resources;
-  }
-
-  set Resources(value: string[]) {
-    this._resources = value;
-  }
-
   get GameSystem(): string {
     return this._gameSystem;
   }
 
   set GameSystem(value: string) {
     this._gameSystem = value;
-  }
-
-  get Maps(): string[] {
-    return this._maps;
-  }
-
-  set Maps(value: string[]) {
-    this._maps = value;
   }
 
   get Music(): string {
@@ -117,10 +97,7 @@ export class Room {
   private _requests: string[];
   private _kicked: string[];
   private _users: string[];
-  private _characters: string[];
-  private _resources: string[];
   private _gameSystem: string;
-  private _maps: string[];
   private _music: string;
 
   constructor({
@@ -131,12 +108,9 @@ export class Room {
     requests,
     kicked,
     users,
-    characters,
-    resources,
     gameSystem,
-    maps,
     music,
-  }: RoomProps) {
+  }: RoomCollectionProps) {
     this._id = id;
     this._name = name;
     this._owner = owner;
@@ -144,10 +118,7 @@ export class Room {
     this._requests = requests;
     this._kicked = kicked;
     this._users = users;
-    this._characters = characters;
-    this._resources = resources;
     this._gameSystem = gameSystem;
-    this._maps = maps;
     this._music = music;
   }
 }

@@ -6,13 +6,18 @@ import {
   where,
   doc,
 } from "firebase/firestore";
-import { db } from "../util/firestore";
-import { User, type UserProps } from "../model/User";
+import { db } from "../../util/firestore";
+import {
+  UserCollection,
+  type UserCollectionProps,
+} from "../../model/collection/UserCollection";
 
 const SYSTEM_COLOR = "#000000";
 
-export const FSUser = () => {
-  const fetchUserByEmail = async (email: string): Promise<User | null> => {
+export const UserCollectionService = () => {
+  const fetchUserByEmail = async (
+    email: string,
+  ): Promise<UserCollection | null> => {
     const userRef = collection(db, "user");
     const q = query(userRef, where("email", "==", email));
     const querySnapshot = await getDocs(q);
@@ -28,16 +33,16 @@ export const FSUser = () => {
       user = doc.data();
       user.id = doc.id;
     });
-    const userProp = user as unknown as UserProps;
+    const userProp = user as unknown as UserCollectionProps;
 
-    return new User(userProp);
+    return new UserCollection(userProp);
   };
 
   const createUser = async (props: {
     Name: string;
     PhotoUrl: string;
     Email: string;
-  }): Promise<User> => {
+  }): Promise<UserCollection> => {
     const u = {
       sys: { created: Date.now() },
       name: props?.Name,
@@ -53,7 +58,7 @@ export const FSUser = () => {
     await setDoc(docRef, u);
 
     const { id } = docRef;
-    return new User({
+    return new UserCollection({
       id,
 
       color: u.color,
