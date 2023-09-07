@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Router, Route, Link } from "svelte-routing";
   import Room from "./pages/Room.svelte";
+  import CreateRoom from "./pages/CreateRoom.svelte";
 
   export let url = new URL(document.URL).pathname;
 </script>
@@ -13,7 +14,9 @@
   <Route path="/r/:id" let:params>
     <Room roomId="{params.id}"></Room>
   </Route>
-  <Route path="/">index</Route>
+  <Route path="/">
+    <CreateRoom></CreateRoom>
+  </Route>
   <Route path="*">not found</Route>
 </Router>
 <style>
