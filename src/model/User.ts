@@ -1,10 +1,10 @@
-type UserProps = {
+export type UserProps = {
   id: string;
   color: string;
   email: string;
   name: string;
   photoUrl: string;
-  lastPing: Date;
+  lastPing: number;
   joinTo: string[];
 };
 
@@ -16,6 +16,7 @@ export class User {
   set ID(value: string) {
     this._id = value;
   }
+
   get Color(): string {
     return this._color;
   }
@@ -48,11 +49,11 @@ export class User {
     this._photoUrl = value;
   }
 
-  get LastPing(): Date {
+  get LastPing(): number {
     return this._lastPing;
   }
 
-  set LastPing(value: Date) {
+  set LastPing(value: number) {
     this._lastPing = value;
   }
 
@@ -69,10 +70,18 @@ export class User {
   private _email: string;
   private _name: string;
   private _photoUrl: string;
-  private _lastPing: Date;
+  private _lastPing: number;
   private _joinTo: string[];
 
-  constructor({ id, color, email, name, photoUrl, lastPing, joinTo }: UserProps) {
+  constructor({
+    id,
+    color,
+    email,
+    name,
+    photoUrl,
+    lastPing,
+    joinTo,
+  }: UserProps) {
     this._id = id;
     this._color = color;
     this._email = email;

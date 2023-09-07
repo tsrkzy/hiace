@@ -1,18 +1,10 @@
 type AuthProps = {
-  id: string;
   name: string;
   photoUrl: string;
   email: string;
 };
 
 export class Auth {
-  get ID(): string {
-    return this._id;
-  }
-
-  set ID(value: string) {
-    this._id = value;
-  }
   get Email(): string {
     return this._email;
   }
@@ -37,13 +29,11 @@ export class Auth {
     this._name = value;
   }
 
-  private _id: string;
   private _name: string;
   private _photoUrl: string;
   private _email: string;
 
-  constructor({ id, name, photoUrl, email }: AuthProps) {
-    this._id = id;
+  constructor({ name, photoUrl, email }: AuthProps) {
     this._name = name;
     this._photoUrl = photoUrl;
     this._email = email;

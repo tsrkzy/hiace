@@ -1,16 +1,16 @@
 type RoomProps = {
-  id: string
-  name: string
-  owner: string
-  keepers: string
-  requests: string
-  kicked: string
-  users: string
-  characters: string
-  resources: string
-  gameSystem: string
-  maps: string
-  music: string
+  id: string;
+  name: string;
+  owner: string;
+  keepers: string[];
+  requests: string[];
+  kicked: string[];
+  users: string[];
+  characters: string[];
+  resources: string[];
+  gameSystem: string;
+  maps: string[];
+  music: string;
 };
 
 export class Room {
@@ -110,44 +110,44 @@ export class Room {
     this._music = value;
   }
 
-  private _id: string
-  private _name: string
-  private _owner: string
-  private _keepers: string[]
-  private _requests: string[]
-  private _kicked: string[]
-  private _users: string[]
-  private _characters: string[]
-  private _resources: string[]
-  private _gameSystem: string
-  private _maps: string[]
-  private _music: string
+  private _id: string;
+  private _name: string;
+  private _owner: string;
+  private _keepers: string[];
+  private _requests: string[];
+  private _kicked: string[];
+  private _users: string[];
+  private _characters: string[];
+  private _resources: string[];
+  private _gameSystem: string;
+  private _maps: string[];
+  private _music: string;
 
   constructor({
-                id,
-                name,
-                owner,
-                keepers,
-                requests,
-                kicked,
-                users,
-                characters,
-                resources,
-                gameSystem,
-                maps,
-                music,
-              }: RoomProps) {
-    this._id = id
-    this._name = name
-    this._owner = owner
-    this._keepers = keepers
-    this._requests = requests
-    this._kicked = kicked
-    this._users = users
-    this._characters = characters
-    this._resources = resources
-    this._gameSystem = gameSystem
-    this._maps = maps
-    this._music = music
+    id,
+    name,
+    owner,
+    keepers,
+    requests,
+    kicked,
+    users,
+    characters,
+    resources,
+    gameSystem,
+    maps,
+    music,
+  }: RoomProps) {
+    this._id = id;
+    this._name = name;
+    this._owner = owner;
+    this._keepers = keepers;
+    this._requests = requests;
+    this._kicked = kicked;
+    this._users = users;
+    this._characters = characters;
+    this._resources = resources;
+    this._gameSystem = gameSystem;
+    this._maps = maps;
+    this._music = music;
   }
 }

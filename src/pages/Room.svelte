@@ -31,14 +31,17 @@
 
         /* 部屋情報を取得 */
         const room = await fetchRoomByID(roomId);
+        if (!room) {
+          throw new Error(`no Room found: ${roomId}`)
+        }
 
         /* 部屋IDへJoinしているかどうかでスイッチ振り分け */
-        const { kicked = [], requests = [], users = [] } = room;
-        if (kicked.indexOf(user.Id) !== -1) {
+        const { Kicked = [], Requests = [], Users = [] } = room;
+        if (Kicked.indexOf(user.ID) !== -1) {
           state = "KICKED"
-        } else if (users.indexOf(user.Id) !== -1) {
+        } else if (Users.indexOf(user.ID) !== -1) {
           state = "JOINED"
-        } else if (requests.indexOf(user.Id) !== -1) {
+        } else if (Requests.indexOf(user.ID) !== -1) {
           state = "WAITING"
         } else {
           state = "NO_REQUEST"
