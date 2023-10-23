@@ -2,6 +2,9 @@
   import { useAuth } from "../store/auth";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
   import { UserCollectionService } from "../service/collection/UserCollectionService";
+  import { RoomCollectionService } from "../service/collection/RoomCollectionService";
+  import { navigate } from "svelte-routing";
+
 
   const GAME_SYSTEM_LIST = [{ system: "Cthulhu", name: "クトゥルフ神話TRPG" },
     { system: "Cthulhu7th", name: "新クトゥルフ神話TRPG" },
@@ -11,11 +14,13 @@
     { system: "SwordWorld2.5", name: "ソードワールド2.5" },]
 
   const { authorized, setAuth } = useAuth();
-  const { fetchUserByEmail, createUser } = UserCollectionService()
+  const { fetchUserByEmail, createUser, joinRoom } = UserCollectionService()
+  const { createRoom } = RoomCollectionService()
 
+  let userId = "";
   $: roomName = "";
   $: gameSystem = "null";
-  $: disableCreateRoom = !roomName || gameSystem === "null" ;
+  $: disableCreateRoom = !roomName || gameSystem === "null";
 
   export const handleLogIn = () => {
     return authenticateWithPopUp()
@@ -29,6 +34,9 @@
           console.log("no user found by Email.");
           const u = await createUser(a);
           console.log("user created.", u);
+          userId = u.ID
+        } else {
+          userId = user.ID;
         }
       })
       .catch(e => {
@@ -37,19 +45,29 @@
 
   }
 
-  export const handleClick = () => {
+  export const handleClick = async () => {
     console.log("CreateRoom.handleClick");
     if (!authorized) {
       throw new Error("not authorized");
     }
 
     /* 部屋の作成 */
-    console.log("roomName");
-    console.log(roomName);
-    console.log("gameSystem");
-    console.log(gameSystem);
+    const room =
+      await createRoom({
+        Name: roomName,
+        Owner: userId,
+        GameSystem: gameSystem,
+      })
 
-    /* @TODO */
+    /* WebSocket */
+    // new Socket(room.ID);
+
+    /* roomに参加 */
+    // RoomCollectionService.joinRoom(userId, room.ID)
+    await joinRoom(userId, room.ID);
+
+    /* /r/:roomId へ仮想ルーティング */
+    navigate(`/r/${room.ID}`, { replace: true });
 
   }
 
@@ -67,7 +85,7 @@
 
 <main>
   <div class="container">
-    "$authorized: "{$authorized}
+    $authorized: {$authorized}
     <fieldset class="create-room__fieldset">
       <legend>部屋の作成</legend>
       {#if !$authorized}
@@ -97,6 +115,8 @@
               on:click={handleClick}
           >作成
           </button>
+          <p>roomName: {roomName}</p>
+          <p>gameSystem: {gameSystem}</p>
         </div>
       {/if}
     </fieldset>

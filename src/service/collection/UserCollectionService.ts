@@ -17,7 +17,7 @@ const SYSTEM_COLOR = "#000000";
 export const UserCollectionService = () => {
   const fetchUserByEmail = async (
     email: string,
-  ): Promise<UserCollection | null> => {
+  ): Promise<UserCollection|null> => {
     const userRef = collection(db, "user");
     const q = query(userRef, where("email", "==", email));
     const querySnapshot = await getDocs(q);
@@ -69,5 +69,25 @@ export const UserCollectionService = () => {
       joinTo: u.joinTo,
     });
   };
-  return { fetchUserByEmail, createUser };
+
+  const joinRoom = async (userId: string, roomId: string) => {
+    console.log("UserCollectionService.joinRoom", userId, roomId);
+    const userDoc = doc(db, userId)
+    const user = userDoc.data();
+
+    if (!user) {
+      throw new Error(`no user found: ${userId} in room: ${roomId}`);
+    }
+
+    const { joinTo = [] } = user;
+    if (joinTo.indexOf(roomId) !== -1) {
+      console.log("already joined");
+      return;
+    }
+    joinTo.push(roomId);
+    await userDoc.update({ joinTo });
+  }
+
+
+  return { fetchUserByEmail, createUser, joinRoom };
 };
