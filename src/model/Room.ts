@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-type RoomCollectionProps = {
+type RoomProps = {
   id: string;
   name: string;
   owner: string;
@@ -17,12 +17,15 @@ type RoomCollectionProps = {
   music: string;
 };
 
-export class RoomCollection {
-  get ID(): string {
+/**
+ * ログイン中のRoom情報を保持する
+ */
+export class Room {
+  get Id(): string {
     return this._id;
   }
 
-  set ID(value: string) {
+  set Id(value: string) {
     this._id = value;
   }
 
@@ -100,17 +103,21 @@ export class RoomCollection {
   private _gameSystem: string;
   private _music: string;
 
-  constructor({
-    id,
-    name,
-    owner,
-    keepers,
-    requests,
-    kicked,
-    users,
-    gameSystem,
-    music,
-  }: RoomCollectionProps) {
+  /**
+   * @param {RoomProps} args
+   */
+  constructor(args: RoomProps) {
+    const {
+      id,
+      name,
+      owner,
+      keepers,
+      requests,
+      kicked,
+      users,
+      gameSystem,
+      music,
+    } = args;
     this._id = id;
     this._name = name;
     this._owner = owner;

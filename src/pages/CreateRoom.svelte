@@ -1,8 +1,8 @@
 <script lang="ts">
   import { useAuth } from "../store/auth";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
-  import { UserCollectionService } from "../service/collection/UserCollectionService";
-  import { RoomCollectionService } from "../service/collection/RoomCollectionService";
+  import { UserCollectionService } from "../model/service/UserCollectionService";
+  import { RoomCollectionService } from "../model/service/RoomCollectionService";
   import { navigate } from "svelte-routing";
 
 
@@ -34,9 +34,9 @@
           console.log("no user found by Email.");
           const u = await createUser(a);
           console.log("user created.", u);
-          userId = u.ID
+          userId = u.Id
         } else {
-          userId = user.ID;
+          userId = user.Id;
         }
       })
       .catch(e => {
@@ -60,26 +60,26 @@
       })
 
     /* WebSocket */
-    // new Socket(room.ID);
+    // new Socket(room.Id);
 
     /* roomに参加 */
-    // RoomCollectionService.joinRoom(userId, room.ID)
-    await joinRoom(userId, room.ID);
+    // RoomCollectionService.joinRoom(userId, room.Id)
+    await joinRoom(userId, room.Id);
 
     /* /r/:roomId へ仮想ルーティング */
-    navigate(`/r/${room.ID}`, { replace: true });
+    navigate(`/r/${room.Id}`, { replace: true });
 
   }
 
-  export const handleRoomNameInput = (e: InputEvent) => {
+  export const handleRoomNameInput = (e: Event & { currentTarget: EventTarget & HTMLInputElement; }) => {
     console.log("CreateRoom.handleRoomNameInput", e);
-    const { target: { value = "" } } = e;
+    const { currentTarget: { value = "" } } = e;
     roomName = value.trim();
   }
 
-  export const handleGameSystemChange = (e: InputEvent) => {
+  export const handleGameSystemChange = (e: Event & { currentTarget: EventTarget & HTMLSelectElement; }) => {
     console.log("CreateRoom.handleGameSystemChange", e);
-    gameSystem = e.target.value;
+    gameSystem = e.currentTarget.value;
   }
 </script>
 

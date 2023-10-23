@@ -7,19 +7,24 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { useRoom } from "../../store/room";
-import { RoomStore } from "../store/RoomStore";
+import { Room } from "../Room";
 
-const subscribeMap = new Map();
+const subscribeMap = new Map<
+  string,
+  { id: string; unsubscribe: () => unknown }
+>();
 
 export function RoomListener() {
-  const { setRoom } = useRoom()
-  const setRoomListener = (roomId) => {
+  const { setRoom } = useRoom();
+  const setRoomListener = (roomId: string) => {
     console.log("setRoomListener");
-    const unsubscribe =
-      onSnapshot(doc(db, "room", roomId), (doc) => {
-        const d = doc.data();
-        console.log("Current data: ", d);
-        setRoom(new RoomStore({
+    const unsubscribe = onSnapshot(doc(db, "room", roomId), doc => {
+      const d = doc.data();
+      if (!d) {
+        throw new Error("cannot get document");
+      }
+      setRoom(
+        new Room({
           id: doc.id,
           name: d.name,
           owner: d.owner,
@@ -29,20 +34,20 @@ export function RoomListener() {
           users: d.users,
           gameSystem: d.gameSystem,
           music: d.music,
-        }))
-      });
+        }),
+      );
+    });
 
-    subscribeMap.set(roomId, { id: roomId, unsubscribe })
-  }
+    subscribeMap.set(roomId, { id: roomId, unsubscribe });
+  };
   const removeListener = () => {
-    const subscribes = subscribeMap.values();
+    const subscribes = Array.from(subscribeMap.values());
     for (let i = 0; i < subscribes.length; i++) {
       const { id, unsubscribe } = subscribes[i];
       unsubscribe?.();
       console.log(`unsubscribed: ${id}`);
-
     }
-  }
+  };
 
-  return { setRoomListener, removeListener }
+  return { setRoomListener, removeListener };
 }

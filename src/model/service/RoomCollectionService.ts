@@ -1,6 +1,6 @@
-import { doc, getDoc, collection, setDoc,updateDoc } from "firebase/firestore";
+import { doc, getDoc, collection, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { RoomCollection } from "../../model/collection/RoomCollection";
+import { Room } from "../Room";
 
 export const RoomCollectionService = () => {
   const fetchRoomByID = async (roomId: string) => {
@@ -12,7 +12,7 @@ export const RoomCollectionService = () => {
     const room = docSnap.data();
     room.id = docSnap.id;
 
-    return new RoomCollection({
+    return new Room({
       id: room.id,
       name: room.name,
       owner: room.owner,
@@ -29,7 +29,7 @@ export const RoomCollectionService = () => {
     Name: string;
     Owner: string;
     GameSystem: string;
-  }): Promise<RoomCollection> => {
+  }): Promise<Room> => {
     const r = {
       name: props.Name,
       owner: props.Owner,
@@ -46,7 +46,7 @@ export const RoomCollectionService = () => {
     await setDoc(docRef, r);
 
     const { id } = docRef;
-    return new RoomCollection({
+    return new Room({
       id,
       name: r.name,
       owner: r.owner,
@@ -63,60 +63,55 @@ export const RoomCollectionService = () => {
     RoomId: string;
     UserId: string;
     State: string;
-  }): Promise<RoomCollection> => {
-    const {
-      RoomId: roomId,
-      UserId: userId,
-      State: state
-    } = props;
+  }): Promise<Room> => {
+    const { RoomId: roomId, UserId: userId, State: state } = props;
 
-    const docRef = doc(db, "room", roomId)
+    const docRef = doc(db, "room", roomId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
-      throw new Error(`no room found: ${roomId}`)
+      throw new Error(`no room found: ${roomId}`);
     }
 
     const room = docSnap.data();
-    room.requests = room.requests.filter(u => u !== userId);
-    room.kicked = room.kicked.filter(u => u !== userId);
-    room.users = room.users.filter(u => u !== userId);
+    room.requests = room.requests.filter((u: string) => u !== userId);
+    room.kicked = room.kicked.filter((u: string) => u !== userId);
+    room.users = room.users.filter((u: string) => u !== userId);
     switch (state) {
       case "KICKED":
-        room.kicked.push(userId)
+        room.kicked.push(userId);
         break;
 
       case "JOINED":
-        room.users.push(userId)
+        room.users.push(userId);
         break;
 
       case "WAITING":
-        room.requests.push(userId)
+        room.requests.push(userId);
         break;
 
       case "NO_REQUEST":
         break;
     }
 
-    const roomDoc = doc(db,"room", roomId);
+    const roomDoc = doc(db, "room", roomId);
     await updateDoc(roomDoc, {
       requests: room.requests,
       kicked: room.kicked,
       users: room.users,
-    })
+    });
 
-    return new RoomCollection({
-        id: docRef.id,
-        name: room.name,
-        owner: room.owner,
-        keepers: room.keepers,
-        requests: room.requests,
-        kicked: room.kicked,
-        users: room.users,
-        gameSystem: room.gameSystem,
-        music: room.music,
-      }
-    )
-  }
+    return new Room({
+      id: docRef.id,
+      name: room.name,
+      owner: room.owner,
+      keepers: room.keepers,
+      requests: room.requests,
+      kicked: room.kicked,
+      users: room.users,
+      gameSystem: room.gameSystem,
+      music: room.music,
+    });
+  };
 
   return { fetchRoomByID, createRoom, setRoomStateForUser };
 };

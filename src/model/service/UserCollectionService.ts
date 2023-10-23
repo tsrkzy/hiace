@@ -5,19 +5,16 @@ import {
   query,
   where,
   doc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import {
-  UserCollection,
-  type UserCollectionProps,
-} from "../../model/collection/UserCollection";
+import { User, type UserProps } from "../User";
 
 const SYSTEM_COLOR = "#000000";
 
 export const UserCollectionService = () => {
-  const fetchUserByEmail = async (
-    email: string,
-  ): Promise<UserCollection|null> => {
+  const fetchUserByEmail = async (email: string): Promise<User | null> => {
     const userRef = collection(db, "user");
     const q = query(userRef, where("email", "==", email));
     const querySnapshot = await getDocs(q);
@@ -33,16 +30,16 @@ export const UserCollectionService = () => {
       user = doc.data();
       user.id = doc.id;
     });
-    const userProp = user as unknown as UserCollectionProps;
+    const userProp = user as unknown as UserProps;
 
-    return new UserCollection(userProp);
+    return new User(userProp);
   };
 
   const createUser = async (props: {
     Name: string;
     PhotoUrl: string;
     Email: string;
-  }): Promise<UserCollection> => {
+  }): Promise<User> => {
     const u = {
       sys: { created: Date.now() },
       name: props?.Name,
@@ -58,7 +55,7 @@ export const UserCollectionService = () => {
     await setDoc(docRef, u);
 
     const { id } = docRef;
-    return new UserCollection({
+    return new User({
       id,
 
       color: u.color,
@@ -71,8 +68,9 @@ export const UserCollectionService = () => {
   };
 
   const joinRoom = async (userId: string, roomId: string) => {
-    console.log("UserCollectionService.joinRoom", userId, roomId);
-    const userDoc = doc(db, userId)
+    console.log("UserStoreService.joinRoom", userId, roomId);
+    const userDocRef = doc(db, userId);
+    const userDoc = await getDoc(userDocRef);
     const user = userDoc.data();
 
     if (!user) {
@@ -85,9 +83,9 @@ export const UserCollectionService = () => {
       return;
     }
     joinTo.push(roomId);
-    await userDoc.update({ joinTo });
-  }
 
+    await updateDoc(userDocRef, { joinTo });
+  };
 
   return { fetchUserByEmail, createUser, joinRoom };
 };

@@ -1,8 +1,8 @@
 import { writable } from "svelte/store";
-import { RoomStore } from "../model/store/RoomStore";
+import { Room } from "../model/Room";
 
-const room = writable<RoomStore>(
-  new RoomStore({
+const room = writable<Room>(
+  new Room({
     id: "",
     name: "",
     owner: "",
@@ -21,7 +21,7 @@ room.subscribe(a => {
 
 export const useRoom = () => {
   return {
-    subscribe: room.subscribe,
+    subscribeRoom: room.subscribe,
     setRoom: room.set,
   };
 };
