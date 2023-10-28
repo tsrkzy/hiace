@@ -6,35 +6,35 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useMapChips } from "../store/mapChips";
-import { MapChip } from "../MapChip";
+import { useImageSources } from "../store/imageSources";
+import { ImageSource } from "../ImageSource";
 
 const subscribeMap = new Map<
   string,
   { id: string; unsubscribe: () => unknown }
 >();
 
-export function MapChipListener() {
-  const { setMapChips } = useMapChips();
+export function ImageSourceListener() {
+  const { setImageSources } = useImageSources();
 
-  const setMapChipListener = (roomId: string) => {
-    console.log("setMapChipListener");
-    const q = query(collection(db, "map"), where("room", "==", roomId));
+  const setImageSourceListener = (roomId: string) => {
+    console.log("setImageSourceListener");
+    const q = query(collection(db, "image"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const mapChips: MapChip[] = [];
+      const images: ImageSource[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
-        const mapChip = new MapChip({
+        const image = new ImageSource({
           id: doc.id,
           name: d.name,
         });
-        mapChips.push(mapChip);
+        images.push(image);
       });
-      setMapChips(mapChips);
+      setImageSources(images);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });
   };
 
-  return { setMapChipListener };
+  return { setImageSourceListener };
 }

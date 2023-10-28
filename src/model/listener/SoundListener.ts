@@ -6,35 +6,35 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useMapChips } from "../store/mapChips";
-import { MapChip } from "../MapChip";
+import { useSounds } from "../store/sounds";
+import { Sound } from "../Sound";
 
 const subscribeMap = new Map<
   string,
   { id: string; unsubscribe: () => unknown }
 >();
 
-export function MapChipListener() {
-  const { setMapChips } = useMapChips();
+export function SoundListener() {
+  const { setSounds } = useSounds();
 
-  const setMapChipListener = (roomId: string) => {
-    console.log("setMapChipListener");
-    const q = query(collection(db, "map"), where("room", "==", roomId));
+  const setSoundListener = (roomId: string) => {
+    console.log("setSoundListener");
+    const q = query(collection(db, "sound"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const mapChips: MapChip[] = [];
+      const sounds: Sound[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
-        const mapChip = new MapChip({
+        const sound = new Sound({
           id: doc.id,
           name: d.name,
         });
-        mapChips.push(mapChip);
+        sounds.push(sound);
       });
-      setMapChips(mapChips);
+      setSounds(sounds);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });
   };
 
-  return { setMapChipListener };
+  return { setSoundListener };
 }

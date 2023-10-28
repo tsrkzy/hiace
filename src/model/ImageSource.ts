@@ -5,19 +5,19 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-export type ImageProps = {
+export type ImageSourceProps = {
   id: string;
   name: string;
 };
 
-export class Image {
+export class ImageSource {
   private _id: string;
   private _name: string;
 
   /**
-   * @param {ImageProps} args
+   * @param {ImageSourceProps} args
    */
-  constructor(args: ImageProps) {
+  constructor(args: ImageSourceProps) {
     const { id, name } = args;
     this._id = id;
     this._name = name;

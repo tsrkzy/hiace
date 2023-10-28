@@ -22,6 +22,9 @@
   import { ChatListener } from "../model/listener/ChatListener";
   import { ColumnListener } from "../model/listener/ColumnListener";
   import { DiceListener } from "../model/listener/DiceListener";
+  import { ImageSourceListener } from "../model/listener/ImageSourceListener";
+  import { SoundListener } from "../model/listener/SoundListener";
+  import { TableListener } from "../model/listener/TableListener";
 
   /* model */
   import { Room, type RoomProps } from "../model/Room";
@@ -52,6 +55,9 @@
   const { setChatListener } = ChatListener();
   const { setColumnListener } = ColumnListener();
   const { setDiceListener } = DiceListener();
+  const { setImageSourceListener } = ImageSourceListener();
+  const { setSoundListener } = SoundListener();
+  const { setTableListener } = TableListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
@@ -116,6 +122,9 @@
     setChatListener(roomId)
     setColumnListener(roomId)
     setDiceListener(roomId)
+    setImageSourceListener(roomId)
+    setSoundListener(roomId)
+    setTableListener(roomId)
   }
 
   export const setState = (state: string) => {

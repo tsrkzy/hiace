@@ -6,35 +6,35 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useMapChips } from "../store/mapChips";
-import { MapChip } from "../MapChip";
+import { useTables } from "../store/tables";
+import { Table } from "../Table";
 
 const subscribeMap = new Map<
   string,
   { id: string; unsubscribe: () => unknown }
 >();
 
-export function MapChipListener() {
-  const { setMapChips } = useMapChips();
+export function TableListener() {
+  const { setTables } = useTables();
 
-  const setMapChipListener = (roomId: string) => {
-    console.log("setMapChipListener");
-    const q = query(collection(db, "map"), where("room", "==", roomId));
+  const setTableListener = (roomId: string) => {
+    console.log("setTableListener");
+    const q = query(collection(db, "table"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const mapChips: MapChip[] = [];
+      const tables: Table[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
-        const mapChip = new MapChip({
+        const table = new Table({
           id: doc.id,
           name: d.name,
         });
-        mapChips.push(mapChip);
+        tables.push(table);
       });
-      setMapChips(mapChips);
+      setTables(tables);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });
   };
 
-  return { setMapChipListener };
+  return { setTableListener };
 }
