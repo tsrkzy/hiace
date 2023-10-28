@@ -15,6 +15,10 @@
   import { UserListener } from "../model/listener/UserListener";
   import { CharacterListener } from "../model/listener/CharacterListener";
   import { AliasListener } from "../model/listener/AliasListener";
+  import { MapChipListener } from "../model/listener/MapChipListener";
+  import { BoardListener } from "../model/listener/BoardListener";
+  import { PawnListener } from "../model/listener/PawnListener";
+  import { ChannelListener } from "../model/listener/ChannelListener";
 
   /* model */
   import { Room, type RoomProps } from "../model/Room";
@@ -38,6 +42,10 @@
   const { setUserListener } = UserListener();
   const { setCharacterListener } = CharacterListener();
   const { setAliasListener } = AliasListener();
+  const { setMapChipListener } = MapChipListener();
+  const { setBoardListener } = BoardListener();
+  const { setPawnListener } = PawnListener();
+  const { setChannelListener } = ChannelListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
@@ -95,6 +103,10 @@
     setUserListener(roomId)
     setCharacterListener(roomId)
     setAliasListener(roomId)
+    setMapChipListener(roomId)
+    setBoardListener(roomId)
+    setPawnListener(roomId)
+    setChannelListener(roomId)
   }
 
   export const setState = (state: string) => {
