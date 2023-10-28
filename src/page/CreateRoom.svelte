@@ -1,8 +1,8 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
-  import { fetchUserByEmail, createUser, joinRoom } from "../model/service/UserCollectionService";
-  import { createRoom } from "../model/service/RoomCollectionService";
+  import { fetchUserByEmail, createUser, joinRoom } from "../model/service/UserService";
+  import { createRoom } from "../model/service/RoomService";
   import { useAuth } from "../model/store/auth";
   const { authorized, setAuth } = useAuth();
 

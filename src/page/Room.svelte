@@ -3,8 +3,8 @@
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
 
   /* service */
-  import { fetchUserByEmail, createUser  } from "../model/service/UserCollectionService";
-  import { setRoomStateForUser } from "../model/service/RoomCollectionService";
+  import { fetchUserByEmail, createUser  } from "../model/service/UserService";
+  import { setRoomStateForUser } from "../model/service/RoomService";
 
   /* store */
   import { useAuth } from "../model/store/auth";
