@@ -6,35 +6,35 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { Alias } from "../Alias";
-import { useAliases } from "../store/aliases";
+import { usePawns } from "../store/pawns";
+import { Pawn } from "../Pawn";
 
 const subscribeMap = new Map<
   string,
   { id: string; unsubscribe: () => unknown }
 >();
 
-export function AliasListener() {
-  const { setAliases } = useAliases();
+export function PawnListener() {
+  const { setPawns } = usePawns();
 
-  const setAliasListener = (roomId: string) => {
-    console.log("setAliasListener");
-    const q = query(collection(db, "alias"), where("room", "==", roomId));
+  const setPawnListener = (roomId: string) => {
+    console.log("setPawnListener");
+    const q = query(collection(db, "pawn"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const aliases: Alias[] = [];
+      const pawns: Pawn[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
-        const alias = new Alias({
+        const pawn = new Pawn({
           id: doc.id,
           name: d.name,
         });
-        aliases.push(alias);
+        pawns.push(pawn);
       });
-      setAliases(aliases);
+      setPawns(pawns);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });
   };
 
-  return { setAliasListener };
+  return { setPawnListener };
 }
