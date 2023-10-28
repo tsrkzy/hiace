@@ -16,30 +16,27 @@ type AuthProps = {
  * 操作中ユーザ単体の情報だけを保持する(<> Roomに参加しているユーザはUser)
  */
 export class Auth {
-  get Email(): string {
-    return this._email;
-  }
-
-  set Email(value: string) {
-    this._email = value;
-  }
-
-  get PhotoUrl(): string {
-    return this._photoUrl;
-  }
-
-  set PhotoUrl(value: string) {
-    this._photoUrl = value;
-  }
-
-  get Name(): string {
+  get name(): string {
     return this._name;
   }
 
-  set Name(value: string) {
+  set name(value: string) {
     this._name = value;
   }
+  get photoUrl(): string {
+    return this._photoUrl;
+  }
 
+  set photoUrl(value: string) {
+    this._photoUrl = value;
+  }
+  get email(): string {
+    return this._email;
+  }
+
+  set email(value: string) {
+    this._email = value;
+  }
   private _name: string;
   private _photoUrl: string;
   private _email: string;

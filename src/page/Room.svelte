@@ -3,8 +3,8 @@
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
 
   /* service */
-  import { UserCollectionService } from "../model/service/UserCollectionService";
-  import { RoomCollectionService } from "../model/service/RoomCollectionService";
+  import { fetchUserByEmail, createUser  } from "../model/service/UserCollectionService";
+  import { setRoomStateForUser } from "../model/service/RoomCollectionService";
 
   /* store */
   import { useAuth } from "../model/store/auth";
@@ -39,10 +39,6 @@
   const { setAuth, authorized, name } = useAuth();
   const { subscribeRoom } = useRoom();
 
-  /* service */
-  const { fetchUserByEmail, createUser } = UserCollectionService()
-  const { setRoomStateForUser } = RoomCollectionService()
-
   /* listener */
   const { setRoomListener } = RoomListener();
   const { setUserListener } = UserListener();
@@ -72,14 +68,14 @@
         setAuth(a)
 
         /* ユーザ情報があれば取得し、なければ作る */
-        let user = await fetchUserByEmail(a.Email)
+        let user = await fetchUserByEmail(a.email)
         if (!user) {
           console.log("no user found by Email.");
           user = await createUser(a);
           console.log("user created.", user);
         }
 
-        userId = user.Id;
+        userId = user.id;
 
         /* 部屋情報を取得 */
         // room = await fetchRoomByID(roomId);
@@ -97,13 +93,13 @@
   subscribes.push(subscribeRoom(_room => {
     /* 部屋IDへJoinしているかどうかでスイッチ振り分け */
     room = _room
-    const { Kicked = [], Requests = [], Users = [] } = room;
-    if (Kicked.indexOf(userId) !== -1) {
+    const { kicked = [], requests = [], users = [] } = room;
+    if (kicked.indexOf(userId) !== -1) {
       state = "KICKED"
-    } else if (Users.indexOf(userId) !== -1) {
+    } else if (users.indexOf(userId) !== -1) {
       state = "JOINED"
       startListening()
-    } else if (Requests.indexOf(userId) !== -1) {
+    } else if (requests.indexOf(userId) !== -1) {
       state = "WAITING"
     } else {
       state = "NO_REQUEST"
@@ -156,12 +152,8 @@
   <p>roomState: {state}</p>
   <h2>Users</h2>
   <UserList></UserList>
-  <h2>Character</h2>
   <CharacterList></CharacterList>
-  <h2>Alias</h2>
   <h2>Board</h2>
-  <h2>Map</h2>
-  <h2>Pawn</h2>
 
 </main>
 

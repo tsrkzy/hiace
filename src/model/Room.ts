@@ -21,75 +21,67 @@ export type RoomProps = {
  * ログイン中のRoom情報を保持する
  */
 export class Room {
-  get Id(): string {
+  get id(): string {
     return this._id;
   }
 
-  set Id(value: string) {
+  set id(value: string) {
     this._id = value;
   }
-
-  get Name(): string {
+  get name(): string {
     return this._name;
   }
 
-  set Name(value: string) {
+  set name(value: string) {
     this._name = value;
   }
-
-  get Owner(): string {
+  get owner(): string {
     return this._owner;
   }
 
-  set Owner(value: string) {
+  set owner(value: string) {
     this._owner = value;
   }
-
-  get Keepers(): string[] {
+  get keepers(): string[] {
     return this._keepers;
   }
 
-  set Keepers(value: string[]) {
+  set keepers(value: string[]) {
     this._keepers = value;
   }
-
-  get Requests(): string[] {
+  get requests(): string[] {
     return this._requests;
   }
 
-  set Requests(value: string[]) {
+  set requests(value: string[]) {
     this._requests = value;
   }
-
-  get Kicked(): string[] {
+  get kicked(): string[] {
     return this._kicked;
   }
 
-  set Kicked(value: string[]) {
+  set kicked(value: string[]) {
     this._kicked = value;
   }
-
-  get Users(): string[] {
+  get users(): string[] {
     return this._users;
   }
 
-  set Users(value: string[]) {
+  set users(value: string[]) {
     this._users = value;
   }
-
-  get GameSystem(): string {
+  get gameSystem(): string {
     return this._gameSystem;
   }
 
-  set GameSystem(value: string) {
+  set gameSystem(value: string) {
     this._gameSystem = value;
   }
-
-  get Music(): string {
+  get music(): string {
     return this._music;
   }
 
-  set Music(value: string) {
+  set music(value: string) {
     this._music = value;
   }
 

@@ -19,53 +19,53 @@ export type UserProps = {
  * 現在参加しているRoomに同じく参加中のすべてのユーザについての情報を保持する
  */
 export class User {
-  get Id(): string {
+  get id(): string {
     return this._id;
   }
 
-  set Id(value: string) {
+  set id(value: string) {
     this._id = value;
   }
-  get Name(): string {
+  get name(): string {
     return this._name;
   }
 
-  set Name(value: string) {
+  set name(value: string) {
     this._name = value;
   }
-  get Color(): string {
+  get color(): string {
     return this._color;
   }
 
-  set Color(value: string) {
+  set color(value: string) {
     this._color = value;
   }
-  get Email(): string {
+  get email(): string {
     return this._email;
   }
 
-  set Email(value: string) {
+  set email(value: string) {
     this._email = value;
   }
-  get JoinTo(): string[] {
+  get joinTo(): string[] {
     return this._joinTo;
   }
 
-  set JoinTo(value: string[]) {
+  set joinTo(value: string[]) {
     this._joinTo = value;
   }
-  get LastPing(): number {
+  get lastPing(): number {
     return this._lastPing;
   }
 
-  set LastPing(value: number) {
+  set lastPing(value: number) {
     this._lastPing = value;
   }
-  get PhotoUrl(): string {
+  get photoUrl(): string {
     return this._photoUrl;
   }
 
-  set PhotoUrl(value: string) {
+  set photoUrl(value: string) {
     this._photoUrl = value;
   }
   private _id: string;

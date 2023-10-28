@@ -1,9 +1,10 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
-  import { UserCollectionService } from "../model/service/UserCollectionService";
-  import { RoomCollectionService } from "../model/service/RoomCollectionService";
+  import { fetchUserByEmail, createUser, joinRoom } from "../model/service/UserCollectionService";
+  import { createRoom } from "../model/service/RoomCollectionService";
   import { useAuth } from "../model/store/auth";
+  const { authorized, setAuth } = useAuth();
 
 
   const GAME_SYSTEM_LIST = [{ system: "Cthulhu", name: "クトゥルフ神話TRPG" },
@@ -13,9 +14,6 @@
     { system: "SwordWorld2.0", name: "ソードワールド2.0" },
     { system: "SwordWorld2.5", name: "ソードワールド2.5" },]
 
-  const { authorized, setAuth } = useAuth();
-  const { fetchUserByEmail, createUser, joinRoom } = UserCollectionService()
-  const { createRoom } = RoomCollectionService()
 
   let userId = "";
   $: roomName = "";
@@ -29,14 +27,14 @@
         setAuth(a)
 
         /* ユーザ情報があれば取得し、なければ作る */
-        const user = await fetchUserByEmail(a.Email)
+        const user = await fetchUserByEmail(a.email)
         if (!user) {
           console.log("no user found by Email.");
           const u = await createUser(a);
           console.log("user created.", u);
-          userId = u.Id
+          userId = u.id
         } else {
-          userId = user.Id;
+          userId = user.id;
         }
       })
       .catch(e => {
@@ -63,11 +61,11 @@
     // new Socket(room.Id);
 
     /* roomに参加 */
-    // RoomCollectionService.joinRoom(userId, room.Id)
-    await joinRoom(userId, room.Id);
+    // RoomCollectionService.joinRoom(userId, room.id)
+    await joinRoom(userId, room.id);
 
     /* /r/:roomId へ仮想ルーティング */
-    navigate(`/r/${room.Id}`, { replace: true });
+    navigate(`/r/${room.id}`, { replace: true });
 
   }
 

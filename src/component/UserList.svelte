@@ -24,7 +24,7 @@
 <main>
   {#each users as u}
     <ul>
-      <li>{u.Id},{u.Name}</li>
+      <li>{u.id},{u.name}</li>
     </ul>
   {/each}
 </main>
