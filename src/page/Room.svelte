@@ -20,6 +20,8 @@
   import { PawnListener } from "../model/listener/PawnListener";
   import { ChannelListener } from "../model/listener/ChannelListener";
   import { ChatListener } from "../model/listener/ChatListener";
+  import { ColumnListener } from "../model/listener/ColumnListener";
+  import { DiceListener } from "../model/listener/DiceListener";
 
   /* model */
   import { Room, type RoomProps } from "../model/Room";
@@ -48,6 +50,8 @@
   const { setPawnListener } = PawnListener();
   const { setChannelListener } = ChannelListener();
   const { setChatListener } = ChatListener();
+  const { setColumnListener } = ColumnListener();
+  const { setDiceListener } = DiceListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
@@ -110,6 +114,8 @@
     setPawnListener(roomId)
     setChannelListener(roomId)
     setChatListener(roomId)
+    setColumnListener(roomId)
+    setDiceListener(roomId)
   }
 
   export const setState = (state: string) => {
