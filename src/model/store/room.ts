@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Room } from "../model/Room";
+import { Room } from "../Room";
 
 const room = writable<Room>(
   new Room({

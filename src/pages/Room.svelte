@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { useAuth } from "../store/auth";
+  import { authenticateWithPopUp } from "../util/googleAuthProvider";
   import { UserCollectionService } from "../model/service/UserCollectionService";
   import { RoomCollectionService } from "../model/service/RoomCollectionService";
-  import { authenticateWithPopUp } from "../util/googleAuthProvider";
+  import { useAuth } from "../model/store/auth";
+  import { useRoom } from "../model/store/room";
+  import { useUsers } from "../model/store/users";
   import { RoomListener } from "../model/listener/RoomListener";
-  import { useRoom } from "../store/room";
   import { UserListener } from "../model/listener/UserListener";
-  import { useUsers } from "../store/users";
   import { User } from "../model/User";
 
   export let roomId = "";

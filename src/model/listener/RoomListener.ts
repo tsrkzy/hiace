@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useRoom } from "../../store/room";
+import { useRoom } from "../store/room";
 import { Room } from "../Room";
 
 const subscribeMap = new Map<

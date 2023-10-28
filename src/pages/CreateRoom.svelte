@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { useAuth } from "../store/auth";
+  import { navigate } from "svelte-routing";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
   import { UserCollectionService } from "../model/service/UserCollectionService";
   import { RoomCollectionService } from "../model/service/RoomCollectionService";
-  import { navigate } from "svelte-routing";
+  import { useAuth } from "../model/store/auth";
 
 
   const GAME_SYSTEM_LIST = [{ system: "Cthulhu", name: "クトゥルフ神話TRPG" },

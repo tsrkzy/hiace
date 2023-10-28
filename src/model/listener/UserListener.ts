@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useUsers } from "../../store/users";
+import { useUsers } from "../store/users";
 import { User } from "../User";
 
 const subscribeMap = new Map<

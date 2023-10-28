@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { User } from "../model/User";
+import { User } from "../User";
 
 const users = writable<User[]>([]);
 
