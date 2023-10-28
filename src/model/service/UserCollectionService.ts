@@ -14,13 +14,13 @@ import { User, type UserProps } from "../User";
 const SYSTEM_COLOR = "#000000";
 
 export const UserCollectionService = () => {
-  const fetchUserByEmail = async (email: string): Promise<User | null> => {
+  const fetchUserByEmail = async (email: string): Promise<User> => {
     const userRef = collection(db, "user");
     const q = query(userRef, where("email", "==", email));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.size === 0) {
-      return null;
+      throw new Error(`no user found. email: ${email}`);
     } else if (querySnapshot.size >= 2) {
       throw new Error("user data corrupted!");
     }

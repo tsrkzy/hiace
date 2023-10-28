@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-type RoomProps = {
+export type RoomProps = {
   id: string;
   name: string;
   owner: string;

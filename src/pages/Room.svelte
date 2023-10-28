@@ -6,23 +6,31 @@
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
   import { useUsers } from "../model/store/users";
+  import { useCharacters } from "../model/store/characters";
   import { RoomListener } from "../model/listener/RoomListener";
   import { UserListener } from "../model/listener/UserListener";
+  import { CharacterListener } from "../model/listener/CharacterListener";
+  import { Room, type RoomProps } from "../model/Room";
   import { User } from "../model/User";
+  import { Character } from "../model/Character";
 
   export let roomId = "";
 
   const { setAuth, authorized, name } = useAuth();
   const { subscribeRoom } = useRoom();
   const { subscribeUsers } = useUsers()
+  const { subscribeCharacters } = useCharacters()
   const { fetchUserByEmail, createUser } = UserCollectionService()
-  const { fetchRoomByID, setRoomStateForUser } = RoomCollectionService()
+  const { setRoomStateForUser } = RoomCollectionService()
   const { setRoomListener } = RoomListener();
   const { setUserListener } = UserListener();
+  const { setCharacterListener } = CharacterListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
+  $: room = new Room({} as RoomProps);
   $: users = [] as User[];
+  $: characters = [] as Character[];
 
   const subscribes: (() => unknown)[] = [];
 
@@ -43,10 +51,10 @@
         userId = user.Id;
 
         /* 部屋情報を取得 */
-        const room = await fetchRoomByID(roomId);
-        if (!room) {
-          throw new Error(`no Room found: ${roomId}`)
-        }
+        // room = await fetchRoomByID(roomId);
+        // if (!room.Id) {
+        //   throw new Error(`no Room found: ${roomId}`)
+        // }
 
         setRoomListener(roomId)
       })
@@ -55,8 +63,9 @@
       })
   }
 
-  subscribes.push(subscribeRoom(room => {
+  subscribes.push(subscribeRoom(_room => {
     /* 部屋IDへJoinしているかどうかでスイッチ振り分け */
+    room = _room
     const { Kicked = [], Requests = [], Users = [] } = room;
     if (Kicked.indexOf(userId) !== -1) {
       state = "KICKED"
@@ -72,9 +81,14 @@
   subscribes.push(subscribeUsers((_users: User[]) => {
     users = _users
   }))
+  subscribes.push(subscribeCharacters((_characters: Character[]) => {
+    characters = _characters
+  }))
 
   function startListening() {
+    // setRoomListener(roomId)
     setUserListener(roomId)
+    setCharacterListener(roomId)
   }
 
   export const setState = (state: string) => {
@@ -105,12 +119,17 @@
   <p>roomId: {roomId}</p>
   <p>roomState: {state}</p>
   <h2>Users</h2>
-  {#each users as user}
+  {#each users as u}
     <ul>
-      <li>{user.Id},{user.Name}</li>
+      <li>{u.Id},{u.Name}</li>
     </ul>
   {/each}
   <h1>Character</h1>
+  {#each characters as c}
+    <ul>
+      <li>{c.Id},{c.Name}</li>
+    </ul>
+  {/each}
   <h2>Alias</h2>
   <h1>Board</h1>
   <h2>Map</h2>

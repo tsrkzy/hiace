@@ -6,42 +6,35 @@
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { useUsers } from "../store/users";
-import { User } from "../User";
+import { useCharacters } from "../store/characters";
+import { Character } from "../Character";
 
 const subscribeMap = new Map<
   string,
   { id: string; unsubscribe: () => unknown }
 >();
 
-export function UserListener() {
-  const { setUsers } = useUsers();
-  const setUserListener = (roomId: string) => {
-    console.log("setUserListener");
-    const q = query(
-      collection(db, "user"),
-      where("joinTo", "array-contains", roomId),
-    );
+export function CharacterListener() {
+  const { setCharacters } = useCharacters();
+
+  const setCharacterListener = (roomId: string) => {
+    console.log("setCharacterListener");
+    const q = query(collection(db, "character"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const users: User[] = [];
+      const characters: Character[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
-        const user = new User({
+        const character = new Character({
           id: doc.id,
           name: d.name,
-          color: d.color,
-          email: d.email,
-          joinTo: d.joinTo,
-          lastPing: d.lastPing,
-          photoUrl: d.photoUrl,
         });
-        users.push(user);
+        characters.push(character);
       });
-      setUsers(users);
+      setCharacters(characters);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });
   };
 
-  return { setUserListener };
+  return { setCharacterListener };
 }

@@ -3,11 +3,11 @@ import { db } from "../../util/firestore";
 import { Room } from "../Room";
 
 export const RoomCollectionService = () => {
-  const fetchRoomByID = async (roomId: string) => {
+  const fetchRoomByID = async (roomId: string): Promise<Room> => {
     const docRef = doc(db, "room", roomId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
-      return null;
+      throw new Error(`room does not found: ${roomId}`);
     }
     const room = docSnap.data();
     room.id = docSnap.id;
