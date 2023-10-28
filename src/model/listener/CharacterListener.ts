@@ -27,6 +27,14 @@ export function CharacterListener() {
         const character = new Character({
           id: doc.id,
           name: d.name,
+          room: d.room,
+          owner: d.owner,
+          activeAlias: d.activeAlias,
+          chatPosition: d.chatPosition,
+          pawnSize: d.pawnSize,
+          showOnInitiative: d.showOnInitiative,
+          text: d.text,
+          lastPostDatetime: d.lastPostDatetime,
         });
         characters.push(character);
       });

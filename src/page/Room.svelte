@@ -3,7 +3,7 @@
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
 
   /* service */
-  import { fetchUserByEmail, createUser  } from "../model/service/UserService";
+  import { fetchUserByEmail, createUser } from "../model/service/UserService";
   import { setRoomStateForUser } from "../model/service/RoomService";
 
   /* store */
@@ -32,12 +32,14 @@
   /* debug components */
   import UserList from "../component/UserList.svelte";
   import CharacterList from "../component/CharacterList.svelte";
+  import { useUsers } from "../model/store/users";
 
   export let roomId = "";
 
   /* store */
-  const { setAuth, authorized, name } = useAuth();
+  const { setAuth, isLoggedIn, email } = useAuth();
   const { subscribeRoom } = useRoom();
+  const { myUserId } = useUsers();
 
   /* listener */
   const { setRoomListener } = RoomListener();
@@ -138,15 +140,17 @@
 <main>
   <h1>Auth</h1>
   <h5>userId: {userId}</h5>
-  <button on:click={handleClick} disabled="{$authorized}">loggin</button>
-  <p>authorized: {$authorized}</p>
+  <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
+  <p>isLoggedIn: {$isLoggedIn}</p>
   <button on:click={setState("KICKED")}>KICKED</button>
   <button on:click={setState("JOINED")}>JOINED</button>
   <button on:click={setState("WAITING")}>WAITING</button>
   <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
-  {#if $authorized}
-    <p>name: {$name}</p>
+  {#if $isLoggedIn}
+    <p>email: {$email}</p>
   {/if}
+  <h1>Me</h1>
+  me.id: {$myUserId}
   <h1>Room</h1>
   <p>roomId: {roomId}</p>
   <p>roomState: {state}</p>

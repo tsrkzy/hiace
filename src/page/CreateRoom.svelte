@@ -4,7 +4,7 @@
   import { fetchUserByEmail, createUser, joinRoom } from "../model/service/UserService";
   import { createRoom } from "../model/service/RoomService";
   import { useAuth } from "../model/store/auth";
-  const { authorized, setAuth } = useAuth();
+  const { isLoggedIn, setAuth } = useAuth();
 
 
   const GAME_SYSTEM_LIST = [{ system: "Cthulhu", name: "クトゥルフ神話TRPG" },
@@ -45,7 +45,7 @@
 
   export const handleClick = async () => {
     console.log("CreateRoom.handleClick");
-    if (!authorized) {
+    if (!isLoggedIn) {
       throw new Error("not authorized");
     }
 
@@ -83,10 +83,10 @@
 
 <main>
   <div class="container">
-    $authorized: {$authorized}
+    $authorized: {$isLoggedIn}
     <fieldset class="create-room__fieldset">
       <legend>部屋の作成</legend>
-      {#if !$authorized}
+      {#if !$isLoggedIn}
         <div>
           <p>Googleアカウントでのログインが必要です</p>
           <button on:click={handleLogIn}>loggin</button>

@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import { Room } from "../Room";
 
 const room = writable<Room>(
@@ -23,5 +23,6 @@ export const useRoom = () => {
   return {
     subscribeRoom: room.subscribe,
     setRoom: room.set,
+    roomId: derived(room, $room => $room.id),
   };
 };

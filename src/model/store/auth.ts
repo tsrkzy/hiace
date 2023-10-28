@@ -18,7 +18,7 @@ export const useAuth = () => {
     subscribeAuth: auth.subscribe,
     setAuth: auth.set,
     /** Googleログイン済みであることを示す */
-    authorized: derived(auth, $auth => $auth.LoggedIn),
-    name: derived(auth, $auth => $auth.name),
+    isLoggedIn: derived(auth, $auth => $auth.isLoggedIn()),
+    email: derived(auth, $auth => $auth.email),
   };
 };

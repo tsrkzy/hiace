@@ -11,9 +11,16 @@
   import { Alias } from "../model/Alias";
   import { useCharacters } from "../model/store/characters";
   import { useAliases } from "../model/store/aliases";
+  import { createCharacter } from "../model/service/CharacterService";
+  import { useAuth } from "../model/store/auth";
+  import { useUsers } from "../model/store/users";
+  import { useRoom } from "../model/store/room";
 
   const { subscribeCharacters } = useCharacters()
   const { subscribeAliases } = useAliases()
+  const { isLoggedIn } = useAuth()
+  const { myUserId } = useUsers()
+  const { roomId } = useRoom()
 
   let characters = [] as Character[];
   let aliases = [] as Alias[];
@@ -31,8 +38,17 @@
     subscribes.forEach(s => s());
   })
 
-  const handleAddCharacter = ()=>{
+  const handleAddCharacter = async () => {
     console.log("CharacterList.handleAddCharacter");
+    await createCharacter({
+      owner: $myUserId,
+      name: `character_${Date.now()}`,
+      roomId: $roomId,
+      text: "",
+      activeAlias: "",
+      imageId: "",
+      showOnInitiative: true,
+    })
   }
 </script>
 
@@ -43,7 +59,9 @@
       <li>{c.id},{c.name}</li>
     </ul>
   {/each}
-  <button on:click={handleAddCharacter}>add character</button>
+  {#if $isLoggedIn}
+    <button on:click={handleAddCharacter}>add character</button>
+  {/if}
   <h2>Alias</h2>
   {#each aliases as a}
     <ul>

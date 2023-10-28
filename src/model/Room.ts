@@ -28,6 +28,7 @@ export class Room {
   set id(value: string) {
     this._id = value;
   }
+
   get name(): string {
     return this._name;
   }
@@ -35,6 +36,7 @@ export class Room {
   set name(value: string) {
     this._name = value;
   }
+
   get owner(): string {
     return this._owner;
   }
@@ -42,6 +44,7 @@ export class Room {
   set owner(value: string) {
     this._owner = value;
   }
+
   get keepers(): string[] {
     return this._keepers;
   }
@@ -49,6 +52,7 @@ export class Room {
   set keepers(value: string[]) {
     this._keepers = value;
   }
+
   get requests(): string[] {
     return this._requests;
   }
@@ -56,6 +60,7 @@ export class Room {
   set requests(value: string[]) {
     this._requests = value;
   }
+
   get kicked(): string[] {
     return this._kicked;
   }
@@ -63,6 +68,7 @@ export class Room {
   set kicked(value: string[]) {
     this._kicked = value;
   }
+
   get users(): string[] {
     return this._users;
   }
@@ -70,6 +76,7 @@ export class Room {
   set users(value: string[]) {
     this._users = value;
   }
+
   get gameSystem(): string {
     return this._gameSystem;
   }
@@ -77,6 +84,7 @@ export class Room {
   set gameSystem(value: string) {
     this._gameSystem = value;
   }
+
   get music(): string {
     return this._music;
   }
