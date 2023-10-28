@@ -27,6 +27,7 @@ export function AliasListener() {
         const alias = new Alias({
           id: doc.id,
           name: d.name,
+          owner: d.owner,
         });
         aliases.push(alias);
       });

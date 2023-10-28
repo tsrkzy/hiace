@@ -26,9 +26,6 @@
   import { SoundListener } from "../model/listener/SoundListener";
   import { TableListener } from "../model/listener/TableListener";
 
-  /* model */
-  import { Room, type RoomProps } from "../model/Room";
-
   /* debug components */
   import UserList from "../component/UserList.svelte";
   import CharacterList from "../component/CharacterList.svelte";
@@ -38,7 +35,7 @@
 
   /* store */
   const { setAuth, isLoggedIn, email } = useAuth();
-  const { subscribeRoom } = useRoom();
+  const { room } = useRoom();
   const { myUserId } = useUsers();
 
   /* listener */
@@ -59,7 +56,6 @@
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
-  $: room = new Room({} as RoomProps);
 
   const subscribes: (() => unknown)[] = [];
 
@@ -79,12 +75,6 @@
 
         userId = user.id;
 
-        /* 部屋情報を取得 */
-        // room = await fetchRoomByID(roomId);
-        // if (!room.Id) {
-        //   throw new Error(`no Room found: ${roomId}`)
-        // }
-
         setRoomListener(roomId)
       })
       .catch(e => {
@@ -92,10 +82,9 @@
       })
   }
 
-  subscribes.push(subscribeRoom(_room => {
+  $: {
     /* 部屋IDへJoinしているかどうかでスイッチ振り分け */
-    room = _room
-    const { kicked = [], requests = [], users = [] } = room;
+    const { kicked = [], requests = [], users = [] } = $room;
     if (kicked.indexOf(userId) !== -1) {
       state = "KICKED"
     } else if (users.indexOf(userId) !== -1) {
@@ -106,7 +95,8 @@
     } else {
       state = "NO_REQUEST"
     }
-  }))
+  }
+
 
   function startListening() {
     // setRoomListener(roomId)

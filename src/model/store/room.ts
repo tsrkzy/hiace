@@ -24,5 +24,6 @@ export const useRoom = () => {
     subscribeRoom: room.subscribe,
     setRoom: room.set,
     roomId: derived(room, $room => $room.id),
+    room,
   };
 };
