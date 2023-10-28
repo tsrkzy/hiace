@@ -19,6 +19,7 @@
   import { BoardListener } from "../model/listener/BoardListener";
   import { PawnListener } from "../model/listener/PawnListener";
   import { ChannelListener } from "../model/listener/ChannelListener";
+  import { ChatListener } from "../model/listener/ChatListener";
 
   /* model */
   import { Room, type RoomProps } from "../model/Room";
@@ -46,6 +47,7 @@
   const { setBoardListener } = BoardListener();
   const { setPawnListener } = PawnListener();
   const { setChannelListener } = ChannelListener();
+  const { setChatListener } = ChatListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
@@ -107,6 +109,7 @@
     setBoardListener(roomId)
     setPawnListener(roomId)
     setChannelListener(roomId)
+    setChatListener(roomId)
   }
 
   export const setState = (state: string) => {
