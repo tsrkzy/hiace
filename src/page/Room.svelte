@@ -1,36 +1,47 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
+
+  /* service */
   import { UserCollectionService } from "../model/service/UserCollectionService";
   import { RoomCollectionService } from "../model/service/RoomCollectionService";
+
+  /* store */
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
-  import { useUsers } from "../model/store/users";
-  import { useCharacters } from "../model/store/characters";
+
+  /* listener */
   import { RoomListener } from "../model/listener/RoomListener";
   import { UserListener } from "../model/listener/UserListener";
   import { CharacterListener } from "../model/listener/CharacterListener";
+  import { AliasListener } from "../model/listener/AliasListener";
+
+  /* model */
   import { Room, type RoomProps } from "../model/Room";
-  import { User } from "../model/User";
-  import { Character } from "../model/Character";
+
+  /* debug components */
+  import UserList from "../component/UserList.svelte";
+  import CharacterList from "../component/CharacterList.svelte";
 
   export let roomId = "";
 
+  /* store */
   const { setAuth, authorized, name } = useAuth();
   const { subscribeRoom } = useRoom();
-  const { subscribeUsers } = useUsers()
-  const { subscribeCharacters } = useCharacters()
+
+  /* service */
   const { fetchUserByEmail, createUser } = UserCollectionService()
   const { setRoomStateForUser } = RoomCollectionService()
+
+  /* listener */
   const { setRoomListener } = RoomListener();
   const { setUserListener } = UserListener();
   const { setCharacterListener } = CharacterListener();
+  const { setAliasListener } = AliasListener();
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
   $: room = new Room({} as RoomProps);
-  $: users = [] as User[];
-  $: characters = [] as Character[];
 
   const subscribes: (() => unknown)[] = [];
 
@@ -78,17 +89,12 @@
       state = "NO_REQUEST"
     }
   }))
-  subscribes.push(subscribeUsers((_users: User[]) => {
-    users = _users
-  }))
-  subscribes.push(subscribeCharacters((_characters: Character[]) => {
-    characters = _characters
-  }))
 
   function startListening() {
     // setRoomListener(roomId)
     setUserListener(roomId)
     setCharacterListener(roomId)
+    setAliasListener(roomId)
   }
 
   export const setState = (state: string) => {
@@ -119,19 +125,11 @@
   <p>roomId: {roomId}</p>
   <p>roomState: {state}</p>
   <h2>Users</h2>
-  {#each users as u}
-    <ul>
-      <li>{u.Id},{u.Name}</li>
-    </ul>
-  {/each}
-  <h1>Character</h1>
-  {#each characters as c}
-    <ul>
-      <li>{c.Id},{c.Name}</li>
-    </ul>
-  {/each}
+  <UserList></UserList>
+  <h2>Character</h2>
+  <CharacterList></CharacterList>
   <h2>Alias</h2>
-  <h1>Board</h1>
+  <h2>Board</h2>
   <h2>Map</h2>
   <h2>Pawn</h2>
 
