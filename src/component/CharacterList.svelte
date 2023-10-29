@@ -8,7 +8,7 @@
 <script lang="ts">
   import { useCharacters } from "../model/store/characters";
   import { useAliases } from "../model/store/aliases";
-  import { createCharacter } from "../model/service/CharacterService";
+  import { createCharacter, deleteCharacter } from "../model/service/CharacterService";
   import { useAuth } from "../model/store/auth";
   import { useUsers } from "../model/store/users";
   import { useRoom } from "../model/store/room";
@@ -31,13 +31,22 @@
       showOnInitiative: true,
     })
   }
+
+  const handleDeleteCharacter = async (characterId:string) => {
+    console.log("CharacterList.handleDeleteCharacter");
+    await deleteCharacter({
+      characterId
+    })
+  }
 </script>
 
 <main>
   <h2>Character</h2>
   {#each $characters as c}
     <ul>
-      <li>{c.id},{c.name}</li>
+      <li>
+      <button on:click={()=>{handleDeleteCharacter(c.id)}}>delete</button>
+        {c.id},{c.name}</li>
     </ul>
   {/each}
   {#if $isLoggedIn}

@@ -1,7 +1,13 @@
-import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Character } from "../Character";
-import { createDefaultAlias } from "./AliasService";
+import { createDefaultAlias, deleteAliasesByCharacter } from "./AliasService";
 
 const SYSTEM_COLOR = "#EEEEEE";
 
@@ -81,4 +87,20 @@ export const setActiveAlias = async (
   const collectionRef = collection(db, "character");
   const docRef = doc(collectionRef, characterId);
   await updateDoc(docRef, { activeAlias: aliasId });
+};
+
+interface DeleteCharacterProps {
+  characterId: string;
+}
+
+export const deleteCharacter = async (props: DeleteCharacterProps) => {
+  const { characterId } = props;
+  const collectionRef = collection(db, "character");
+  const docRef = doc(collectionRef, characterId);
+  await deleteDoc(docRef);
+
+  /* 紐づくaliasを削除 */
+  await deleteAliasesByCharacter({ characterId });
+
+  /* 紐づくpawnを削除 */
 };

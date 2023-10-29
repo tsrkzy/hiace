@@ -1,4 +1,12 @@
-import { setDoc, doc, collection } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  collection,
+  writeBatch,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { Alias } from "../Alias";
 import { db } from "../../util/firestore";
 
@@ -56,4 +64,23 @@ export const createAlias = async (props: CreateAliasProps): Promise<Alias> => {
     image: a.image,
     name: a.name,
   });
+};
+
+interface DeleteAliasesByCharacterProps {
+  characterId: string;
+}
+
+export const deleteAliasesByCharacter = async (
+  props: DeleteAliasesByCharacterProps,
+): Promise<void> => {
+  const { characterId } = props;
+
+  const batch = writeBatch(db);
+  const collectionRef = collection(db, "alias");
+
+  const q = query(collectionRef, where("character", "==", characterId));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(d => batch.delete(d.ref));
+
+  await batch.commit();
 };
