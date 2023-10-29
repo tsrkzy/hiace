@@ -27,6 +27,7 @@ export function ChannelListener() {
         const channel = new Channel({
           id: doc.id,
           name: d.name,
+          room: d.room,
         });
         channels.push(channel);
       });
