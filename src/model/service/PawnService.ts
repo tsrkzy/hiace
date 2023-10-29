@@ -1,4 +1,12 @@
-import { collection, setDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  writeBatch,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Pawn } from "../Pawn";
 
@@ -40,4 +48,17 @@ export const createPawn = async (props: CreatePawnProps) => {
     character: p.character,
     transform: p.transform,
   });
+};
+
+export const deletePawnByBoard = async (props: { boardId: string }) => {
+  const { boardId } = props;
+
+  const batch = writeBatch(db);
+  const collectionRef = collection(db, "pawn");
+
+  const q = query(collectionRef, where("board", "==", boardId));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(d => batch.delete(d.ref));
+
+  await batch.commit();
 };

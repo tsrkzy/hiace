@@ -10,7 +10,7 @@
   import { useMapChips } from "../model/store/mapChips";
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
-  import { createBoard } from "../model/service/BoardService";
+  import { createBoard, deleteBoard } from "../model/service/BoardService";
   import { createMapChip, deleteMapChip } from "../model/service/MapChipService";
   import { usePawns } from "../model/store/pawns";
   import { useUsers } from "../model/store/users";
@@ -45,12 +45,13 @@
     })
   }
 
-  const handleDeleteBoard = async () => {
+  const handleDeleteBoard = async (boardId: string) => {
     console.log("BoardList.handleDeleteBoard");
+    await deleteBoard({ boardId })
   }
   const handleDeleteMapChip = async (mapChipId: string) => {
     console.log("Boa3rdList.handleDeleteMapChip");
-    deleteMapChip({mapChipId})
+    await deleteMapChip({ mapChipId })
   }
 
 </script>
@@ -61,13 +62,15 @@
     {#each $boards as b}
       <ul>
         <li>
-          <button on:click={handleDeleteBoard}>delete</button>board: {b.id}
+          <button on:click={()=>handleDeleteBoard(b.id)}>delete</button>
+          board: {b.id}
         </li>
         <ul>
           {#each $mapChips as m}
             {#if m.board === b.id}
               <li>
-                <button on:click={()=>handleDeleteMapChip(m.id)}>delete</button>map: {m.id}
+                <button on:click={()=>handleDeleteMapChip(m.id)}>delete</button>
+                map: {m.id}
               </li>
             {/if}
           {/each}
@@ -83,11 +86,9 @@
           {/each}
         </ul>
         {#if $isLoggedIn}
-          <li>
-            {#each $myCharacters as c}
-                <button on:click={()=>handleAddPawn(b.id, c.id)}>add pawn:{c.name}</button>
-            {/each}
-          </li>
+          {#each $myCharacters as c}
+            <button on:click={()=>handleAddPawn(b.id, c.id)}>add pawn:{c.name}</button>
+          {/each}
         {/if}
       </ul>
     {/each}

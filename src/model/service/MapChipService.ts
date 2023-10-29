@@ -1,4 +1,13 @@
-import { collection, setDoc, doc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  deleteDoc,
+  writeBatch,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { MapChip } from "../MapChip";
 
@@ -34,4 +43,17 @@ export const deleteMapChip = async (props: { mapChipId: string }) => {
   const collectionRef = collection(db, "map");
   const docRef = doc(collectionRef, mapChipId);
   await deleteDoc(docRef);
+};
+
+export const deleteMapChipByBoard = async (props: { boardId: string }) => {
+  const { boardId } = props;
+
+  const batch = writeBatch(db);
+  const collectionRef = collection(db, "map");
+
+  const q = query(collectionRef, where("board", "==", boardId));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(d => batch.delete(d.ref));
+
+  await batch.commit();
 };
