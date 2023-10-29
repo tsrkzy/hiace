@@ -16,6 +16,55 @@ export type PawnProps = {
 };
 
 export class Pawn {
+  get id(): string {
+    return this._id;
+  }
+
+  set id(value: string) {
+    this._id = value;
+  }
+  get room(): string {
+    return this._room;
+  }
+
+  set room(value: string) {
+    this._room = value;
+  }
+  get owner(): string {
+    return this._owner;
+  }
+
+  set owner(value: string) {
+    this._owner = value;
+  }
+  get board(): string {
+    return this._board;
+  }
+
+  set board(value: string) {
+    this._board = value;
+  }
+  get image(): string {
+    return this._image;
+  }
+
+  set image(value: string) {
+    this._image = value;
+  }
+  get character(): string {
+    return this._character;
+  }
+
+  set character(value: string) {
+    this._character = value;
+  }
+  get transform(): string {
+    return this._transform;
+  }
+
+  set transform(value: string) {
+    this._transform = value;
+  }
   private _id: string;
   private _room: string;
   private _owner: string;

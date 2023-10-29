@@ -11,7 +11,7 @@
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
   import { createBoard } from "../model/service/BoardService";
-  import { createMapChip } from "../model/service/MapChipService";
+  import { createMapChip, deleteMapChip } from "../model/service/MapChipService";
   import { usePawns } from "../model/store/pawns";
   import { useUsers } from "../model/store/users";
   import { useCharacters } from "../model/store/characters";
@@ -48,8 +48,9 @@
   const handleDeleteBoard = async () => {
     console.log("BoardList.handleDeleteBoard");
   }
-  const handleDeleteMapChip = async () => {
+  const handleDeleteMapChip = async (mapChipId: string) => {
     console.log("Boa3rdList.handleDeleteMapChip");
+    deleteMapChip({mapChipId})
   }
 
 </script>
@@ -66,7 +67,7 @@
           {#each $mapChips as m}
             {#if m.board === b.id}
               <li>
-                <button on:click={handleDeleteMapChip}>delete</button>map: {m.id}
+                <button on:click={()=>handleDeleteMapChip(m.id)}>delete</button>map: {m.id}
               </li>
             {/if}
           {/each}

@@ -1,4 +1,4 @@
-import { collection, setDoc, doc } from "firebase/firestore";
+import { collection, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { MapChip } from "../MapChip";
 
@@ -26,4 +26,12 @@ export const createMapChip = async (
     room: m.room,
     board: m.board,
   });
+};
+
+export const deleteMapChip = async (props: { mapChipId: string }) => {
+  const { mapChipId } = props;
+
+  const collectionRef = collection(db, "map");
+  const docRef = doc(collectionRef, mapChipId);
+  await deleteDoc(docRef);
 };
