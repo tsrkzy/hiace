@@ -11,6 +11,7 @@
     "prettier": "npx prettier . --write",
     "lint": "npx eslint . --fix",
     "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check_watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "deploy": "firebase deploy"
   },
   "devDependencies": {

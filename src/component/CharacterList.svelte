@@ -13,6 +13,8 @@
   import { useUsers } from "../model/store/users";
   import { useRoom } from "../model/store/room";
 
+  export let open = false;
+
   const { characters, } = useCharacters()
   const { aliases, } = useAliases()
   const { isLoggedIn } = useAuth()
@@ -41,7 +43,7 @@
 </script>
 
 <main>
-  <details>
+  <details {open}>
     <summary>Character</summary>
     {#each $characters as c}
       <ul>

@@ -31,6 +31,7 @@
   import CharacterList from "../component/CharacterList.svelte";
   import { useUsers } from "../model/store/users";
   import BoardList from "../component/BoardList.svelte";
+  import ChannelList from "../component/ChannelList.svelte";
 
   export let roomId = "";
 
@@ -151,9 +152,10 @@
     <p>roomId: {roomId}</p>
     <p>roomState: {state}</p>
   </details>
-  <UserList></UserList>
-  <CharacterList></CharacterList>
-  <BoardList></BoardList>
+  <UserList open></UserList>
+  <CharacterList open></CharacterList>
+  <BoardList open></BoardList>
+  <ChannelList open></ChannelList>
 </main>
 
 <style>

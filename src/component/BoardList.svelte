@@ -17,6 +17,8 @@
   import { useCharacters } from "../model/store/characters";
   import { createPawn, deletePawn } from "../model/service/PawnService";
 
+  export let open = false;
+
   const { boards, } = useBoards()
   const { mapChips, } = useMapChips()
   const { pawns, } = usePawns()
@@ -61,7 +63,7 @@
 </script>
 
 <main>
-  <details open>
+  <details {open}>
     <summary>Board</summary>
     {#each $boards as b}
       <ul>

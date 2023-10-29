@@ -6,26 +6,18 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { onDestroy } from "svelte";
-  import { User } from "../model/User";
   import { useUsers } from "../model/store/users";
 
-  const { subscribeUsers } = useUsers()
+  export let open = false;
 
-  $: users = [] as User[];
-  const subscribes: (() => unknown)[] = [];
-  subscribes.push(subscribeUsers((_users: User[]) => {
-    users = _users
-  }))
-  onDestroy(() => {
-    subscribes.forEach(s => s());
-  })
+  const { users } = useUsers();
+
 </script>
 
 <main>
-  <details>
+  <details {open}>
     <summary>Users</summary>
-    {#each users as u}
+    {#each $users as u}
       <ul>
         <li>{u.id},{u.name}</li>
       </ul>

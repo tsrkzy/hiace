@@ -18,5 +18,6 @@ export const useUsers = () => {
     subscribeUsers: users.subscribe,
     setUsers: users.set,
     myUserId,
+    users,
   };
 };
