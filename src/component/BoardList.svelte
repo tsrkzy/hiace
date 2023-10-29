@@ -15,7 +15,7 @@
   import { usePawns } from "../model/store/pawns";
   import { useUsers } from "../model/store/users";
   import { useCharacters } from "../model/store/characters";
-  import { createPawn } from "../model/service/PawnService";
+  import { createPawn, deletePawn } from "../model/service/PawnService";
 
   const { boards, } = useBoards()
   const { mapChips, } = useMapChips()
@@ -50,8 +50,12 @@
     await deleteBoard({ boardId })
   }
   const handleDeleteMapChip = async (mapChipId: string) => {
-    console.log("Boa3rdList.handleDeleteMapChip");
+    console.log("BoardList.handleDeleteMapChip");
     await deleteMapChip({ mapChipId })
+  }
+  const handleDeletePawn = async (pawnId: string) => {
+    console.log("BoardList.handleDeletePawn");
+    await deletePawn({ pawnId })
   }
 
 </script>
@@ -81,7 +85,7 @@
         <ul>
           {#each $pawns as p}
             {#if p.board === b.id}
-              <li>pawn: {p.id}</li>
+              <li><button on:click={()=>handleDeletePawn(p.id)}>delete</button>pawn: {p.id}(c:{p.character})</li>
             {/if}
           {/each}
         </ul>

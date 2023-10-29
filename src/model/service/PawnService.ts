@@ -6,6 +6,7 @@ import {
   query,
   where,
   getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Pawn } from "../Pawn";
@@ -48,6 +49,14 @@ export const createPawn = async (props: CreatePawnProps) => {
     character: p.character,
     transform: p.transform,
   });
+};
+
+export const deletePawn = async (props: { pawnId: string }) => {
+  const { pawnId } = props;
+
+  const collectionRef = collection(db, "pawn");
+  const docRef = doc(collectionRef, pawnId);
+  await deleteDoc(docRef);
 };
 
 export const deletePawnByBoard = async (props: { boardId: string }) => {
