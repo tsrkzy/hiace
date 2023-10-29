@@ -26,7 +26,14 @@ export function ImageSourceListener() {
         const d = doc.data();
         const image = new ImageSource({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          owner: d.owner,
+          path: d.path,
+          url: d.url,
+          height: d.height,
+          width: d.width,
+          hidden: d.hidden,
+          tags: d.tags,
         });
         images.push(image);
       });
