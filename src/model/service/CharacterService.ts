@@ -1,10 +1,11 @@
-import { collection, setDoc, doc } from "firebase/firestore";
+import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Character } from "../Character";
+import { createDefaultAlias } from "./AliasService";
 
 const SYSTEM_COLOR = "#EEEEEE";
 
-export const createCharacter = async (props: {
+type CreateCharacterProps = {
   owner: string;
   name: string;
   roomId: string;
@@ -16,7 +17,15 @@ export const createCharacter = async (props: {
   pawnSize?: number;
   color?: string;
   archived?: boolean;
-}): Promise<Character> => {
+};
+/**
+ * characterの作成
+ * デフォルトのaliasも同時に作成する
+ * @param {CreateCharacterProps} props
+ */
+export const createCharacter = async (
+  props: CreateCharacterProps,
+): Promise<Character> => {
   const c = {
     owner: props.owner,
     name: props.name,
@@ -33,6 +42,17 @@ export const createCharacter = async (props: {
   const docRef = doc(collectionRef);
   await setDoc(docRef, c);
   const { id } = docRef;
+
+  /* 初期aliasの作成 */
+  const alias = await createDefaultAlias({
+    roomId: props.roomId,
+    characterId: id,
+    imageId: "imageId",
+  });
+
+  /* 作成したaliasをcharacterに割当 */
+  await setActiveAlias({ characterId: id, aliasId: alias.id });
+
   return new Character({
     id,
     name: c.name,
@@ -44,4 +64,21 @@ export const createCharacter = async (props: {
     showOnInitiative: c.showOnInitiative,
     text: c.text,
   });
+};
+
+type ActiveAliasProps = {
+  characterId: string;
+  aliasId: string;
+};
+/**
+ * characterのactiveAliasにaliasを設定する
+ * @param {ActiveAliasProps} props
+ */
+export const setActiveAlias = async (
+  props: ActiveAliasProps,
+): Promise<void> => {
+  const { characterId, aliasId } = props;
+  const collectionRef = collection(db, "character");
+  const docRef = doc(collectionRef, characterId);
+  await updateDoc(docRef, { activeAlias: aliasId });
 };

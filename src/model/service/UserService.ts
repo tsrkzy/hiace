@@ -56,7 +56,6 @@ export const createUser = async (props: {
   const { id } = docRef;
   return new User({
     id,
-
     color: u.color,
     email: u.email,
     name: u.name,

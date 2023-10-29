@@ -26,8 +26,10 @@ export function AliasListener() {
         const d = doc.data();
         const alias = new Alias({
           id: doc.id,
+          room: d.room,
+          character: d.character,
+          image: d.image,
           name: d.name,
-          owner: d.owner,
         });
         aliases.push(alias);
       });

@@ -8,7 +8,9 @@
 export type AliasProps = {
   id: string;
   name: string;
-  owner: string;
+  room: string;
+  character: string;
+  image: string;
 };
 
 export class Alias {
@@ -19,7 +21,6 @@ export class Alias {
   set id(value: string) {
     this._id = value;
   }
-
   get name(): string {
     return this._name;
   }
@@ -27,26 +28,43 @@ export class Alias {
   set name(value: string) {
     this._name = value;
   }
-
-  get owner(): string {
-    return this._owner;
+  get room(): string {
+    return this._room;
   }
 
-  set owner(value: string) {
-    this._owner = value;
+  set room(value: string) {
+    this._room = value;
+  }
+  get character(): string {
+    return this._character;
+  }
+
+  set character(value: string) {
+    this._character = value;
+  }
+  get image(): string {
+    return this._image;
+  }
+
+  set image(value: string) {
+    this._image = value;
   }
 
   private _id: string;
   private _name: string;
-  private _owner: string;
+  private _room: string;
+  private _character: string;
+  private _image: string;
 
   /**
    * @param {AliasProps} args
    */
   constructor(args: AliasProps) {
-    const { id, name, owner } = args;
+    const { id, name, room, character, image } = args;
     this._id = id;
     this._name = name;
-    this._owner = owner;
+    this._room = room;
+    this._character = character;
+    this._image = image;
   }
 }
