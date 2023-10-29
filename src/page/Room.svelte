@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
+  import { get } from "svelte/store";
   import { authenticateWithPopUp } from "../util/googleAuthProvider";
 
   /* service */
@@ -59,6 +60,21 @@
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
 
+  /* 描画時にログイン済みの場合 */
+  if (get(isLoggedIn) && get(email)) {
+    fetchUserByEmail(get(email)).then(user => {
+      if (!user) {
+        throw new Error("auth information corrupted.")
+      }
+
+      userId = user.id;
+      setRoomListener(roomId)
+    }).catch((e) => {
+      console.error(e);
+      throw e
+    })
+  }
+
   const subscribes: (() => unknown)[] = [];
 
   export const handleClick = () => {
@@ -101,7 +117,6 @@
 
 
   function startListening() {
-    // setRoomListener(roomId)
     setUserListener(roomId)
     setCharacterListener(roomId)
     setAliasListener(roomId)

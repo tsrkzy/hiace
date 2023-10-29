@@ -61,12 +61,10 @@
     // new Socket(room.Id);
 
     /* roomに参加 */
-    // RoomCollectionService.joinRoom(userId, room.id)
     await joinRoom(userId, room.id);
 
     /* /r/:roomId へ仮想ルーティング */
     navigate(`/r/${room.id}`, { replace: true });
-
   }
 
   export const handleRoomNameInput = (e: Event & { currentTarget: EventTarget & HTMLInputElement; }) => {
