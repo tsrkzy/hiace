@@ -67,8 +67,9 @@ export const createUser = async (props: {
 
 export const joinRoom = async (userId: string, roomId: string) => {
   console.log("UserStoreService.joinRoom", userId, roomId);
-  const userDocRef = doc(db, userId);
-  const userDoc = await getDoc(userDocRef);
+  const collectionRef = collection(db, "user");
+  const docRef = doc(collectionRef, userId);
+  const userDoc = await getDoc(docRef);
   const user = userDoc.data();
 
   if (!user) {
@@ -82,5 +83,5 @@ export const joinRoom = async (userId: string, roomId: string) => {
   }
   joinTo.push(roomId);
 
-  await updateDoc(userDocRef, { joinTo });
+  await updateDoc(docRef, { joinTo });
 };
