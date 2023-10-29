@@ -8,6 +8,7 @@
 export type ChannelProps = {
   id: string;
   name: string;
+  type: string;
 };
 
 export class Channel {
@@ -27,13 +28,15 @@ export class Channel {
   }
   private _id: string;
   private _name: string;
+  private _type: string;
 
   /**
    * @param {ChannelProps} args
    */
   constructor(args: ChannelProps) {
-    const { id, name } = args;
+    const { id, name, type } = args;
     this._id = id;
     this._name = name;
+    this._type = type;
   }
 }
