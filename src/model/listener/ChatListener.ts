@@ -26,7 +26,15 @@ export function ChatListener() {
         const d = doc.data();
         const chat = new Chat({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          channel: d.channel,
+          alias: d.alias,
+          character: d.character,
+          color: d.color,
+          owner: d.owner,
+          type: d.type,
+          value: d.value,
+          timestamp: d.timestamp,
         });
         chats.push(chat);
       });

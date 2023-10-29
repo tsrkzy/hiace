@@ -28,15 +28,16 @@ export const createChannel = async (
   });
 };
 
-
 interface DeleteChannelProps {
   channelId: string;
 }
 
-export const deleteChannel = async (props: DeleteChannelProps): Promise<void> => {
+export const deleteChannel = async (
+  props: DeleteChannelProps,
+): Promise<void> => {
   const { channelId } = props;
 
   const collectionRef = collection(db, "channel");
-  const docRef = doc(collectionRef, channelId)
-  await deleteDoc(docRef)
-}
+  const docRef = doc(collectionRef, channelId);
+  await deleteDoc(docRef);
+};

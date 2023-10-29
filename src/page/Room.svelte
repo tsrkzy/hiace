@@ -152,9 +152,9 @@
     <p>roomId: {roomId}</p>
     <p>roomState: {state}</p>
   </details>
-  <UserList open></UserList>
-  <CharacterList open></CharacterList>
-  <BoardList open></BoardList>
+  <UserList></UserList>
+  <CharacterList></CharacterList>
+  <BoardList></BoardList>
   <ChannelList open></ChannelList>
 </main>
 
