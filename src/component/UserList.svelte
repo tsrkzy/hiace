@@ -9,6 +9,7 @@
   import { onDestroy } from "svelte";
   import { User } from "../model/User";
   import { useUsers } from "../model/store/users";
+
   const { subscribeUsers } = useUsers()
 
   $: users = [] as User[];
@@ -22,9 +23,12 @@
 </script>
 
 <main>
-  {#each users as u}
-    <ul>
-      <li>{u.id},{u.name}</li>
-    </ul>
-  {/each}
+  <details>
+    <summary>Users</summary>
+    {#each users as u}
+      <ul>
+        <li>{u.id},{u.name}</li>
+      </ul>
+    {/each}
+  </details>
 </main>

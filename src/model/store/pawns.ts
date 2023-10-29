@@ -11,5 +11,6 @@ export const usePawns = () => {
   return {
     subscribePawns: pawns.subscribe,
     setPawns: pawns.set,
+    pawns,
   };
 };

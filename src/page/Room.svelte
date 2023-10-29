@@ -30,6 +30,7 @@
   import UserList from "../component/UserList.svelte";
   import CharacterList from "../component/CharacterList.svelte";
   import { useUsers } from "../model/store/users";
+  import BoardList from "../component/BoardList.svelte";
 
   export let roomId = "";
 
@@ -128,27 +129,31 @@
 </script>
 
 <main>
-  <h1>Auth</h1>
-  <h5>userId: {userId}</h5>
-  <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
-  <p>isLoggedIn: {$isLoggedIn}</p>
-  <button on:click={setState("KICKED")}>KICKED</button>
-  <button on:click={setState("JOINED")}>JOINED</button>
-  <button on:click={setState("WAITING")}>WAITING</button>
-  <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
-  {#if $isLoggedIn}
-    <p>email: {$email}</p>
-  {/if}
-  <h1>Me</h1>
-  me.id: {$myUserId}
-  <h1>Room</h1>
-  <p>roomId: {roomId}</p>
-  <p>roomState: {state}</p>
-  <h2>Users</h2>
+  <details open>
+    <summary>Auth</summary>
+    <h5>userId: {userId}</h5>
+    <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
+    <p>isLoggedIn: {$isLoggedIn}</p>
+    <button on:click={setState("KICKED")}>KICKED</button>
+    <button on:click={setState("JOINED")}>JOINED</button>
+    <button on:click={setState("WAITING")}>WAITING</button>
+    <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
+    {#if $isLoggedIn}
+      <p>email: {$email}</p>
+    {/if}
+  </details>
+  <details>
+    <summary>Me</summary>
+    me.id: {$myUserId}
+  </details>
+  <details>
+    <summary>Room</summary>
+    <p>roomId: {roomId}</p>
+    <p>roomState: {state}</p>
+  </details>
   <UserList></UserList>
   <CharacterList></CharacterList>
-  <h2>Board</h2>
-
+  <BoardList></BoardList>
 </main>
 
 <style>

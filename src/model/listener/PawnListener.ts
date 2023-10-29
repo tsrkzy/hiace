@@ -26,7 +26,12 @@ export function PawnListener() {
         const d = doc.data();
         const pawn = new Pawn({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          owner: d.owner,
+          board: d.board,
+          image: d.image,
+          character: d.character,
+          transform: d.transform,
         });
         pawns.push(pawn);
       });

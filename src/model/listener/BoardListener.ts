@@ -26,7 +26,7 @@ export function BoardListener() {
         const d = doc.data();
         const board = new Board({
           id: doc.id,
-          name: d.name,
+          room: d.room,
         });
         boards.push(board);
       });

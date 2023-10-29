@@ -32,7 +32,7 @@
     })
   }
 
-  const handleDeleteCharacter = async (characterId:string) => {
+  const handleDeleteCharacter = async (characterId: string) => {
     console.log("CharacterList.handleDeleteCharacter");
     await deleteCharacter({
       characterId
@@ -41,21 +41,24 @@
 </script>
 
 <main>
-  <h2>Character</h2>
-  {#each $characters as c}
-    <ul>
-      <li>
-      <button on:click={()=>{handleDeleteCharacter(c.id)}}>delete</button>
-        {c.id},{c.name}</li>
-    </ul>
-  {/each}
-  {#if $isLoggedIn}
-    <button on:click={handleAddCharacter}>add character</button>
-  {/if}
-  <h2>Alias</h2>
-  {#each $aliases as a}
-    <ul>
-      <li>{a.id},{a.name}</li>
-    </ul>
-  {/each}
+  <details>
+    <summary>Character</summary>
+    {#each $characters as c}
+      <ul>
+        <li>
+          <button on:click={()=>{handleDeleteCharacter(c.id)}}>delete</button>
+          {c.id},{c.name}</li>
+        {#each $aliases as a}
+          {#if a.character === c.id}
+            <ul>
+              <li>{a.id},{a.name}</li>
+            </ul>
+          {/if}
+        {/each}
+      </ul>
+    {/each}
+    {#if $isLoggedIn}
+      <button on:click={handleAddCharacter}>add character</button>
+    {/if}
+  </details>
 </main>

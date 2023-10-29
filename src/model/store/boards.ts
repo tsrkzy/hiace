@@ -11,5 +11,6 @@ export const useBoards = () => {
   return {
     subscribeBoards: boards.subscribe,
     setBoards: boards.set,
+    boards,
   };
 };

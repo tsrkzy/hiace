@@ -11,5 +11,6 @@ export const useMapChips = () => {
   return {
     subscribeMapChips: mapChips.subscribe,
     setMapChips: mapChips.set,
+    mapChips,
   };
 };

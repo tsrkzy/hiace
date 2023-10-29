@@ -26,7 +26,8 @@ export function MapChipListener() {
         const d = doc.data();
         const mapChip = new MapChip({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          board: d.board,
         });
         mapChips.push(mapChip);
       });

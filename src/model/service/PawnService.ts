@@ -1,0 +1,43 @@
+import { collection, setDoc, doc } from "firebase/firestore";
+import { db } from "../../util/firestore";
+import { Pawn } from "../Pawn";
+
+const DEFAULT_CHARACTER_IMAGE = "default_character_image";
+
+interface CreatePawnProps {
+  roomId: string;
+  userId: string;
+  boardId: string;
+  imageId: string;
+  characterId: string;
+  transform?: string | DOMMatrix;
+}
+
+export const createPawn = async (props: CreatePawnProps) => {
+  const { roomId, userId, boardId, imageId, characterId, transform } = props;
+  const p = {
+    room: roomId,
+    owner: userId,
+    board: boardId,
+    image: imageId ?? DEFAULT_CHARACTER_IMAGE,
+    character: characterId,
+    transform: `${transform ?? new DOMMatrix()}`,
+    updatedAt: Date.now(),
+  };
+
+  const collectionRef = collection(db, "pawn");
+  const docRef = doc(collectionRef);
+  await setDoc(docRef, p);
+
+  const { id } = docRef;
+
+  return new Pawn({
+    id,
+    room: p.room,
+    owner: p.owner,
+    board: p.board,
+    image: p.image,
+    character: p.character,
+    transform: p.transform,
+  });
+};
