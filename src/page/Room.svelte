@@ -10,6 +10,7 @@
   /* store */
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
+  import { useUsers } from "../model/store/users";
 
   /* listener */
   import { RoomListener } from "../model/listener/RoomListener";
@@ -28,11 +29,13 @@
   import { TableListener } from "../model/listener/TableListener";
 
   /* debug components */
-  import UserList from "../component/UserList.svelte";
-  import CharacterList from "../component/CharacterList.svelte";
-  import { useUsers } from "../model/store/users";
-  import BoardList from "../component/BoardList.svelte";
-  import ChannelList from "../component/ChannelList.svelte";
+  import UserList from "../component/debug/UserList.svelte";
+  import CharacterList from "../component/debug/CharacterList.svelte";
+  import BoardList from "../component/debug/BoardList.svelte";
+  import ChannelList from "../component/debug/ChannelList.svelte";
+
+  /* components */
+  import Button from "../component/button/Button.svelte";
 
   export let roomId = "";
 
@@ -59,6 +62,10 @@
 
   $: state = "NOT_AUTHORIZED";
   $: userId = "";
+  $: isJoined = state === "JOINED"
+  $: isKicked = state === "KICKED"
+  $: isWaiting = state === "WAITING"
+  $: noRequest = state === "NO_REQUEST"
 
   /* 描画時にログイン済みの場合 */
   if (get(isLoggedIn) && get(email)) {
@@ -151,18 +158,18 @@
 
     {#if !$isLoggedIn}
       <!-- Google認証がまだならGoogle認証ボタンのみ表示 -->
-      <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
-    {:else if state === "NO_REQUEST"}
+      <Button handle={handleClick}>Google認証</Button>
+    {:else if noRequest}
       <button on:click={setState("WAITING")}>入室リクエスト</button>
-    {:else if state === "KICKED"}
+    {:else if isKicked}
       <p>キックされました</p>
-    {:else if state === "JOINED"}
+    {:else if isJoined}
       <p>ゲーム画面</p>
-    {:else if state === "WAITING"}
+    {:else if isWaiting}
       <p>リクエスト承認待ち</p>
-      <!--    <SvgBoard></SvgBoard>-->
-      <!--    <ContextMenu></ContextMenu>-->
-      <!--    <FloatGroup></FloatGroup>-->
+      <!-- <SvgBoard></SvgBoard> -->
+      <!-- <ContextMenu></ContextMenu> -->
+      <!-- <FloatGroup></FloatGroup> -->
     {/if}
 
   </div>

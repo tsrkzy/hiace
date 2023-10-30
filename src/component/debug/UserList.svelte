@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useUsers } from "../model/store/users";
+  import { useUsers } from "../../model/store/users";
 
   export let open = false;
 

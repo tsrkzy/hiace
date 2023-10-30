@@ -6,12 +6,12 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useCharacters } from "../model/store/characters";
-  import { useAliases } from "../model/store/aliases";
-  import { createCharacter, deleteCharacter } from "../model/service/CharacterService";
-  import { useAuth } from "../model/store/auth";
-  import { useUsers } from "../model/store/users";
-  import { useRoom } from "../model/store/room";
+  import { useCharacters } from "../../model/store/characters";
+  import { useAliases } from "../../model/store/aliases";
+  import { createCharacter, deleteCharacter } from "../../model/service/CharacterService";
+  import { useAuth } from "../../model/store/auth";
+  import { useUsers } from "../../model/store/users";
+  import { useRoom } from "../../model/store/room";
 
   export let open = false;
 
