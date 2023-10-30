@@ -6,11 +6,34 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { Alias } from "../Alias";
 import { db } from "../../util/firestore";
 
 const DEFAULT_CHARACTER_IMAGE = "default_character_image";
+
+export const fetchAliasById = async ({
+  id,
+}: {
+  id: string;
+}): Promise<Alias | null> => {
+  const docRef = doc(collection(db, "alias"), id);
+  const d = await getDoc(docRef);
+  if (!d.exists()) {
+    return null;
+  }
+
+  const data = d.data();
+  return new Alias({
+    id,
+    name: data.name,
+    room: data.room,
+    image: data.image,
+    character: "",
+  });
+};
 
 interface CreateDefaultAliasProps {
   roomId: string;
@@ -83,4 +106,16 @@ export const deleteAliasesByCharacter = async (
   querySnapshot.forEach(d => batch.delete(d.ref));
 
   await batch.commit();
+};
+
+interface UpdateAliasProps {
+  aliasId: string;
+  criteria: object;
+}
+
+export const updateAlias = async (props: UpdateAliasProps): Promise<void> => {
+  const { aliasId, criteria } = props;
+  const collectionRef = collection(db, "alias");
+  const docRef = doc(collectionRef, aliasId);
+  return await updateDoc(docRef, criteria);
 };
