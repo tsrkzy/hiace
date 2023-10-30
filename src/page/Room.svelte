@@ -145,32 +145,55 @@
 </script>
 
 <main>
-  <details open>
-    <summary>Auth</summary>
-    <h5>userId: {userId}</h5>
-    <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
-    <p>isLoggedIn: {$isLoggedIn}</p>
-    <button on:click={setState("KICKED")}>KICKED</button>
-    <button on:click={setState("JOINED")}>JOINED</button>
-    <button on:click={setState("WAITING")}>WAITING</button>
-    <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
-    {#if $isLoggedIn}
-      <p>email: {$email}</p>
+  <div id="floor" class="floor_container">
+    <div style="position: fixed; top: 0; left: 0">
+    </div>
+
+    {#if !$isLoggedIn}
+      <!-- Google認証がまだならGoogle認証ボタンのみ表示 -->
+      <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
+    {:else if state === "NO_REQUEST"}
+      <button on:click={setState("WAITING")}>入室リクエスト</button>
+    {:else if state === "KICKED"}
+      <p>キックされました</p>
+    {:else if state === "JOINED"}
+      <p>ゲーム画面</p>
+    {:else if state === "WAITING"}
+      <p>リクエスト承認待ち</p>
+      <!--    <SvgBoard></SvgBoard>-->
+      <!--    <ContextMenu></ContextMenu>-->
+      <!--    <FloatGroup></FloatGroup>-->
     {/if}
-  </details>
-  <details>
-    <summary>Me</summary>
-    me.id: {$myUserId}
-  </details>
-  <details>
-    <summary>Room</summary>
-    <p>roomId: {roomId}</p>
-    <p>roomState: {state}</p>
-  </details>
-  <UserList></UserList>
-  <CharacterList></CharacterList>
-  <BoardList></BoardList>
-  <ChannelList open></ChannelList>
+
+  </div>
+  <div style="position:absolute;top:0;right:0;width:50vw;">
+    <details>
+      <summary>Auth</summary>
+      <h5>userId: {userId}</h5>
+      <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
+      <p>isLoggedIn: {$isLoggedIn}</p>
+      <button on:click={setState("KICKED")}>KICKED</button>
+      <button on:click={setState("JOINED")}>JOINED</button>
+      <button on:click={setState("WAITING")}>WAITING</button>
+      <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
+      {#if $isLoggedIn}
+        <p>email: {$email}</p>
+      {/if}
+    </details>
+    <details>
+      <summary>Me</summary>
+      me.id: {$myUserId}
+    </details>
+    <details>
+      <summary>Room</summary>
+      <p>roomId: {roomId}</p>
+      <p>roomState: {state}</p>
+    </details>
+    <UserList></UserList>
+    <CharacterList></CharacterList>
+    <BoardList></BoardList>
+    <ChannelList open></ChannelList>
+  </div>
 </main>
 
 <style>
