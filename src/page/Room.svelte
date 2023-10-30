@@ -41,7 +41,7 @@
 
   /* store */
   const { setAuth, isLoggedIn, email } = useAuth();
-  const { room } = useRoom();
+  const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
   const { myUserId } = useUsers();
 
   /* listener */
@@ -61,7 +61,6 @@
   const { setTableListener } = TableListener();
 
   $: state = "NOT_AUTHORIZED";
-  $: userId = "";
   $: isJoined = state === "JOINED"
   $: isKicked = state === "KICKED"
   $: isWaiting = state === "WAITING"
@@ -74,7 +73,7 @@
         throw new Error("auth information corrupted.")
       }
 
-      userId = user.id;
+      setUserIdForRoomState(user.id);
       setRoomListener(roomId)
     }).catch((e) => {
       console.error(e);
@@ -98,8 +97,7 @@
           console.log("user created.", user);
         }
 
-        userId = user.id;
-
+        setUserIdForRoomState(user.id);
         setRoomListener(roomId)
       })
       .catch(e => {
@@ -110,12 +108,12 @@
   $: {
     /* 部屋IDへJoinしているかどうかでスイッチ振り分け */
     const { kicked = [], requests = [], users = [] } = $room;
-    if (kicked.indexOf(userId) !== -1) {
+    if (kicked.indexOf(get(userIdForRoomState)) !== -1) {
       state = "KICKED"
-    } else if (users.indexOf(userId) !== -1) {
+    } else if (users.indexOf(get(userIdForRoomState)) !== -1) {
       state = "JOINED"
       startListening()
-    } else if (requests.indexOf(userId) !== -1) {
+    } else if (requests.indexOf(get(userIdForRoomState)) !== -1) {
       state = "WAITING"
     } else {
       state = "NO_REQUEST"
@@ -141,7 +139,11 @@
 
   export const setState = (state: string) => {
     return async () => {
-      await setRoomStateForUser({ RoomId: roomId, UserId: userId, State: state })
+      await setRoomStateForUser({
+        RoomId: roomId,
+        UserId: get(userIdForRoomState),
+        State: state
+      })
     }
   }
 
@@ -176,7 +178,7 @@
   <div style="position:absolute;top:0;right:0;width:50vw;">
     <details>
       <summary>Auth</summary>
-      <h5>userId: {userId}</h5>
+      <h5>userIdForRoomState: {$userIdForRoomState}</h5>
       <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
       <p>isLoggedIn: {$isLoggedIn}</p>
       <button on:click={setState("KICKED")}>KICKED</button>
