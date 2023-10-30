@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
   import { get } from "svelte/store";
-  import { authenticateWithPopUp } from "../util/googleAuthProvider";
 
   /* service */
-  import { fetchUserByEmail, createUser } from "../model/service/UserService";
+  import { fetchUserByEmail,  } from "../model/service/UserService";
   import { setRoomStateForUser } from "../model/service/RoomService";
 
   /* store */
@@ -35,12 +33,12 @@
   import ChannelList from "../component/debug/ChannelList.svelte";
 
   /* components */
-  import Button from "../component/button/Button.svelte";
+  import GoogleLogInButton from "../component/button/GoogleLogInButton.svelte";
 
   export let roomId = "";
 
   /* store */
-  const { setAuth, isLoggedIn, email } = useAuth();
+  const {  isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
   const { myUserId } = useUsers();
 
@@ -79,30 +77,6 @@
       console.error(e);
       throw e
     })
-  }
-
-  const subscribes: (() => unknown)[] = [];
-
-  export const handleClick = () => {
-    return authenticateWithPopUp()
-      .then(async (a) => {
-        /* Googleログイン後 */
-        setAuth(a)
-
-        /* ユーザ情報があれば取得し、なければ作る */
-        let user = await fetchUserByEmail(a.email)
-        if (!user) {
-          console.log("no user found by Email.");
-          user = await createUser(a);
-          console.log("user created.", user);
-        }
-
-        setUserIdForRoomState(user.id);
-        setRoomListener(roomId)
-      })
-      .catch(e => {
-        console.error(e);
-      })
   }
 
   $: {
@@ -147,10 +121,6 @@
     }
   }
 
-  onDestroy(() => {
-    subscribes.forEach(s => s());
-  })
-
 </script>
 
 <main>
@@ -160,7 +130,7 @@
 
     {#if !$isLoggedIn}
       <!-- Google認証がまだならGoogle認証ボタンのみ表示 -->
-      <Button handle={handleClick}>Google認証</Button>
+      <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
     {:else if noRequest}
       <button on:click={setState("WAITING")}>入室リクエスト</button>
     {:else if isKicked}
@@ -179,7 +149,7 @@
     <details>
       <summary>Auth</summary>
       <h5>userIdForRoomState: {$userIdForRoomState}</h5>
-      <button on:click={handleClick} disabled="{$isLoggedIn}">loggin</button>
+      <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
       <p>isLoggedIn: {$isLoggedIn}</p>
       <button on:click={setState("KICKED")}>KICKED</button>
       <button on:click={setState("JOINED")}>JOINED</button>
