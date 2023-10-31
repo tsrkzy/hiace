@@ -3,10 +3,21 @@ import { ContentId, Float } from "../Float";
 
 const floats = writable<Float[]>([
   new Float({
+    id: 2,
+    show: true,
+    contentId: ContentId.CHAT_LIST,
+    contentTitle: "2222222222",
+    x: 300,
+    y: 300,
+    w: 300,
+    h: 300,
+    z: 2,
+  }),
+  new Float({
     id: 1,
     show: true,
     contentId: ContentId.CHAT_LIST,
-    contentTitle: "test1111111",
+    contentTitle: "1111111111",
     x: 300,
     y: 300,
     w: 300,

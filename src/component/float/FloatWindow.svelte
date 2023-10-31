@@ -9,15 +9,19 @@
   import { toCSS } from "../../util/style";
   import { useFloats } from "../../model/store/floats";
 
-  const {setFloats, floats} =useFloats()
+  const { setFloats, floats } = useFloats()
   export let float = {} as Float;
 
-  let xt = 0
-  let yt = 0
-  let wt = 0
-  let ht = 0
+  /* transition: 移動・サイズ変更中の値 */
+  let xt = float.x
+  let yt = float.y
+  let wt = float.w
+  let ht = float.h
 
-  $: floatStyle = (()=>{
+  /* ドラッグ操作中 */
+  let isDragMove = false;
+
+  $: floatStyle = (() => {
     const { x = 0, y = 0, w = 0, h = 0 } = float;
     const styleObject = {
       position: "absolute",
@@ -27,28 +31,27 @@
       height: `${ht ?? h}px`,
       border: "1px solid dimgray",
       backgroundColor: "transparent",
+      zIndex: `${float.z}`
     };
     return toCSS(styleObject)
   })();
   $: top = true;
-  $: dragMove = false;
   $: scaleNw = false;
   $: scaleSe = false;
   $: scaleSw = false;
-
-
 
 
   const onHandleMouseDown = (e: MouseEvent) => {
     e.stopPropagation();
     const { x: x0, y: y0 } = float;
 
-    /* copy origin to transition */
+    /* マウス移動中の座標で再描画するため、transition系の座標をfloatの現在座標で初期化 */
     xt = x0;
     yt = y0;
 
     const downX = e.clientX;
     const downY = e.clientY;
+    isDragMove = true;
 
     const el = document.getElementById(`move_handle_${float.id}`);
     if (!el) throw new Error(`no node with move_handle_${float.id}`)
@@ -57,11 +60,14 @@
       e.stopPropagation();
       const dx = e.clientX - downX;
       const dy = e.clientY - downY;
+
+      /* ブラウザウィンドウの左側および上側の画面外に行かないように */
       const x = Math.max(0, x0 + dx);
       const y = Math.max(0, y0 + dy);
+      /* ブラウザウィンドウの右側および下側の画面外に行かないように @TODO */
+
       xt = x;
       yt = y;
-      // console.log(`xt: ${xt}, yt: ${yt}`);
     };
 
 
@@ -75,7 +81,10 @@
         }
         f.x = xt;
         f.y = yt;
+
+        isDragMove = false;
       }
+      /* svelte-storeを発火させる */
       setFloats($floats);
 
       el.removeEventListener("mousemove", onHandleMouseMove);
@@ -108,11 +117,11 @@
         on:mousedown={onHandleMouseDown}
     >
       <span class="float-handle__title">{float.contentTitle }</span>
-      {#if dragMove}
+      {#if isDragMove}
         <div class="move-hit-box"></div>
       {/if}
 
-      {#if !dragMove}
+      {#if !isDragMove}
         <button
             on:mousedown={(e)=>e.stopPropagation}
             on:click={onClickClose}
@@ -121,42 +130,44 @@
           閉じる
         </button>
       {/if}
-      <!--      <float-duplicator v-if="!dragMove" :float-id="floatId"/>-->
-      <!--      <hint-container v-if="!dragMove" :float-id="floatId"/>-->
+      <!--      <float-duplicator v-if="!isDragMove" :float-id="floatId"/>-->
+      <!--      <hint-container v-if="!isDragMove" :float-id="floatId"/>-->
     </div>
     <!-- scale diagonal -->
-    <div
-        id={`scale_nw_handle_${float.id}`}
-        class="scale-handle__nw z-10"
-        on:mousedown={(e)=>onScaleMouseDown(e, 'nw')}
-    >
-      {#if scaleNw}
-        <div class="scale-hit-box__nw"></div>
-      {/if}
-    </div>
-    <div
-        id={`scale_se_handle_${float.id}`}
-        class="scale-handle__se z-10"
-        on:mousedown={(e)=>onScaleMouseDown(e, 'se')}
-    >
-      {#if scaleSe}
-        <div class="scale-hit-box__se"></div>
-      {/if}
-    </div>
-    <div
-        id={`scale_sw_handle_${float.id}`}
-        class="scale-handle__sw z-10"
-        on:mousedown={(e)=>onScaleMouseDown(e, 'sw')}
-    >
-      {#if scaleSw}
-        <div class="scale-hit-box__sw"></div>
-      {/if}
-    </div>
+    {#if !isDragMove}
+      <div
+          id={`scale_nw_handle_${float.id}`}
+          class="scale-handle__nw z-10"
+          on:mousedown={(e)=>onScaleMouseDown(e, 'nw')}
+      >
+        {#if scaleNw}
+          <div class="scale-hit-box__nw"></div>
+        {/if}
+      </div>
+      <div
+          id={`scale_se_handle_${float.id}`}
+          class="scale-handle__se z-10"
+          on:mousedown={(e)=>onScaleMouseDown(e, 'se')}
+      >
+        {#if scaleSe}
+          <div class="scale-hit-box__se"></div>
+        {/if}
+      </div>
+      <div
+          id={`scale_sw_handle_${float.id}`}
+          class="scale-handle__sw z-10"
+          on:mousedown={(e)=>onScaleMouseDown(e, 'sw')}
+      >
+        {#if scaleSw}
+          <div class="scale-hit-box__sw"></div>
+        {/if}
+      </div>
+    {/if}
     {#if !top}
       <div on:click={onClickShroud} class="float-content__shroud"></div>
     {/if}
     <div class="content-slot z-1">
-      <slot name="content">failed to load content: { float.id }</slot>
+      <slot name="content">{floatStyle}</slot>
     </div>
   </div>
 {/if}

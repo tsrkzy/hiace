@@ -5,8 +5,8 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-const camelToSnakeCase = (str: string) => {
-  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+const camelToKebabCase = (str: string) => {
+  return str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
 }
 export const toCSS = (o: { [key: string]: string|number|null|undefined }): string => {
   let s = "";
@@ -17,7 +17,7 @@ export const toCSS = (o: { [key: string]: string|number|null|undefined }): strin
       continue
     }
 
-    const k = camelToSnakeCase(_k)
+    const k = camelToKebabCase(_k)
     const style = `${k}: ${v};`
     s = s + style;
   }

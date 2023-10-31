@@ -7,9 +7,7 @@
 <script lang="ts">
   import { useFloats } from "../../model/store/floats";
   import FloatWindow from "./FloatWindow.svelte";
-
   const { floats } = useFloats();
-
 </script>
 
 
