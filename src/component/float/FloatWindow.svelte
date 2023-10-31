@@ -265,18 +265,7 @@
       </div>
     {/if}
     <div class="content-slot z-1">
-      <slot name="content">
-        <div>
-          <p>{floatStyle}</p>
-          <label>
-            <span>text</span>
-            <input type="text"/>
-          </label> <br><label>
-          <span>checkbox</span>
-          <input type="checkbox"/>
-        </label> <br>
-        </div>
-      </slot>
+      <slot></slot>
     </div>
   </div>
 {/if}
