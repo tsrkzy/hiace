@@ -11,7 +11,7 @@
     "prettier": "npx prettier . --write",
     "lint": "npx eslint . --fix",
     "check": "svelte-check --tsconfig ./tsconfig.json --compiler-warnings a11y-no-static-element-interactions:ignore,a11y-mouse-events-have-key-events:ignore,a11y-click-events-have-key-events:ignore",
-    "check_watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+    "check_watch": "npm run check -- --watch",
     "deploy": "firebase deploy"
   },
   "devDependencies": {

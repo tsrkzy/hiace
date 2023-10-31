@@ -34,6 +34,7 @@
 
   /* components */
   import GoogleLogInButton from "../component/button/GoogleLogInButton.svelte";
+  import FloatGroup from "../component/float/FloatGroup.svelte";
 
   export let roomId = "";
 
@@ -137,11 +138,11 @@
       <p>キックされました</p>
     {:else if isJoined}
       <p>ゲーム画面</p>
-    {:else if isWaiting}
-      <p>リクエスト承認待ち</p>
       <!-- <SvgBoard></SvgBoard> -->
       <!-- <ContextMenu></ContextMenu> -->
-      <!-- <FloatGroup></FloatGroup> -->
+       <FloatGroup></FloatGroup>
+    {:else if isWaiting}
+      <p>リクエスト承認待ち</p>
     {/if}
 
   </div>
