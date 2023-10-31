@@ -21,6 +21,12 @@
   /* ドラッグ操作中 */
   let isDragMove = false;
 
+  /* ドラッグ中のハンドルの方向 */
+  let scaleNe = false;
+  let scaleNw = false;
+  let scaleSe = false;
+  let scaleSw = false;
+
   $: floatStyle = (() => {
     const { x = 0, y = 0, w = 0, h = 0 } = float;
     const styleObject = {
@@ -36,9 +42,6 @@
     return toCSS(styleObject)
   })();
   $: top = true;
-  $: scaleNw = false;
-  $: scaleSe = false;
-  $: scaleSw = false;
 
 
   const onHandleMouseDown = (e: MouseEvent) => {
@@ -101,6 +104,101 @@
   }
   const onScaleMouseDown = (e: MouseEvent, direction: string) => {
     console.log("FloatWindow.onScaleMouseDown", e, direction);
+    const isNe = direction === "ne";
+    const isNw = direction === "nw";
+    const isSw = direction === "sw";
+    const isSe = direction === "se";
+    const isN = isNw || isNe;
+    const isE = isSe || isNe;
+
+    e.stopPropagation();
+    // this.$store.dispatch("float/pop", { id: this.floatId });
+
+    const { x: x0, y: y0, w: w0, h: h0 } = float;
+
+    /* マウス移動中の座標で再描画するため、transition系の座標をfloatの現在座標で初期化 */
+    xt = x0;
+    yt = y0;
+    wt = w0;
+    ht = h0;
+
+    const downX = e.clientX;
+    const downY = e.clientY;
+    scaleNe = isNe;
+    scaleNw = isNw;
+    scaleSw = isSw;
+    scaleSe = isSe;
+
+    const el = document.getElementById(
+      `scale_${direction}_handle_${float.id}`
+    );
+    if (!el) {
+      throw new Error(`cannot found node: scale_${direction}_handle_${float.id}`)
+    }
+
+    const onHandleMouseMove = (e: MouseEvent) => {
+      e.stopPropagation();
+      const dx = e.clientX - downX;
+      const dy = e.clientY - downY;
+      /* 最小幅または最小高さを下回る場合は、最小幅または最小高さをセット */
+      const _w = isE ? w0 + dx : w0 - dx;
+      const _h = isN ? h0 - dy : h0 + dy;
+
+      const tooSmallW = _w < 300;
+      const tooSmallH = _h < 200;
+
+      /* swの場合はxとwを変更、seの場合はwのみ */
+      const _x = isE ? x0 : x0 + dx;
+      const _y = isN ? y0 + dy : y0;
+
+      const w = tooSmallW ? 300 : _w;
+      const h = tooSmallH ? 200 : _h;
+
+      const x = Math.max(0, tooSmallW ? x0 : _x);
+      const y = Math.max(0, tooSmallH ? y0 : _y);
+
+      xt = x;
+      yt = y;
+      wt = w;
+      ht = h;
+    };
+
+    const onHandleMouseUp = async (e: MouseEvent) => {
+      console.log("Float.onHandleMouseUp");
+      e.stopPropagation();
+
+      // this.$store.dispatch("float/scale", {
+      //   id: this.floatId,
+      //   w: this.wt,
+      //   h: this.ht,
+      // });
+      //
+      // this.$store.dispatch("float/move", {
+      //   id: this.floatId,
+      //   x: this.xt,
+      //   y: this.yt,
+      // });
+
+      xt = float.x = xt;
+      yt = float.y = yt;
+      wt = float.w = wt;
+      ht = float.h = ht;
+
+      scaleNe = false;
+      scaleNw = false;
+      scaleSw = false;
+      scaleSe = false;
+
+      el.removeEventListener("mousemove", onHandleMouseMove);
+      el.removeEventListener("mouseup", onHandleMouseUp);
+      el.removeEventListener("mouseleave", onHandleMouseUp);
+    };
+
+    el.addEventListener("mousemove", onHandleMouseMove, false);
+    el.addEventListener("mouseup", onHandleMouseUp, false);
+    el.addEventListener("mouseleave", onHandleMouseUp, false);
+
+    return false;
   }
   const onClickShroud = () => {
   }
@@ -125,7 +223,7 @@
         <button
             on:mousedown={(e)=>e.stopPropagation}
             on:click={onClickClose}
-            style="float: right"
+            style="float: right;margin-right: .5rem;"
         >
           閉じる
         </button>
@@ -135,6 +233,15 @@
     </div>
     <!-- scale diagonal -->
     {#if !isDragMove}
+      <div
+          id={`scale_ne_handle_${float.id}`}
+          class="scale-handle__ne z-10"
+          on:mousedown={(e)=>onScaleMouseDown(e, 'ne')}
+      >
+        {#if scaleNe}
+          <div class="scale-hit-box__ne"></div>
+        {/if}
+      </div>
       <div
           id={`scale_nw_handle_${float.id}`}
           class="scale-handle__nw z-10"
@@ -227,6 +334,7 @@
     cursor: move;
   }
 
+  .scale-hit-box__ne,
   .scale-hit-box__nw,
   .scale-hit-box__se,
   .scale-hit-box__sw {
@@ -237,6 +345,20 @@
     left: calc(-1 * #{$ww} / 2);
     top: calc(-1 * #{$hh} / 2);
     cursor: grabbing;
+  }
+
+  .scale-handle__ne {
+    width: $control-size;
+    height: $control-size;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: nesw-resize;
+
+    &:hover {
+      border-top: $edge;
+      border-right: $edge;
+    }
   }
 
   .scale-handle__nw {
