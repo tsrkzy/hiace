@@ -41,7 +41,6 @@
     };
     return toCSS(styleObject)
   })();
-  $: top = true;
 
   const onClickBackground = (e: MouseEvent) => {
     console.log("FloatWindow.onClickBackground");
@@ -65,7 +64,9 @@
     isDragMove = true;
 
     const el = document.getElementById(`move_handle_${float.id}`);
-    if (!el) throw new Error(`no node with move_handle_${float.id}`)
+    if (!el) {
+      throw new Error(`no node with move_handle_${float.id}`)
+    }
 
     const onHandleMouseMove = (e: MouseEvent) => {
       e.stopPropagation();
@@ -196,9 +197,6 @@
 
     return false;
   }
-  const onClickShroud = () => {
-  }
-
 
 </script>
 
@@ -207,7 +205,7 @@
     <!-- move -->
     <div
         id={`move_handle_${float.id}`}
-        class={`move-handle z-10 ${top ? 'top' : ''}`}
+        class={"move-handle z-10"}
         on:mousedown={onHandleMouseDown}
     >
       <span class="float-handle__title">{float.contentTitle }</span>
@@ -266,9 +264,6 @@
         {/if}
       </div>
     {/if}
-    {#if !top}
-      <div on:click={onClickShroud} class="float-content__shroud"></div>
-    {/if}
     <div class="content-slot z-1">
       <slot name="content">
         <div>
@@ -294,21 +289,6 @@
   $ww: 200vw;
   $hh: 200vh;
 
-  div.float-content__shroud {
-    z-index: 1;
-    background: radial-gradient(
-                    circle at center,
-                    rgba(0, 0, 0, 0) 0,
-                    rgba(0, 0, 0, 0.05) 80%,
-                    rgba(0, 0, 0, 0.1) 100%
-    );
-    position: absolute;
-    top: 2rem;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 2rem);
-  }
-
   //button.button__close {
   //  top: 0;
   //  right: 0;
@@ -326,9 +306,6 @@
     background-color: lightgray;
     cursor: move;
 
-    &.top {
-      background-color: lightsteelblue;
-    }
   }
 
   .move-hit-box {
