@@ -14,6 +14,7 @@
 <div class="float-group__container">
   {#each $floats as f}
     <FloatWindow float={f}>
+      {f.id}
     </FloatWindow>
   {/each}
 </div>

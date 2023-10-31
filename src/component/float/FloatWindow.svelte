@@ -9,7 +9,7 @@
   import { toCSS } from "../../util/style";
   import { useFloats } from "../../model/store/floats";
 
-  const { setFloats, floats } = useFloats()
+  const { popFloat, setFloats, floats } = useFloats()
   export let float = {} as Float;
 
   /* transition: 移動・サイズ変更中の値 */
@@ -43,9 +43,17 @@
   })();
   $: top = true;
 
+  const onClickBackground = (e: MouseEvent) => {
+    console.log("FloatWindow.onClickBackground");
+    e.stopPropagation();
+    popFloat(float.id)
+  }
 
   const onHandleMouseDown = (e: MouseEvent) => {
+    console.log("FloatWindow.onHandleMouseDown");
     e.stopPropagation();
+    popFloat(float.id)
+
     const { x: x0, y: y0 } = float;
 
     /* マウス移動中の座標で再描画するため、transition系の座標をfloatの現在座標で初期化 */
@@ -104,15 +112,15 @@
   }
   const onScaleMouseDown = (e: MouseEvent, direction: string) => {
     console.log("FloatWindow.onScaleMouseDown", e, direction);
+    e.stopPropagation();
+    popFloat(float.id);
+
     const isNe = direction === "ne";
     const isNw = direction === "nw";
     const isSw = direction === "sw";
     const isSe = direction === "se";
     const isN = isNw || isNe;
     const isE = isSe || isNe;
-
-    e.stopPropagation();
-    // this.$store.dispatch("float/pop", { id: this.floatId });
 
     const { x: x0, y: y0, w: w0, h: h0 } = float;
 
@@ -167,18 +175,6 @@
       console.log("Float.onHandleMouseUp");
       e.stopPropagation();
 
-      // this.$store.dispatch("float/scale", {
-      //   id: this.floatId,
-      //   w: this.wt,
-      //   h: this.ht,
-      // });
-      //
-      // this.$store.dispatch("float/move", {
-      //   id: this.floatId,
-      //   x: this.xt,
-      //   y: this.yt,
-      // });
-
       xt = float.x = xt;
       yt = float.y = yt;
       wt = float.w = wt;
@@ -207,7 +203,7 @@
 </script>
 
 {#if float.show}
-  <div style={floatStyle} class="float bs-5">
+  <div style={floatStyle} class="float bs-5" on:click={(e)=>onClickBackground(e)}>
     <!-- move -->
     <div
         id={`move_handle_${float.id}`}
@@ -274,7 +270,18 @@
       <div on:click={onClickShroud} class="float-content__shroud"></div>
     {/if}
     <div class="content-slot z-1">
-      <slot name="content">{floatStyle}</slot>
+      <slot name="content">
+        <div>
+          <p>{floatStyle}</p>
+          <label>
+            <span>text</span>
+            <input type="text"/>
+          </label> <br><label>
+          <span>checkbox</span>
+          <input type="checkbox"/>
+        </label> <br>
+        </div>
+      </slot>
     </div>
   </div>
 {/if}
