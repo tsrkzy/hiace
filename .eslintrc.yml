@@ -31,4 +31,5 @@ overrides:
 plugins:
   - "@typescript-eslint"
   - "svelte"
-rules: {}
+# eslint側でwaningを無視する(a11y系warning対策) 同様に $ npm run check に --compiler-warnings オプションを追加
+rules: { svelte/valid-compile: ["error", { ignoreWarnings: true }] }
