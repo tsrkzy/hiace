@@ -25,17 +25,23 @@ floats.subscribe(a => {
 const popFloat = (floatId: number) => {
   const floatList = get(floats);
   const maxZ = floatList.length;
-  const targetFloat = floatList.find(f => f.id === floatId) as Float;
-  const zThreshold = targetFloat.z;
 
-  floatList.forEach((f: Float) => {
-    if (f.id === floatId) {
-      f.z = maxZ;
-    } else if (f.z > zThreshold) {
-      f.z = f.z - 1;
-    }
-  });
+  /* zの降順かつ対象を最前列に */
+  floatList.sort((a, b) =>
+    a.id === floatId ? -1 : b.id === floatId ? 1 : a.z < b.z ? 1 : -1,
+  );
+
+  for (let i = 0; i < floatList.length; i++) {
+    const f = floatList[i];
+    f.z = maxZ - i;
+  }
+
   floats.set(floatList);
+};
+
+const closeFloat = (floatId: number) => {
+  const floatList = get(floats);
+  floats.set(floatList.filter(f => f.id !== floatId));
 };
 
 export const useFloats = () => {
@@ -44,5 +50,6 @@ export const useFloats = () => {
     setFloats: floats.set,
     floats,
     popFloat,
+    closeFloat,
   };
 };

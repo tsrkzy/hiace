@@ -15,7 +15,7 @@
 
 
 <div class="float-group__container">
-  {#each $floats as float}
+  {#each $floats as float (float.id)}
     <FloatWindow {float}>
       <div class="content-container">
         {#if float.contentId === ContentId.CHAT_LIST}<h1>CHAT_LIST</h1>
@@ -27,7 +27,8 @@
         {:else if float.contentId === ContentId.CHAT_PALETTE}<h1>CHAT_PALETTE</h1>
         {:else if float.contentId === ContentId.IMAGE_MANAGER}<h1>IMAGE_MANAGER</h1>
         {:else if float.contentId === ContentId.SOUND_MANAGER}<h1>SOUND_MANAGER</h1>
-        {:else if float.contentId === ContentId.ROOM_MANAGER}<RoomManager {float} />
+        {:else if float.contentId === ContentId.ROOM_MANAGER}
+          <RoomManager {float}/>
         {:else if float.contentId === ContentId.CHANNEL_LIST}<h1>CHANNEL_LIST</h1>
         {:else if float.contentId === ContentId.NOTE_MANAGER}<h1>NOTE_MANAGER</h1>
         {:else if float.contentId === ContentId.ISSUE_WRITER}<h1>ISSUE_WRITER</h1>

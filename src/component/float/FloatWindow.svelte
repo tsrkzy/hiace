@@ -9,7 +9,12 @@
   import { toCSS } from "../../util/style";
   import { useFloats } from "../../model/store/floats";
 
-  const { popFloat, setFloats, floats } = useFloats()
+  const {
+    floats,
+    setFloats,
+    popFloat,
+    closeFloat,
+  } = useFloats()
   export let float = {} as Float;
 
   /* transition: 移動・サイズ変更中の値 */
@@ -109,8 +114,13 @@
     el.addEventListener("mouseleave", onHandleMouseUp, false);
 
   }
-  const onClickClose = () => {
+
+  const onClickClose = (e: MouseEvent, floatId: number) => {
+    console.log("FloatWindow.onClickClose");
+    e.stopPropagation();
+    closeFloat(floatId);
   }
+
   const onScaleMouseDown = (e: MouseEvent, direction: string) => {
     console.log("FloatWindow.onScaleMouseDown", e, direction);
     e.stopPropagation();
@@ -213,15 +223,13 @@
         <div class="move-hit-box"></div>
       {/if}
 
-      {#if !isDragMove}
-        <button
-            on:mousedown={(e)=>e.stopPropagation}
-            on:click={onClickClose}
-            style="float: right;margin-right: .5rem;"
-        >
-          閉じる
-        </button>
-      {/if}
+      <button
+          on:mousedown={e=>e.stopPropagation()}
+          on:click={(e)=>onClickClose(e, float.id)}
+          style="float: right;margin-right: .5rem;"
+      >
+        閉じる
+      </button>
       <!--      <float-duplicator v-if="!isDragMove" :float-id="floatId"/>-->
       <!--      <hint-container v-if="!isDragMove" :float-id="floatId"/>-->
     </div>
