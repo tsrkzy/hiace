@@ -13,6 +13,22 @@ import { User, type UserProps } from "../User";
 
 const SYSTEM_COLOR = "#000000";
 
+export const fetchUserById = async (id): Promise<User> => {
+  const collectionRef = collection(db, "user");
+  const docRef = doc(collectionRef, id)
+  const d = await getDoc(docRef);
+
+  return new User({
+    id: docRef.id,
+    color: d.color,
+    email: d.email,
+    name: d.name,
+    photoUrl: d.photoUrl,
+    lastPing: d.lastPing,
+    joinTo: d.joinTo,
+  })
+}
+
 export const fetchUserByEmail = async (email: string): Promise<User> => {
   const userRef = collection(db, "user");
   const q = query(userRef, where("email", "==", email));

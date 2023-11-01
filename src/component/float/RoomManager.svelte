@@ -9,12 +9,18 @@
   import { Float } from "../../model/Float";
   import Button from "../button/Button.svelte";
   import { User } from "../../model/User";
+  import { useRoom } from "../../model/store/room";
+  import { useUsers } from "../../model/store/users";
+
+  const { myUserId } = useUsers();
+  const { room } = useRoom();
 
   export let float = {} as Float
 
-  $: amIOwner = true;
-  let requestItems: User[] = []
+  $: isOwner = $room.owner === $myUserId;
+  let requestUsers: User[] = []
   let userItems: User[] = []
+
   const onClickGrant = (userId: string) => {
     console.log("RoomManager.onClickGrant");
     console.log(userId);
@@ -45,11 +51,12 @@
     <span>新着チャットを通知する</span>
   </label>
 </fieldset>
-{#if amIOwner}
+{#if isOwner}
   <div>
-    {#each requestItems as r}
+    {#each requestUsers as r}
       <fieldset>
-        <legend>入室リクエスト:{ r.email }</legend>
+        {r}
+        <legend>入室リクエスト:{r.id},{ r.email }</legend>
         <Button handle={()=>onClickGrant(r.id)}>許可</Button>
         <Button handle={()=>onClickKick(r.id)}>キック</Button>
       </fieldset>
