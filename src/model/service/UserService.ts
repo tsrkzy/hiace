@@ -13,21 +13,28 @@ import { User, type UserProps } from "../User";
 
 const SYSTEM_COLOR = "#000000";
 
-export const fetchUserById = async (id): Promise<User> => {
+export const fetchUsersById = async (idList: string[]): Promise<User[]> => {
+  return await Promise.all(idList.map(async id => await fetchUserById(id)));
+};
+export const fetchUserById = async (id: string): Promise<User> => {
   const collectionRef = collection(db, "user");
-  const docRef = doc(collectionRef, id)
+  const docRef = doc(collectionRef, id);
   const d = await getDoc(docRef);
+  const u = d.data();
+  if (!u) {
+    throw new Error(`no user found: ${id}`);
+  }
 
   return new User({
     id: docRef.id,
-    color: d.color,
-    email: d.email,
-    name: d.name,
-    photoUrl: d.photoUrl,
-    lastPing: d.lastPing,
-    joinTo: d.joinTo,
-  })
-}
+    color: u.color,
+    email: u.email,
+    name: u.name,
+    photoUrl: u.photoUrl,
+    lastPing: u.lastPing,
+    joinTo: u.joinTo,
+  });
+};
 
 export const fetchUserByEmail = async (email: string): Promise<User> => {
   const userRef = collection(db, "user");
@@ -81,8 +88,8 @@ export const createUser = async (props: {
   });
 };
 
-export const joinRoom = async (userId: string, roomId: string) => {
-  console.log("UserStoreService.joinRoom", userId, roomId);
+export const assignUserToRoom = async (userId: string, roomId: string) => {
+  console.log("UserStoreService.assignUserToRoom", userId, roomId);
   const collectionRef = collection(db, "user");
   const docRef = doc(collectionRef, userId);
   const userDoc = await getDoc(docRef);

@@ -168,6 +168,8 @@
       <summary>Room</summary>
       <p>roomId: {roomId}</p>
       <p>roomState: {state}</p>
+      <p>requests: {$room.requests}</p>
+      <p>users: {$room.users}</p>
     </details>
     <UserList></UserList>
     <CharacterList></CharacterList>

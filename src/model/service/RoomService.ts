@@ -3,7 +3,8 @@ import { db } from "../../util/firestore";
 import { Room } from "../Room";
 
 export const fetchRoomByID = async (roomId: string): Promise<Room> => {
-  const docRef = doc(db, "room", roomId);
+  const collectionRef = collection(db, "room");
+  const docRef = doc(collectionRef, roomId);
   const docSnap = await getDoc(docRef);
   if (!docSnap.exists()) {
     throw new Error(`room does not found: ${roomId}`);
@@ -109,5 +110,29 @@ export const setRoomStateForUser = async (props: {
     users: room.users,
     gameSystem: room.gameSystem,
     music: room.music,
+  });
+};
+
+export const joinRoom = async (userId: string, roomId: string) => {
+  console.log("RoomService.joinRoom");
+  const room = await fetchRoomByID(roomId);
+  if (room.requests.indexOf(userId) === -1) {
+    throw new Error(`no request in room: ${roomId}, user: ${userId}`);
+  }
+
+  if (room.users.indexOf(userId) !== -1) {
+    console.log(`user: ${userId} already in room: ${roomId}`);
+    return false;
+  }
+
+  /* 入室申請ユーザから取り除き、入室済みユーザに追加 */
+  room.requests = room.requests.filter(uId => uId !== userId);
+  room.users.push(userId);
+
+  const collectionRef = collection(db, "room");
+  const docRef = doc(collectionRef, roomId);
+  await updateDoc(docRef, {
+    requests: room.requests,
+    users: room.users,
   });
 };

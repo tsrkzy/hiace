@@ -10,6 +10,6 @@
   }
 </script>
 
-<button on:click={()=>handle()}>
+<button on:click|stopPropagation={()=>handle()}>
   <slot></slot>
 </button>

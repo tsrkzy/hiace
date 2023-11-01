@@ -10,22 +10,31 @@
   import Button from "../button/Button.svelte";
   import { User } from "../../model/User";
   import { useRoom } from "../../model/store/room";
+  import { assignUserToRoom, fetchUsersById, } from "../../model/service/UserService";
   import { useUsers } from "../../model/store/users";
+  import { joinRoom } from "../../model/service/RoomService";
 
-  const { myUserId } = useUsers();
+  const { myUserId, users } = useUsers();
   const { room } = useRoom();
 
-  export let float = {} as Float
+  export const float = {} as Float
 
   $: isOwner = $room.owner === $myUserId;
-  let requestUsers: User[] = []
-  let userItems: User[] = []
 
-  const onClickGrant = (userId: string) => {
+  let isBanMode = false
+
+  let requestUsers: User[] = []
+  $: {
+    fetchUsersById($room.requests).then(users => {
+      requestUsers = users
+    })
+  }
+
+
+  const onClickGrant = async (userId: string) => {
     console.log("RoomManager.onClickGrant");
-    console.log(userId);
-  };
-  const makeRequest = () => {
+    await joinRoom(userId, $room.id)
+    await assignUserToRoom(userId, $room.id)
   };
   const onClickDrop = (userId: string) => {
     console.log("RoomManager.onClickDrop");
@@ -55,58 +64,43 @@
   <div>
     {#each requestUsers as r}
       <fieldset>
-        {r}
-        <legend>入室リクエスト:{r.id},{ r.email }</legend>
+        <legend>入室リクエスト:{ r.email }</legend>
         <Button handle={()=>onClickGrant(r.id)}>許可</Button>
         <Button handle={()=>onClickKick(r.id)}>キック</Button>
       </fieldset>
     {/each}
   </div>
-{:else }
-  <fieldset>
-    <legend>入室状況</legend>
-    <div>
-      <span>キックされました</span>
-    </div>
-    <div>
-      <span>入出許可待ち</span>
-    </div>
-    <div>
-      <Button on:click={()=>makeRequest()}>入室リクエストを送る</Button>
-    </div>
-    <div>
-      <span>入室済み</span>
-    </div>
-  </fieldset>
 {/if}
 <fieldset>
   <legend>参加中のユーザ</legend>
   <ul>
-    {#each userItems as u}
+    {#each $users as u}
       <li>
           <span
-          > isOwner(u.id) ? "[admin] " : ""  / u.email /  isMe(u.id) ? "(自分)" : "" </span
+          > {$room.owner === u.id ? "[admin] " : ""}{ u.email } {u.id === $myUserId ? "(自分)" : ""} </span
           >
-        <Button
-            on:click={()=>onClickDrop(u.id)}
-        >退室させる
-        </Button>
-        <Button
-            on:click={()=>onClickKick(u.id)}
-        >キック
-        </Button>
+        {#if isOwner && u.id === $myUserId && isBanMode}
+          <Button
+              on:click={()=>onClickDrop(u.id)}
+          >退室させる
+          </Button>
+          <Button
+              on:click={()=>onClickKick(u.id)}
+          >キック
+          </Button>
+        {/if}
       </li>
     {/each}
   </ul>
   <label>
-    <input type="checkbox">
+    <input type="checkbox" bind:value={isBanMode}>
     <span>追放操作を有効にする</span>
   </label>
 </fieldset>
 <fieldset>
   <legend>DL</legend>
   <Button>チャットをダウンロードする</Button>
-  <Button>チャットをすべて削除する</Button>
+  <!--  <Button>チャットをすべて削除する</Button>-->
 </fieldset>
 <fieldset>
   <legend>外部サイト</legend>
