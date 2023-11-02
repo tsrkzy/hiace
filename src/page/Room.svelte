@@ -36,6 +36,7 @@
   /* components */
   import GoogleLogInButton from "../component/button/GoogleLogInButton.svelte";
   import FloatGroup from "../component/float/FloatGroup.svelte";
+  import NoticeGroup from "../component/NoticeGroup.svelte";
 
   export let roomId = "";
 
@@ -142,10 +143,10 @@
       <!-- <SvgBoard></SvgBoard> -->
       <!-- <ContextMenu></ContextMenu> -->
       <FloatGroup></FloatGroup>
+
     {:else if isWaiting}
       <p>リクエスト承認待ち</p>
     {/if}
-
   </div>
   <div style="position:absolute;top:0;right:0;width:50vw;">
     <details>
@@ -177,6 +178,7 @@
     <BoardList></BoardList>
     <ChannelList open></ChannelList>
   </div>
+  <NoticeGroup></NoticeGroup>
 </main>
 
 <style>

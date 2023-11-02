@@ -14,6 +14,7 @@
   import { useUsers } from "../../model/store/users";
   import { joinRoom } from "../../model/service/RoomService";
   import { useLocalConfig } from "../../model/store/localConfig";
+  import { createNotice } from "../../model/service/NoticeService";
 
   const { myUserId, users } = useUsers();
   const { room } = useRoom();
@@ -39,12 +40,12 @@
     await assignUserToRoom(userId, $room.id)
   };
   const onClickDrop = (userId: string) => {
-    console.log("RoomManager.onClickDrop");
-    console.log(userId);
+    console.log("RoomManager.onClickDrop", userId);
+    createNotice("未実装です");
   };
   const onClickKick = (userId: string) => {
-    console.log("RoomManager.onClickKick");
-    console.log(userId);
+    console.log("RoomManager.onClickKick", userId);
+    createNotice("未実装です");
   };
 
   const onChangeMaskChannel = (e: Event) => {
@@ -96,21 +97,23 @@
           >
         {#if isOwner && u.id !== $myUserId && isBanMode}
           <Button
-              on:click={()=>onClickDrop(u.id)}
-          >退室させる
+              handle={()=>onClickDrop(u.id)}
+          >退室させる(未実装)
           </Button>
           <Button
-              on:click={()=>onClickKick(u.id)}
-          >キック
+              handle={()=>onClickKick(u.id)}
+          >キック(未実装)
           </Button>
         {/if}
       </li>
     {/each}
   </ul>
-  <label>
-    <input type="checkbox" bind:checked={isBanMode}>
-    <span>追放操作を有効にする</span>
-  </label>
+  {#if isOwner}
+    <label>
+      <input type="checkbox" bind:checked={isBanMode}>
+      <span>追放操作を有効にする</span>
+    </label>
+  {/if}
 </fieldset>
 <fieldset>
   <legend>DL</legend>
