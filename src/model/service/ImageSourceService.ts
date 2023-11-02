@@ -5,7 +5,6 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-
 import { ImageSource } from "../ImageSource";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../util/firestore";
@@ -17,14 +16,23 @@ interface CreateImageSourceProps {
   url: string;
   height: number;
   width: number;
-  hidden: boolean;
-  tags: string[];
+  hidden?: boolean;
+  tags?: string[];
 }
 
 export const createImageSource = async (props: CreateImageSourceProps) => {
   console.log("ImageSourceService.createImageSource");
   console.log(props);
-  const { roomId, userId, path, url, height, width, hidden = true, tags = [] } = props;
+  const {
+    roomId,
+    userId,
+    path,
+    url,
+    height,
+    width,
+    hidden = true,
+    tags = [],
+  } = props;
   const img = {
     room: roomId,
     owner: userId,
@@ -38,7 +46,7 @@ export const createImageSource = async (props: CreateImageSourceProps) => {
 
   const collectionRef = collection(db, "image");
   const docRef = doc(collectionRef);
-  await setDoc(docRef, img)
+  await setDoc(docRef, img);
 
   return new ImageSource({
     id: docRef.id,
@@ -50,6 +58,5 @@ export const createImageSource = async (props: CreateImageSourceProps) => {
     width: img.width,
     hidden: img.hidden,
     tags: img.tags,
-
   });
-}
+};

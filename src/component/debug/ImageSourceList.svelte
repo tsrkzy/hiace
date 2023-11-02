@@ -30,8 +30,11 @@
     inputEl.accept = "image/*";
     inputEl.multiple = true;
     inputEl.addEventListener("change", async (e) => {
-      console.log(">>>>>>>>");
-      const { files = [] } = e.target;
+      const { files = [] } = e.target as HTMLInputElement;
+      if (!files) {
+        return;
+      }
+
       for (let i = 0; i < files.length; i++) {
         const imageFile = files[i];
         const { width, height } = await getImageSize(imageFile);
@@ -54,7 +57,7 @@
     inputEl.click();
   }
 
-  const uploadImageToFirebaseStorage = async (imageFile, fireStoragePath, metaData) => {
+  const uploadImageToFirebaseStorage = async (imageFile: File, fireStoragePath: string, metaData: object): Promise<string> => {
     console.log("ImageSourceList.uploadImageToFirebaseStorage");
     return new Promise(resolve => {
       const storageRef = ref(storage, fireStoragePath);
@@ -74,11 +77,25 @@
 <main>
   <details {open}>
     <summary>ImageSources</summary>
-    <ul>
+    <div class="image-flex-container">
+
       {#each $imageSources as imgSrc}
-        <li><img src={imgSrc.url} alt={imgSrc.id}></li>
+        <div>
+          <img src={imgSrc.url} alt={imgSrc.id} width="100" height="100">
+        </div>
       {/each}
-    </ul>
+    </div>
     <Button handle={()=>onClickUploadImages()}>Image Upload</Button>
   </details>
 </main>
+
+<style>
+    .image-flex-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: flex-start
+    }
+</style>

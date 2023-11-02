@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 export const getImageSize = (imageFile: File) => {
-  return new Promise<{ width: number, height: number }>((resolve, reject) => {
+  return new Promise<{ width: number; height: number }>((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
       resolve({ width: img.width, height: img.height });
@@ -16,4 +16,4 @@ export const getImageSize = (imageFile: File) => {
     };
     img.src = URL.createObjectURL(imageFile);
   });
-}
+};

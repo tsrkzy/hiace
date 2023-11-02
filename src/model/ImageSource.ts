@@ -15,7 +15,7 @@ export type ImageSourceProps = {
   width: number;
   hidden: boolean;
   tags: string[];
-  timestamp?: number|Date;
+  timestamp?: number | Date;
 };
 
 export class ImageSource {
@@ -91,11 +91,11 @@ export class ImageSource {
     this._tags = value;
   }
 
-  get timestamp(): number|Date {
+  get timestamp(): number | Date {
     return this._timestamp;
   }
 
-  set timestamp(value: number|Date) {
+  set timestamp(value: number | Date) {
     this._timestamp = value;
   }
 
@@ -108,13 +108,24 @@ export class ImageSource {
   private _width: number;
   private _hidden: boolean;
   private _tags: string[];
-  private _timestamp: number|Date;
+  private _timestamp: number | Date;
 
   /**
    * @param {ImageSourceProps} args
    */
   constructor(args: ImageSourceProps) {
-    const { id, room, owner, path, url, height, width, hidden, tags=[], timestamp = Date.now() } = args;
+    const {
+      id,
+      room,
+      owner,
+      path,
+      url,
+      height,
+      width,
+      hidden,
+      tags = [],
+      timestamp = Date.now(),
+    } = args;
     this._id = id;
     this._room = room;
     this._owner = owner;

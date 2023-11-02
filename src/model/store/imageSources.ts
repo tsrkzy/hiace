@@ -11,6 +11,6 @@ export const useImageSources = () => {
   return {
     subscribeImageSources: imageSources.subscribe,
     setImageSources: imageSources.set,
-    imageSources
+    imageSources,
   };
 };
