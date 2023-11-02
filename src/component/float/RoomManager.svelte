@@ -94,7 +94,7 @@
           <span
           > {$room.owner === u.id ? "[admin] " : ""}{ u.email } {u.id === $myUserId ? "(自分)" : ""} </span
           >
-        {#if isOwner && u.id === $myUserId && isBanMode}
+        {#if isOwner && u.id !== $myUserId && isBanMode}
           <Button
               on:click={()=>onClickDrop(u.id)}
           >退室させる
@@ -108,7 +108,7 @@
     {/each}
   </ul>
   <label>
-    <input type="checkbox" bind:value={isBanMode}>
+    <input type="checkbox" bind:checked={isBanMode}>
     <span>追放操作を有効にする</span>
   </label>
 </fieldset>
