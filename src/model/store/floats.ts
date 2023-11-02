@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store";
 import { ContentId, Float } from "../Float";
 
 const floats = writable<Float[]>(
-  [5, 1, 4, 2, 3].map(
+  [1].map(
     i =>
       new Float({
         id: i,

@@ -37,6 +37,7 @@
   import GoogleLogInButton from "../component/button/GoogleLogInButton.svelte";
   import FloatGroup from "../component/float/FloatGroup.svelte";
   import NoticeGroup from "../component/NoticeGroup.svelte";
+  import ImageSourceList from "../component/debug/ImageSourceList.svelte";
 
   export let roomId = "";
 
@@ -176,7 +177,9 @@
     <UserList></UserList>
     <CharacterList></CharacterList>
     <BoardList></BoardList>
-    <ChannelList open></ChannelList>
+    <ChannelList ></ChannelList>
+    <ImageSourceList open></ImageSourceList>
+
   </div>
   <NoticeGroup></NoticeGroup>
 </main>

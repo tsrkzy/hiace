@@ -15,6 +15,7 @@ export type ImageSourceProps = {
   width: number;
   hidden: boolean;
   tags: string[];
+  timestamp?: number|Date;
 };
 
 export class ImageSource {
@@ -25,6 +26,7 @@ export class ImageSource {
   set id(value: string) {
     this._id = value;
   }
+
   get room(): string {
     return this._room;
   }
@@ -32,6 +34,7 @@ export class ImageSource {
   set room(value: string) {
     this._room = value;
   }
+
   get owner(): string {
     return this._owner;
   }
@@ -39,6 +42,7 @@ export class ImageSource {
   set owner(value: string) {
     this._owner = value;
   }
+
   get path(): string {
     return this._path;
   }
@@ -46,6 +50,7 @@ export class ImageSource {
   set path(value: string) {
     this._path = value;
   }
+
   get url(): string {
     return this._url;
   }
@@ -53,6 +58,7 @@ export class ImageSource {
   set url(value: string) {
     this._url = value;
   }
+
   get height(): number {
     return this._height;
   }
@@ -60,6 +66,7 @@ export class ImageSource {
   set height(value: number) {
     this._height = value;
   }
+
   get width(): number {
     return this._width;
   }
@@ -67,6 +74,7 @@ export class ImageSource {
   set width(value: number) {
     this._width = value;
   }
+
   get hidden(): boolean {
     return this._hidden;
   }
@@ -74,6 +82,7 @@ export class ImageSource {
   set hidden(value: boolean) {
     this._hidden = value;
   }
+
   get tags(): string[] {
     return this._tags;
   }
@@ -81,6 +90,15 @@ export class ImageSource {
   set tags(value: string[]) {
     this._tags = value;
   }
+
+  get timestamp(): number|Date {
+    return this._timestamp;
+  }
+
+  set timestamp(value: number|Date) {
+    this._timestamp = value;
+  }
+
   private _id: string;
   private _room: string;
   private _owner: string;
@@ -90,12 +108,13 @@ export class ImageSource {
   private _width: number;
   private _hidden: boolean;
   private _tags: string[];
+  private _timestamp: number|Date;
 
   /**
    * @param {ImageSourceProps} args
    */
   constructor(args: ImageSourceProps) {
-    const { id, room, owner, path, url, height, width, hidden, tags } = args;
+    const { id, room, owner, path, url, height, width, hidden, tags=[], timestamp = Date.now() } = args;
     this._id = id;
     this._room = room;
     this._owner = owner;
@@ -105,5 +124,6 @@ export class ImageSource {
     this._width = width;
     this._hidden = hidden;
     this._tags = tags;
+    this._timestamp = timestamp;
   }
 }
