@@ -2,13 +2,14 @@
   import { get } from "svelte/store";
 
   /* service */
-  import { fetchUserByEmail,  } from "../model/service/UserService";
+  import { fetchUserByEmail, } from "../model/service/UserService";
   import { setRoomStateForUser } from "../model/service/RoomService";
 
   /* store */
   import { useAuth } from "../model/store/auth";
   import { useRoom } from "../model/store/room";
   import { useUsers } from "../model/store/users";
+  import "../model/store/localConfig"
 
   /* listener */
   import { RoomListener } from "../model/listener/RoomListener";
@@ -39,7 +40,7 @@
   export let roomId = "";
 
   /* store */
-  const {  isLoggedIn, email } = useAuth();
+  const { isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
   const { myUserId } = useUsers();
 
@@ -140,7 +141,7 @@
       <p>ゲーム画面</p>
       <!-- <SvgBoard></SvgBoard> -->
       <!-- <ContextMenu></ContextMenu> -->
-       <FloatGroup></FloatGroup>
+      <FloatGroup></FloatGroup>
     {:else if isWaiting}
       <p>リクエスト承認待ち</p>
     {/if}

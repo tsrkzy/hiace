@@ -13,9 +13,11 @@
   import { assignUserToRoom, fetchUsersById, } from "../../model/service/UserService";
   import { useUsers } from "../../model/store/users";
   import { joinRoom } from "../../model/service/RoomService";
+  import { useLocalConfig } from "../../model/store/localConfig";
 
   const { myUserId, users } = useUsers();
   const { room } = useRoom();
+  const { localConfig } = useLocalConfig();
 
   export const float = {} as Float
 
@@ -44,6 +46,19 @@
     console.log("RoomManager.onClickKick");
     console.log(userId);
   };
+
+  const onChangeMaskChannel = (e: Event) => {
+    console.log("RoomManager.onChangeMaskChannel");
+    const { checked } = e.currentTarget as HTMLInputElement;
+    $localConfig.maskChannel = checked;
+  }
+
+  const onChangeRing = (e: Event) => {
+    console.log("RoomManager.onChangeRing");
+    const { checked } = e.currentTarget as HTMLInputElement
+    $localConfig.ring = checked;
+  }
+
 </script>
 
 <fieldset>
@@ -51,12 +66,12 @@
   <input type="color">
   <h5>個別のチャンネル(全体以外)への発言</h5>
   <label>
-    <input type="checkbox"/>
+    <input type="checkbox" checked={$localConfig.maskChannel} on:change={onChangeMaskChannel}/>
     <span>発言内容を伏せる</span>
   </label>
   <h5>タブが非アクティブの時に通知音を鳴らす</h5>
   <label>
-    <input type="checkbox"/>
+    <input type="checkbox" checked={$localConfig.ring} on:change={onChangeRing}/>
     <span>新着チャットを通知する</span>
   </label>
 </fieldset>
