@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 import { ImageSource } from "../ImageSource";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../util/firestore";
 
 interface CreateImageSourceProps {
@@ -60,3 +60,10 @@ export const createImageSource = async (props: CreateImageSourceProps) => {
     tags: img.tags,
   });
 };
+
+export const deleteImageSource = async (imageId: string): Promise<void> => {
+  console.log("ImageSourceService.deleteImageSource", imageId);
+  const collectionRef = collection(db, "image");
+  const docRef = doc(collectionRef, imageId);
+  await deleteDoc(docRef);
+}
