@@ -17,3 +17,16 @@ export const getImageSize = (imageFile: File) => {
     img.src = URL.createObjectURL(imageFile);
   });
 };
+
+interface GetImageMetaDataResult {
+  name: string;
+  size: number;
+  contentType: string;
+}
+
+export const getImageMetaData = (imageFile: File): GetImageMetaDataResult => {
+  const name = imageFile.name;
+  const size = imageFile.size;
+  const contentType = imageFile.type;
+  return { name, size, contentType };
+};

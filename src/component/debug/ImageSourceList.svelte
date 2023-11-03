@@ -6,21 +6,17 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
-  import { createImageSource, deleteImageSource } from "../../model/service/ImageSourceService";
+  import { deleteImageSource, registerImage } from "../../model/service/ImageSourceService";
   import Button from "../button/Button.svelte";
+  import { useRoom } from "../../model/store/room";
   import { useUsers } from "../../model/store/users";
-  import { getImageSize } from "../../util/imageUtil";
-
-  import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-  import { storage } from "../../util/firestore";
 
   export let open = false;
 
-  const { room } = useRoom();
-  const { myUserId } = useUsers()
   const { imageSources } = useImageSources()
+  const { room } = useRoom()
+  const { myUserId } = useUsers()
 
   let isDeleteMode = false;
 
@@ -36,43 +32,15 @@
         return;
       }
 
-      for (let i = 0; i < files.length; i++) {
-        const imageFile = files[i];
-        const { width, height } = await getImageSize(imageFile);
-        const name = imageFile.name
-        const size = imageFile.size
-        const contentType = imageFile.type
-        const roomId = $room.id
-        const userId = $myUserId;
-        const fireStoragePath = `${userId}/images/${name}`;
+      const roomId = $room.id
+      const userId = $myUserId;
 
-        console.log(name, size, contentType, roomId, userId, fireStoragePath)
-
-        const metaData = { name, size, contentType };
-        const url = await uploadImageToFirebaseStorage(imageFile, fireStoragePath, metaData);
-
-        await createImageSource({ roomId, userId, path: fireStoragePath, url, height, width });
-      }
-
+      /* input要素から取得した画像ファイルをアップロードし、firestoreに登録する */
+      await Promise.all(Array.from(files).map(f => registerImage(f, roomId, userId)));
     }, false);
     inputEl.click();
   }
 
-  const uploadImageToFirebaseStorage = async (imageFile: File, fireStoragePath: string, metaData: object): Promise<string> => {
-    console.log("ImageSourceList.uploadImageToFirebaseStorage");
-    return new Promise(resolve => {
-      const storageRef = ref(storage, fireStoragePath);
-
-      uploadBytes(storageRef, imageFile, metaData).then(() => {
-        console.log("uploaded");
-        getDownloadURL(storageRef).then(url => {
-          console.log("url", url);
-          resolve(url);
-        })
-      })
-
-    })
-  }
 
   const onClickDeleteImageSource = async (imageId: string) => {
     console.log("ImageSourceList.onClickDeleteImageSource");
