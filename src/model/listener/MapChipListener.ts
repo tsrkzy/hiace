@@ -34,6 +34,9 @@ export function MapChipListener() {
           offsetX: d.offsetX,
           offsetY: d.offsetY,
           scalePp: d.scalePp,
+          dragLock: d.dragLock,
+          transform: d.transform,
+          grid: d.grid,
         });
         mapChips.push(mapChip);
       });

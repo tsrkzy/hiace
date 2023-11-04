@@ -13,8 +13,6 @@ import { MapChip } from "../MapChip";
 
 export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
 
-// export const DEFAULT_CHARACTER_IMAGE = "wG5tOfKAW3trnsApUNRy";
-
 interface CreateMapChipProps {
   roomId: string;
   boardId: string;
@@ -24,6 +22,14 @@ interface CreateMapChipProps {
   offsetX?: number;
   offsetY?: number;
   scalePp?: number;
+  dragLock?: boolean;
+  transform?: string;
+  grid?: {
+    cols: number;
+    rows: number;
+    color: string;
+    snap: boolean;
+  };
 }
 
 export const createMapChip = async (
@@ -38,16 +44,26 @@ export const createMapChip = async (
     offsetX = 0,
     offsetY = 0,
     scalePp = 100,
+    dragLock = false,
+    transform = `${new DOMMatrix()}`,
   } = props;
   const m = {
     room: roomId,
     board: boardId,
     owner: userId,
     image: imageId,
-    backgroundColor: backgroundColor,
-    offsetX: offsetX,
-    offsetY: offsetY,
-    scalePp: scalePp,
+    backgroundColor,
+    offsetX,
+    offsetY,
+    scalePp,
+    dragLock,
+    transform,
+    grid: {
+      cols: 15,
+      rows: 15,
+      color: "#000000",
+      snap: true,
+    }
   };
 
   const collectionRef = collection(db, "map");
@@ -65,6 +81,9 @@ export const createMapChip = async (
     offsetX: m.offsetX,
     offsetY: m.offsetY,
     scalePp: m.scalePp,
+    dragLock: m.dragLock,
+    transform: m.transform,
+    grid: m.grid,
   });
 };
 

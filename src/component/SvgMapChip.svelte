@@ -23,32 +23,36 @@
   let isDragged = false;
   let transformStyle: string = "transform: translate(0, 0);";
 
+  const DEFAULT_MAP_IMAGE_URL = "../assets/images/default_map.jpg";
+  const DEFAULT_MAP_IMAGE_WIDTH = 1109
+  const DEFAULT_MAP_IMAGE_HEIGHT = 840
+
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgMap.onMouseDown", e);
   }
 </script>
 
-{#if loaded && mapChip && imageSource}
+{#if loaded && mapChip}
   <g
       id={`map_${mapChipId}`}
       style={transformStyle}
       on:mousedown={(e)=>onMouseDown(e)}
   >
     <rect
-        width={imageSource.width}
-        height={imageSource.height}
+        width={imageSource?.width || DEFAULT_MAP_IMAGE_WIDTH}
+        height={imageSource?.height || DEFAULT_MAP_IMAGE_HEIGHT}
         stroke="red"
         fill="transparent"
     ></rect>
     <rect
-        width={imageSource.width}
-        height={imageSource.height}
+        width={imageSource?.width || DEFAULT_MAP_IMAGE_WIDTH}
+        height={imageSource?.height || DEFAULT_MAP_IMAGE_HEIGHT}
         stroke="transparent"
         fill="dimgray"
     ></rect>
-    <image width={imageSource.width}
-           height={imageSource.height}
-           href={imageSource.url}
+    <image width={imageSource?.width || DEFAULT_MAP_IMAGE_WIDTH}
+           height={imageSource?.height || DEFAULT_MAP_IMAGE_HEIGHT}
+           href={imageSource?.url || DEFAULT_MAP_IMAGE_URL}
     >
 
     </image>
@@ -57,8 +61,8 @@
       <rect
           x={-1000 / 2}
           y={-1000 / 2}
-          width={imageSource.width + 1000}
-          height={imageSource.height + 1000}
+          width={imageSource?.width || DEFAULT_MAP_IMAGE_WIDTH + 1000}
+          height={imageSource?.height || DEFAULT_MAP_IMAGE_HEIGHT + 1000}
           stroke="red"
           fill="transparent"
       ></rect>

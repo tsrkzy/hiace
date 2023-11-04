@@ -30,3 +30,14 @@ export const getImageMetaData = (imageFile: File): GetImageMetaDataResult => {
   const contentType = imageFile.type;
   return { name, size, contentType };
 };
+
+export const getDefaultPawnObjectURL = async () => {
+  const response = await fetch("/default_pawn.png");
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+}
+export const getDefaultMapObjectURL = async () => {
+  const response = await fetch("/default_map.png");
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+}

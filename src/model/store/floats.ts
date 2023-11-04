@@ -1,22 +1,29 @@
 import { get, writable } from "svelte/store";
 import { ContentId, Float } from "../Float";
 
-const floats = writable<Float[]>(
-  [1].map(
-    i =>
+const floats = writable<Float[]>([
       new Float({
-        id: i,
+        id: 1,
         show: true,
         contentId: ContentId.ROOM_MANAGER,
-        contentTitle: `float_${i}`,
+        contentTitle: "float_1",
         x: 300,
         y: 300,
         w: 300,
         h: 300,
-        z: i,
+        z: 1,
+      }),new Float({
+        id: 2,
+        show: true,
+        contentId: ContentId.BOARD_MANAGER,
+        contentTitle: "float_2",
+        x: 300,
+        y: 300,
+        w: 300,
+        h: 300,
+        z: 2,
       }),
-  ),
-);
+]);
 
 floats.subscribe(a => {
   console.log("floats.subscribe", a); // @DELETEME
