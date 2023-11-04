@@ -17,7 +17,7 @@
     return $mapChips.find(mapChip => mapChip.id === mapChipId)
   })()
   $: imageSource = (() => {
-    return $imageSources.find(imageSource => imageSource.id === mapChip.image)
+    return $imageSources.find(imageSource => imageSource.id === mapChip?.image)
   })()
   let loaded = true;
   let isDragged = false;
@@ -30,7 +30,7 @@
 
 {#if loaded && mapChip && imageSource}
   <g
-      id="`map_${mapChipId}`"
+      id={`map_${mapChipId}`}
       style={transformStyle}
       on:mousedown={(e)=>onMouseDown(e)}
   >

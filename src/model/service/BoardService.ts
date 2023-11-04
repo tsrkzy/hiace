@@ -6,10 +6,12 @@ import { deletePawnByBoard } from "./PawnService";
 
 export const createBoard = async (props: {
   roomId: string;
+  userId: string;
 }): Promise<Board> => {
-  const { roomId } = props;
+  const { roomId, userId } = props;
   const b = {
     room: roomId,
+    owner: userId,
   };
 
   const collectionRef = collection(db, "board");
@@ -20,6 +22,7 @@ export const createBoard = async (props: {
   return new Board({
     id,
     room: b.room,
+    owner: b.owner,
   });
 };
 

@@ -29,11 +29,11 @@
 
   const handleAddBoard = async () => {
     console.log("BoardList.handleAddBoard");
-    await createBoard({ roomId: $roomId })
+    await createBoard({ roomId: $roomId , userId: $myUserId })
   }
   const handleAddMapChip = async (boardId: string) => {
     console.log("BoardList.handleAddMapChip");
-    await createMapChip({ roomId: $roomId, boardId })
+    await createMapChip({ roomId: $roomId, boardId, userId: $myUserId })
   }
   const handleAddPawn = async (boardId: string, characterId: string) => {
     console.log("BoardList.handleAddPawn");

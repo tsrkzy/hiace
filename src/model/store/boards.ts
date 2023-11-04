@@ -2,7 +2,7 @@ import { derived, get, writable } from "svelte/store";
 import { Board } from "../Board";
 import { useRoom } from "./room";
 
-const { room } = useRoom()
+const { room } = useRoom();
 
 const boards = writable<Board[]>([]);
 
@@ -11,7 +11,7 @@ boards.subscribe(a => {
 });
 
 const activeBoard = derived(boards, $boards => {
-  return $boards.find(b => b.id === get(room).activeBoard)
+  return $boards.find(b => b.id === get(room).activeBoard);
 });
 
 export const useBoards = () => {

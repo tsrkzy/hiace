@@ -96,7 +96,17 @@ export class MapChip {
    * @param {MapChipProps} args
    */
   constructor(args: MapChipProps) {
-    const { id, room, board, image, owner, backgroundColor, offsetX, offsetY, scalePp } = args;
+    const {
+      id,
+      room,
+      board,
+      image,
+      owner,
+      backgroundColor,
+      offsetX,
+      offsetY,
+      scalePp,
+    } = args;
     this._id = id;
     this._room = room;
     this._board = board;

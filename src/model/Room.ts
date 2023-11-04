@@ -22,7 +22,6 @@ export type RoomProps = {
  * ログイン中のRoom情報を保持する
  */
 export class Room {
-
   get id(): string {
     return this._id;
   }

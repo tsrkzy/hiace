@@ -35,6 +35,7 @@ export class Board {
   set owner(value: string) {
     this._owner = value;
   }
+
   private _id: string;
   private _room: string;
   private _owner: string;
@@ -43,8 +44,9 @@ export class Board {
    * @param {BoardProps} args
    */
   constructor(args: BoardProps) {
-    const { id, room } = args;
+    const { id, room, owner } = args;
     this._id = id;
     this._room = room;
+    this._owner = owner;
   }
 }

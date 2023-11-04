@@ -20,6 +20,7 @@ export const fetchRoomByID = async (roomId: string): Promise<Room> => {
     requests: room.requests,
     kicked: room.kicked,
     users: room.users,
+    activeBoard: room.activeBoard,
     gameSystem: room.gameSystem,
     music: room.music,
   });
@@ -41,6 +42,9 @@ export const createRoom = async (props: {
     music: "",
   };
 
+  /* デフォルトのboard作成 @TODO */
+  /* デフォルトのmap作成 @TODO */
+
   const collectionRef = collection(db, "room");
   const docRef = doc(collectionRef);
   await setDoc(docRef, r);
@@ -54,6 +58,7 @@ export const createRoom = async (props: {
     requests: r.requests,
     kicked: r.kicked,
     users: r.users,
+    activeBoard: "", // @TODO
     gameSystem: r.gameSystem,
     music: "",
   });
@@ -108,6 +113,7 @@ export const setRoomStateForUser = async (props: {
     requests: room.requests,
     kicked: room.kicked,
     users: room.users,
+    activeBoard: room.activeBoard,
     gameSystem: room.gameSystem,
     music: room.music,
   });
