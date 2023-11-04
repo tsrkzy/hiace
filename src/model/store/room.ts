@@ -10,6 +10,7 @@ const room = writable<Room>(
     requests: [],
     kicked: [],
     users: [],
+    activeBoard: "",
     gameSystem: "",
     music: "",
   }),

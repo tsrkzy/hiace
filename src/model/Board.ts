@@ -8,6 +8,7 @@
 export type BoardProps = {
   id: string;
   room: string;
+  owner: string;
 };
 
 export class Board {
@@ -27,8 +28,16 @@ export class Board {
     this._room = value;
   }
 
+  get owner(): string {
+    return this._owner;
+  }
+
+  set owner(value: string) {
+    this._owner = value;
+  }
   private _id: string;
   private _room: string;
+  private _owner: string;
 
   /**
    * @param {BoardProps} args

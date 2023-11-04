@@ -32,6 +32,7 @@ export function RoomListener() {
           requests: d.requests,
           kicked: d.kicked,
           users: d.users,
+          activeBoard: d.activeBoard,
           gameSystem: d.gameSystem,
           music: d.music,
         }),

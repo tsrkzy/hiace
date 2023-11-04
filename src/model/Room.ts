@@ -13,6 +13,7 @@ export type RoomProps = {
   requests: string[];
   kicked: string[];
   users: string[];
+  activeBoard: string;
   gameSystem: string;
   music: string;
 };
@@ -21,6 +22,7 @@ export type RoomProps = {
  * ログイン中のRoom情報を保持する
  */
 export class Room {
+
   get id(): string {
     return this._id;
   }
@@ -77,6 +79,14 @@ export class Room {
     this._users = value;
   }
 
+  get activeBoard(): string {
+    return this._activeBoard;
+  }
+
+  set activeBoard(value: string) {
+    this._activeBoard = value;
+  }
+
   get gameSystem(): string {
     return this._gameSystem;
   }
@@ -100,6 +110,7 @@ export class Room {
   private _requests: string[];
   private _kicked: string[];
   private _users: string[];
+  private _activeBoard: string;
   private _gameSystem: string;
   private _music: string;
 
@@ -115,6 +126,7 @@ export class Room {
       requests,
       kicked,
       users,
+      activeBoard,
       gameSystem,
       music,
     } = args;
@@ -125,6 +137,7 @@ export class Room {
     this._requests = requests;
     this._kicked = kicked;
     this._users = users;
+    this._activeBoard = activeBoard;
     this._gameSystem = gameSystem;
     this._music = music;
   }

@@ -28,6 +28,12 @@ export function MapChipListener() {
           id: doc.id,
           room: d.room,
           board: d.board,
+          image: d.image,
+          owner: d.owner,
+          backgroundColor: d.backgroundColor,
+          offsetX: d.offsetX,
+          offsetY: d.offsetY,
+          scalePp: d.scalePp,
         });
         mapChips.push(mapChip);
       });

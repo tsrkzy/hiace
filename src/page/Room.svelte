@@ -38,6 +38,7 @@
   import FloatGroup from "../component/float/FloatGroup.svelte";
   import NoticeGroup from "../component/NoticeGroup.svelte";
   import ImageSourceList from "../component/debug/ImageSourceList.svelte";
+  import SvgBoard from "../component/SvgBoard.svelte";
 
   export let roomId = "";
 
@@ -141,7 +142,7 @@
       <p>キックされました</p>
     {:else if isJoined}
       <p>ゲーム画面</p>
-      <!-- <SvgBoard></SvgBoard> -->
+      <SvgBoard></SvgBoard>
       <!-- <ContextMenu></ContextMenu> -->
       <FloatGroup></FloatGroup>
 
@@ -149,7 +150,7 @@
       <p>リクエスト承認待ち</p>
     {/if}
   </div>
-  <div style="position:absolute;top:0;right:0;width:50vw;">
+  <div style="position:absolute;top:0;right:0;width:50vw;user-select: unset;">
     <details>
       <summary>Auth</summary>
       <h5>userIdForRoomState: {$userIdForRoomState}</h5>
@@ -177,7 +178,7 @@
     <UserList></UserList>
     <CharacterList></CharacterList>
     <BoardList></BoardList>
-    <ChannelList ></ChannelList>
+    <ChannelList></ChannelList>
     <ImageSourceList open></ImageSourceList>
 
   </div>
