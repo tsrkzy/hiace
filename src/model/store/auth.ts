@@ -15,7 +15,6 @@ auth.subscribe(a => {
 
 export const useAuth = () => {
   return {
-    subscribeAuth: auth.subscribe,
     setAuth: auth.set,
     auth,
     /** Googleログイン済みであることを示す */

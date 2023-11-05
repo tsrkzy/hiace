@@ -15,7 +15,6 @@ const myCharacters = derived(characters, $characters => {
 });
 export const useCharacters = () => {
   return {
-    subscribeCharacters: characters.subscribe,
     setCharacters: characters.set,
     characters,
     myCharacters,

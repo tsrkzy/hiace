@@ -13,11 +13,14 @@
   import { useBoards } from "../model/store/boards";
   import { touchPawn, updatePawnTransfer } from "../model/service/PawnService";
   import { useAliases } from "../model/store/aliases";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "../util/drag";
+  import { useMapChips } from "../model/store/mapChips";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;
 
-  const { pawns } = usePawns()
+  const {draggedMapChipId} = useMapChips()
+  const { pawns, draggedPawnId, setDraggedPawnId } = usePawns()
   const { imageSources } = useImageSources()
   const { characters } = useCharacters()
   const { aliases } = useAliases()
@@ -25,7 +28,6 @@
 
   let archived = false;
   let shadowHandler = true;
-  let dragged = false;
 
   $: pawn = (() => {
     return $pawns.find(pawn => pawn.id === pawnId)
@@ -53,6 +55,7 @@
   $: pawnStyleString = toCSS({ transform: `${transform}` });
   $: filter = shadow ? `url(#shadow_filter_${pawnId})` : ''
 
+  $: dragged = $draggedPawnId === pawnId;
 
   const DEFAULT_PAWN_IMAGE_URL = "../assets/images/default_pawn.png";
 
@@ -72,6 +75,9 @@
       console.log("SvgPawn.onMouseDown: pawnEl or boardEl is null");
       return;
     }
+
+    setDraggedPawnId(pawnId)
+    hideObstaclesToDrag();
 
     pawnEl.classList.remove("token-transition");
 
@@ -97,6 +103,9 @@
       e.stopPropagation();
       console.log("SvgPawn.onMouseUp"); // @DELETEME
 
+      setDraggedPawnId("")
+      showObstaclesToDrag()
+
       pawnEl.classList.add("token-transition");
 
       pawnEl.removeEventListener("mousemove", onMove);
@@ -113,16 +122,15 @@
     pawnEl.addEventListener("mousemove", onMove, false);
     pawnEl.addEventListener("mouseup", onMouseUp, false);
     pawnEl.addEventListener("mouseleave", onMouseUp, false);
-
-
   }
+
   const onMouseEnter = (e: MouseEvent) => {
     console.log("SvgPawn.onMouseEnter", e);
   }
 
 </script>
 
-{#if !archived && shadowHandler}
+{#if !archived && shadowHandler && !$draggedMapChipId && ( !$draggedPawnId || dragged) }
   <g
       id={shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`}
       style={pawnStyleString}

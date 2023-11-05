@@ -9,7 +9,6 @@ aliases.subscribe(a => {
 
 export const useAliases = () => {
   return {
-    subscribeAliases: aliases.subscribe,
     setAliases: aliases.set,
     aliases,
   };

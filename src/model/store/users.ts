@@ -15,7 +15,6 @@ const myUserId = derived(users, $users => {
 
 export const useUsers = () => {
   return {
-    subscribeUsers: users.subscribe,
     setUsers: users.set,
     myUserId,
     users,

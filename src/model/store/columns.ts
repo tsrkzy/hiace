@@ -9,7 +9,6 @@ columns.subscribe(a => {
 
 export const useColumns = () => {
   return {
-    subscribeColumns: columns.subscribe,
     setColumns: columns.set,
   };
 };

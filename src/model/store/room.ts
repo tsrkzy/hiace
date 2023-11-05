@@ -28,7 +28,6 @@ userIdForRoomState.subscribe(u => {
 
 export const useRoom = () => {
   return {
-    subscribeRoom: room.subscribe,
     setRoom: room.set,
     roomId: derived(room, $room => $room.id),
     room,

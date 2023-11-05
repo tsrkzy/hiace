@@ -9,7 +9,6 @@ chats.subscribe(a => {
 
 export const useChats = () => {
   return {
-    subscribeChats: chats.subscribe,
     setChats: chats.set,
     chats,
   };

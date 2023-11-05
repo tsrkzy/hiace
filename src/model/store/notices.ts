@@ -16,7 +16,6 @@ notices.subscribe(nList => {
 
 export const useNotices = () => {
   return {
-    subscribe: notices.subscribe,
     setNotices: notices.set,
     notices,
     addNotice: (notice: Notice) => {

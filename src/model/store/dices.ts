@@ -9,7 +9,6 @@ dices.subscribe(a => {
 
 export const useDices = () => {
   return {
-    subscribeDices: dices.subscribe,
     setDices: dices.set,
   };
 };

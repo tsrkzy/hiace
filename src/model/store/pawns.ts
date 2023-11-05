@@ -7,10 +7,13 @@ pawns.subscribe(a => {
   console.log("pawns.subscribe", a); // @DELETEME
 });
 
+const draggedPawnId = writable<string>("");
+
 export const usePawns = () => {
   return {
-    subscribePawns: pawns.subscribe,
     setPawns: pawns.set,
     pawns,
+    draggedPawnId,
+    setDraggedPawnId: draggedPawnId.set,
   };
 };

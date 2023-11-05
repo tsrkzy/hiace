@@ -24,7 +24,6 @@ localConfig.subscribe((l: LocalConfig) => {
 
 export const useLocalConfig = () => {
   return {
-    subscribeLocalConfig: localConfig.subscribe,
     setLocalConfig: localConfig.set,
     localConfig,
   };

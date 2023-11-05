@@ -54,7 +54,6 @@ const closeFloat = (floatId: number) => {
 
 export const useFloats = () => {
   return {
-    subscribeFloats: floats.subscribe,
     setFloats: floats.set,
     floats,
     popFloat,

@@ -11,11 +11,11 @@
   import { toCSS } from "../util/style";
   import { useBoards } from "../model/store/boards";
   import { updateMapChipTransfer } from "../model/service/MapChipService";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "../util/drag";
 
   export let mapChipId: string = "";
 
-
-  const { mapChips } = useMapChips()
+  const { mapChips, draggedMapChipId, setDraggedMapChipId } = useMapChips()
   const { imageSources } = useImageSources()
   const { activeBoard } = useBoards()
 
@@ -30,7 +30,7 @@
   let transform = mapChip?.transform || new DOMMatrix();
   $: mapStyleString = toCSS({ transform: `${transform}` });
 
-  let isDragged = false;
+  $: isDragged = $draggedMapChipId === mapChipId;
   let locked = false;
 
   const DEFAULT_MAP_IMAGE_URL = "../assets/images/default_map.jpg";
@@ -60,6 +60,8 @@
       return false;
     }
 
+    setDraggedMapChipId(mapChipId);
+    hideObstaclesToDrag()
 
     const ctmB = boardEl.getCTM() as DOMMatrix; // global to board
     const ctmM = mapChipEl.getCTM() as DOMMatrix; // board to mapChip
@@ -85,13 +87,16 @@
       console.log("SvgMap.onMouseUp", e);
       e.stopPropagation();
 
+      setDraggedMapChipId("");
+      showObstaclesToDrag()
+
       mapChipEl.removeEventListener("mousemove", onMouseMove);
       mapChipEl.removeEventListener("mouseup", onMouseUp);
       mapChipEl.removeEventListener("mouseleave", onMouseUp);
 
       transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
 
-      await updateMapChipTransfer({mapChipId, transform});
+      await updateMapChipTransfer({ mapChipId, transform });
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);
@@ -132,7 +137,7 @@
           y={-1000 / 2}
           width={imageSource?.width || DEFAULT_MAP_IMAGE_WIDTH + 1000}
           height={imageSource?.height || DEFAULT_MAP_IMAGE_HEIGHT + 1000}
-          stroke="red"
+          stroke="transparent"
           fill="transparent"
       ></rect>
     {/if}

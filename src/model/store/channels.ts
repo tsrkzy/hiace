@@ -9,7 +9,6 @@ channels.subscribe(a => {
 
 export const useChannels = () => {
   return {
-    subscribeChannels: channels.subscribe,
     setChannels: channels.set,
     channels,
   };

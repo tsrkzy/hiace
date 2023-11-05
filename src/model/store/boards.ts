@@ -14,11 +14,14 @@ const activeBoard = derived(boards, $boards => {
   return $boards.find(b => b.id === get(room).activeBoard);
 });
 
+const draggedBoardId = writable<string>("");
+
 export const useBoards = () => {
   return {
-    subscribeBoards: boards.subscribe,
     setBoards: boards.set,
     boards,
     activeBoard,
+    draggedBoardId,
+    setDraggedBoardId: draggedBoardId.set,
   };
 };

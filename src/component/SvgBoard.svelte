@@ -14,7 +14,7 @@
   import SvgPawn from "./SvgPawn.svelte";
   import { usePawns } from "../model/store/pawns";
 
-  const { activeBoard } = useBoards()
+  const { activeBoard, setDraggedBoardId } = useBoards()
   const { mapChips } = useMapChips()
   const { pawns } = usePawns()
 
@@ -29,6 +29,7 @@
     e.stopPropagation();
     e.preventDefault();
 
+    setDraggedBoardId($activeBoard?.id || "");
 
     const elSvg = document.getElementById("svg-table") as HTMLElement;
     elSvg.classList.add("drag");
@@ -52,6 +53,8 @@
       const t = globalToLocal(e.clientX - downX, e.clientY - downY, ctmBoard);
       transformMatrix = `${t}`
       elSvg.classList.remove("drag");
+
+      setDraggedBoardId("");
 
       elSvg.removeEventListener("mousemove", onMove);
       elSvg.removeEventListener("mouseup", onMouseUp);

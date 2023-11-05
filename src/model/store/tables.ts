@@ -9,7 +9,6 @@ tables.subscribe(a => {
 
 export const useTables = () => {
   return {
-    subscribeTables: tables.subscribe,
     setTables: tables.set,
   };
 };
