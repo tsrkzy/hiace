@@ -6,7 +6,9 @@ import {
   writeBatch,
   query,
   where,
-  getDocs, updateDoc, getDoc,
+  getDocs,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { MapChip } from "../MapChip";
@@ -108,16 +110,18 @@ export const deleteMapChipByBoard = async (props: { boardId: string }) => {
   await batch.commit();
 };
 
-
-export const updateMapChipTransfer = async (props: { mapChipId: string; transform: string }) => {
+export const updateMapChipTransfer = async (props: {
+  mapChipId: string;
+  transform: string;
+}) => {
   console.log("MapChipService.updateMapChipTransfer");
   const { mapChipId, transform } = props;
   const collectionRef = collection(db, "map");
   const docRef = doc(collectionRef, mapChipId);
   await updateDoc(docRef, { transform });
 
-  const docSnap = await getDoc(docRef)
-  const d = docSnap.data();
+  const docSnap = await getDoc(docRef);
+  const d = docSnap.data() as MapChip;
 
   return new MapChip({
     id: docRef.id,
@@ -132,5 +136,5 @@ export const updateMapChipTransfer = async (props: { mapChipId: string; transfor
     dragLock: d.dragLock,
     transform: d.transform,
     grid: d.grid,
-  })
-}
+  });
+};

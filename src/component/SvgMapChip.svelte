@@ -27,10 +27,9 @@
     return $imageSources.find(imageSource => imageSource.id === mapChip?.image)
   })()
 
-  let domMatrix = mapChip?.transform || new DOMMatrix();
-  $: mapStyleString = toCSS({ transform: `${domMatrix}` });
+  let transform = mapChip?.transform || new DOMMatrix();
+  $: mapStyleString = toCSS({ transform: `${transform}` });
 
-  let loaded = true;
   let isDragged = false;
   let locked = false;
 
@@ -77,7 +76,7 @@
 
     const onMouseMove = (e: MouseEvent) => {
       e.stopPropagation();
-      domMatrix = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+      transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
     }
 
     const onMouseUp = async (e: MouseEvent) => {
@@ -88,9 +87,9 @@
       mapChipEl.removeEventListener("mouseup", onMouseUp);
       mapChipEl.removeEventListener("mouseleave", onMouseUp);
 
-      domMatrix = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
+      transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
 
-      await updateMapChipTransfer({mapChipId, transform: domMatrix});
+      await updateMapChipTransfer({mapChipId, transform});
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);
@@ -100,7 +99,7 @@
   }
 </script>
 
-{#if loaded && mapChip}
+{#if mapChip}
   <g
       id={`map_${mapChipId}`}
       style={mapStyleString}

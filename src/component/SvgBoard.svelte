@@ -11,9 +11,12 @@
   import SvgMapChip from "./SvgMapChip.svelte";
   import { useMapChips } from "../model/store/mapChips";
   import { toCSS } from "../util/style";
+  import SvgPawn from "./SvgPawn.svelte";
+  import { usePawns } from "../model/store/pawns";
 
   const { activeBoard } = useBoards()
   const { mapChips } = useMapChips()
+  const { pawns } = usePawns()
 
 
   const zoom = 100;
@@ -88,9 +91,9 @@
       <SvgMapChip mapChipId={mapChip.id}></SvgMapChip>
 
     {/each}
-    <!--      {#each pawns as pawn(pawn.id)}-->
-    <!--        <SvgPawn shadow pawnId={pawn.id}></SvgPawn>-->
-    <!--      {/each}-->
+    {#each $pawns as pawn(pawn.id)}
+      <SvgPawn shadow pawnId={pawn.id}></SvgPawn>
+    {/each}
     <!--      {#each dices as dice(dice.id)}-->
     <!--        <SvgDice shadow diceId={dice.id}></SvgDice>-->
     <!--      {/each}-->
