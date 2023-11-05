@@ -1,0 +1,43 @@
+<!-----------------------------------------------------------------------------
+  - Copyright (c) 2023.                                                       -
+  - @tsrkzy/Github.                                                           -
+  - tsrmix@gmail.com                                                          -
+  - All rights reserved.                                                      -
+  ----------------------------------------------------------------------------->
+
+<script lang="ts">
+  import { ContentId,  ContentTitle } from "../../model/Float";
+  import { openFloat,  } from "../../model/service/FloatService";
+
+
+  const contents = [
+    { id: ContentId.ROOM_MANAGER, name: ContentTitle(ContentId.ROOM_MANAGER) },
+    { id: ContentId.BOARD_MANAGER, name: ContentTitle(ContentId.BOARD_MANAGER) },
+    { id: ContentId.CHARACTER_MANAGER, name: ContentTitle(ContentId.CHARACTER_MANAGER) },
+  ]
+
+  const onContentChangeHandler = (e: Event) => {
+    console.log("FloatOpener.onContentChangeHandler");
+    const { value: contentId } = e.currentTarget as HTMLSelectElement;
+    openFloat(<ContentId>contentId);
+
+    (e.currentTarget as HTMLSelectElement).value = ContentId.UNSET;
+  }
+</script>
+
+<label id="float-opener">
+  <select on:change={(e)=>onContentChangeHandler(e)}>
+    <option value={ContentId.UNSET} selected disabled>{ContentTitle(ContentId.UNSET)}</option>
+    {#each contents as c(c.id)}
+      <option value={c.id}>{c.name}</option>
+    {/each}
+  </select>
+</label>
+
+<style>
+    #float-opener {
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+</style>

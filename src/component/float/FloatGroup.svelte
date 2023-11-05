@@ -25,7 +25,6 @@
 
 
 <div class="float-group__container">
-  {isDragging}
   {#if isDragging}
     {#each $floats as float (float.id)}
       <FloatWindow {float}>

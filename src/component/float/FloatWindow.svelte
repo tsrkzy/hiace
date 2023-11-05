@@ -8,12 +8,11 @@
   import { Float } from "../../model/Float";
   import { toCSS } from "../../util/style";
   import { useFloats } from "../../model/store/floats";
+  import { closeFloat, popFloat } from "../../model/service/FloatService";
 
   const {
     floats,
     setFloats,
-    popFloat,
-    closeFloat,
   } = useFloats()
   export let float = {} as Float;
 

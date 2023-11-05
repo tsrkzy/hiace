@@ -39,6 +39,7 @@
   import NoticeGroup from "../component/NoticeGroup.svelte";
   import ImageSourceList from "../component/debug/ImageSourceList.svelte";
   import SvgBoard from "../component/SvgBoard.svelte";
+  import FloatOpener from "../component/float/FloatOpener.svelte";
 
   export let roomId = "";
 
@@ -130,9 +131,6 @@
 
 <main>
   <div id="floor" class="floor_container">
-    <div style="position: fixed; top: 0; left: 0">
-    </div>
-
     {#if !$isLoggedIn}
       <!-- Google認証がまだならGoogle認証ボタンのみ表示 -->
       <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
@@ -141,8 +139,8 @@
     {:else if isKicked}
       <p>キックされました</p>
     {:else if isJoined}
-      <p>ゲーム画面</p>
       <SvgBoard></SvgBoard>
+      <FloatOpener></FloatOpener>
       <!-- <ContextMenu></ContextMenu> -->
       <FloatGroup></FloatGroup>
 

@@ -21,7 +21,28 @@ export const ContentId = {
   NOTE_MANAGER: "NOTE_MANAGER",
   ISSUE_WRITER: "ISSUE_WRITER",
 } as const;
-type ContentId = (typeof ContentId)[keyof typeof ContentId];
+export type ContentId = (typeof ContentId)[keyof typeof ContentId];
+
+export const ContentTitle = (contentId: ContentId): string => {
+  return (
+    {
+      [ContentId.UNSET]: "ウィンドウを開く",
+      [ContentId.CHARACTER_MANAGER]: "キャラクター",
+      [ContentId.CHARACTER_EDIT]: "CHARACTER_EDIT",
+      [ContentId.BOARD_MANAGER]: "マップオブジェクト",
+      [ContentId.MAP_EDIT]: "MAP_EDIT",
+      [ContentId.CHAT_LIST]: "CHAT_LIST",
+      [ContentId.TABLE_VIEW]: "TABLE_VIEW",
+      [ContentId.CHAT_PALETTE]: "CHAT_PALETTE",
+      [ContentId.IMAGE_MANAGER]: "IMAGE_MANAGER",
+      [ContentId.SOUND_MANAGER]: "SOUND_MANAGER",
+      [ContentId.ROOM_MANAGER]: "ルーム",
+      [ContentId.CHANNEL_LIST]: "CHANNEL_LIST",
+      [ContentId.NOTE_MANAGER]: "NOTE_MANAGER",
+      [ContentId.ISSUE_WRITER]: "ISSUE_WRITER",
+    }[contentId] || "ERROR: CANNOT GET CONTENT TITLE"
+  );
+};
 
 export type FloatProps = {
   id: number;
