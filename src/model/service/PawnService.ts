@@ -6,7 +6,9 @@ import {
   query,
   where,
   getDocs,
-  deleteDoc, updateDoc, getDoc,
+  deleteDoc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Pawn } from "../Pawn";
@@ -19,7 +21,7 @@ interface CreatePawnProps {
   boardId: string;
   imageId: string;
   characterId: string;
-  transform?: string|DOMMatrix;
+  transform?: string | DOMMatrix;
 }
 
 export const createPawn = async (props: CreatePawnProps) => {
@@ -74,7 +76,7 @@ export const deletePawnByBoard = async (props: { boardId: string }) => {
 
 export const updatePawnTransfer = async (props: {
   pawnId: string;
-  transform: string|DOMMatrix;
+  transform: string | DOMMatrix;
 }) => {
   console.log("PawnService.updatePawnTransfer");
   const { pawnId, transform } = props;
@@ -94,13 +96,13 @@ export const updatePawnTransfer = async (props: {
     image: d.image,
     character: d.character,
     transform: d.transform,
-  })
-}
+  });
+};
 
-export const touchPawn = async (props : {pawnId: string }) => {
+export const touchPawn = async (props: { pawnId: string }) => {
   const { pawnId } = props;
 
   const collectionRef = collection(db, "pawn");
   const docRef = doc(collectionRef, pawnId);
   await updateDoc(docRef, { updatedAt: Date.now() });
-}
+};

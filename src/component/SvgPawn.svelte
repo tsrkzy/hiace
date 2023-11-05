@@ -12,6 +12,7 @@
   import { useCharacters } from "../model/store/characters";
   import { useBoards } from "../model/store/boards";
   import { touchPawn, updatePawnTransfer } from "../model/service/PawnService";
+  import { useAliases } from "../model/store/aliases";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;
@@ -19,6 +20,7 @@
   const { pawns } = usePawns()
   const { imageSources } = useImageSources()
   const { characters } = useCharacters()
+  const { aliases } = useAliases()
   const { activeBoard } = useBoards()
 
   let archived = false;
@@ -33,8 +35,12 @@
     return $characters.find(character => character.id === pawn?.character)
   })()
 
+  $: alias = (() => {
+    return $aliases.find(alias => alias.character === character?.id)
+  })()
+
   $: imageSource = (() => {
-    return $imageSources.find(imageSource => imageSource.id === character?.image)
+    return $imageSources.find(imageSource => imageSource.id === alias?.image)
   })()
 
 
@@ -70,11 +76,11 @@
     pawnEl.classList.remove("token-transition");
 
     /* globalの座標系をboard,pawnの座標系へ変換する行列 */
-    const ctmB = boardEl.getCTM(); // global -> board
-    const ctmP = pawnEl.getCTM(); // global -> pawn
+    const ctmB = boardEl.getCTM() as DOMMatrix; // global -> board
+    const ctmP = pawnEl.getCTM() as DOMMatrix; // global -> pawn
     const ctmBp = ctmB.inverse().multiply(ctmP); // board -> pawn
 
-    function globalToLocal(dx, dy) {
+    function globalToLocal(dx: number, dy: number) {
       /* 変位をglobalからDOMローカルの座標系へ変換 */
       return new DOMMatrix([1, 0, 0, 1, dx / ctmP.a, dy / ctmP.a]).translate(
         ctmBp.e,
@@ -82,12 +88,12 @@
       );
     }
 
-    const onMove = (e) => {
+    const onMove = (e: MouseEvent) => {
       e.stopPropagation();
       transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
     };
 
-    const onMouseUp = async (e) => {
+    const onMouseUp = async (e: MouseEvent) => {
       e.stopPropagation();
       console.log("SvgPawn.onMouseUp"); // @DELETEME
 

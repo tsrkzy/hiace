@@ -4,13 +4,21 @@
  - tsrmix@gmail.com                                                           -
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
-import { collection, onSnapshot, query, where, orderBy } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { usePawns } from "../store/pawns";
 import { Pawn } from "../Pawn";
 
-const subscribeMap = new Map<string,
-  { id: string; unsubscribe: () => unknown }>();
+const subscribeMap = new Map<
+  string,
+  { id: string; unsubscribe: () => unknown }
+>();
 
 export function PawnListener() {
   const { setPawns } = usePawns();
@@ -18,9 +26,9 @@ export function PawnListener() {
   const setPawnListener = (roomId: string) => {
     console.log("setPawnListener");
     const q = query(
-      collection(db, "pawn")
-      , where("room", "==", roomId)
-      , orderBy("updatedAt", "desc")
+      collection(db, "pawn"),
+      where("room", "==", roomId),
+      orderBy("updatedAt", "desc"),
     );
     const unsubscribe = onSnapshot(q, querySnapshot => {
       const pawns: Pawn[] = [];
