@@ -8,8 +8,9 @@
 <script lang="ts">
   export let handle = () => {
   }
+  export let disabled = false
 </script>
 
-<button on:click|stopPropagation={()=>handle()}>
+<button {disabled} on:click|stopPropagation={()=>handle()}>
   <slot></slot>
 </button>

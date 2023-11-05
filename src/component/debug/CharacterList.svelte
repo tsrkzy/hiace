@@ -28,7 +28,6 @@
       name: `character_${Date.now()}`,
       roomId: $roomId,
       text: "",
-      activeAlias: "",
       imageId: "",
       showOnInitiative: true,
     })

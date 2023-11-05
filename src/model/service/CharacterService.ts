@@ -16,8 +16,7 @@ type CreateCharacterProps = {
   name: string;
   roomId: string;
   text?: string;
-  activeAlias: string;
-  imageId: string;
+  imageId?: string;
   showOnInitiative?: boolean;
   chatPosition?: number;
   pawnSize?: number;
@@ -37,7 +36,7 @@ export const createCharacter = async (
     name: props.name,
     room: props.roomId,
     text: props.text ?? "",
-    activeAlias: props.activeAlias,
+    activeAlias: "",
     showOnInitiative: props.showOnInitiative ?? true,
     chatPosition: props.chatPosition ?? 0,
     pawnSize: props.pawnSize ?? 1,
@@ -53,7 +52,7 @@ export const createCharacter = async (
   const alias = await createDefaultAlias({
     roomId: props.roomId,
     characterId: id,
-    imageId: "imageId",
+    imageId: props.imageId || "",
   });
 
   /* 作成したaliasをcharacterに割当 */
