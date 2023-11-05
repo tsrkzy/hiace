@@ -92,7 +92,7 @@
 
     {/each}
     {#each $pawns as pawn(pawn.id)}
-      <SvgPawn shadow pawnId={pawn.id}></SvgPawn>
+      <SvgPawn pawnId={pawn.id}></SvgPawn>
     {/each}
     <!--      {#each dices as dice(dice.id)}-->
     <!--        <SvgDice shadow diceId={dice.id}></SvgDice>-->

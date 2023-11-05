@@ -4,7 +4,7 @@
  - tsrmix@gmail.com                                                           -
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { useChats } from "../store/chats";
 import { Chat } from "../Chat";
@@ -19,7 +19,10 @@ export function ChatListener() {
 
   const setChatListener = (roomId: string) => {
     console.log("setChatListener");
-    const q = query(collection(db, "chat"), where("room", "==", roomId));
+    const q = query(collection(db, "chat")
+      , where("room", "==", roomId)
+      , orderBy("timestamp", "asc") // @TODO should be "asc"
+    );
     const unsubscribe = onSnapshot(q, querySnapshot => {
       const chats: Chat[] = [];
       querySnapshot.forEach(doc => {

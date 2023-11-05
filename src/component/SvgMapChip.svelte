@@ -53,11 +53,13 @@
 
     const boardEl = document.getElementById(`board_${$activeBoard?.id}`) as HTMLElement&SVGGElement;
     const mapChipEl = document.getElementById(`map_${mapChipId}`) as HTMLElement&SVGGElement;
+
+    // 要素が取得できなければログだけして終了
     if (!boardEl || !mapChipEl) {
-      console.log("boardEl: ", boardEl);
-      console.log("mapChipEl: ", mapChipEl);
-      throw new Error(`board or mapChip is not found: ${$activeBoard?.id}, ${mapChipId}`);
+      console.log("SvgMap.onMouseDown: boardEl or mapChipEl is null");
+      return false;
     }
+
 
     const ctmB = boardEl.getCTM() as DOMMatrix; // global to board
     const ctmM = mapChipEl.getCTM() as DOMMatrix; // board to mapChip
