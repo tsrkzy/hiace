@@ -10,6 +10,7 @@
   import { useImageSources } from "../model/store/imageSources";
   import { toCSS } from "../util/style";
   import { useBoards } from "../model/store/boards";
+  import { updateMapChipTransfer } from "../model/service/MapChipService";
 
   export let mapChipId: string = "";
 
@@ -79,7 +80,7 @@
       domMatrix = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
     }
 
-    const onMouseUp = (e: MouseEvent) => {
+    const onMouseUp = async (e: MouseEvent) => {
       console.log("SvgMap.onMouseUp", e);
       e.stopPropagation();
 
@@ -89,6 +90,7 @@
 
       domMatrix = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
 
+      await updateMapChipTransfer({mapChipId, transform: domMatrix});
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);
