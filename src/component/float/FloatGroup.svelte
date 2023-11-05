@@ -13,6 +13,7 @@
   import { useMapChips } from "../../model/store/mapChips";
   import { usePawns } from "../../model/store/pawns";
   import { useBoards } from "../../model/store/boards";
+  import CharacterManager from "./CharacterManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -30,7 +31,7 @@
       <FloatWindow {float}>
         <div class="content-container">
           {#if float.contentId === ContentId.CHAT_LIST}CHAT_LIST
-          {:else if float.contentId === ContentId.CHARACTER_LIST}CHARACTER_LIST
+          {:else if float.contentId === ContentId.CHARACTER_MANAGER}<CharacterManager {float}></CharacterManager>
           {:else if float.contentId === ContentId.CHARACTER_EDIT}CHARACTER_EDIT
           {:else if float.contentId === ContentId.BOARD_MANAGER}
             <BoardManager {float}/>
