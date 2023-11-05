@@ -38,7 +38,6 @@
     const ctmBoard = boardEl.getCTM() as DOMMatrix
 
     const onMove = (e: MouseEvent) => {
-      console.log("SvgBoard.onMove");
       e.stopPropagation();
       const t = globalToLocal(e.clientX - downX, e.clientY - downY, ctmBoard);
       transformMatrix = `${t}`

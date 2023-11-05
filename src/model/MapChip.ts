@@ -31,7 +31,12 @@ export class MapChip {
     return this._grid;
   }
 
-  set grid(value: { cols: number; rows: number; color: string; snap: boolean }) {
+  set grid(value: {
+    cols: number;
+    rows: number;
+    color: string;
+    snap: boolean;
+  }) {
     this._grid = value;
   }
   get transform(): string {

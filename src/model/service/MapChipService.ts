@@ -63,7 +63,7 @@ export const createMapChip = async (
       rows: 15,
       color: "#000000",
       snap: true,
-    }
+    },
   };
 
   const collectionRef = collection(db, "map");
