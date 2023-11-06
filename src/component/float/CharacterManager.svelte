@@ -9,7 +9,7 @@
   import { useCharacters } from "../../model/store/characters";
   import { Float } from "../../model/Float";
   import Button from "../button/Button.svelte";
-  import { createCharacter } from "../../model/service/CharacterService";
+  import { cloneCharacter, createCharacter } from "../../model/service/CharacterService";
   import { useUsers } from "../../model/store/users";
   import { useRoom } from "../../model/store/room";
 
@@ -43,9 +43,11 @@
     console.log("CharacterManager.onClickEditHandler");
     console.log(characterId);
   }
-  const onClickDuplicateHandler = (characterId:string)=>{
-    console.log("CharacterManager.onClickDuplicateHandler");
+  const onClickCloneHandler = async (characterId:string)=>{
+    console.log("CharacterManager.onClickCloneHandler");
     console.log(characterId);
+    await cloneCharacter({ characterId, userId: $myUserId })
+
   }
   const onClickAddPawnHandler = (characterId:string)=>{
     console.log("CharacterManager.onClickAddPawnHandler");
@@ -62,16 +64,9 @@
   {#each $characters as c (c.id)}
     <li>{c.name} (#{c.id})
       <Button handle={()=>onClickEditHandler(c.id)}>編集</Button>
-      <Button handle={()=>onClickDuplicateHandler(c.id)}>複製</Button>
+      <Button handle={()=>onClickCloneHandler(c.id)}>複製</Button>
       <Button handle={()=>onClickAddPawnHandler(c.id)}>コマ追加</Button>
       <Button handle={()=>onClickArchiveHandler(c.id)}>控室に入れる</Button>
     </li>
-    <!--    <ul>-->
-    <!--      {#each $aliases as a (a.id)}-->
-    <!--        {#if a.character === c.id}-->
-    <!--          <li>{a.name} (#{a.id})</li>-->
-    <!--        {/if}-->
-    <!--      {/each}-->
-    <!--    </ul>-->
   {/each}
 </ul>

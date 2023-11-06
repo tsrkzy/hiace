@@ -148,7 +148,7 @@
       <p>リクエスト承認待ち</p>
     {/if}
   </div>
-  <div style="position:absolute;top:0;right:0;width:50vw;user-select: unset;">
+  <div style="position:absolute;top:0;right:0;width:50vw;user-select: unset;background-color: lightgray;">
     <details>
       <summary>Auth</summary>
       <h5>userIdForRoomState: {$userIdForRoomState}</h5>

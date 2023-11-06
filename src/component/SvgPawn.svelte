@@ -38,7 +38,10 @@
   })()
 
   $: alias = (() => {
-    return $aliases.find(alias => alias.character === character?.id)
+    return $aliases.find(alias =>
+      alias.character === character?.id
+      && character?.activeAlias === alias.id
+    )
   })()
 
   $: imageSource = (() => {
@@ -104,8 +107,6 @@
 
       e.stopPropagation();
       pawn.transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
-      console.log(pawn.transform);
-
     };
 
     const onMouseUp = async (e: MouseEvent) => {
