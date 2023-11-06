@@ -27,8 +27,7 @@
     return $imageSources.find(imageSource => imageSource.id === mapChip?.image)
   })()
 
-  let transform = mapChip?.transform || new DOMMatrix();
-  $: mapStyleString = toCSS({ transform: `${transform}` });
+  $: mapStyleString = toCSS({ transform: `${mapChip?.transform}` });
 
   $: isDragged = $draggedMapChipId === mapChipId;
   let locked = false;
@@ -38,6 +37,10 @@
   const DEFAULT_MAP_IMAGE_HEIGHT = 840
 
   const onMouseDown = (e: MouseEvent) => {
+    if(!mapChip) {
+      return;
+    }
+
     console.log("SvgMap.onMouseDown", e);
 
     if (locked) {
@@ -79,11 +82,19 @@
     }
 
     const onMouseMove = (e: MouseEvent) => {
+      if(!mapChip) {
+        return;
+      }
+
       e.stopPropagation();
-      transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+      mapChip.transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
     }
 
     const onMouseUp = async (e: MouseEvent) => {
+      if(!mapChip) {
+        return;
+      }
+
       console.log("SvgMap.onMouseUp", e);
       e.stopPropagation();
 
@@ -94,9 +105,10 @@
       mapChipEl.removeEventListener("mouseup", onMouseUp);
       mapChipEl.removeEventListener("mouseleave", onMouseUp);
 
-      transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
+      const newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
+      mapChip.transform =  newTransform
 
-      await updateMapChipTransfer({ mapChipId, transform });
+      await updateMapChipTransfer({ mapChipId, transform: newTransform });
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);

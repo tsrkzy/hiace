@@ -13,6 +13,7 @@
   import { toCSS } from "../util/style";
   import SvgPawn from "./SvgPawn.svelte";
   import { usePawns } from "../model/store/pawns";
+  import { isMacOS } from "../util/agent";
 
   const { activeBoard, setDraggedBoardId } = useBoards()
   const { mapChips } = useMapChips()
@@ -72,8 +73,49 @@
     return new DOMMatrix([1, 0, 0, 1, dx, dy]).multiply(ctm);
   }
 
-  const onWheel = (e: MouseEvent) => {
-    console.log("SvgBoard.onWheel", e);
+  const onWheel = (event: WheelEvent) => {
+    console.log("SvgBoard.onWheel", event);
+    const SVG_MARGIN = 40;
+    const { clientX: _x, clientY: _y } = event;
+    const x = _x - SVG_MARGIN;
+    const y = _y - SVG_MARGIN;
+
+    /* windowsの場合の正。osxは逆 */
+    const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
+    const t = new DOMMatrix(transformMatrix);
+    let { a, e, f } = t;
+
+    /* osxの場合はtrackpadとして扱う
+     * 慣性スクロールでwheelがマウスの場合より多く発生するので、
+     * 係数で抑え込む */
+    const MOUSE_SCROLL_SPEED = 1.0;
+    const TRACKPAD_SCROLL_SPEED = 0.2;
+    const os = isMacOS() ? TRACKPAD_SCROLL_SPEED : MOUSE_SCROLL_SPEED;
+
+    /* Windowsのマウスでwheelが1回発火したときの拡大率のステップ */
+    const ZOOM_RATE_DELTA = 0.1;
+    const DELTA = a * ZOOM_RATE_DELTA * os;
+
+    /* 拡大率の下限値と上限値 */
+    const MIN_ZOOM_RATE = 0.1;
+    const MAX_ZOOM_RATE = 3.0;
+
+    /* 倍率100%の際の、boardの原点から測ったクリック位置 */
+    const ix = (x - e) / a;
+    const iy = (y - f) / a;
+
+    /* 倍率を増減 */
+    a += dir * DELTA;
+    a = Math.max(a, MIN_ZOOM_RATE);
+    a = Math.min(a, MAX_ZOOM_RATE);
+
+    /* クリック位置から逆算 */
+    const newE = x + -a * ix;
+    const newF = y + -a * iy;
+
+    const newTransform = new DOMMatrix([a, 0, 0, a, newE, newF]);
+    // this.updateWeathercock(newTransform);
+    transformMatrix = `${newTransform}`;
   }
 
 </script>

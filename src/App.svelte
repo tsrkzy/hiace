@@ -15,5 +15,3 @@
   </Route>
   <Route path="*">not found</Route>
 </Router>
-<style>
-</style>
