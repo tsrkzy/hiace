@@ -74,7 +74,6 @@
   }
 
   const onWheel = (event: WheelEvent) => {
-    console.log("SvgBoard.onWheel", event);
     const SVG_MARGIN = 40;
     const { clientX: _x, clientY: _y } = event;
     const x = _x - SVG_MARGIN;
