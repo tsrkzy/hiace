@@ -19,7 +19,7 @@
   export let pawnId: string = "";
   export let shadow: boolean = false;
 
-  const {draggedMapChipId} = useMapChips()
+  const { draggedMapChipId } = useMapChips()
   const { pawns, draggedPawnId, setDraggedPawnId } = usePawns()
   const { imageSources } = useImageSources()
   const { characters } = useCharacters()
@@ -51,8 +51,7 @@
     return (character?.pawnSize ?? 1) * PAWN_UNIT_SIZE;
   })()
 
-  let transform = pawn?.transform || new DOMMatrix();
-  $: pawnStyleString = toCSS({ transform: `${transform}` });
+  $: pawnStyleString = toCSS({ transform: `${pawn?.transform}` });
   $: filter = shadow ? `url(#shadow_filter_${pawnId})` : ''
 
   $: dragged = $draggedPawnId === pawnId;
@@ -61,6 +60,10 @@
 
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgPawn.onMouseDown", e);
+    if (!pawn) {
+      return;
+    }
+
     e.stopPropagation();
     e.preventDefault();
 
@@ -95,13 +98,23 @@
     }
 
     const onMove = (e: MouseEvent) => {
+      if (!pawn) {
+        return;
+      }
+
       e.stopPropagation();
-      transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+      pawn.transform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+      console.log(pawn.transform);
+
     };
 
     const onMouseUp = async (e: MouseEvent) => {
-      e.stopPropagation();
+      if (!pawn) {
+        return;
+      }
+
       console.log("SvgPawn.onMouseUp"); // @DELETEME
+      e.stopPropagation();
 
       setDraggedPawnId("")
       showObstaclesToDrag()
@@ -112,10 +125,11 @@
       pawnEl.removeEventListener("mouseup", onMouseUp);
       pawnEl.removeEventListener("mouseleave", onMouseUp);
 
-      transform = globalToLocal(e.clientX - downX, e.clientY - downY);
+      let newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+      pawn.transform = newTransform;
 
+      await updatePawnTransfer({ pawnId, transform: newTransform })
       await touchPawn({ pawnId })
-      await updatePawnTransfer({ pawnId, transform })
       // touch("コマ", "character", this.pawn.character); // @TODO
     };
 
@@ -130,7 +144,7 @@
 
 </script>
 
-{#if !archived && shadowHandler && !$draggedMapChipId && ( !$draggedPawnId || dragged) }
+{#if !archived && shadowHandler && !$draggedMapChipId && (!$draggedPawnId || dragged) }
   <g
       id={shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`}
       style={pawnStyleString}

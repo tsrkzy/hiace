@@ -80,6 +80,7 @@ export const updatePawnTransfer = async (props: {
 }) => {
   console.log("PawnService.updatePawnTransfer");
   const { pawnId, transform } = props;
+  console.log(transform);
 
   const collectionRef = collection(db, "pawn");
   const docRef = doc(collectionRef, pawnId);
