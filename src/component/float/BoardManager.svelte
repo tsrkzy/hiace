@@ -10,9 +10,10 @@
   import { useMapChips } from "../../model/store/mapChips";
   import { usePawns } from "../../model/store/pawns";
   import { useRoom } from "../../model/store/room";
-  import { Float } from "../../model/Float";
+  import { ContentId, Float } from "../../model/Float";
   import { createMapChip, deleteMapChip } from "../../model/service/MapChipService";
   import { useUsers } from "../../model/store/users";
+  import { openFloat } from "../../model/service/FloatService";
 
   export const float = {} as Float;
 
@@ -40,6 +41,7 @@
   }
   const onClickMapEdit = async (mapChipId: string) => {
     console.log("BoardManager.onClickMapEdit", mapChipId);
+    openFloat(ContentId.MAP_EDIT, {args: {mapChipId}});
   }
   const onClickDeleteMapChip = async (mapChipId: string) => {
     console.log("BoardManager.onClickDeleteMapChip", mapChipId);

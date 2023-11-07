@@ -28,7 +28,7 @@ export const ContentTitle = (contentId: ContentId): string => {
     {
       [ContentId.UNSET]: "ウィンドウを開く",
       [ContentId.CHARACTER_MANAGER]: "キャラクター",
-      [ContentId.CHARACTER_EDIT]: "CHARACTER_EDIT",
+      [ContentId.CHARACTER_EDIT]: "マップ編集",
       [ContentId.BOARD_MANAGER]: "マップオブジェクト",
       [ContentId.MAP_EDIT]: "MAP_EDIT",
       [ContentId.CHAT_LIST]: "CHAT_LIST",
@@ -44,6 +44,10 @@ export const ContentTitle = (contentId: ContentId): string => {
   );
 };
 
+export type FloatArgs = {
+  mapChipId?: string;
+};
+
 export type FloatProps = {
   id: number;
   show: boolean;
@@ -54,6 +58,7 @@ export type FloatProps = {
   z: number;
   h: number;
   w: number;
+  args?: FloatArgs;
 };
 
 export class Float {
@@ -129,6 +134,14 @@ export class Float {
     this._w = value;
   }
 
+  get args(): FloatArgs {
+    return this._args;
+  }
+
+  set args(value: FloatArgs) {
+    this._args = value;
+  }
+
   private _id: number;
   private _show: boolean;
   private _contentId: ContentId;
@@ -138,12 +151,24 @@ export class Float {
   private _z: number;
   private _h: number;
   private _w: number;
+  private _args: FloatArgs;
 
   /**
-   * @param {FloatProps} args
+   * @param {FloatProps} _args
    */
-  constructor(args: FloatProps) {
-    const { id, show, contentId, contentTitle, x, y, z, h, w } = args;
+  constructor(_args: FloatProps) {
+    const {
+      id,
+      show,
+      contentId,
+      contentTitle,
+      x,
+      y,
+      z,
+      h,
+      w,
+      args = {},
+    } = _args;
     this._id = id;
     this._show = show;
     this._contentId = contentId;
@@ -153,5 +178,6 @@ export class Float {
     this._z = z;
     this._h = h;
     this._w = w;
+    this._args = args;
   }
 }

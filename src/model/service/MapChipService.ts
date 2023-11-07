@@ -8,7 +8,6 @@ import {
   where,
   getDocs,
   updateDoc,
-  getDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { MapChip } from "../MapChip";
@@ -119,22 +118,26 @@ export const updateMapChipTransfer = async (props: {
   const collectionRef = collection(db, "map");
   const docRef = doc(collectionRef, mapChipId);
   await updateDoc(docRef, { transform });
+};
 
-  const docSnap = await getDoc(docRef);
-  const d = docSnap.data() as MapChip;
+export const updateMapChipDragLock = async (props: {
+  mapChipId: string;
+  dragLock: boolean;
+}) => {
+  console.log("MapChipService.updateMapChipDragLock");
+  const { mapChipId, dragLock } = props;
+  const collectionRef = collection(db, "map");
+  const docRef = doc(collectionRef, mapChipId);
+  await updateDoc(docRef, { dragLock });
+};
 
-  return new MapChip({
-    id: docRef.id,
-    room: d.room,
-    board: d.board,
-    owner: d.owner,
-    image: d.image,
-    backgroundColor: d.backgroundColor,
-    offsetX: d.offsetX,
-    offsetY: d.offsetY,
-    scalePp: d.scalePp,
-    dragLock: d.dragLock,
-    transform: d.transform,
-    grid: d.grid,
-  });
+export const updateMapChipScalePp = async (props: {
+  mapChipId: string;
+  scalePp: string;
+}) => {
+  console.log("MapChipService.updateMapChipScalePp");
+  const { mapChipId, scalePp } = props;
+  const collectionRef = collection(db, "map");
+  const docRef = doc(collectionRef, mapChipId);
+  await updateDoc(docRef, { scalePp });
 };

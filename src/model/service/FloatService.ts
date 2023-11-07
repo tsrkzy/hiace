@@ -7,7 +7,7 @@
 
 import { get } from "svelte/store";
 import { useFloats } from "../store/floats";
-import { ContentId, ContentTitle, Float } from "../Float";
+import { ContentId, ContentTitle, Float, type FloatArgs } from "../Float";
 
 const { floats, setFloats } = useFloats();
 
@@ -33,18 +33,25 @@ export const closeFloat = (floatId: number) => {
   setFloats(floatList.filter(f => f.id !== floatId));
 };
 
-export const openFloat = (contentId: ContentId) => {
+export const openFloat = (
+  contentId: ContentId,
+  option: { contentTitle?: string; args?: FloatArgs } = {
+    contentTitle: "",
+    args: {},
+  },
+) => {
   const newId = Math.max(...get(floats).map(f => f.id)) + 1;
   const float = new Float({
     id: newId,
     show: true,
     contentId,
-    contentTitle: ContentTitle(contentId),
+    contentTitle: option.contentTitle || ContentTitle(contentId),
     x: 300,
     y: 300,
     w: 300,
     h: 300,
     z: newId,
+    args: option.args,
   });
   setFloats([...get(floats), float]);
 };
