@@ -40,7 +40,7 @@ export const openFloat = (
     args: {},
   },
 ) => {
-  const newId = Math.max(...get(floats).map(f => f.id)) + 1;
+  const newId = Math.max(0, ...get(floats).map(f => f.id)) + 1;
   const float = new Float({
     id: newId,
     show: true,
