@@ -28,27 +28,27 @@
   })()
 
   $: scaledTransform = (() => {
+    const { e, f } = new DOMMatrix(mapChip?.transform);
     const scale = (mapChip?.scalePp || 100) / 100;
-    return new DOMMatrix(mapChip?.transform).scale(scale, scale)
+    return new DOMMatrix([scale, 0, 0, scale, e, f]);
   })()
 
   $: mapStyleString = toCSS({ transform: `${scaledTransform}` });
 
   $: isDragged = $draggedMapChipId === mapChipId;
-  let locked = false;
 
   const DEFAULT_MAP_IMAGE_URL = "../assets/images/default_map.jpg";
   const DEFAULT_MAP_IMAGE_WIDTH = 1109
   const DEFAULT_MAP_IMAGE_HEIGHT = 840
 
   const onMouseDown = (e: MouseEvent) => {
+    console.log("SvgMap.onMouseDown", e);
     if (!mapChip) {
       return;
     }
 
-    console.log("SvgMap.onMouseDown", e);
-
-    if (locked) {
+    if (mapChip?.dragLock) {
+      /* ロック中の場合はpropagationする前にreturn */
       console.log(`mapChip is locked: ${mapChipId}`);
       return false;
     }
