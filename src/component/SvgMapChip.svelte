@@ -27,7 +27,12 @@
     return $imageSources.find(imageSource => imageSource.id === mapChip?.image)
   })()
 
-  $: mapStyleString = toCSS({ transform: `${mapChip?.transform}` });
+  $: scaledTransform = (() => {
+    const scale = (mapChip?.scalePp || 100) / 100;
+    return new DOMMatrix(mapChip?.transform).scale(scale, scale)
+  })()
+
+  $: mapStyleString = toCSS({ transform: `${scaledTransform}` });
 
   $: isDragged = $draggedMapChipId === mapChipId;
   let locked = false;
@@ -37,7 +42,7 @@
   const DEFAULT_MAP_IMAGE_HEIGHT = 840
 
   const onMouseDown = (e: MouseEvent) => {
-    if(!mapChip) {
+    if (!mapChip) {
       return;
     }
 
@@ -82,7 +87,7 @@
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      if(!mapChip) {
+      if (!mapChip) {
         return;
       }
 
@@ -91,7 +96,7 @@
     }
 
     const onMouseUp = async (e: MouseEvent) => {
-      if(!mapChip) {
+      if (!mapChip) {
         return;
       }
 
@@ -106,7 +111,7 @@
       mapChipEl.removeEventListener("mouseleave", onMouseUp);
 
       const newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
-      mapChip.transform =  newTransform
+      mapChip.transform = newTransform
 
       await updateMapChipTransfer({ mapChipId, transform: newTransform });
     }

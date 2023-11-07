@@ -45,8 +45,9 @@
     console.log("MapEdit.onChangeScaleHandler");
     e.stopPropagation();
     const currentTarget = e.currentTarget as HTMLInputElement;
-    const value = currentTarget.value;
-    await updateMapChipScalePp({ mapChipId, scalePp: value })
+    const scalePp = parseInt(currentTarget.value, 10);
+
+    await updateMapChipScalePp({ mapChipId, scalePp, })
   }
 </script>
 

@@ -133,7 +133,7 @@ export const updateMapChipDragLock = async (props: {
 
 export const updateMapChipScalePp = async (props: {
   mapChipId: string;
-  scalePp: string;
+  scalePp: number;
 }) => {
   console.log("MapChipService.updateMapChipScalePp");
   const { mapChipId, scalePp } = props;
