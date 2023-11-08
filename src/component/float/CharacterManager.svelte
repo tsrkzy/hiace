@@ -7,11 +7,12 @@
 
 <script lang="ts">
   import { useCharacters } from "../../model/store/characters";
-  import { Float } from "../../model/Float";
+  import { ContentId, Float } from "../../model/Float";
   import Button from "../button/Button.svelte";
   import { cloneCharacter, createCharacter } from "../../model/service/CharacterService";
   import { useUsers } from "../../model/store/users";
   import { useRoom } from "../../model/store/room";
+  import { openFloat } from "../../model/service/FloatService";
 
   export const float = {} as Float
 
@@ -39,21 +40,22 @@
   }
 
 
-  const onClickEditHandler = (characterId:string)=>{
+  const onClickEditHandler = (characterId: string) => {
     console.log("CharacterManager.onClickEditHandler");
     console.log(characterId);
+    openFloat(ContentId.CHARACTER_EDIT, { args: { characterId } })
   }
-  const onClickCloneHandler = async (characterId:string)=>{
+  const onClickCloneHandler = async (characterId: string) => {
     console.log("CharacterManager.onClickCloneHandler");
     console.log(characterId);
     await cloneCharacter({ characterId, userId: $myUserId })
 
   }
-  const onClickAddPawnHandler = (characterId:string)=>{
+  const onClickAddPawnHandler = (characterId: string) => {
     console.log("CharacterManager.onClickAddPawnHandler");
     console.log(characterId);
   }
-  const onClickArchiveHandler = (characterId:string)=>{
+  const onClickArchiveHandler = (characterId: string) => {
     console.log("CharacterManager.onClickArchiveHandler");
     console.log(characterId);
   }
