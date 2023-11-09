@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-export const isMacOS = () => {
+export const isMacOS = (): boolean => {
   const ua = navigator.userAgent.toLowerCase();
   return ua.indexOf("mac") > 0 && ua.indexOf("os") > 0;
 };

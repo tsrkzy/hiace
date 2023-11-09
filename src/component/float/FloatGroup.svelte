@@ -15,6 +15,7 @@
   import { useBoards } from "../../model/store/boards";
   import CharacterManager from "./CharacterManager.svelte";
   import MapEdit from "./MapEdit.svelte";
+  import CharacterEdit from "./CharacterEdit.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -32,12 +33,13 @@
         <div class="content-container">
           {#if float.contentId === ContentId.CHAT_LIST}CHAT_LIST
           {:else if float.contentId === ContentId.CHARACTER_MANAGER}
-            <CharacterManager {float}></CharacterManager>
-          {:else if float.contentId === ContentId.CHARACTER_EDIT}CHARACTER_EDIT
+            <CharacterManager {float}/>
+          {:else if float.contentId === ContentId.CHARACTER_EDIT}
+            <CharacterEdit {float}/>
           {:else if float.contentId === ContentId.BOARD_MANAGER}
             <BoardManager {float}/>
           {:else if float.contentId === ContentId.MAP_EDIT}
-            <MapEdit {float}></MapEdit>
+            <MapEdit {float}/>
           {:else if float.contentId === ContentId.TABLE_VIEW}TABLE_VIEW
           {:else if float.contentId === ContentId.CHAT_PALETTE}CHAT_PALETTE
           {:else if float.contentId === ContentId.IMAGE_MANAGER}IMAGE_MANAGER

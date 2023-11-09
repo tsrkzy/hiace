@@ -46,6 +46,7 @@ export const ContentTitle = (contentId: ContentId): string => {
 
 export type FloatArgs = {
   mapChipId?: string;
+  characterId?: string;
 };
 
 export type FloatProps = {

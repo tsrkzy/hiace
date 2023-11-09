@@ -6,12 +6,12 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useMapChips } from "../model/store/mapChips";
-  import { useImageSources } from "../model/store/imageSources";
-  import { toCSS } from "../util/style";
-  import { useBoards } from "../model/store/boards";
-  import { updateMapChipTransfer } from "../model/service/MapChipService";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "../util/drag";
+  import { updateMapChipTransfer } from                    "../../model/service/MapChipService";
+  import { useMapChips } from                              "../../model/store/mapChips";
+  import { useImageSources } from                          "../../model/store/imageSources";
+  import { useBoards } from                                "../../model/store/boards";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
+  import { toCSS } from "../../util/style";
 
   export let mapChipId: string = "";
 

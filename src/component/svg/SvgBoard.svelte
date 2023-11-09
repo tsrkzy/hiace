@@ -7,13 +7,13 @@
 
 <script lang="ts">
 
-  import { useBoards } from "../model/store/boards";
+  import { useBoards } from   "../../model/store/boards";
+  import { useMapChips } from "../../model/store/mapChips";
+  import { usePawns } from    "../../model/store/pawns";
   import SvgMapChip from "./SvgMapChip.svelte";
-  import { useMapChips } from "../model/store/mapChips";
-  import { toCSS } from "../util/style";
   import SvgPawn from "./SvgPawn.svelte";
-  import { usePawns } from "../model/store/pawns";
-  import { isMacOS } from "../util/agent";
+  import { toCSS } from "../../util/style";
+  import { isMacOS } from "../../util/agent";
 
   const { activeBoard, setDraggedBoardId } = useBoards()
   const { mapChips } = useMapChips()

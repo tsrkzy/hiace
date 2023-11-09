@@ -6,15 +6,15 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { toCSS } from "../util/style";
-  import { usePawns } from "../model/store/pawns";
-  import { useImageSources } from "../model/store/imageSources";
-  import { useCharacters } from "../model/store/characters";
-  import { useBoards } from "../model/store/boards";
-  import { touchPawn, updatePawnTransfer } from "../model/service/PawnService";
-  import { useAliases } from "../model/store/aliases";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "../util/drag";
-  import { useMapChips } from "../model/store/mapChips";
+  import { touchPawn, updatePawnTransfer } from            "../../model/service/PawnService";
+  import { usePawns } from                                 "../../model/store/pawns";
+  import { useImageSources } from                          "../../model/store/imageSources";
+  import { useCharacters } from                            "../../model/store/characters";
+  import { useBoards } from                                "../../model/store/boards";
+  import { useAliases } from                               "../../model/store/aliases";
+  import { useMapChips } from                              "../../model/store/mapChips";
+  import { toCSS } from                                    "../../util/style";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;

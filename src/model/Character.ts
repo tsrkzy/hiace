@@ -15,6 +15,7 @@ export type CharacterProps = {
   pawnSize: number;
   showOnInitiative: boolean;
   text: string;
+  color?: string;
   lastPostDatetime?: number;
 };
 
@@ -93,6 +94,14 @@ export class Character {
     this._text = value;
   }
 
+  get color(): string {
+    return this._color;
+  }
+
+  set color(value: string) {
+    this._color = value;
+  }
+
   get lastPostDatetime(): number {
     return this._lastPostDatetime;
   }
@@ -110,6 +119,7 @@ export class Character {
   private _pawnSize: number;
   private _showOnInitiative: boolean;
   private _text: string;
+  private _color: string;
   private _lastPostDatetime: number;
 
   /**
@@ -127,6 +137,7 @@ export class Character {
       pawnSize,
       showOnInitiative,
       text,
+      color,
       lastPostDatetime,
     } = args;
     this._id = id;
@@ -138,6 +149,7 @@ export class Character {
     this._pawnSize = pawnSize;
     this._showOnInitiative = showOnInitiative;
     this._text = text;
+    this._color = color || "#000000";
     this._lastPostDatetime = lastPostDatetime || 0;
   }
 }
