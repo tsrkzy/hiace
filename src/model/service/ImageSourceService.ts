@@ -6,7 +6,14 @@
  -----------------------------------------------------------------------------*/
 
 import { ImageSource } from "../ImageSource";
-import { collection, doc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db, storage } from "../../util/firestore";
 import { getImageMetaData, getImageSize } from "../../util/imageUtil";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -109,6 +116,31 @@ export const registerImage = async (
     height,
     width,
   });
+};
+
+export const validateImageUrl = async (url: string) => {
+  return await new Promise(resolve => {
+    const $img = new Image();
+    $img.onload = () => resolve(true);
+    $img.onerror = () => resolve(false);
+    $img.src = url;
+  });
+};
+
+export const renewImageUrl = async (imageId: string) => {
+  console.log("ImageSourceService.renewImageUrl");
+  const collectionRef = collection(db, "image");
+  const docRef = doc(collectionRef, imageId);
+  const docSnap = await getDoc(docRef);
+  const data = docSnap.data();
+  if (!data) {
+    throw new Error(`image not found: ${imageId}`);
+  }
+  const { path } = data;
+  const storageRef = ref(storage, path);
+  const url = await getDownloadURL(storageRef);
+  await updateDoc(docRef, { url });
+  return url;
 };
 
 /**
