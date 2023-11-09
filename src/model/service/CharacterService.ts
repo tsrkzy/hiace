@@ -197,3 +197,11 @@ export const cloneCharacter = async (props: {
     characterId: newCharacterId,
   });
 };
+
+export const updateCharacterName = async (props: { characterId: string, name:string}) => {
+  console.log("CharacterService.updateCharacter");
+  const { characterId, name } = props;
+  const collectionRef = collection(db, "character");
+  const docRef = doc(collectionRef, characterId);
+  await updateDoc(docRef, { name });
+}
