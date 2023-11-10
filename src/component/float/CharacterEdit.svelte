@@ -11,17 +11,21 @@
   import { Float } from "../../model/Float";
   import { useAliases } from "../../model/store/aliases";
   import Button from "../button/Button.svelte";
-  import { updateCharacterName } from "../../model/service/CharacterService";
+  import { updateCharacterChatPosition, updateCharacterName, updateCharacterPawnSize, updateCharacterShowOnInitiative, updateCharacterText } from "../../model/service/CharacterService";
+  import { createAlias } from "../../model/service/AliasService";
+  import { useRoom } from "../../model/store/room";
+  import { useImageSources } from "../../model/store/imageSources";
 
   export let float: Float = {} as Float;
 
   const { characters } = useCharacters()
   const { aliases } = useAliases()
+  const { room } = useRoom()
+  const { imageSources } = useImageSources()
 
   $: floatId = float?.id;
 
   let characterId = float?.args?.characterId || "";
-  let newCharacterName = "";
   $: character = $characters.find(c => c.id === characterId);
   $: characterName = character?.name || "";
   $: characterText = character?.text || "";
@@ -30,6 +34,13 @@
   $: characterAliases = (() => {
     return $aliases.filter(a => a.character === characterId)
   })()
+  $: aliasImageSources = (() => {
+    return $imageSources.filter(i => characterAliases.some(a => a.image === i.id))
+  })()
+
+  const getAliasImage = (imageId: string) => {
+    return aliasImageSources.find(i => i.id === imageId)
+  }
 
   const onChangeCharacter = async (e: Event) => {
     console.log("CharacterEdit.onChangeCharacter");
@@ -44,22 +55,56 @@
   const onBlurCharacterName = async (e: Event) => {
     console.log("CharacterEdit.onBlurCharacterName");
     const target = e.target as HTMLInputElement;
-    newCharacterName = target.value;
+    const newCharacterName = target.value.trim();
     if (!newCharacterName) {
-      newCharacterName = "";
+      target.value = characterName;
       return false;
     }
-    await updateCharacterName({ characterId, name: newCharacterName.trim() })
-    newCharacterName = "";
+    await updateCharacterName({ characterId, name: newCharacterName })
   }
 
+  const onBlurCharacterText = async (e: Event) => {
+    console.log("CharacterEdit.onBlurCharacterText");
+    const target = e.target as HTMLTextAreaElement;
+    const text = target.value.trim();
+    if (text === characterText) {
+      return false;
+    }
+    await updateCharacterText({ characterId, text })
+  }
 
+  const onChangePawnSize = async (e: Event) => {
+    console.log("CharacterEdit.onChangePawnSize");
+    const target = e.target as HTMLSelectElement;
+    const pawnSize = parseInt(target.value, 10);
+    await updateCharacterPawnSize({ characterId, pawnSize })
+  }
+
+  const onChangeCharacterShowOnInitiative = async (e: Event) => {
+    console.log("CharacterEdit.onChangeCharacterShowOnInitiative");
+    const target = e.target as HTMLInputElement;
+    const showOnInitiative = !!(target.checked);
+    await updateCharacterShowOnInitiative({ characterId, showOnInitiative })
+  }
+
+  const onChangeChatPosition = async (e: Event) => {
+    console.log("CharacterEdit.onChangeChatPosition");
+    const target = e.target as HTMLInputElement;
+    const chatPosition = parseInt(target.value, 10);
+    if (chatPosition === character?.chatPosition) {
+      return false;
+    }
+    await updateCharacterChatPosition({ characterId, chatPosition })
+  }
   const onAddAlias = async (characterId: string) => {
     console.log("CharacterEdit.onAddAlias", characterId);
-    if (characterId) {
-      return false;
-    }
+    await createAlias({
+      roomId: $room.id,
+      characterId,
+      name: `立絵_${characterAliases.length + 1}`,
+    })
   }
+
 
 </script>
 
@@ -80,16 +125,20 @@
       <input type="text" value={characterName}
              on:blur={(e)=>onBlurCharacterName(e)}>
     </label>
-    {newCharacterName}
   </div>
   <div>
     <textarea
         placeholder="キャラクタ説明"
-        value={characterText}></textarea>
+        value={characterText}
+        on:blur={(e)=>onBlurCharacterText(e)}
+    ></textarea>
   </div>
   <div>
     <label>
-      <input type="checkbox" checked={isShowOnInitiative}>
+      <input
+          type="checkbox"
+          checked={isShowOnInitiative}
+          on:change={(e)=>onChangeCharacterShowOnInitiative(e)}>
       <span>データテーブルに表示する</span>
     </label>
   </div>
@@ -102,10 +151,10 @@
   <div>
     <label>
       <span>コマの大きさ</span>
-      <select>
-        <option selected value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
+      <select on:change={(e)=>onChangePawnSize(e)}>
+        {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as size}
+          <option selected={character?.pawnSize === size} value={size}>x{size}</option>
+        {/each}
       </select>
     </label>
   </div>
@@ -114,17 +163,33 @@
     <div>
       <label>
         <span>表示位置</span>
-        <input type="range" min="0" max="11" step="1">
+        <input
+            type="range"
+            min="0"
+            max="11"
+            step="1"
+            value={character?.chatPosition}
+            on:change={(e)=>onChangeChatPosition(e)}
+        >
       </label>
     </div>
     <div>
-      <Button handle={()=>onAddAlias(characterId)}></Button>
+      <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
     </div>
     <ul>
       {#each characterAliases as alias (alias.id)}
         <li>
           <div>
-            <img src={alias.image} alt={alias.name}><span>{alias.name}</span>
+            <div
+                class="alias-image__chip"
+            >
+              {#if getAliasImage(alias.image)}
+                <img
+                    src={getAliasImage(alias.image)?.url}
+                    alt={alias.name}>
+              {/if}
+            </div>
+            <span>{alias.name}</span>
           </div>
           <div>
           </div>
@@ -133,3 +198,15 @@
     </ul>
   </field>
 </fieldset>
+
+<style lang="scss">
+  div.alias-image__chip {
+    width: 64px;
+    height: 64px;
+    border: 1px solid #000000;
+    & img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>

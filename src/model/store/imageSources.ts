@@ -10,7 +10,10 @@ imageSources.subscribe(imageSourceList => {
     const imageSource = imageSourceList[i];
     validateImageUrl(imageSource.url).then(ok => {
       if (!ok) {
-        console.log("image url is invalid", imageSource.url);
+        console.warn(
+          "image url may have been expired. renew...",
+          imageSource.url,
+        );
         renewImageUrl(imageSource.id).catch(e => console.error(e));
       } else {
         console.log("image url is valid", imageSource.url);

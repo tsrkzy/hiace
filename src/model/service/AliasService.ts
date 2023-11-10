@@ -57,7 +57,7 @@ export const createDefaultAlias = async (
 interface CreateAliasProps {
   roomId: string;
   characterId: string;
-  imageId: string;
+  imageId?: string;
   name: string;
 }
 

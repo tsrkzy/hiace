@@ -13,7 +13,20 @@ const { floats, setFloats } = useFloats();
 
 export const popFloat = (floatId: number) => {
   const floatList = get(floats);
+
+  const sorted = reassignFloatZIndex(floatId, floatList);
+
+  if (sorted) {
+    setFloats(floatList);
+  }
+};
+
+const reassignFloatZIndex = (floatId: number, floatList: Float[]): boolean => {
   const maxZ = floatList.length;
+  if (floatList[0].id === floatId && floatList[0].z === maxZ) {
+    console.log("nothing to do");
+    return false;
+  }
 
   /* zの降順かつ対象を最前列に */
   floatList.sort((a, b) =>
@@ -25,7 +38,7 @@ export const popFloat = (floatId: number) => {
     f.z = maxZ - i;
   }
 
-  setFloats(floatList);
+  return true;
 };
 
 export const closeFloat = (floatId: number) => {
@@ -53,5 +66,8 @@ export const openFloat = (
     z: newId,
     args: option.args,
   });
-  setFloats([...get(floats), float]);
+  const floatList = [...get(floats), float];
+  reassignFloatZIndex(newId, floatList);
+
+  setFloats(floatList);
 };
