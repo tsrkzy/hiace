@@ -12,7 +12,7 @@
   import { useAliases } from "../../model/store/aliases";
   import Button from "../button/Button.svelte";
   import { updateCharacterChatPosition, updateCharacterName, updateCharacterPawnSize, updateCharacterShowOnInitiative, updateCharacterText } from "../../model/service/CharacterService";
-  import { createAlias } from "../../model/service/AliasService";
+  import { createAlias, deleteAlias, updateAlias } from "../../model/service/AliasService";
   import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
 
@@ -105,6 +105,21 @@
     })
   }
 
+  const onClickDeleteAlias = async (aliasId: string) => {
+    console.log("CharacterEdit.onClickDeleteAlias", aliasId);
+    await deleteAlias({ aliasId })
+  }
+
+  const onBlurAliasName = async (e: Event, aliasId: string, aliasName: string) => {
+    console.log("CharacterEdit.onBlurAliasName", aliasId);
+    const target = e.target as HTMLInputElement;
+    const name = target.value.trim();
+    if (!name) {
+      target.value = aliasName;
+      return false;
+    }
+    await updateAlias({ aliasId, criteria: { name } })
+  }
 
 </script>
 
@@ -176,37 +191,31 @@
     <div>
       <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
     </div>
-    <ul>
+    <div class="image-containter">
       {#each characterAliases as alias (alias.id)}
-        <li>
-          <div>
-            <div
-                class="alias-image__chip"
-            >
-              {#if getAliasImage(alias.image)}
-                <img
-                    src={getAliasImage(alias.image)?.url}
-                    alt={alias.name}>
-              {/if}
-            </div>
-            <span>{alias.name}</span>
-          </div>
-          <div>
-          </div>
-        </li>
+        <div class="alias-image__chip">
+          {#if getAliasImage(alias.image)}
+            <img src={getAliasImage(alias.image)?.url}
+                 alt={alias.name}>
+          {/if}
+        </div>
+        <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
+        <input type="text" value={alias.name} on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
       {/each}
-    </ul>
+    </div>
   </field>
 </fieldset>
 
 <style lang="scss">
   div.alias-image__chip {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border: 1px solid #000000;
+
     & img {
       width: 100%;
       height: 100%;
     }
   }
+
 </style>

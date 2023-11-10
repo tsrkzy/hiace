@@ -8,6 +8,7 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { Alias } from "../Alias";
 import { db } from "../../util/firestore";
@@ -87,6 +88,15 @@ export const createAlias = async (props: CreateAliasProps): Promise<Alias> => {
     image: a.image,
     name: a.name,
   });
+};
+
+export const deleteAlias = async (props: {
+  aliasId: string;
+}): Promise<void> => {
+  const { aliasId } = props;
+  console.log("AliasService.deleteAlias", aliasId);
+  const docRef = doc(collection(db, "alias"), aliasId);
+  await deleteDoc(docRef);
 };
 
 interface DeleteAliasesByCharacterProps {
