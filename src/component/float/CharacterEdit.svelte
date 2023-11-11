@@ -15,6 +15,7 @@
   import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
   import { updateCharacter } from "../../model/service/CharacterService";
+  import ImageTile from "../image/ImageTile.svelte";
 
   export let float: Float = {} as Float;
 
@@ -238,19 +239,19 @@
             value={alias.name}
             on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
         <div>
-        <label>
-          <input type="radio"
-                 name={`active-alias-picker_float-${floatId}`}
-                 value={alias.id}
-                 checked={alias.id === character?.activeAlias}
-                 on:change={(e)=>onChangeActiveAlias(e)}>
-          <div class="alias-image__chip">
-            {#if getAliasImage(alias.image)}
-              <img src={getAliasImage(alias.image)?.url}
-                   alt={alias.name}>
-            {/if}
-          </div>
-        </label>
+          <label>
+            <input type="radio"
+                   name={`active-alias-picker_float-${floatId}`}
+                   value={alias.id}
+                   checked={alias.id === character?.activeAlias}
+                   on:change={(e)=>onChangeActiveAlias(e)}>
+            <div class="alias-image__chip">
+              {#if getAliasImage(alias.image)}
+                <ImageTile url={getAliasImage(alias.image)?.url}
+                           alt={alias.name}></ImageTile>
+              {/if}
+            </div>
+          </label>
         </div>
         <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
       </fieldset>
@@ -274,26 +275,13 @@
                checked={aliasSelected?.image===imgSrc.id}
                on:change={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
         />
-        <div class="alias-image__chip">
-          <img src={imgSrc.url} alt={imgSrc.url}>
-        </div>
+        <ImageTile url={imgSrc.url}></ImageTile>
       </label>
     {/each}
   </div>
 </fieldset>
 
 <style lang="scss">
-  div.alias-image__chip {
-    width: 48px;
-    height: 48px;
-    border: 1px solid #000000;
-
-    & img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
   .image-chip__container {
     display: flex;
     flex-wrap: wrap;
