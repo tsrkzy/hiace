@@ -12,6 +12,7 @@
   import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
   import { toCSS } from "../../util/style";
   import { updateMapChip } from "../../model/service/MapChipService";
+  import { DEFAULT_MAP_IMAGE_HEIGHT, DEFAULT_MAP_IMAGE_URL, DEFAULT_MAP_IMAGE_WIDTH } from "../../constant";
 
   export let mapChipId: string = "";
 
@@ -37,10 +38,6 @@
 
   $: isDragged = $draggedMapChipId === mapChipId;
 
-  const DEFAULT_MAP_IMAGE_URL = "../assets/images/default_map.jpg";
-  const DEFAULT_MAP_IMAGE_WIDTH = 1109
-  const DEFAULT_MAP_IMAGE_HEIGHT = 840
-
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgMap.onMouseDown", e);
     if (!mapChip) {
@@ -54,7 +51,6 @@
     }
 
     e.stopPropagation();
-
 
     const downX = e.clientX;
     const downY = e.clientY;
@@ -113,7 +109,7 @@
       const newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
       mapChip.transform = newTransform
 
-      await updateMapChip({ mapChipId,criteria: { transform: newTransform } });
+      await updateMapChip({ mapChipId, criteria: { transform: newTransform } });
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);
@@ -147,6 +143,7 @@
     >
 
     </image>
+    <text>#{mapChipId.slice(0,3)}</text>
     <!-- ドラッグ中の当たり判定拡張 -->
     {#if isDragged}
       <rect

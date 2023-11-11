@@ -13,6 +13,7 @@
   import { useUsers } from "../../model/store/users";
   import { useRoom } from "../../model/store/room";
   import { openFloat } from "../../model/service/FloatService";
+  import { createPawn } from "../../model/service/PawnService";
 
   export const float = {} as Float
 
@@ -51,9 +52,15 @@
     await cloneCharacter({ characterId, userId: $myUserId })
 
   }
-  const onClickAddPawnHandler = (characterId: string) => {
+  const onClickAddPawnHandler = async (characterId: string) => {
     console.log("CharacterManager.onClickAddPawnHandler");
     console.log(characterId);
+    await createPawn({
+      characterId
+      , userId: $myUserId
+      , roomId: $room.id
+      , boardId: $room.activeBoard
+    })
   }
   const onClickArchiveHandler = (characterId: string) => {
     console.log("CharacterManager.onClickArchiveHandler");

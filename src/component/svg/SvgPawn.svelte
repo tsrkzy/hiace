@@ -15,6 +15,7 @@
   import { useMapChips } from "../../model/store/mapChips";
   import { toCSS } from "../../util/style";
   import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
+  import { DEFAULT_PAWN_IMAGE_URL } from "../../constant.js";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;
@@ -58,8 +59,6 @@
   $: filter = shadow ? `url(#shadow_filter_${pawnId})` : ''
 
   $: dragged = $draggedPawnId === pawnId;
-
-  const DEFAULT_PAWN_IMAGE_URL = "../assets/images/default_pawn.png";
 
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgPawn.onMouseDown", e);

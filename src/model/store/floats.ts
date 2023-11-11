@@ -5,7 +5,7 @@ const floats = writable<Float[]>([
   new Float({
     id: 2,
     show: true,
-    contentId: ContentId.CHARACTER_MANAGER,
+    contentId: ContentId.BOARD_MANAGER,
     contentTitle: "float_2",
     x: 300,
     y: 300,

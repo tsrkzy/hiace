@@ -18,7 +18,7 @@ interface CreatePawnProps {
   roomId: string;
   userId: string;
   boardId: string;
-  imageId: string;
+  imageId?: string;
   characterId: string;
   transform?: string | DOMMatrix;
 }

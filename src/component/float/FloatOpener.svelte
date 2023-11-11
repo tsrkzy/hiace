@@ -14,6 +14,7 @@
     { id: ContentId.ROOM_MANAGER, name: ContentTitle(ContentId.ROOM_MANAGER) },
     { id: ContentId.BOARD_MANAGER, name: ContentTitle(ContentId.BOARD_MANAGER) },
     { id: ContentId.CHARACTER_MANAGER, name: ContentTitle(ContentId.CHARACTER_MANAGER) },
+    { id: ContentId.IMAGE_MANAGER, name: ContentTitle(ContentId.IMAGE_MANAGER) },
   ]
 
   const onContentChangeHandler = (e: Event) => {

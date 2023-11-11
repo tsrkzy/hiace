@@ -8,7 +8,6 @@
 <script lang="ts">
 
   import { useMapChips } from "../../model/store/mapChips";
-  import { useImageSources } from "../../model/store/imageSources";
   import { Float } from "../../model/Float";
   import { updateMapChip } from "../../model/service/MapChipService";
 
@@ -16,7 +15,6 @@
 
 
   const { mapChips } = useMapChips();
-  const { imageSources } = useImageSources();
 
   $: floatId = float?.id;
 
@@ -25,8 +23,6 @@
   $: map = (() => {
     return $mapChips.find(m => m.id === mapChipId);
   })()
-
-  $: imageSource = $imageSources.find(i => i.id === map?.image)
 
   const onChangeDragLockHandler = async (e: Event) => {
     console.log("MapEdit.onChangeDragLockHandler");
@@ -63,6 +59,3 @@
   <legend>サイズの拡縮: {map?.scalePp}%</legend>
   <input type="range" min="20" max="300" step="5" value="{map?.scalePp}" on:change={(e)=>onChangeScaleHandler(e)}/>
 </fieldset>
-<img
-    src={imageSource?.url} alt={imageSource?.id} style="max-height: 200px; max-width: 200px"/>
-<p>scroll-summary</p>
