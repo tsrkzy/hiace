@@ -38,6 +38,9 @@
     return $imageSources.filter(i => characterAliases.some(a => a.image === i.id))
   })()
 
+  let aliasIdSelected = character?.activeAlias;
+  $: aliasSelected = characterAliases.find(a => a.id === character?.activeAlias);
+
   const getAliasImage = (imageId: string) => {
     return aliasImageSources.find(i => i.id === imageId)
   }
@@ -87,6 +90,14 @@
     await updateCharacter({ characterId, criteria: { showOnInitiative } })
   }
 
+  const onChangeCharacterColor = async (e: Event) => {
+    console.log("CharacterEdit.onChangeCharacterColor");
+    const target = e.target as HTMLInputElement;
+    const color = target.value || "#000000"
+    console.log("target.value", target.value);
+    await updateCharacter({ characterId, criteria: { color } })
+  }
+
   const onChangeChatPosition = async (e: Event) => {
     console.log("CharacterEdit.onChangeChatPosition");
     const target = e.target as HTMLInputElement;
@@ -105,6 +116,13 @@
     })
   }
 
+  export const onChangeActiveAlias = async (e: Event) => {
+    console.log("CharacterEdit.onChangeActiveAlias");
+    const target = e.target as HTMLInputElement;
+    const activeAlias = target.value;
+    await updateCharacter({ characterId, criteria: { activeAlias } })
+  }
+
   const onClickDeleteAlias = async (aliasId: string) => {
     console.log("CharacterEdit.onClickDeleteAlias", aliasId);
     await deleteAlias({ aliasId })
@@ -121,6 +139,25 @@
     await updateAlias({ aliasId, criteria: { name } })
   }
 
+  const onChangeAlias = async (e: Event) => {
+    console.log("CharacterEdit.onChangeAlias");
+    const target = e.target as HTMLSelectElement;
+    const _aliasId = target.value;
+    if (!_aliasId) {
+      return false;
+    }
+    aliasIdSelected = _aliasId;
+  }
+
+  const onChangeAliasImage = async (e: Event, aliasId: string|undefined) => {
+    console.log("CharacterEdit.onChangeAliasImage");
+    if (!aliasId) {
+      return false;
+    }
+    const target = e.target as HTMLInputElement;
+    const imageId = target.value;
+    await updateAlias({ aliasId, criteria: { image: imageId } })
+  }
 </script>
 
 
@@ -159,7 +196,10 @@
   </div>
   <div>
     <label>
-      <input type="color" bind:value={characterColor}>
+      {characterColor}
+      <input type="color" value={characterColor}
+             on:change={(e)=>onChangeCharacterColor(e)}
+      >
       <span>チャット色</span>
     </label>
   </div>
@@ -173,37 +213,73 @@
       </select>
     </label>
   </div>
-  <field>
-    <legend>立ち絵</legend>
-    <div>
-      <label>
-        <span>表示位置</span>
+  <legend>立ち絵</legend>
+  <div>
+    <label>
+      <span>表示位置</span>
+      <input
+          type="range"
+          min="0"
+          max="11"
+          step="1"
+          value={character?.chatPosition}
+          on:change={(e)=>onChangeChatPosition(e)}
+      >
+    </label>
+  </div>
+  <div>
+    <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
+  </div>
+  <div class="image-containter">
+    {#each characterAliases as alias (alias.id)}
+      <fieldset>
         <input
-            type="range"
-            min="0"
-            max="11"
-            step="1"
-            value={character?.chatPosition}
-            on:change={(e)=>onChangeChatPosition(e)}
-        >
-      </label>
-    </div>
-    <div>
-      <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
-    </div>
-    <div class="image-containter">
-      {#each characterAliases as alias (alias.id)}
-        <div class="alias-image__chip">
-          {#if getAliasImage(alias.image)}
-            <img src={getAliasImage(alias.image)?.url}
-                 alt={alias.name}>
-          {/if}
+            type="text"
+            value={alias.name}
+            on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
+        <div>
+        <label>
+          <input type="radio"
+                 name={`active-alias-picker_float-${floatId}`}
+                 value={alias.id}
+                 checked={alias.id === character?.activeAlias}
+                 on:change={(e)=>onChangeActiveAlias(e)}>
+          <div class="alias-image__chip">
+            {#if getAliasImage(alias.image)}
+              <img src={getAliasImage(alias.image)?.url}
+                   alt={alias.name}>
+            {/if}
+          </div>
+        </label>
         </div>
         <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
-        <input type="text" value={alias.name} on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
-      {/each}
-    </div>
-  </field>
+      </fieldset>
+    {/each}
+  </div>
+</fieldset>
+<fieldset>
+  <select on:change={(e)=>onChangeAlias(e)}>
+    {#each characterAliases as a (a.id)}
+      <option value={a.id} selected={a.id === aliasIdSelected}>{a.name}</option>
+    {/each}
+  </select>
+
+  <div class="image-chip__container">
+    {aliasSelected?.image}
+    {#each $imageSources as imgSrc (imgSrc.id)}
+      <label>
+        <input type="radio"
+               name={`character-edit_alias-image_float-${floatId}`}
+               value={imgSrc.id}
+               checked={aliasSelected?.image===imgSrc.id}
+               on:change={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
+        />
+        <div class="alias-image__chip">
+          <img src={imgSrc.url} alt={imgSrc.url}>
+        </div>
+      </label>
+    {/each}
+  </div>
 </fieldset>
 
 <style lang="scss">
@@ -216,6 +292,11 @@
       width: 100%;
       height: 100%;
     }
+  }
+
+  .image-chip__container {
+    display: flex;
+    flex-wrap: wrap;
   }
 
 </style>

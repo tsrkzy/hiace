@@ -34,6 +34,7 @@ export function CharacterListener() {
           pawnSize: d.pawnSize,
           showOnInitiative: d.showOnInitiative,
           text: d.text,
+          color: d.color,
           lastPostDatetime: d.lastPostDatetime,
         });
         characters.push(character);

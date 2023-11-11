@@ -28,7 +28,7 @@ export const ContentTitle = (contentId: ContentId): string => {
     {
       [ContentId.UNSET]: "ウィンドウを開く",
       [ContentId.CHARACTER_MANAGER]: "キャラクター",
-      [ContentId.CHARACTER_EDIT]: "マップ編集",
+      [ContentId.CHARACTER_EDIT]: "キャラクター編集",
       [ContentId.BOARD_MANAGER]: "マップオブジェクト",
       [ContentId.MAP_EDIT]: "MAP_EDIT",
       [ContentId.CHAT_LIST]: "CHAT_LIST",
