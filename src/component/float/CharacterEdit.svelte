@@ -16,6 +16,7 @@
   import { useImageSources } from "../../model/store/imageSources";
   import { updateCharacter } from "../../model/service/CharacterService";
   import ImageTile from "../image/ImageTile.svelte";
+  import ImageTileSelector from "../image/ImageTileSelector.svelte";
 
   export let float: Float = {} as Float;
 
@@ -135,7 +136,7 @@
     const name = target.value.trim();
     if (!name) {
       target.value = aliasName;
-      return false;
+      return;
     }
     await updateAlias({ aliasId, criteria: { name } })
   }
@@ -145,7 +146,7 @@
     const target = e.target as HTMLSelectElement;
     const _aliasId = target.value;
     if (!_aliasId) {
-      return false;
+      return;
     }
     aliasIdSelected = _aliasId;
   }
@@ -153,10 +154,9 @@
   const onChangeAliasImage = async (e: Event, aliasId: string|undefined) => {
     console.log("CharacterEdit.onChangeAliasImage");
     if (!aliasId) {
-      return false;
+      return;
     }
-    const target = e.target as HTMLInputElement;
-    const imageId = target.value;
+    const { value:imageId } = e.target as HTMLInputElement;
     await updateAlias({ aliasId, criteria: { image: imageId } })
   }
 </script>
@@ -266,17 +266,13 @@
   </select>
 
   <div class="image-chip__container">
-    {aliasSelected?.image}
     {#each $imageSources as imgSrc (imgSrc.id)}
-      <label>
-        <input type="radio"
-               name={`character-edit_alias-image_float-${floatId}`}
-               value={imgSrc.id}
-               checked={aliasSelected?.image===imgSrc.id}
-               on:change={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
-        />
-        <ImageTile url={imgSrc.url}></ImageTile>
-      </label>
+      <ImageTileSelector
+          imageSource={imgSrc}
+          name={`character-edit_alias-image_float-${floatId}`}
+          checkedId={aliasSelected?.image}
+          onChange={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
+      ></ImageTileSelector>
     {/each}
   </div>
 </fieldset>

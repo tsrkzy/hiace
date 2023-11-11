@@ -14,7 +14,7 @@
   export let height = 48;
   export let borderColor = "#000000";
 
-  const styleObj = {
+  $: styleObj = {
     width: `${width}px`,
     height: `${height}px`,
     border: `1px solid ${borderColor}`,
