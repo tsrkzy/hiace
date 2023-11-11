@@ -18,8 +18,9 @@
   import ImageTileSelector from "../image/ImageTileSelector.svelte";
   import ImageUploadButton from "../button/ImageUploadButton.svelte";
   import AliasSelector from "../AliasSelector.svelte";
-  import InputText from "../text/InputText.svelte";
-  import TextArea from "../text/TextArea.svelte";
+  import InputText from "../input/InputText.svelte";
+  import TextArea from "../input/TextArea.svelte";
+  import Checkbox from "../input/Checkbox.svelte";
 
   export let float: Float = {} as Float;
 
@@ -59,7 +60,7 @@
     const newCharacterName = target.value.trim();
     if (!newCharacterName) {
       target.value = characterName;
-      return ;
+      return;
     }
     await updateCharacter({ characterId, criteria: { name: newCharacterName } })
   }
@@ -69,7 +70,7 @@
     const target = e.target as HTMLTextAreaElement;
     const text = target.value.trim();
     if (text === characterText) {
-      return ;
+      return;
     }
     await updateCharacter({ characterId, criteria: { text } })
   }
@@ -168,13 +169,11 @@
       ></TextArea>
     </div>
     <div>
-      <label>
-        <input
-            type="checkbox"
-            checked={isShowOnInitiative}
-            on:change={(e)=>onChangeCharacterShowOnInitiative(e)}>
-        <span>データテーブルに表示する</span>
-      </label>
+      <Checkbox
+          label="データテーブルに表示する"
+          checked={isShowOnInitiative}
+          onChange={onChangeCharacterShowOnInitiative}
+      ></Checkbox>
     </div>
     <div>
       <label>
