@@ -11,10 +11,10 @@
   import { Float } from "../../model/Float";
   import { useAliases } from "../../model/store/aliases";
   import Button from "../button/Button.svelte";
-  import { updateCharacterChatPosition, updateCharacterName, updateCharacterPawnSize, updateCharacterShowOnInitiative, updateCharacterText } from "../../model/service/CharacterService";
   import { createAlias, deleteAlias, updateAlias } from "../../model/service/AliasService";
   import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
+  import { updateCharacter } from "../../model/service/CharacterService";
 
   export let float: Float = {} as Float;
 
@@ -60,7 +60,7 @@
       target.value = characterName;
       return false;
     }
-    await updateCharacterName({ characterId, name: newCharacterName })
+    await updateCharacter({ characterId, criteria: { name: newCharacterName } })
   }
 
   const onBlurCharacterText = async (e: Event) => {
@@ -70,21 +70,21 @@
     if (text === characterText) {
       return false;
     }
-    await updateCharacterText({ characterId, text })
+    await updateCharacter({ characterId, criteria: { text } })
   }
 
   const onChangePawnSize = async (e: Event) => {
     console.log("CharacterEdit.onChangePawnSize");
     const target = e.target as HTMLSelectElement;
     const pawnSize = parseInt(target.value, 10);
-    await updateCharacterPawnSize({ characterId, pawnSize })
+    await updateCharacter({ characterId, criteria: { pawnSize } })
   }
 
   const onChangeCharacterShowOnInitiative = async (e: Event) => {
     console.log("CharacterEdit.onChangeCharacterShowOnInitiative");
     const target = e.target as HTMLInputElement;
     const showOnInitiative = !!(target.checked);
-    await updateCharacterShowOnInitiative({ characterId, showOnInitiative })
+    await updateCharacter({ characterId, criteria: { showOnInitiative } })
   }
 
   const onChangeChatPosition = async (e: Event) => {
@@ -94,7 +94,7 @@
     if (chatPosition === character?.chatPosition) {
       return false;
     }
-    await updateCharacterChatPosition({ characterId, chatPosition })
+    await updateCharacter({ characterId, criteria: { chatPosition } })
   }
   const onAddAlias = async (characterId: string) => {
     console.log("CharacterEdit.onAddAlias", characterId);

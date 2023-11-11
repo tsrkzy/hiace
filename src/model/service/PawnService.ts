@@ -8,7 +8,6 @@ import {
   getDocs,
   deleteDoc,
   updateDoc,
-  getDoc,
 } from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Pawn } from "../Pawn";
@@ -74,36 +73,20 @@ export const deletePawnByBoard = async (props: { boardId: string }) => {
   await batch.commit();
 };
 
-export const updatePawnTransfer = async (props: {
+interface UpdatePawnProps {
   pawnId: string;
-  transform: string | DOMMatrix;
-}) => {
-  console.log("PawnService.updatePawnTransfer");
-  const { pawnId, transform } = props;
-  console.log(transform);
+  criteria: object;
+}
+
+export const updatePawn = async (props: UpdatePawnProps) => {
+  const { pawnId, criteria } = props;
 
   const collectionRef = collection(db, "pawn");
   const docRef = doc(collectionRef, pawnId);
-  await updateDoc(docRef, { transform: `${transform}` });
-
-  const docSnap = await getDoc(docRef);
-  const d = docSnap.data() as Pawn;
-
-  return new Pawn({
-    id: docRef.id,
-    room: d.room,
-    owner: d.owner,
-    board: d.board,
-    image: d.image,
-    character: d.character,
-    transform: d.transform,
-  });
+  await updateDoc(docRef, criteria);
 };
 
 export const touchPawn = async (props: { pawnId: string }) => {
   const { pawnId } = props;
-
-  const collectionRef = collection(db, "pawn");
-  const docRef = doc(collectionRef, pawnId);
-  await updateDoc(docRef, { updatedAt: Date.now() });
+  await updatePawn({ pawnId, criteria: { updatedAt: Date.now() } });
 };

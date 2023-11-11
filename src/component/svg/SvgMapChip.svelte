@@ -6,12 +6,12 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { updateMapChipTransfer } from                    "../../model/service/MapChipService";
-  import { useMapChips } from                              "../../model/store/mapChips";
-  import { useImageSources } from                          "../../model/store/imageSources";
-  import { useBoards } from                                "../../model/store/boards";
+  import { useMapChips } from "../../model/store/mapChips";
+  import { useImageSources } from "../../model/store/imageSources";
+  import { useBoards } from "../../model/store/boards";
   import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
   import { toCSS } from "../../util/style";
+  import { updateMapChip } from "../../model/service/MapChipService";
 
   export let mapChipId: string = "";
 
@@ -113,7 +113,7 @@
       const newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`
       mapChip.transform = newTransform
 
-      await updateMapChipTransfer({ mapChipId, transform: newTransform });
+      await updateMapChip({ mapChipId,criteria: { transform: newTransform } });
     }
 
     mapChipEl.addEventListener("mousemove", onMouseMove, false);

@@ -6,14 +6,14 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { touchPawn, updatePawnTransfer } from            "../../model/service/PawnService";
-  import { usePawns } from                                 "../../model/store/pawns";
-  import { useImageSources } from                          "../../model/store/imageSources";
-  import { useCharacters } from                            "../../model/store/characters";
-  import { useBoards } from                                "../../model/store/boards";
-  import { useAliases } from                               "../../model/store/aliases";
-  import { useMapChips } from                              "../../model/store/mapChips";
-  import { toCSS } from                                    "../../util/style";
+  import { touchPawn, updatePawn } from "../../model/service/PawnService";
+  import { usePawns } from "../../model/store/pawns";
+  import { useImageSources } from "../../model/store/imageSources";
+  import { useCharacters } from "../../model/store/characters";
+  import { useBoards } from "../../model/store/boards";
+  import { useAliases } from "../../model/store/aliases";
+  import { useMapChips } from "../../model/store/mapChips";
+  import { toCSS } from "../../util/style";
   import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
 
   export let pawnId: string = "";
@@ -129,7 +129,7 @@
       let newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
       pawn.transform = newTransform;
 
-      await updatePawnTransfer({ pawnId, transform: newTransform })
+      await updatePawn({ pawnId, criteria: { transform: newTransform } })
       await touchPawn({ pawnId })
       // touch("コマ", "character", this.pawn.character); // @TODO
     };

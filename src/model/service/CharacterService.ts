@@ -198,57 +198,14 @@ export const cloneCharacter = async (props: {
   });
 };
 
-export const updateCharacterName = async (props: {
+interface UpdateCharacterProps {
   characterId: string;
-  name: string;
-}) => {
-  console.log("CharacterService.updateCharacterName");
-  const { characterId, name } = props;
-  const collectionRef = collection(db, "character");
-  const docRef = doc(collectionRef, characterId);
-  await updateDoc(docRef, { name });
-};
+  criteria: object;
+}
 
-export const updateCharacterText = async (props: {
-  characterId: string;
-  text: string;
-}) => {
-  console.log("CharacterService.updateCharacterText");
-  const { characterId, text } = props;
+export const updateCharacter = async (props: UpdateCharacterProps) => {
+  const { characterId, criteria } = props;
   const collectionRef = collection(db, "character");
   const docRef = doc(collectionRef, characterId);
-  await updateDoc(docRef, { text });
-};
-
-export const updateCharacterPawnSize = async (props: {
-  characterId: string;
-  pawnSize: number;
-}) => {
-  console.log("CharacterService.updateCharacterPawnSize");
-  const { characterId, pawnSize } = props;
-  const collectionRef = collection(db, "character");
-  const docRef = doc(collectionRef, characterId);
-  await updateDoc(docRef, { pawnSize });
-};
-
-export const updateCharacterShowOnInitiative = async (props: {
-  characterId: string;
-  showOnInitiative: boolean;
-}) => {
-  console.log("CharacterService.updateCharacterShowOnInitiative");
-  const { characterId, showOnInitiative } = props;
-  const collectionRef = collection(db, "character");
-  const docRef = doc(collectionRef, characterId);
-  await updateDoc(docRef, { showOnInitiative });
-};
-
-export const updateCharacterChatPosition = async (props: {
-  characterId: string;
-  chatPosition: number;
-}) => {
-  console.log("CharacterService.updateCharacterChatPosition");
-  const { characterId, chatPosition } = props;
-  const collectionRef = collection(db, "character");
-  const docRef = doc(collectionRef, characterId);
-  await updateDoc(docRef, { chatPosition });
+  await updateDoc(docRef, criteria);
 };

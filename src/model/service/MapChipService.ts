@@ -109,35 +109,13 @@ export const deleteMapChipByBoard = async (props: { boardId: string }) => {
   await batch.commit();
 };
 
-export const updateMapChipTransfer = async (props: {
+interface UpdateMapChipProps {
   mapChipId: string;
-  transform: string;
-}) => {
-  console.log("MapChipService.updateMapChipTransfer");
-  const { mapChipId, transform } = props;
+  criteria: object;
+}
+export const updateMapChip = async (props: UpdateMapChipProps) => {
+  const { mapChipId, criteria } = props;
   const collectionRef = collection(db, "map");
   const docRef = doc(collectionRef, mapChipId);
-  await updateDoc(docRef, { transform });
-};
-
-export const updateMapChipDragLock = async (props: {
-  mapChipId: string;
-  dragLock: boolean;
-}) => {
-  console.log("MapChipService.updateMapChipDragLock");
-  const { mapChipId, dragLock } = props;
-  const collectionRef = collection(db, "map");
-  const docRef = doc(collectionRef, mapChipId);
-  await updateDoc(docRef, { dragLock });
-};
-
-export const updateMapChipScalePp = async (props: {
-  mapChipId: string;
-  scalePp: number;
-}) => {
-  console.log("MapChipService.updateMapChipScalePp");
-  const { mapChipId, scalePp } = props;
-  const collectionRef = collection(db, "map");
-  const docRef = doc(collectionRef, mapChipId);
-  await updateDoc(docRef, { scalePp });
+  await updateDoc(docRef, criteria);
 };

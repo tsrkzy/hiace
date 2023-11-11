@@ -10,7 +10,7 @@
   import { useMapChips } from "../../model/store/mapChips";
   import { useImageSources } from "../../model/store/imageSources";
   import { Float } from "../../model/Float";
-  import { updateMapChipDragLock, updateMapChipScalePp, } from "../../model/service/MapChipService";
+  import { updateMapChip } from "../../model/service/MapChipService";
 
   export let float: Float = {} as Float;
 
@@ -36,7 +36,7 @@
     e.stopPropagation();
     const currentTarget = e.currentTarget as HTMLInputElement;
     const checked = currentTarget.checked;
-    await updateMapChipDragLock({ mapChipId, dragLock: checked })
+    await updateMapChip({ mapChipId, criteria: { dragLock: checked } })
   }
   const onChangeScaleHandler = async (e: Event) => {
     if (!mapChipId) {
@@ -47,7 +47,7 @@
     const currentTarget = e.currentTarget as HTMLInputElement;
     const scalePp = parseInt(currentTarget.value, 10);
 
-    await updateMapChipScalePp({ mapChipId, scalePp, })
+    await updateMapChip({ mapChipId, criteria: { scalePp }, })
   }
 </script>
 
