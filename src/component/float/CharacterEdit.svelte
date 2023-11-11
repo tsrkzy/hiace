@@ -21,6 +21,7 @@
   import InputText from "../input/InputText.svelte";
   import TextArea from "../input/TextArea.svelte";
   import Checkbox from "../input/Checkbox.svelte";
+  import ColorPicker from "../input/ColorPicker.svelte";
 
   export let float: Float = {} as Float;
 
@@ -176,13 +177,11 @@
       ></Checkbox>
     </div>
     <div>
-      <label>
-        {characterColor}
-        <input type="color" value={characterColor}
-               on:change={(e)=>onChangeCharacterColor(e)}
-        >
-        <span>チャット色</span>
-      </label>
+        <ColorPicker
+            label="チャット色"
+            value={characterColor}
+            onChange={onChangeCharacterColor}
+        ></ColorPicker>
     </div>
     <div>
       <label>
