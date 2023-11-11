@@ -17,7 +17,7 @@
   $: styleObj = {
     width: `${width}px`,
     height: `${height}px`,
-    border: `1px solid ${borderColor}`,
+    borderColor: `${borderColor}`,
   };
   $: styleStr = toCSS(styleObj)
 </script>
@@ -31,6 +31,8 @@
     width: 48px;
     height: 48px;
     border: 1px solid #000000;
+    padding: 1px;
+    margin: 1px;
 
     & img {
       width: 100%;

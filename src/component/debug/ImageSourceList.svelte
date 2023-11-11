@@ -7,39 +7,15 @@
 
 <script lang="ts">
   import { useImageSources } from "../../model/store/imageSources";
-  import { deleteImageSource, registerImage } from "../../model/service/ImageSourceService";
+  import { deleteImageSource, } from "../../model/service/ImageSourceService";
   import Button from "../button/Button.svelte";
-  import { useRoom } from "../../model/store/room";
-  import { useUsers } from "../../model/store/users";
+  import ImageUploadButton from "../button/ImageUploadButton.svelte";
 
   export let open = false;
 
   const { imageSources } = useImageSources()
-  const { room } = useRoom()
-  const { myUserId } = useUsers()
 
   let isDeleteMode = false;
-
-  const onClickUploadImages = () => {
-    console.log("ImageSourceList.onClickUploadImages");
-    const inputEl = document.createElement("input");
-    inputEl.type = "file";
-    inputEl.accept = "image/*";
-    inputEl.multiple = true;
-    inputEl.addEventListener("change", async (e) => {
-      const { files = [] } = e.target as HTMLInputElement;
-      if (!files) {
-        return;
-      }
-
-      const roomId = $room.id
-      const userId = $myUserId;
-
-      /* input要素から取得した画像ファイルをアップロードし、firestoreに登録する */
-      await Promise.all(Array.from(files).map(f => registerImage(f, roomId, userId)));
-    }, false);
-    inputEl.click();
-  }
 
 
   const onClickDeleteImageSource = async (imageId: string) => {
@@ -63,7 +39,7 @@
         </div>
       {/each}
     </div>
-    <Button handle={()=>onClickUploadImages()}>Image Upload</Button>
+    <ImageUploadButton></ImageUploadButton>
   </details>
 </main>
 

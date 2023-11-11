@@ -15,8 +15,9 @@
   import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
   import { updateCharacter } from "../../model/service/CharacterService";
-  import ImageTile from "../image/ImageTile.svelte";
   import ImageTileSelector from "../image/ImageTileSelector.svelte";
+  import ImageUploadButton from "../button/ImageUploadButton.svelte";
+  import AliasSelector from "../AliasSelector.svelte";
 
   export let float: Float = {} as Float;
 
@@ -36,16 +37,9 @@
   $: characterAliases = (() => {
     return $aliases.filter(a => a.character === characterId)
   })()
-  $: aliasImageSources = (() => {
-    return $imageSources.filter(i => characterAliases.some(a => a.image === i.id))
-  })()
 
   let aliasIdSelected = character?.activeAlias;
   $: aliasSelected = characterAliases.find(a => a.id === character?.activeAlias);
-
-  const getAliasImage = (imageId: string) => {
-    return aliasImageSources.find(i => i.id === imageId)
-  }
 
   const onChangeCharacter = async (e: Event) => {
     console.log("CharacterEdit.onChangeCharacter");
@@ -156,7 +150,7 @@
     if (!aliasId) {
       return;
     }
-    const { value:imageId } = e.target as HTMLInputElement;
+    const { value: imageId } = e.target as HTMLInputElement;
     await updateAlias({ aliasId, criteria: { image: imageId } })
   }
 </script>
@@ -170,112 +164,108 @@
     <option value={c.id} selected={c.id === character?.id}>{c.name}</option>
   {/each}
 </select>
-<fieldset>
-  <legend>キャラクタの設定</legend>
-  <div>
-    <label>
-      <span>名前</span>
-      <input type="text" value={characterName}
-             on:blur={(e)=>onBlurCharacterName(e)}>
-    </label>
-  </div>
-  <div>
+{#if character}
+  <fieldset>
+    <legend>キャラクタの設定</legend>
+    <div>
+      <label>
+        <span>名前</span>
+        <input type="text" value={characterName}
+               on:blur={(e)=>onBlurCharacterName(e)}>
+      </label>
+    </div>
+    <div>
     <textarea
         placeholder="キャラクタ説明"
         value={characterText}
         on:blur={(e)=>onBlurCharacterText(e)}
     ></textarea>
-  </div>
-  <div>
-    <label>
-      <input
-          type="checkbox"
-          checked={isShowOnInitiative}
-          on:change={(e)=>onChangeCharacterShowOnInitiative(e)}>
-      <span>データテーブルに表示する</span>
-    </label>
-  </div>
-  <div>
-    <label>
-      {characterColor}
-      <input type="color" value={characterColor}
-             on:change={(e)=>onChangeCharacterColor(e)}
-      >
-      <span>チャット色</span>
-    </label>
-  </div>
-  <div>
-    <label>
-      <span>コマの大きさ</span>
-      <select on:change={(e)=>onChangePawnSize(e)}>
-        {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as size}
-          <option selected={character?.pawnSize === size} value={size}>x{size}</option>
-        {/each}
-      </select>
-    </label>
-  </div>
-  <legend>立ち絵</legend>
-  <div>
-    <label>
-      <span>表示位置</span>
-      <input
-          type="range"
-          min="0"
-          max="11"
-          step="1"
-          value={character?.chatPosition}
-          on:change={(e)=>onChangeChatPosition(e)}
-      >
-    </label>
-  </div>
-  <div>
-    <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
-  </div>
-  <div class="image-containter">
-    {#each characterAliases as alias (alias.id)}
-      <fieldset>
+    </div>
+    <div>
+      <label>
         <input
-            type="text"
-            value={alias.name}
-            on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
-        <div>
-          <label>
-            <input type="radio"
-                   name={`active-alias-picker_float-${floatId}`}
-                   value={alias.id}
-                   checked={alias.id === character?.activeAlias}
-                   on:change={(e)=>onChangeActiveAlias(e)}>
-            <div class="alias-image__chip">
-              {#if getAliasImage(alias.image)}
-                <ImageTile url={getAliasImage(alias.image)?.url}
-                           alt={alias.name}></ImageTile>
-              {/if}
-            </div>
-          </label>
-        </div>
-        <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
-      </fieldset>
-    {/each}
-  </div>
-</fieldset>
-<fieldset>
-  <select on:change={(e)=>onChangeAlias(e)}>
-    {#each characterAliases as a (a.id)}
-      <option value={a.id} selected={a.id === aliasIdSelected}>{a.name}</option>
-    {/each}
-  </select>
+            type="checkbox"
+            checked={isShowOnInitiative}
+            on:change={(e)=>onChangeCharacterShowOnInitiative(e)}>
+        <span>データテーブルに表示する</span>
+      </label>
+    </div>
+    <div>
+      <label>
+        {characterColor}
+        <input type="color" value={characterColor}
+               on:change={(e)=>onChangeCharacterColor(e)}
+        >
+        <span>チャット色</span>
+      </label>
+    </div>
+    <div>
+      <label>
+        <span>コマの大きさ</span>
+        <select on:change={(e)=>onChangePawnSize(e)}>
+          {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as size}
+            <option selected={character?.pawnSize === size} value={size}>x{size}</option>
+          {/each}
+        </select>
+      </label>
+    </div>
+    <legend>立ち絵</legend>
+    <div>
+      <label>
+        <span>表示位置</span>
+        <input
+            type="range"
+            min="0"
+            max="11"
+            step="1"
+            value={character?.chatPosition}
+            on:change={(e)=>onChangeChatPosition(e)}
+        >
+      </label>
+    </div>
+    <div>
+      <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
+    </div>
+    <div class="image-containter">
+      {#each characterAliases as alias (alias.id)}
+        <fieldset>
+          <input
+              type="text"
+              value={alias.name}
+              on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
+          <div>
+            <AliasSelector
+                alias={alias}
+                name={`active-alias-picker_float-${floatId}`}
+                character={character}
+                onChange={onChangeActiveAlias}
+            ></AliasSelector>
+          </div>
+          <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
+        </fieldset>
+      {/each}
+    </div>
+  </fieldset>
+  <fieldset>
+    <select on:change={(e)=>onChangeAlias(e)}>
+      {#each characterAliases as a (a.id)}
+        <option value={a.id} selected={a.id === aliasIdSelected}>{a.name}</option>
+      {/each}
+    </select>
+    <ImageUploadButton></ImageUploadButton>
+    <div class="image-chip__container">
+      {#each $imageSources as imgSrc (imgSrc.id)}
+        <ImageTileSelector
+            imageSource={imgSrc}
+            name={`character-edit_alias-image_float-${floatId}`}
+            checkedId={aliasSelected?.image}
+            onChange={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
+        ></ImageTileSelector>
+      {/each}
+    </div>
+  </fieldset>
+{/if}
 
-  <div class="image-chip__container">
-    {#each $imageSources as imgSrc (imgSrc.id)}
-      <ImageTileSelector
-          imageSource={imgSrc}
-          name={`character-edit_alias-image_float-${floatId}`}
-          checkedId={aliasSelected?.image}
-          onChange={(e)=>onChangeAliasImage(e, aliasSelected?.id)}
-      ></ImageTileSelector>
-    {/each}
-  </div>
-</fieldset>
 
 <style lang="scss">
   .image-chip__container {
