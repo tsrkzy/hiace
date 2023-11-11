@@ -11,13 +11,15 @@
   import { Float } from "../../model/Float";
   import { useAliases } from "../../model/store/aliases";
   import Button from "../button/Button.svelte";
-  import { createAlias, deleteAlias, updateAlias } from "../../model/service/AliasService";
+  import { createAlias, updateAlias } from "../../model/service/AliasService";
   import { useRoom } from "../../model/store/room";
   import { useImageSources } from "../../model/store/imageSources";
   import { updateCharacter } from "../../model/service/CharacterService";
   import ImageTileSelector from "../image/ImageTileSelector.svelte";
   import ImageUploadButton from "../button/ImageUploadButton.svelte";
   import AliasSelector from "../AliasSelector.svelte";
+  import InputText from "../text/InputText.svelte";
+  import TextArea from "../text/TextArea.svelte";
 
   export let float: Float = {} as Float;
 
@@ -57,7 +59,7 @@
     const newCharacterName = target.value.trim();
     if (!newCharacterName) {
       target.value = characterName;
-      return false;
+      return ;
     }
     await updateCharacter({ characterId, criteria: { name: newCharacterName } })
   }
@@ -67,7 +69,7 @@
     const target = e.target as HTMLTextAreaElement;
     const text = target.value.trim();
     if (text === characterText) {
-      return false;
+      return ;
     }
     await updateCharacter({ characterId, criteria: { text } })
   }
@@ -119,22 +121,6 @@
     await updateCharacter({ characterId, criteria: { activeAlias } })
   }
 
-  const onClickDeleteAlias = async (aliasId: string) => {
-    console.log("CharacterEdit.onClickDeleteAlias", aliasId);
-    await deleteAlias({ aliasId })
-  }
-
-  const onBlurAliasName = async (e: Event, aliasId: string, aliasName: string) => {
-    console.log("CharacterEdit.onBlurAliasName", aliasId);
-    const target = e.target as HTMLInputElement;
-    const name = target.value.trim();
-    if (!name) {
-      target.value = aliasName;
-      return;
-    }
-    await updateAlias({ aliasId, criteria: { name } })
-  }
-
   const onChangeAlias = async (e: Event) => {
     console.log("CharacterEdit.onChangeAlias");
     const target = e.target as HTMLSelectElement;
@@ -168,18 +154,18 @@
   <fieldset>
     <legend>キャラクタの設定</legend>
     <div>
-      <label>
-        <span>名前</span>
-        <input type="text" value={characterName}
-               on:blur={(e)=>onBlurCharacterName(e)}>
-      </label>
+      <InputText
+          label="名前"
+          value={characterName}
+          onBlur={(e)=>onBlurCharacterName(e)}
+      ></InputText>
     </div>
     <div>
-    <textarea
-        placeholder="キャラクタ説明"
-        value={characterText}
-        on:blur={(e)=>onBlurCharacterText(e)}
-    ></textarea>
+      <TextArea
+          placeholder="キャラクタ説明"
+          value={characterText}
+          onBlur={(e)=>onBlurCharacterText(e)}
+      ></TextArea>
     </div>
     <div>
       <label>
@@ -223,30 +209,21 @@
         >
       </label>
     </div>
-    <div>
-      <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
-    </div>
-    <div class="image-containter">
-      {#each characterAliases as alias (alias.id)}
-        <fieldset>
-          <input
-              type="text"
-              value={alias.name}
-              on:blur={(e)=>onBlurAliasName(e, alias.id, alias.name)}/>
-          <div>
-            <AliasSelector
-                alias={alias}
-                name={`active-alias-picker_float-${floatId}`}
-                character={character}
-                onChange={onChangeActiveAlias}
-            ></AliasSelector>
-          </div>
-          <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
-        </fieldset>
-      {/each}
-    </div>
   </fieldset>
   <fieldset>
+    <legend>立絵の選択</legend>
+    <Button handle={()=>onAddAlias(characterId)}>立絵の追加</Button>
+    {#each characterAliases as alias (alias.id)}
+      <AliasSelector
+          alias={alias}
+          name={`active-alias-picker_float-${floatId}`}
+          character={character}
+          onChange={onChangeActiveAlias}
+      ></AliasSelector>
+    {/each}
+  </fieldset>
+  <fieldset>
+    <legend>立絵の画像割当</legend>
     <select on:change={(e)=>onChangeAlias(e)}>
       {#each characterAliases as a (a.id)}
         <option value={a.id} selected={a.id === aliasIdSelected}>{a.name}</option>

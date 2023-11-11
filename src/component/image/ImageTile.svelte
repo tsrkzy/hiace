@@ -23,20 +23,39 @@
 </script>
 
 <div class="alias-image__chip" style={styleStr}>
-  <img src={url} alt={alt}>
+  {#if url}
+    <img src={url} alt={alt}>
+  {:else}
+    <div class="alias-image__dummy"><span>NO IMAGE</span></div>
+  {/if}
 </div>
 
 <style lang="scss">
-  div.alias-image__chip {
-    width: 48px;
-    height: 48px;
-    border: 1px solid #000000;
-    padding: 1px;
-    margin: 1px;
+  div {
+    &.alias-image__chip {
+      width: 48px;
+      height: 48px;
+      border: 1px solid #000000;
+      padding: 1px;
+      margin: 1px;
 
-    & img {
-      width: 100%;
-      height: 100%;
+      div.alias-image__dummy {
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+
+        span {
+          color: #ffffff;
+
+        }
+      }
+
+      & img {
+        width: 100%;
+        height: 100%;
+      }
     }
+
+
   }
 </style>
