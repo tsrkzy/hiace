@@ -22,6 +22,7 @@
   import TextArea from "../input/TextArea.svelte";
   import Checkbox from "../input/Checkbox.svelte";
   import ColorPicker from "../input/ColorPicker.svelte";
+  import InputRange from "../input/InputRange.svelte";
 
   export let float: Float = {} as Float;
 
@@ -177,11 +178,11 @@
       ></Checkbox>
     </div>
     <div>
-        <ColorPicker
-            label="チャット色"
-            value={characterColor}
-            onChange={onChangeCharacterColor}
-        ></ColorPicker>
+      <ColorPicker
+          label="チャット色"
+          value={characterColor}
+          onChange={onChangeCharacterColor}
+      ></ColorPicker>
     </div>
     <div>
       <label>
@@ -195,17 +196,13 @@
     </div>
     <legend>立ち絵</legend>
     <div>
-      <label>
-        <span>表示位置</span>
-        <input
-            type="range"
-            min="0"
-            max="11"
-            step="1"
-            value={character?.chatPosition}
-            on:change={(e)=>onChangeChatPosition(e)}
-        >
-      </label>
+      <InputRange
+          label="表示位置"
+          min={0}
+          max={11}
+          step={1}
+          value={character?.chatPosition}
+          onChange={onChangeChatPosition}></InputRange>
     </div>
   </fieldset>
   <fieldset>

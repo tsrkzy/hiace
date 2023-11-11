@@ -15,6 +15,8 @@
   import { joinRoom } from "../../model/service/RoomService";
   import { useLocalConfig } from "../../model/store/localConfig";
   import { createNotice } from "../../model/service/NoticeService";
+  import ColorPicker from "../input/ColorPicker.svelte";
+  import Checkbox from "../input/Checkbox.svelte";
 
   const { myUserId, users } = useUsers();
   const { room } = useRoom();
@@ -64,17 +66,18 @@
 
 <fieldset>
   <legend>個人設定</legend>
-  <input type="color">
+  <ColorPicker onChange={()=>{}}/>
   <h5>個別のチャンネル(全体以外)への発言</h5>
-  <label>
-    <input type="checkbox" checked={$localConfig.maskChannel} on:change={onChangeMaskChannel}/>
-    <span>発言内容を伏せる</span>
-  </label>
+  <Checkbox
+      label="発言内容を伏せる"
+      checked={$localConfig.maskChannel}
+      onChange={onChangeMaskChannel}
+  ></Checkbox>
   <h5>タブが非アクティブの時に通知音を鳴らす</h5>
-  <label>
-    <input type="checkbox" checked={$localConfig.ring} on:change={onChangeRing}/>
-    <span>新着チャットを通知する</span>
-  </label>
+  <Checkbox
+      label="新着チャットを通知する"
+      checked={$localConfig.ring}
+      onChange={onChangeRing}></Checkbox>
 </fieldset>
 {#if isOwner}
   <div>

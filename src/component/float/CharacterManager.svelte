@@ -9,11 +9,12 @@
   import { useCharacters } from "../../model/store/characters";
   import { ContentId, Float } from "../../model/Float";
   import Button from "../button/Button.svelte";
-  import { cloneCharacter, createCharacter } from "../../model/service/CharacterService";
+  import { cloneCharacter, createCharacter, deleteCharacter } from "../../model/service/CharacterService";
   import { useUsers } from "../../model/store/users";
   import { useRoom } from "../../model/store/room";
   import { openFloat } from "../../model/service/FloatService";
   import { createPawn } from "../../model/service/PawnService";
+  import InputText from "../input/InputText.svelte";
 
   export const float = {} as Float
 
@@ -38,6 +39,7 @@
       name: characterName,
       roomId: $room.id,
     })
+    characterName = "";
   }
 
 
@@ -66,9 +68,19 @@
     console.log("CharacterManager.onClickArchiveHandler");
     console.log(characterId);
   }
+
+  const onClickDeleteHandler  = async (characterId:string) => {
+    console.log("CharacterManager.onClickDeleteHandler");
+    console.log(characterId);
+    await deleteCharacter({characterId})
+  }
 </script>
 <ul>
-  <input type="text" placeholder="キャラクター名" on:input={(e)=>onInputCharacterName(e)}/>
+  <InputText
+      value={characterName}
+      placeholder="キャラクター名"
+      onBlur={(e)=>onInputCharacterName(e)}
+  ></InputText>
   <Button disabled={!(characterName.trim())} handle={()=>onAddCharacter()}>キャラクター追加</Button>
   {#each $characters as c (c.id)}
     <li>{c.name} (#{c.id})
@@ -76,6 +88,7 @@
       <Button handle={()=>onClickCloneHandler(c.id)}>複製</Button>
       <Button handle={()=>onClickAddPawnHandler(c.id)}>コマ追加</Button>
       <Button handle={()=>onClickArchiveHandler(c.id)}>控室に入れる</Button>
+      <Button handle={()=>onClickDeleteHandler(c.id)}>キャラクターの削除</Button>
     </li>
   {/each}
 </ul>

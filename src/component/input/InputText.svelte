@@ -6,12 +6,15 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  export let label: string;
-  export let value: string;
+  export let label: string = ""
+  export let placeholder: string = ""
+  export let value: string = ""
   export let onBlur: (e: FocusEvent) => void|Promise<void>;
 </script>
 <label>
   <span>{label}</span>
-  <input type="text" value={value}
+  <input type="text"
+         value={value}
+         placeholder={placeholder}
          on:blur={(e)=>onBlur(e)}>
 </label>
