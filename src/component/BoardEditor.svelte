@@ -10,16 +10,15 @@
   import Button from "./button/Button.svelte";
   import { useMapChips } from "../model/store/mapChips";
   import { usePawns } from "../model/store/pawns";
-  import { DEFAULT_MAP_IMAGE_URL, DEFAULT_PAWN_IMAGE_URL } from "../constant";
+  import {  DEFAULT_PAWN_IMAGE_URL } from "../constant";
   import { useCharacters } from "../model/store/characters";
   import { useImageSources } from "../model/store/imageSources";
   import { useUsers } from "../model/store/users";
   import { useAliases } from "../model/store/aliases";
-  import { createMapChip, deleteMapChip } from "../model/service/MapChipService";
-  import { openFloat } from "../model/service/FloatService";
-  import { ContentId } from "../model/Float";
+  import { createMapChip } from "../model/service/MapChipService";
   import { deletePawn } from "../model/service/PawnService";
   import { useRoom } from "../model/store/room";
+  import BoardMapChipManager from "./BoardMapChipManager.svelte";
 
   export let board: Board;
 
@@ -48,15 +47,6 @@
     return user?.email
   }
 
-  const getMapChipImgSrc = (mapChipId: string) => {
-    const mapChip = $mapChips.find(m => m.id === mapChipId);
-    const imgSrc = $imageSources.find(i => i.id === mapChip?.image);
-    if (!imgSrc) {
-      return DEFAULT_MAP_IMAGE_URL;
-    }
-    return imgSrc.url
-  }
-
   const getPawnImgSrc = (pawnId: string) => {
     const pawn = $pawns.find(p => p.id === pawnId);
     const character = $characters.find(c => c.id === pawn?.character);
@@ -81,17 +71,8 @@
   const onClickAddDice = async (boardId: string) => {
     console.log("BoardManager.onClickAddDice", boardId);
   }
-  const onClickMapEdit = async (mapChipId: string) => {
-    console.log("BoardManager.onClickMapEdit", mapChipId);
-    openFloat(ContentId.MAP_EDIT, { args: { mapChipId } });
-  }
-  const onClickDeleteMapChip = async (mapChipId: string) => {
-    console.log("BoardManager.onClickDeleteMapChip", mapChipId);
-    await deleteMapChip({ mapChipId })
-  }
   const onClickResetPawn = async (pawnId: string) => {
     console.log("BoardManager.onClickResetPawn", pawnId);
-    // await resetPawnTransform({ pawnId });
   }
   const onClickDeletePawn = async (pawnId: string) => {
     console.log("BoardManager.onClickDeletePawn", pawnId);
@@ -104,12 +85,7 @@
   <Button handle={()=>onClickAddMapChip(board.id)}>マップを追加</Button>
   <Button handle={()=>onClickAddDice(board.id)}>ダイスを追加</Button>
   {#each mapChipsInBoard as m (m.id)}
-    <fieldset>
-      <legend>マップ: { m.id }</legend>
-      <img src={ getMapChipImgSrc(m.id) } class="map-chip-image" alt="map"/>
-      <Button handle={()=>onClickMapEdit(m.id)}>編集</Button>
-      <Button handle={()=>onClickDeleteMapChip(m.id)}>削除</Button>
-    </fieldset>
+    <BoardMapChipManager mapChip={m}/>
   {/each}
   {#each pawnsInBoard as p (p.id)}
     <fieldset>
@@ -122,10 +98,6 @@
 </fieldset>
 
 <style>
-    .map-chip-image {
-        max-height: 100px;
-    }
-
     .pawn-image {
         max-height: 48px;
     }
