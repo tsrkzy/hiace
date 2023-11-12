@@ -10,53 +10,21 @@
   import Button from "./button/Button.svelte";
   import { useMapChips } from "../model/store/mapChips";
   import { usePawns } from "../model/store/pawns";
-  import {  DEFAULT_PAWN_IMAGE_URL } from "../constant";
-  import { useCharacters } from "../model/store/characters";
-  import { useImageSources } from "../model/store/imageSources";
   import { useUsers } from "../model/store/users";
-  import { useAliases } from "../model/store/aliases";
   import { createMapChip } from "../model/service/MapChipService";
-  import { deletePawn } from "../model/service/PawnService";
   import { useRoom } from "../model/store/room";
   import BoardMapChipManager from "./BoardMapChipManager.svelte";
+  import BoardPawnManager from "./BoardPawnManager.svelte";
 
   export let board: Board;
 
-  const { characters } = useCharacters();
-  const { aliases } = useAliases();
   const { mapChips } = useMapChips();
   const { pawns } = usePawns();
-  const { imageSources } = useImageSources();
-  const { users, myUserId } = useUsers()
-  const {room}=useRoom()
+  const { myUserId } = useUsers()
+  const { room } = useRoom()
 
   $: mapChipsInBoard = $mapChips.filter(m => m.board === board.id);
   $: pawnsInBoard = $pawns.filter(p => p.board === board.id);
-
-  const whoIsPawn = (pawnId: string) => {
-    console.log("BoardManager.whoIsPawn", pawnId);
-    const pawn = $pawns.find(p => p.id === pawnId);
-    const characterId = pawn?.character;
-    const character = $characters.find(c => c.id === characterId);
-    return character?.name;
-  }
-
-  const whosePawn = (ownerId: string) => {
-    console.log("BoardManager.whosePawn", ownerId);
-    const user = $users.find(u => u.id === ownerId);
-    return user?.email
-  }
-
-  const getPawnImgSrc = (pawnId: string) => {
-    const pawn = $pawns.find(p => p.id === pawnId);
-    const character = $characters.find(c => c.id === pawn?.character);
-    const alias = $aliases.find(a => a.id === character?.activeAlias);
-    const imgSrc = $imageSources.find(i => i.id === alias?.image);
-    if (!imgSrc) {
-      return DEFAULT_PAWN_IMAGE_URL;
-    }
-    return imgSrc.url
-  }
 
 
   const onClickAddMapChip = async (boardId: string) => {
@@ -71,13 +39,6 @@
   const onClickAddDice = async (boardId: string) => {
     console.log("BoardManager.onClickAddDice", boardId);
   }
-  const onClickResetPawn = async (pawnId: string) => {
-    console.log("BoardManager.onClickResetPawn", pawnId);
-  }
-  const onClickDeletePawn = async (pawnId: string) => {
-    console.log("BoardManager.onClickDeletePawn", pawnId);
-    await deletePawn({ pawnId });
-  }
 </script>
 
 <fieldset>
@@ -88,17 +49,6 @@
     <BoardMapChipManager mapChip={m}/>
   {/each}
   {#each pawnsInBoard as p (p.id)}
-    <fieldset>
-      <legend>コマ: { whoIsPawn(p.id) }({ whosePawn(p.owner) })</legend>
-      <img src={ getPawnImgSrc(p.id) } class="pawn-image" alt="pawn"/>
-      <Button handle={()=>onClickResetPawn(p.id)}>原点へ戻す</Button>
-      <Button handle={()=>onClickDeletePawn(p.id)}>削除</Button>
-    </fieldset>
+    <BoardPawnManager pawn={p}/>
   {/each}
 </fieldset>
-
-<style>
-    .pawn-image {
-        max-height: 48px;
-    }
-</style>

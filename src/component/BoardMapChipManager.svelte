@@ -22,7 +22,7 @@
 
   const getMapChipImgSrc = (mapChipId: string) => {
     const mapChip = $mapChips.find(m => m.id === mapChipId);
-    const imgSrc = $imageSources.find(i => i.id === mapChip.image);
+    const imgSrc = $imageSources.find(i => i.id === mapChip?.image);
     if (!imgSrc) {
       return DEFAULT_MAP_IMAGE_URL;
     }
