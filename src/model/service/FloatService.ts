@@ -13,7 +13,6 @@ const { floats, setFloats } = useFloats();
 
 export const popFloat = (floatId: number) => {
   const floatList = get(floats);
-
   const sorted = reassignFloatZIndex(floatId, floatList);
 
   if (sorted) {
@@ -22,22 +21,23 @@ export const popFloat = (floatId: number) => {
 };
 
 const reassignFloatZIndex = (floatId: number, floatList: Float[]): boolean => {
-  const maxZ = floatList.length;
-  if (floatList[0].id === floatId && floatList[0].z === maxZ) {
-    console.log("nothing to do");
+  const maxZ = Math.max(...floatList.map(f => f.z));
+
+  /* 対象のIDの項目を探し、zにmaxZをセットする
+   * 既にmaxZならばなにもしない */
+  const targetIndex = floatList.findIndex(item => item.id === floatId);
+  if (floatList[targetIndex].z === maxZ) {
     return false;
   }
+  floatList[targetIndex].z = maxZ;
 
-  /* zの降順かつ対象を最前列に */
-  floatList.sort((a, b) =>
-    a.id === floatId ? -1 : b.id === floatId ? 1 : a.z < b.z ? 1 : -1,
-  );
-
-  for (let i = 0; i < floatList.length; i++) {
-    const f = floatList[i];
-    f.z = maxZ - i;
-  }
-
+  /* floatListのidがfloatIdでない項目を探索し、zが重複しないように上に詰める */
+  floatList
+    .filter(item => item.id !== floatId)
+    .sort((a, b) => a.z - b.z)
+    .forEach((item, index) => {
+      item.z = index + 1;
+    });
   return true;
 };
 
