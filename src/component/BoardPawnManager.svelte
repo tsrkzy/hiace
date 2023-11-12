@@ -38,8 +38,7 @@
     return user?.email
   }
 
-  const getPawnImgSrc = (pawnId: string) => {
-    const pawn = $pawns.find(p => p.id === pawnId);
+  $: pawnImageUrl = (() => {
     const character = $characters.find(c => c.id === pawn?.character);
     const alias = $aliases.find(a => a.id === character?.activeAlias);
     const imgSrc = $imageSources.find(i => i.id === alias?.image);
@@ -47,7 +46,7 @@
       return DEFAULT_PAWN_IMAGE_URL;
     }
     return imgSrc.url
-  }
+  })()
 
   const onClickResetPawn = async (pawnId: string) => {
     console.log("BoardManager.onClickResetPawn", pawnId);
@@ -60,7 +59,7 @@
 
 <fieldset>
   <legend>コマ: { whoIsPawn(pawn.id) }({ whosePawn(pawn.owner) })</legend>
-  <img src={ getPawnImgSrc(pawn.id) } class="pawn-image" alt="pawn"/>
+  <img src={ pawnImageUrl } class="pawn-image" alt="pawn"/>
   <Button handle={()=>onClickResetPawn(pawn.id)}>原点へ戻す</Button>
   <Button handle={()=>onClickDeletePawn(pawn.id)}>削除</Button>
 </fieldset>

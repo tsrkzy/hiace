@@ -29,16 +29,17 @@
 
   const onClickAddMapChip = async (boardId: string) => {
     console.log("BoardManager.onClickAddMapChip", boardId);
-    await createMapChip(
-      {
-        roomId: $room.id,
-        boardId,
-        userId: $myUserId
-      })
+    await createMapChip({
+      roomId: $room.id,
+      boardId,
+      userId: $myUserId
+    })
   }
+
   const onClickAddDice = async (boardId: string) => {
     console.log("BoardManager.onClickAddDice", boardId);
   }
+
 </script>
 
 <fieldset>
