@@ -215,6 +215,7 @@
           character={character}
           onChange={onChangeActiveAlias}
       ></AliasSelector>
+      <hr>
     {/each}
   </fieldset>
   <fieldset>

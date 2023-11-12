@@ -54,13 +54,14 @@ export const openFloat = (
   },
 ) => {
   const newId = Math.max(0, ...get(floats).map(f => f.id)) + 1;
+  const offset = (newId % 20) * 20;
   const float = new Float({
     id: newId,
     show: true,
     contentId,
     contentTitle: option.contentTitle || ContentTitle(contentId),
-    x: 300,
-    y: 300,
+    x: 300 + offset,
+    y: 300 + offset,
     w: 300,
     h: 300,
     z: newId,
