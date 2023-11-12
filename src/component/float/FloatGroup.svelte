@@ -16,6 +16,7 @@
   import CharacterManager from "./CharacterManager.svelte";
   import MapEdit from "./MapEdit.svelte";
   import CharacterEdit from "./CharacterEdit.svelte";
+  import ImageManager from "./ImageManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -42,7 +43,8 @@
             <MapEdit {float}/>
           {:else if float.contentId === ContentId.TABLE_VIEW}TABLE_VIEW
           {:else if float.contentId === ContentId.CHAT_PALETTE}CHAT_PALETTE
-          {:else if float.contentId === ContentId.IMAGE_MANAGER}IMAGE_MANAGER
+          {:else if float.contentId === ContentId.IMAGE_MANAGER}
+            <ImageManager {float}/>
           {:else if float.contentId === ContentId.SOUND_MANAGER}SOUND_MANAGER
           {:else if float.contentId === ContentId.ROOM_MANAGER}
             <RoomManager {float}/>

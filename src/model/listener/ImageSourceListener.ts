@@ -21,7 +21,7 @@ export function ImageSourceListener() {
     console.log("setImageSourceListener");
     const q = query(collection(db, "image"), where("room", "==", roomId));
     const unsubscribe = onSnapshot(q, querySnapshot => {
-      const images: ImageSource[] = [];
+      const imageSources: ImageSource[] = [];
       querySnapshot.forEach(doc => {
         const d = doc.data();
         const image = new ImageSource({
@@ -35,9 +35,9 @@ export function ImageSourceListener() {
           hidden: d.hidden,
           tags: d.tags,
         });
-        images.push(image);
+        imageSources.push(image);
       });
-      setImageSources(images);
+      setImageSources(imageSources);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });

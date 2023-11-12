@@ -167,3 +167,58 @@ const uploadImageToFirebaseStorage = async (
     });
   });
 };
+
+interface updateImageSourceProps {
+  imageSourceId: string;
+  criteria: object;
+}
+
+export const updateImageSource = async (props: updateImageSourceProps) => {
+  const { imageSourceId, criteria } = props;
+  console.log("ImageSourceService.updateImageSource", imageSourceId, criteria);
+  const collectionRef = collection(db, "image");
+  const docRef = doc(collectionRef, imageSourceId);
+  await updateDoc(docRef, criteria);
+};
+
+interface addTagImageSourceProps {
+  imageSourceId: string;
+  tag: string;
+}
+
+export const addTagImageSource = async (props: addTagImageSourceProps) => {
+  const { imageSourceId, tag } = props;
+  console.log("ImageSourceService.addTagImageSource", imageSourceId, tag);
+  const collectionRef = collection(db, "image");
+  const docRef = doc(collectionRef, imageSourceId);
+  const snapShot = await getDoc(docRef);
+  const imgSrc = snapShot.data() as ImageSource;
+
+  if (imgSrc.tags.includes(tag)) {
+    return;
+  }
+  imgSrc.tags.push(tag);
+
+  await updateDoc(docRef, { tags: imgSrc.tags });
+};
+
+interface TagImageSource {
+  imageSourceId: string;
+  tag: string;
+}
+
+export const removeTagImageSource = async (props: TagImageSource) => {
+  const { imageSourceId, tag } = props;
+  console.log("ImageSourceService.removeTagImageSource", imageSourceId, tag);
+  const collectionRef = collection(db, "image");
+  const docRef = doc(collectionRef, imageSourceId);
+  const snapShot = await getDoc(docRef);
+  const imgSrc = snapShot.data() as ImageSource;
+
+  if (!imgSrc.tags.includes(tag)) {
+    return;
+  }
+  imgSrc.tags = imgSrc.tags.filter(t => t !== tag);
+
+  await updateDoc(docRef, { tags: imgSrc.tags });
+};
