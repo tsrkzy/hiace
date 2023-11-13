@@ -5,6 +5,20 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
+export const ChatType = {
+  /* ユーザーのチャット */
+  TEXT: "TEXT",
+  /* BCDiceの結果 */
+  DICE: "DICE",
+  /* DCDice(secret)の結果 */
+  DICE_SECRET: "DICE_SECRET",
+  /* ログイン通知、ダイス操作ログなどのシステム通知 */
+  SYSTEM: "SYSTEM",
+} as const;
+export type ChatType = (typeof ChatType)[keyof typeof ChatType];
+
+export const SYSTEM_CHANNEL_ID = "SYSTEM";
+
 export type ChatProps = {
   id: string;
   channel: string;
@@ -15,7 +29,7 @@ export type ChatProps = {
   room: string;
   type: string;
   value: { text: string };
-  timestamp?: number | Date;
+  timestamp: number | Date;
 };
 
 export class Chat {
@@ -26,6 +40,7 @@ export class Chat {
   set id(value: string) {
     this._id = value;
   }
+
   get channel(): string {
     return this._channel;
   }
@@ -33,6 +48,7 @@ export class Chat {
   set channel(value: string) {
     this._channel = value;
   }
+
   get alias(): string | null {
     return this._alias;
   }
@@ -40,6 +56,7 @@ export class Chat {
   set alias(value: string | null) {
     this._alias = value;
   }
+
   get character(): string | null {
     return this._character;
   }
@@ -47,6 +64,7 @@ export class Chat {
   set character(value: string | null) {
     this._character = value;
   }
+
   get color(): string {
     return this._color;
   }
@@ -54,6 +72,7 @@ export class Chat {
   set color(value: string) {
     this._color = value;
   }
+
   get owner(): string {
     return this._owner;
   }
@@ -61,6 +80,7 @@ export class Chat {
   set owner(value: string) {
     this._owner = value;
   }
+
   get room(): string {
     return this._room;
   }
@@ -68,6 +88,7 @@ export class Chat {
   set room(value: string) {
     this._room = value;
   }
+
   get type(): string {
     return this._type;
   }
@@ -75,6 +96,7 @@ export class Chat {
   set type(value: string) {
     this._type = value;
   }
+
   get value(): { text: string } {
     return this._value;
   }
@@ -82,6 +104,7 @@ export class Chat {
   set value(value: { text: string }) {
     this._value = value;
   }
+
   get timestamp(): number | Date {
     return this._timestamp;
   }
@@ -89,6 +112,7 @@ export class Chat {
   set timestamp(value: number | Date) {
     this._timestamp = value;
   }
+
   private _id: string;
   private _channel: string;
   private _alias: string | null;
@@ -114,7 +138,7 @@ export class Chat {
       room,
       type,
       value,
-      timestamp = Date.now(),
+      timestamp,
     } = args;
     this._id = id;
     this._channel = channel;

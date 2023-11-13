@@ -1,24 +1,24 @@
-import { setDoc, doc, collection } from "firebase/firestore";
+import { setDoc, doc, collection, writeBatch } from "firebase/firestore";
 import { db } from "../../util/firestore";
-import { Chat } from "../Chat";
+import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "../Chat";
 
 interface CreateChatProps {
   roomId: string;
   channelId: string;
-  aliasId: string | null;
-  characterId: string | null;
-  color: string;
+  aliasId?: string | null;
+  characterId?: string | null;
+  color?: string;
   userId: string;
-  type: string;
+  type: ChatType;
   value: { text: string };
 }
 
 export const createChat = async (props: CreateChatProps): Promise<Chat> => {
   const {
     channelId,
-    aliasId,
-    characterId,
-    color,
+    aliasId = null,
+    characterId = null,
+    color = "#000000",
     userId,
     roomId,
     type,
@@ -34,6 +34,7 @@ export const createChat = async (props: CreateChatProps): Promise<Chat> => {
     room: roomId,
     type: type,
     value: value,
+    timestamp: Date.now(),
   };
 
   const collectionRef = collection(db, "chat");
@@ -50,5 +51,61 @@ export const createChat = async (props: CreateChatProps): Promise<Chat> => {
     room: c.room,
     type: c.type,
     value: c.value,
+    timestamp: c.timestamp,
   });
+};
+
+interface createSystemChatProps {
+  roomId: string;
+  text: string;
+  userId: string;
+}
+
+export const createSystemChat = async (props: createSystemChatProps) => {
+  const { roomId, text, userId } = props;
+
+  await createChat({
+    roomId,
+    channelId: SYSTEM_CHANNEL_ID,
+    aliasId: null,
+    characterId: null,
+    userId,
+    type: ChatType.SYSTEM,
+    value: { text },
+  });
+};
+
+interface insertDummyChatProps {
+  roomId: string;
+  userId: string;
+}
+
+export const insertDummyChat = async (
+  amountOfChat: number,
+  props: insertDummyChatProps,
+) => {
+  const { roomId, userId } = props;
+  console.log("ChatService.insertDummyChat", roomId, userId);
+  const batch = writeBatch(db);
+  const collectionRef = collection(db, "chat");
+
+  for (let i = 0; i < amountOfChat; i++) {
+    const seq = `${i}`.padStart(4, "0");
+
+    const docRef = doc(collectionRef);
+    const c = {
+      channel: SYSTEM_CHANNEL_ID,
+      alias: null,
+      character: null,
+      color: "#000000",
+      owner: userId,
+      room: roomId,
+      type: ChatType.TEXT,
+      value: { text: `dummy_${seq}` },
+      timestamp: Date.now() - (amountOfChat - i),
+    };
+    batch.set(docRef, c);
+  }
+
+  await batch.commit();
 };

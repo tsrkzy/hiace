@@ -11,7 +11,7 @@
   import { createChannel, deleteChannel } from "../../model/service/ChannelService";
   import { useRoom } from "../../model/store/room";
   import { useChats } from "../../model/store/chats";
-  import { createChat } from "../../model/service/ChatService";
+  import { createChat, insertDummyChat } from "../../model/service/ChatService";
   import { useUsers } from "../../model/store/users";
 
 
@@ -69,6 +69,11 @@
       channelId
     })
   }
+
+  const onClickBulkInsert = async (amountOfChat: number) => {
+    const userId = $myUserId
+    await insertDummyChat(amountOfChat, { userId, roomId: $roomId })
+  }
 </script>
 
 <main>
@@ -79,9 +84,7 @@
         <li>SYSTEM</li>
         <ul>
           {#each $chats as chat}
-            {#if chat.channel === "SYSTEM"}
-              <li>{chat.id}, {chat.value.text}</li>
-            {/if}
+            <li>{chat.id}, {chat.value.text}</li>
           {/each}
           <button on:click={()=>handleCreateSystemChat()}>add chat</button>
         </ul>
@@ -105,5 +108,8 @@
   </details>
   {#if $isLoggedIn}
     <button on:click={()=>handleCreateChannel()}>add channel</button>
+    <button on:click={()=>onClickBulkInsert(500)}>チャット500件作成</button>
+    <button on:click={()=>onClickBulkInsert(1)}>チャット1件作成</button>
+
   {/if}
 </main>

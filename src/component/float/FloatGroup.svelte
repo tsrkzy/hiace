@@ -18,6 +18,7 @@
   import CharacterEdit from "./CharacterEdit.svelte";
   import ImageManager from "./ImageManager.svelte";
   import ChannelManager from "./ChannelManager.svelte";
+  import ChatManager from "./ChatManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -33,7 +34,8 @@
     {#each $floats as float (float.id)}
       <FloatWindow {float}>
         <div class="content-container">
-          {#if float.contentId === ContentId.CHAT_LIST}CHAT_LIST
+          {#if float.contentId === ContentId.CHAT_LIST}
+            <ChatManager {float}/>
           {:else if float.contentId === ContentId.CHARACTER_MANAGER}
             <CharacterManager {float}/>
           {:else if float.contentId === ContentId.CHARACTER_EDIT}
