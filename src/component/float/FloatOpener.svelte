@@ -15,6 +15,7 @@
     { id: ContentId.BOARD_MANAGER, name: ContentTitle(ContentId.BOARD_MANAGER) },
     { id: ContentId.CHARACTER_MANAGER, name: ContentTitle(ContentId.CHARACTER_MANAGER) },
     { id: ContentId.IMAGE_MANAGER, name: ContentTitle(ContentId.IMAGE_MANAGER) },
+    { id: ContentId.CHANNEL_LIST, name: ContentTitle(ContentId.CHANNEL_LIST) },
   ]
 
   const onContentChangeHandler = (e: Event) => {

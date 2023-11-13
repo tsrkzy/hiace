@@ -17,6 +17,7 @@
   import MapEdit from "./MapEdit.svelte";
   import CharacterEdit from "./CharacterEdit.svelte";
   import ImageManager from "./ImageManager.svelte";
+  import ChannelManager from "./ChannelManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -48,7 +49,8 @@
           {:else if float.contentId === ContentId.SOUND_MANAGER}SOUND_MANAGER
           {:else if float.contentId === ContentId.ROOM_MANAGER}
             <RoomManager {float}/>
-          {:else if float.contentId === ContentId.CHANNEL_LIST}CHANNEL_LIST
+          {:else if float.contentId === ContentId.CHANNEL_LIST}
+            <ChannelManager {float}/>
           {:else if float.contentId === ContentId.NOTE_MANAGER}NOTE_MANAGER
           {:else if float.contentId === ContentId.ISSUE_WRITER}ISSUE_WRITER
           {:else }<h1>content not found</h1>

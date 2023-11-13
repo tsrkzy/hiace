@@ -1,4 +1,10 @@
-import { setDoc, doc, collection, deleteDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  collection,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../util/firestore";
 import { Channel } from "../Channel";
 
@@ -40,4 +46,18 @@ export const deleteChannel = async (
   const collectionRef = collection(db, "channel");
   const docRef = doc(collectionRef, channelId);
   await deleteDoc(docRef);
+};
+
+interface updateChannelProps {
+  channelId: string;
+  criteria: object;
+}
+
+export const updateChannel = async (
+  props: updateChannelProps,
+): Promise<void> => {
+  const { channelId, criteria } = props;
+  const collectionRef = collection(db, "channel");
+  const docRef = doc(collectionRef, channelId);
+  await updateDoc(docRef, criteria);
 };
