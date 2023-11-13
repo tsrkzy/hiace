@@ -177,7 +177,7 @@
     <CharacterList></CharacterList>
     <BoardList></BoardList>
     <ChannelList></ChannelList>
-    <ImageSourceList open></ImageSourceList>
+    <ImageSourceList></ImageSourceList>
 
   </div>
   <NoticeGroup></NoticeGroup>

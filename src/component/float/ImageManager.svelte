@@ -15,7 +15,7 @@
   import { addTagImageSource, deleteImageSource, removeTagImageSource, updateImageSource } from "../../model/service/ImageSourceService";
 
   const { imageSources } = useImageSources()
-  const { myUserId } = useUsers()
+  const { myUserId, users } = useUsers()
 
   export const float = {} as Float;
 
@@ -25,6 +25,8 @@
   let onlyCharacter = false
   let onlyUntagged = false
   $: imageSource = $imageSources.find(i => i.id === imageSourceId);
+  $: ownerId = imageSource?.owner;
+  $: owner = $users.find(u => u.id === ownerId);
   $: filteredImageSources = $imageSources.filter(imgSrc => {
     if (onlyMine && imgSrc.owner !== $myUserId) {
       return false;
@@ -41,10 +43,7 @@
     return true;
   });
 
-  const whose = (imageSourceId: string) => {
-    console.log(imageSourceId);
-    return "tsrkzy"
-  };
+
   const onMakeHidden = async (e: Event) => {
     console.log("ImageManager.onMakeHidden", e);
     if (!imageSourceId) {
@@ -82,8 +81,8 @@
 
     }
   }
-  const onClickDeleteImageSource = async (e: Event) => {
-    console.log("ImageManager.onClickDeleteImageSource", e);
+  const onClickDeleteImageSource = async () => {
+    console.log("ImageManager.onClickDeleteImageSource",);
     if (!imageSourceId) {
       return
     }
@@ -91,27 +90,27 @@
     imageSourceId = ""
   }
   const onChangeOnlyMine = (e: Event) => {
-    console.log("ImageManager.onChangeOnlyMine", e);
+    console.log("ImageManager.onChangeOnlyMine",);
     const currentTarget = e.currentTarget as HTMLInputElement;
     onlyMine = currentTarget.checked
   }
   const onChangeOnlyMap = (e: Event) => {
-    console.log("ImageManager.onChangeOnlyMap", e);
+    console.log("ImageManager.onChangeOnlyMap",);
     const currentTarget = e.currentTarget as HTMLInputElement;
     onlyMap = currentTarget.checked
   }
   const onChangeOnlyCharacter = (e: Event) => {
-    console.log("ImageManager.onChangeOnlyCharacter", e);
+    console.log("ImageManager.onChangeOnlyCharacter",);
     const currentTarget = e.currentTarget as HTMLInputElement;
     onlyCharacter = currentTarget.checked
   }
   const onChangeOnlyUntagged = (e: Event) => {
-    console.log("ImageManager.onChangeOnlyUntagged", e);
+    console.log("ImageManager.onChangeOnlyUntagged",);
     const currentTarget = e.currentTarget as HTMLInputElement;
     onlyUntagged = currentTarget.checked
   }
   const onChangeImageSource = (e: Event) => {
-    console.log("ImageManager.onChangeImageSource", e);
+    console.log("ImageManager.onChangeImageSource",);
     const currentTarget = e.currentTarget as HTMLInputElement;
     imageSourceId = currentTarget.value
   }
@@ -120,40 +119,41 @@
 <ImageUploadButton></ImageUploadButton>
 {imageSourceId}
 {imageSource?.hidden}
-{#if imageSourceId}
-  <fieldset>
-    <legend>画像の情報</legend>
-    <ul>
-      <li>
-        <p>持ち主: { whose(imageSourceId) || "-" }</p>
-      </li>
-      <li>
-        <Checkbox
-            label="他のユーザから隠す"
-            checked={!!(imageSource?.hidden)}
-            onChange={(e)=>onMakeHidden(e)}
-        ></Checkbox>
-      </li>
-      <li>
-        <Checkbox
-            label="#マップ"
-            checked={imageSource?.tags.indexOf('map') !== -1}
-            onChange={(e)=>onMakeMap(e)}
-        ></Checkbox>
-      </li>
-      <li>
-        <Checkbox
-            label="#キャラクタ"
-            checked={imageSource?.tags.indexOf('character') !== -1}
-            onChange={(e)=>onMakeCharacter(e)}
-        ></Checkbox>
-      </li>
-      <li>
-        <Button handle={()=>onClickDeleteImageSource}>削除</Button>
-      </li>
-    </ul>
-  </fieldset>
-{/if}
+<fieldset>
+  <legend>画像の情報</legend>
+  <ul>
+    <li>
+      <p>持ち主: { owner?.email }</p>
+    </li>
+    <li>
+      <Checkbox
+          label="他のユーザから隠す"
+          checked={!!(imageSource?.hidden)}
+          onChange={(e)=>onMakeHidden(e)}
+          disabled={!imageSourceId}
+      ></Checkbox>
+    </li>
+    <li>
+      <Checkbox
+          label="#マップ"
+          checked={imageSource?.tags.indexOf('map') !== -1}
+          onChange={(e)=>onMakeMap(e)}
+          disabled={!imageSourceId}
+      ></Checkbox>
+    </li>
+    <li>
+      <Checkbox
+          label="#キャラクタ"
+          checked={imageSource?.tags.indexOf('character') !== -1}
+          onChange={(e)=>onMakeCharacter(e)}
+          disabled={!imageSourceId}
+      ></Checkbox>
+    </li>
+    <li>
+      <Button handle={()=>onClickDeleteImageSource}>削除</Button>
+    </li>
+  </ul>
+</fieldset>
 <fieldset>
   <legend>フィルタ設定(AND)</legend>
   <ul>
@@ -196,6 +196,7 @@
         name={`image-source-manager_float-${float.id}`}
         checkedId={imageSourceId}
         onChange={(e)=>onChangeImageSource(e)}
+        text={(imgSrc.hidden && imgSrc.owner === $myUserId )? "個人" : ""}
     ></ImageTileSelector>
   {/each}
 </div>
