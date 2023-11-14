@@ -10,7 +10,7 @@
   import Checkbox from "../input/Checkbox.svelte";
   import Button from "../button/Button.svelte";
 
-  export let float = {} as Float;
+  export const float = {} as Float;
 
   const onChangeShowAlias = (e: Event) => {
     console.log("ChatManager.onChangeShowAlias", e);
@@ -18,7 +18,7 @@
 </script>
 
 
-<ChatLogViewer floatId={float.id}></ChatLogViewer>
+<ChatLogViewer></ChatLogViewer>
 <fieldset>
   <legend>チャット設定</legend>
   <div style="white-space: nowrap">

@@ -10,10 +10,9 @@
 
   export let chat: Chat;
   export let latest = false;
-  export let floatId: number;
 </script>
 
-<li class={`chat-row ${latest?`latest_floatId-${floatId}`:""}`} data-chat-id={chat.id}>
+<li class={`chat-row ${latest?"latest":""}`} data-chat-id={chat.id}>
   <span>{chat.channel},{chat.owner},{chat.value.text}</span>
 </li>
 
