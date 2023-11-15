@@ -5,8 +5,8 @@ import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "../Chat";
 interface CreateChatProps {
   roomId: string;
   channelId: string;
-  aliasId?: string|null;
-  characterId?: string|null;
+  aliasId?: string | null;
+  characterId?: string | null;
   color?: string;
   userId: string;
   type: ChatType;
@@ -110,15 +110,14 @@ export const insertDummyChat = async (
   await batch.commit();
 };
 
-
-export const scrollChatToBottom = () => {
-  const elements = document.getElementsByClassName("chat-row latest");
-  if (!elements.length) {
+export const scrollChatToBottom = (floatId: number) => {
+  console.log("ChatService.scrollChatToBottom", floatId);
+  const element = document.querySelector(
+    `li.chat-row.latest[data-float-id="${floatId}"]`,
+  );
+  if (!element) {
     console.warn("no latest found"); // @DELETEME
     return;
   }
-  for (let i = 0; i < elements.length; i++) {
-    // {behavior
-    elements[i].scrollIntoView();
-  }
-}
+  element.scrollIntoView();
+};

@@ -8,17 +8,22 @@
 <script lang="ts">
   import { Chat } from "../../model/Chat.js";
   import { onMount } from "svelte";
+  import { ReadManager } from "../../model/ReadManager";
 
   export let chat: Chat;
-  export let latest = false;
-  let unread = true;
+  export let isLatest = false;
+  export let floatId: number;
+  const isCreatedAsRead = ReadManager.Get(chat.id);
 
-  $: classStr = (() => {
-    return `chat-row ${unread ? "unread" : ""} ${latest ? "latest" : ""}`
-  })()
+
+  const classStr = `chat-row ${isCreatedAsRead ? "" : "unread"} ${isLatest ? "latest" : ""}`
 
   onMount(() => {
-    const observeTarget = `li[data-chat-id="${chat.id}"]`;
+    if (isCreatedAsRead) {
+      return
+    }
+
+    const observeTarget = `li[data-chat-id="${chat.id}"][data-float-id="${floatId}"]`;
 
     /*
      * 要素の50%が読み込まれてビューポートに入ったら
@@ -28,7 +33,8 @@
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           setTimeout(() => {
-            unread = false;
+            ReadManager.Set(chat.id);
+            entry.target.classList.remove("unread");
           }, 1000);
           observer.disconnect();
         }
@@ -43,7 +49,7 @@
 
 </script>
 
-<li class={classStr} data-chat-id={chat.id}>
+<li class={classStr} data-chat-id={chat.id} data-float-id={floatId}>
   <span>{chat.channel},{chat.owner},{chat.value.text}</span>
 </li>
 
