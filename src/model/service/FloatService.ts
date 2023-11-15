@@ -62,8 +62,8 @@ export const openFloat = (
     contentTitle: option.contentTitle || ContentTitle(contentId),
     x: 300 + offset,
     y: 300 + offset,
-    w: 300,
-    h: 300,
+    w: 600,
+    h: 400,
     z: newId,
     args: option.args,
   });

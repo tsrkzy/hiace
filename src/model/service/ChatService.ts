@@ -114,6 +114,7 @@ export const insertDummyChat = async (
 export const scrollChatToBottom = () => {
   const elements = document.getElementsByClassName("chat-row latest");
   if (!elements.length) {
+    console.warn("no latest found"); // @DELETEME
     return;
   }
   for (let i = 0; i < elements.length; i++) {

@@ -49,7 +49,6 @@
     ></textarea>
   </div>
 </fieldset>
-
 <style>
     textarea.chat-list__textarea-wrapper {
         width: 100%;
