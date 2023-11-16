@@ -13,15 +13,17 @@
   import { useUsers } from "@/model/store/users";
   import { useAliases } from "@/model/store/aliases";
   import { useChannels } from "@/model/store/channels";
-  import { ALIAS_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
+  import { ALIAS_ID_NULL, CHANNEL_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
   import CharacterSelector from "@/component/float/ChatManager/CharacterSelector.svelte";
   import AliasSelector from "@/component/float/ChatManager/AliasSelector.svelte";
+  import ChannelSelector from "@/component/float/ChatManager/ChannelSelector.svelte";
 
   export let float = {} as Float;
 
 
   let characterId = CHARACTER_ID_NULL;
   let aliasId = ALIAS_ID_NULL;
+  let channelId = CHANNEL_ID_NULL
 
   const { myUserId } = useUsers();
   const { characters } = useCharacters();
@@ -40,8 +42,15 @@
   }
   const onChangeAlias = (e: CustomEvent<string>) => {
     console.log("ChatManager.onChangeAlias", e);
-    console.log(e.detail);
+    aliasId = e.detail;
+    console.log(aliasId);
   }
+
+  const onChangeChannel = (e: CustomEvent<string>) => {
+    console.log("ChatManager.onChangeChannel", e);
+    channelId = e.detail;
+  }
+
   const onChangeShowAlias = (e: Event) => {
     console.log("ChatManager.onChangeShowAlias", e);
   };
@@ -51,7 +60,6 @@
 <ChatLogViewer floatId={float.id}></ChatLogViewer>
 <fieldset>
   <legend>チャット設定</legend>
-  {characterId} {aliasId}
   <div style="white-space: nowrap">
     <CharacterSelector
         characters={myCharacters}
@@ -63,12 +71,11 @@
         characterId={characterId}
         on:changeAliasId={e=>onChangeAlias(e)}
     ></AliasSelector>
-    <select>
-      <option value="NULL" selected>チャンネル</option>
-      {#each $channels as channel (channel.id)}
-        <option value={channel.id}>{channel.name}</option>
-      {/each}
-    </select>
+    <ChannelSelector
+        channels={$channels}
+        channelId={channelId}
+        on:changeChannelId={e=>onChangeChannel(e)}
+    ></ChannelSelector>
     <select>
       <option>ダイス</option>
     </select>

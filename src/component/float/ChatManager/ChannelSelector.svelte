@@ -7,28 +7,24 @@
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { CHARACTER_ID_NULL } from "@/constant";
-  import { ALIAS_ID_NULL } from "@/constant.js";
-  import { Alias } from "@/model/Alias";
-  import { useCharacters } from "@/model/store/characters";
+  import { CHANNEL_ID_NULL } from "@/constant.js";
+  import { Channel } from "@/model/Channel";
 
-  export let characterAliases: Alias[];
-  export let characterId: string = CHARACTER_ID_NULL;
+  export let channels: Channel[];
+  export let channelId: string = CHANNEL_ID_NULL;
 
-  const { characters } = useCharacters()
-  $: character = $characters.find((c) => c.id === characterId);
-  const dispatcher = createEventDispatcher<{ changeAliasId: string }>();
+  const dispatcher = createEventDispatcher<{ changeChannelId: string }>();
 
   const onChangeAlias = (e: Event) => {
     const target = e.target as HTMLSelectElement;
     const value = target.value;
-    dispatcher("changeAliasId", value)
+    dispatcher("changeChannelId", value)
   }
 </script>
 
 <select on:change={(e)=>onChangeAlias(e)}>
-  <option value={ALIAS_ID_NULL} disabled selected={characterId==="NULL"}>立絵なし</option>
-  {#each characterAliases as alias (alias.id)}
-    <option value={alias.id} selected={alias.id===character?.activeAlias}>{alias.name}</option>
+  <option value={CHANNEL_ID_NULL} selected={channelId === CHANNEL_ID_NULL}>チャンネルなし</option>
+  {#each channels as channel (channel.id)}
+    <option value={channel.id} selected={channel.id === channelId}>{channel.name}</option>
   {/each}
 </select>
