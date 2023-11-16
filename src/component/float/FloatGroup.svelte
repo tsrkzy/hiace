@@ -15,7 +15,7 @@
   import { useBoards } from "../../model/store/boards";
   import CharacterManager from "./CharacterManager.svelte";
   import MapEdit from "./MapEdit.svelte";
-  import CharacterEdit from "./CharacterEdit.svelte";
+  import CharacterEdit from "./CharacterEdit/CharacterEdit.svelte";
   import ImageManager from "./ImageManager.svelte";
   import ChannelManager from "./ChannelManager.svelte";
   import ChatManager from "./ChatManager.svelte";

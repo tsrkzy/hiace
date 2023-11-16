@@ -7,22 +7,22 @@
 
 <script lang="ts">
 
-  import { useCharacters } from "../../model/store/characters";
-  import { Float } from "../../model/Float";
-  import { useAliases } from "../../model/store/aliases";
-  import Button from "../button/Button.svelte";
-  import { createAlias, updateAlias } from "../../model/service/AliasService";
-  import { useRoom } from "../../model/store/room";
-  import { useImageSources } from "../../model/store/imageSources";
-  import { updateCharacter } from "../../model/service/CharacterService";
-  import ImageTileSelector from "../image/ImageTileSelector.svelte";
-  import ImageUploadButton from "../button/ImageUploadButton.svelte";
-  import AliasSelector from "../AliasSelector.svelte";
-  import InputText from "../input/InputText.svelte";
-  import TextArea from "../input/TextArea.svelte";
-  import Checkbox from "../input/Checkbox.svelte";
-  import ColorPicker from "../input/ColorPicker.svelte";
-  import InputRange from "../input/InputRange.svelte";
+  import { useCharacters } from "../../../model/store/characters";
+  import { Float } from "../../../model/Float";
+  import { useAliases } from "../../../model/store/aliases";
+  import Button from "../../button/Button.svelte";
+  import { createAlias, updateAlias } from "../../../model/service/AliasService";
+  import { useRoom } from "../../../model/store/room";
+  import { useImageSources } from "../../../model/store/imageSources";
+  import { updateCharacter } from "../../../model/service/CharacterService";
+  import ImageTileSelector from "../../image/ImageTileSelector.svelte";
+  import ImageUploadButton from "../../button/ImageUploadButton.svelte";
+  import AliasSelector from "./AliasSelector.svelte";
+  import InputText from "../../input/InputText.svelte";
+  import TextArea from "../../input/TextArea.svelte";
+  import Checkbox from "../../input/Checkbox.svelte";
+  import ColorPicker from "../../input/ColorPicker.svelte";
+  import InputRange from "../../input/InputRange.svelte";
 
   export let float: Float = {} as Float;
 

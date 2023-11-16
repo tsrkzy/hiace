@@ -6,12 +6,13 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Alias } from "../model/Alias";
-  import { Character } from "../model/Character";
-  import ImageTile from "./image/ImageTile.svelte";
-  import { useImageSources } from "../model/store/imageSources";
-  import Button from "./button/Button.svelte";
-  import { deleteAlias, updateAlias } from "../model/service/AliasService";
+
+  import { useImageSources } from "../../../model/store/imageSources";
+  import { Alias } from "../../../model/Alias";
+  import { Character } from "../../../model/Character";
+  import { deleteAlias, updateAlias } from "../../../model/service/AliasService";
+  import ImageTile from "../../image/ImageTile.svelte";
+  import Button from "../../button/Button.svelte";
 
   const { imageSources } = useImageSources();
 
@@ -60,8 +61,8 @@
            checked={checked}
            on:change={(e)=>onChange(e)}
     >
-      <ImageTile url={getAliasImage(alias.image)?.url}
-                 alt={alias.name}></ImageTile>
+    <ImageTile url={getAliasImage(alias.image)?.url}
+               alt={alias.name}></ImageTile>
   </label>
   <Button handle={()=>onClickDeleteAlias(alias.id)}>削除</Button>
 </div>
