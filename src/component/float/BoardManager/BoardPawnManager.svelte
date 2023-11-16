@@ -7,15 +7,15 @@
 
 <script lang="ts">
 
-  import { Pawn } from "../../../model/Pawn";
-  import { useCharacters } from "../../../model/store/characters";
-  import { useAliases } from "../../../model/store/aliases";
-  import { usePawns } from "../../../model/store/pawns";
-  import { useImageSources } from "../../../model/store/imageSources";
-  import { useUsers } from "../../../model/store/users";
-  import { DEFAULT_PAWN_IMAGE_URL } from "../../../constant";
-  import { deletePawn } from "../../../model/service/PawnService";
-  import Button from "../../button/Button.svelte";
+  import { Pawn } from "@/model/Pawn";
+  import { useCharacters } from "@/model/store/characters";
+  import { useAliases } from "@/model/store/aliases";
+  import { usePawns } from "@/model/store/pawns";
+  import { useImageSources } from "@/model/store/imageSources";
+  import { useUsers } from "@/model/store/users";
+  import { DEFAULT_PAWN_IMAGE_URL } from "@/constant";
+  import { deletePawn } from "@/model/service/PawnService";
+  import Button from "@/component/button/Button.svelte";
 
   export let pawn: Pawn;
 

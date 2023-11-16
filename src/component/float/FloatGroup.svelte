@@ -5,14 +5,14 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import { useFloats } from "../../model/store/floats";
+  import { useFloats } from "@/model/store/floats";
   import FloatWindow from "./FloatWindow.svelte";
-  import { ContentId } from "../../model/Float.js";
+  import { ContentId } from "@/model/Float.js";
   import RoomManager from "./RoomManager.svelte";
   import BoardManager from "./BoardManager/BoardManager.svelte";
-  import { useMapChips } from "../../model/store/mapChips";
-  import { usePawns } from "../../model/store/pawns";
-  import { useBoards } from "../../model/store/boards";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { usePawns } from "@/model/store/pawns";
+  import { useBoards } from "@/model/store/boards";
   import CharacterManager from "./CharacterManager.svelte";
   import MapEdit from "./MapEdit.svelte";
   import CharacterEdit from "./CharacterEdit/CharacterEdit.svelte";

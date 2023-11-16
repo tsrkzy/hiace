@@ -5,7 +5,7 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import { useNotices } from "../model/store/notices";
+  import { useNotices } from "@/model/store/notices";
 
   const { notices } = useNotices()
 

@@ -7,11 +7,11 @@
 
 <script lang="ts">
 
-  import { useMapChips } from "../../model/store/mapChips";
-  import { Float } from "../../model/Float";
-  import { updateMapChip } from "../../model/service/MapChipService";
-  import ImageTileSelector from "../image/ImageTileSelector.svelte";
-  import { useImageSources } from "../../model/store/imageSources";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { Float } from "@/model/Float";
+  import { updateMapChip } from "@/model/service/MapChipService";
+  import ImageTileSelector from "@/component/image/ImageTileSelector.svelte";
+  import { useImageSources } from "@/model/store/imageSources";
 
   export let float: Float = {} as Float;
 

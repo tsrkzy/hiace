@@ -6,17 +6,17 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Float } from "../../model/Float";
-  import Button from "../button/Button.svelte";
-  import { User } from "../../model/User";
-  import { useRoom } from "../../model/store/room";
-  import { assignUserToRoom, fetchUsersById, } from "../../model/service/UserService";
-  import { useUsers } from "../../model/store/users";
-  import { joinRoom } from "../../model/service/RoomService";
-  import { useLocalConfig } from "../../model/store/localConfig";
-  import { createNotice } from "../../model/service/NoticeService";
-  import ColorPicker from "../input/ColorPicker.svelte";
-  import Checkbox from "../input/Checkbox.svelte";
+  import { Float } from "@/model/Float";
+  import Button from "@/component/button/Button.svelte";
+  import { User } from "@/model/User";
+  import { useRoom } from "@/model/store/room";
+  import { assignUserToRoom, fetchUsersById, } from "@/model/service/UserService";
+  import { useUsers } from "@/model/store/users";
+  import { joinRoom } from "@/model/service/RoomService";
+  import { useLocalConfig } from "@/model/store/localConfig";
+  import { createNotice } from "@/model/service/NoticeService";
+  import ColorPicker from "@/component/input/ColorPicker.svelte";
+  import Checkbox from "@/component/input/Checkbox.svelte";
 
   const { myUserId, users } = useUsers();
   const { room } = useRoom();

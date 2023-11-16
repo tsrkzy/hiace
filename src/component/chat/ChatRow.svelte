@@ -6,9 +6,9 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Chat } from "../../model/Chat.js";
+  import { Chat } from "@/model/Chat.js";
   import { onMount } from "svelte";
-  import { ReadManager } from "../../model/ReadManager";
+  import { ReadManager } from "@/model/ReadManager";
 
   export let chat: Chat;
   export let isLatest = false;

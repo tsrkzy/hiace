@@ -7,12 +7,12 @@
 
 <script lang="ts">
 
-  import { useImageSources } from "../../../model/store/imageSources";
-  import { Alias } from "../../../model/Alias";
-  import { Character } from "../../../model/Character";
-  import { deleteAlias, updateAlias } from "../../../model/service/AliasService";
-  import ImageTile from "../../image/ImageTile.svelte";
-  import Button from "../../button/Button.svelte";
+  import { useImageSources } from "@/model/store/imageSources";
+  import { Alias } from "@/model/Alias";
+  import { Character } from "@/model/Character";
+  import { deleteAlias, updateAlias } from "@/model/service/AliasService";
+  import ImageTile from "@/component/image/ImageTile.svelte";
+  import Button from "@/component/button/Button.svelte";
 
   const { imageSources } = useImageSources();
 

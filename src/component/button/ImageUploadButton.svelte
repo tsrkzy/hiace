@@ -7,9 +7,9 @@
 
 
 <script lang="ts">
-  import { registerImage } from "../../model/service/ImageSourceService";
-  import { useRoom } from "../../model/store/room";
-  import { useUsers } from "../../model/store/users";
+  import { registerImage } from "@/model/service/ImageSourceService";
+  import { useRoom } from "@/model/store/room";
+  import { useUsers } from "@/model/store/users";
   import Button from "./Button.svelte";
 
   const { room } = useRoom();

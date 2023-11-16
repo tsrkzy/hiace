@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 <script lang="ts">
 
-  import { ImageSource } from "../../model/ImageSource.js";
+  import { ImageSource } from "@/model/ImageSource.js";
   import ImageTile from "./ImageTile.svelte";
 
   export let imageSource: ImageSource;

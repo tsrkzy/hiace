@@ -6,16 +6,16 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useBoards } from "../../model/store/boards";
-  import { useMapChips } from "../../model/store/mapChips";
-  import { useAuth } from "../../model/store/auth";
-  import { useRoom } from "../../model/store/room";
-  import { createBoard, deleteBoard } from "../../model/service/BoardService";
-  import { createMapChip, deleteMapChip } from "../../model/service/MapChipService";
-  import { usePawns } from "../../model/store/pawns";
-  import { useUsers } from "../../model/store/users";
-  import { useCharacters } from "../../model/store/characters";
-  import { createPawn, deletePawn } from "../../model/service/PawnService";
+  import { useBoards } from "@/model/store/boards";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { useAuth } from "@/model/store/auth";
+  import { useRoom } from "@/model/store/room";
+  import { createBoard, deleteBoard } from "@/model/service/BoardService";
+  import { createMapChip, deleteMapChip } from "@/model/service/MapChipService";
+  import { usePawns } from "@/model/store/pawns";
+  import { useUsers } from "@/model/store/users";
+  import { useCharacters } from "@/model/store/characters";
+  import { createPawn, deletePawn } from "@/model/service/PawnService";
 
   export let open = false;
 

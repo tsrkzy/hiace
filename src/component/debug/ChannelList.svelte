@@ -6,13 +6,13 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useChannels } from "../../model/store/channels";
-  import { useAuth } from "../../model/store/auth";
-  import { createChannel, deleteChannel } from "../../model/service/ChannelService";
-  import { useRoom } from "../../model/store/room";
-  import { useChats } from "../../model/store/chats";
-  import { createChat, insertDummyChat } from "../../model/service/ChatService";
-  import { useUsers } from "../../model/store/users";
+  import { useChannels } from "@/model/store/channels";
+  import { useAuth } from "@/model/store/auth";
+  import { createChannel, deleteChannel } from "@/model/service/ChannelService";
+  import { useRoom } from "@/model/store/room";
+  import { useChats } from "@/model/store/chats";
+  import { createChat, insertDummyChat } from "@/model/service/ChatService";
+  import { useUsers } from "@/model/store/users";
 
 
   export let open = false;

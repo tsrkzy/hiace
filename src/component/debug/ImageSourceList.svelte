@@ -6,10 +6,10 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useImageSources } from "../../model/store/imageSources";
-  import { deleteImageSource, } from "../../model/service/ImageSourceService";
-  import Button from "../button/Button.svelte";
-  import ImageUploadButton from "../button/ImageUploadButton.svelte";
+  import { useImageSources } from "@/model/store/imageSources";
+  import { deleteImageSource, } from "@/model/service/ImageSourceService";
+  import Button from "@/component/button/Button.svelte";
+  import ImageUploadButton from "@/component/button/ImageUploadButton.svelte";
 
   export let open = false;
 

@@ -6,11 +6,11 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import Button from "./Button.svelte";
-  import { authenticateWithPopUp } from "../../util/googleAuthProvider";
-  import { createUser, fetchUserByEmail } from "../../model/service/UserService";
-  import { useAuth } from "../../model/store/auth";
-  import { useRoom } from "../../model/store/room";
+  import Button from "@/component/button/Button.svelte";
+  import { authenticateWithPopUp } from "@/util/googleAuthProvider";
+  import { createUser, fetchUserByEmail } from "@/model/service/UserService";
+  import { useAuth } from "@/model/store/auth";
+  import { useRoom } from "@/model/store/room";
 
   export let cb = ()=>{};
 

@@ -6,15 +6,15 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useCharacters } from "../../model/store/characters";
-  import { ContentId, Float } from "../../model/Float";
-  import Button from "../button/Button.svelte";
-  import { cloneCharacter, createCharacter, deleteCharacter } from "../../model/service/CharacterService";
-  import { useUsers } from "../../model/store/users";
-  import { useRoom } from "../../model/store/room";
-  import { openFloat } from "../../model/service/FloatService";
-  import { createPawn } from "../../model/service/PawnService";
-  import InputText from "../input/InputText.svelte";
+  import { useCharacters } from "@/model/store/characters";
+  import { ContentId, Float } from "@/model/Float";
+  import Button from "@/component/button/Button.svelte";
+  import { cloneCharacter, createCharacter, deleteCharacter } from "@/model/service/CharacterService";
+  import { useUsers } from "@/model/store/users";
+  import { useRoom } from "@/model/store/room";
+  import { openFloat } from "@/model/service/FloatService";
+  import { createPawn } from "@/model/service/PawnService";
+  import InputText from "@/component/input/InputText.svelte";
 
   export const float = {} as Float
 

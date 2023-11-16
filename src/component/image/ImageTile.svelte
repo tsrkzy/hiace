@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { toCSS } from "../../util/style";
+  import { toCSS } from "@/util/style";
 
   export let url = "";
   export let alt = "image";

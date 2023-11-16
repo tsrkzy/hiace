@@ -5,14 +5,14 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import ImageUploadButton from "../button/ImageUploadButton.svelte";
-  import Checkbox from "../input/Checkbox.svelte";
-  import { useImageSources } from "../../model/store/imageSources";
-  import { Float } from "../../model/Float";
-  import ImageTileSelector from "../image/ImageTileSelector.svelte";
-  import { useUsers } from "../../model/store/users";
-  import Button from "../button/Button.svelte";
-  import { addTagImageSource, deleteImageSource, removeTagImageSource, updateImageSource } from "../../model/service/ImageSourceService";
+  import ImageUploadButton from "@/component/button/ImageUploadButton.svelte";
+  import Checkbox from "@/component/input/Checkbox.svelte";
+  import { useImageSources } from "@/model/store/imageSources";
+  import { Float } from "@/model/Float";
+  import ImageTileSelector from "@/component/image/ImageTileSelector.svelte";
+  import { useUsers } from "@/model/store/users";
+  import Button from "@/component/button/Button.svelte";
+  import { addTagImageSource, deleteImageSource, removeTagImageSource, updateImageSource } from "@/model/service/ImageSourceService";
 
   const { imageSources } = useImageSources()
   const { myUserId, users } = useUsers()

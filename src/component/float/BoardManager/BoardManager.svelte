@@ -5,8 +5,8 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import { Float } from "../../../model/Float";
-  import { useBoards } from "../../../model/store/boards";
+  import { Float } from "@/model/Float";
+  import { useBoards } from "@/model/store/boards";
   import BoardEditor from "./BoardEditor.svelte";
 
   export const float = {} as Float;

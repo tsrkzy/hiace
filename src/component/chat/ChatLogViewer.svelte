@@ -6,10 +6,10 @@
   ----------------------------------------------------------------------------->
 <script lang="ts">
   import { onMount, onDestroy, tick } from "svelte";
-  import { useChats } from "../../model/store/chats";
-  import ChatRow from "./ChatRow.svelte";
-  import { scrollChatToBottom } from "../../model/service/ChatService";
-  import { ReadManager } from "../../model/ReadManager";
+  import { useChats } from "@/model/store/chats";
+  import ChatRow from "@/component/chat/ChatRow.svelte";
+  import { scrollChatToBottom } from "@/model/service/ChatService";
+  import { ReadManager } from "@/model/ReadManager";
   import { get } from "svelte/store";
 
   export let floatId: number;

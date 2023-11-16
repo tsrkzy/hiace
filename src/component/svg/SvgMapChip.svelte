@@ -6,13 +6,13 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { useMapChips } from "../../model/store/mapChips";
-  import { useImageSources } from "../../model/store/imageSources";
-  import { useBoards } from "../../model/store/boards";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "../../util/drag";
-  import { toCSS } from "../../util/style";
-  import { updateMapChip } from "../../model/service/MapChipService";
-  import { DEFAULT_MAP_IMAGE_HEIGHT, DEFAULT_MAP_IMAGE_URL, DEFAULT_MAP_IMAGE_WIDTH } from "../../constant";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { useImageSources } from "@/model/store/imageSources";
+  import { useBoards } from "@/model/store/boards";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
+  import { toCSS } from "@/util/style";
+  import { updateMapChip } from "@/model/service/MapChipService";
+  import { DEFAULT_MAP_IMAGE_HEIGHT, DEFAULT_MAP_IMAGE_URL, DEFAULT_MAP_IMAGE_WIDTH } from "@/constant";
 
   export let mapChipId: string = "";
 

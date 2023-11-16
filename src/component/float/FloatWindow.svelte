@@ -5,10 +5,10 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import { Float } from "../../model/Float";
-  import { toCSS } from "../../util/style";
-  import { useFloats } from "../../model/store/floats";
-  import { closeFloat, popFloat } from "../../model/service/FloatService";
+  import { Float } from "@/model/Float";
+  import { toCSS } from "@/util/style";
+  import { useFloats } from "@/model/store/floats";
+  import { closeFloat, popFloat } from "@/model/service/FloatService";
 
   const {
     floats,

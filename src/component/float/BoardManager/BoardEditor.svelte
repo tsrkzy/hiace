@@ -6,15 +6,15 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Board } from "../../../model/Board";
-  import { createMapChip } from "../../../model/service/MapChipService";
-  import Button from "../../button/Button.svelte";
+  import { Board } from "@/model/Board";
+  import { createMapChip } from "@/model/service/MapChipService";
+  import Button from "@/component/button/Button.svelte";
   import BoardMapChipManager from "./BoardMapChipManager.svelte";
   import BoardPawnManager from "./BoardPawnManager.svelte";
-  import { useMapChips } from "../../../model/store/mapChips";
-  import { usePawns } from "../../../model/store/pawns";
-  import { useUsers } from "../../../model/store/users";
-  import { useRoom } from "../../../model/store/room";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { usePawns } from "@/model/store/pawns";
+  import { useUsers } from "@/model/store/users";
+  import { useRoom } from "@/model/store/room";
 
   export let board: Board;
 

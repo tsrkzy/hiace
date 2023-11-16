@@ -6,8 +6,8 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { ContentId, ContentTitle } from "../../model/Float";
-  import { openFloat, } from "../../model/service/FloatService";
+  import { ContentId, ContentTitle } from "@/model/Float";
+  import { openFloat, } from "@/model/service/FloatService";
 
 
   const contents = [
