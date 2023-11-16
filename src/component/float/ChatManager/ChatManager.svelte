@@ -9,20 +9,19 @@
   import ChatLogViewer from "@/component/chat/ChatLogViewer.svelte";
   import Checkbox from "@/component/input/Checkbox.svelte";
   import Button from "@/component/button/Button.svelte";
-  import { useAuth } from "@/model/store/auth";
   import { useCharacters } from "@/model/store/characters";
   import { useUsers } from "@/model/store/users";
   import { useAliases } from "@/model/store/aliases";
   import { useChannels } from "@/model/store/channels";
+  import { ALIAS_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
+  import CharacterSelector from "@/component/float/ChatManager/CharacterSelector.svelte";
 
   export let float = {} as Float;
 
-  const CHARACTER_ID_NULL = "NULL";
-  const ALIAS_ID_NULL = "NULL";
+
   let characterId = CHARACTER_ID_NULL;
   let aliasId = ALIAS_ID_NULL;
 
-  const { email } = useAuth()
   const { myUserId } = useUsers();
   const { characters } = useCharacters();
   const { aliases } = useAliases();
@@ -33,10 +32,9 @@
   $: myCharacterAliases = $aliases.filter((a) => a.character === characterId);
 
 
-  const onChangeCharacter = (e: Event) => {
-    console.log("ChatManager.onChangeCharacter", e);
-    const { value } = e.currentTarget as HTMLSelectElement;
-    characterId = value;
+  const onChangeCharacter = (e: CustomEvent<string>) => {
+    console.log("ChatManager.onChangeCharacter");
+    characterId = e.detail;
     const character = $characters.find((c) => c.id === characterId);
     aliasId = character?.activeAlias || ALIAS_ID_NULL;
   }
@@ -54,12 +52,11 @@
   <legend>チャット設定</legend>
   {characterId} {aliasId}
   <div style="white-space: nowrap">
-    <select on:change={(e)=>onChangeCharacter(e)}>
-      <option value={CHARACTER_ID_NULL}>{$email}(PL)</option>
-      {#each myCharacters as character (character.id)}
-        <option value={character.id}>{character.name}</option>
-      {/each}
-    </select>
+    <CharacterSelector
+        characters={myCharacters}
+        characterId={characterId}
+        on:changeCharacterId={e=>onChangeCharacter(e)}
+    ></CharacterSelector>
     <select on:change={(e)=>onChangeAlias(e)}>
       <option value={ALIAS_ID_NULL} disabled selected={characterId==="NULL"}>立絵</option>
       {#each myCharacterAliases as alias (alias.id)}
