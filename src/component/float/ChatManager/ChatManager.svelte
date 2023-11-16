@@ -15,6 +15,7 @@
   import { useChannels } from "@/model/store/channels";
   import { ALIAS_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
   import CharacterSelector from "@/component/float/ChatManager/CharacterSelector.svelte";
+  import AliasSelector from "@/component/float/ChatManager/AliasSelector.svelte";
 
   export let float = {} as Float;
 
@@ -28,7 +29,6 @@
   const { channels } = useChannels();
 
   $: myCharacters = $characters.filter((c) => c.owner === $myUserId);
-  $: character = $characters.find((c) => c.id === characterId);
   $: myCharacterAliases = $aliases.filter((a) => a.character === characterId);
 
 
@@ -38,8 +38,9 @@
     const character = $characters.find((c) => c.id === characterId);
     aliasId = character?.activeAlias || ALIAS_ID_NULL;
   }
-  const onChangeAlias = (e: Event) => {
+  const onChangeAlias = (e: CustomEvent<string>) => {
     console.log("ChatManager.onChangeAlias", e);
+    console.log(e.detail);
   }
   const onChangeShowAlias = (e: Event) => {
     console.log("ChatManager.onChangeShowAlias", e);
@@ -57,12 +58,11 @@
         characterId={characterId}
         on:changeCharacterId={e=>onChangeCharacter(e)}
     ></CharacterSelector>
-    <select on:change={(e)=>onChangeAlias(e)}>
-      <option value={ALIAS_ID_NULL} disabled selected={characterId==="NULL"}>立絵</option>
-      {#each myCharacterAliases as alias (alias.id)}
-        <option value={alias.id} selected={alias.id===character?.activeAlias}>{alias.name}</option>
-      {/each}
-    </select>
+    <AliasSelector
+        characterAliases={myCharacterAliases}
+        characterId={characterId}
+        on:changeAliasId={e=>onChangeAlias(e)}
+    ></AliasSelector>
     <select>
       <option value="NULL" selected>チャンネル</option>
       {#each $channels as channel (channel.id)}
