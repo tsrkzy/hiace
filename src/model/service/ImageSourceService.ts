@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { ImageSource } from "../ImageSource";
+import { ImageSource } from "@/model/ImageSource";
 import {
   collection,
   doc,
@@ -14,8 +14,8 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, storage } from "../../util/firestore";
-import { getImageMetaData, getImageSize } from "../../util/imageUtil";
+import { db, storage } from "@/util/firestore";
+import { getImageMetaData, getImageSize } from "@/util/imageUtil";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface CreateImageSourceProps {

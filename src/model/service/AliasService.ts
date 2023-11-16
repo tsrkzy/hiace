@@ -10,8 +10,8 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { Alias } from "../Alias";
-import { db } from "../../util/firestore";
+import { Alias } from "@/model/Alias";
+import { db } from "@/util/firestore";
 
 const DEFAULT_CHARACTER_IMAGE = "default_character_image";
 

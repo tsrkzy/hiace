@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Chat } from "../Chat";
+import { Chat } from "@/model/Chat";
 
 const chats = writable<Chat[]>([]);
 

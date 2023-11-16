@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Alias } from "../Alias";
-import { useAliases } from "../store/aliases";
+import { db } from "@/util/firestore";
+import { Alias } from "@/model/Alias";
+import { useAliases } from "@/model/store/aliases";
 
 const subscribeMap = new Map<
   string,

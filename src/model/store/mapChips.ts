@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { MapChip } from "../MapChip";
+import { MapChip } from "@/model/MapChip";
 
 const mapChips = writable<MapChip[]>([]);
 

@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useMapChips } from "../store/mapChips";
-import { MapChip } from "../MapChip";
+import { db } from "@/util/firestore";
+import { useMapChips } from "@/model/store/mapChips";
+import { MapChip } from "@/model/MapChip";
 
 const subscribeMap = new Map<
   string,

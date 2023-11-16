@@ -1,5 +1,5 @@
 import { derived, writable, get } from "svelte/store";
-import { Character } from "../Character";
+import { Character } from "@/model/Character";
 import { useUsers } from "./users";
 
 const { myUserId } = useUsers();

@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Dice } from "../Dice";
+import { Dice } from "@/model/Dice";
 
 const dices = writable<Dice[]>([]);
 

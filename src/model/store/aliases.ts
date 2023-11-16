@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Alias } from "../Alias";
+import { Alias } from "@/model/Alias";
 
 const aliases = writable<Alias[]>([]);
 

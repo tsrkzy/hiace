@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useChannels } from "../store/channels";
-import { Channel } from "../Channel";
+import { db } from "@/util/firestore";
+import { useChannels } from "@/model/store/channels";
+import { Channel } from "@/model/Channel";
 
 const subscribeMap = new Map<
   string,

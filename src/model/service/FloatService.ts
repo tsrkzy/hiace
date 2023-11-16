@@ -6,8 +6,8 @@
  -----------------------------------------------------------------------------*/
 
 import { get } from "svelte/store";
-import { useFloats } from "../store/floats";
-import { ContentId, ContentTitle, Float, type FloatArgs } from "../Float";
+import { useFloats } from "@/model/store/floats";
+import { ContentId, ContentTitle, Float, type FloatArgs } from "@/model/Float";
 
 const { floats, setFloats } = useFloats();
 

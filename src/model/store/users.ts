@@ -1,5 +1,5 @@
 import { derived, writable, get } from "svelte/store";
-import { User } from "../User";
+import { User } from "@/model/User";
 import { useAuth } from "./auth";
 
 const { email } = useAuth();

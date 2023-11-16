@@ -5,8 +5,8 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Channel } from "../Channel";
+import { db } from "@/util/firestore";
+import { Channel } from "@/model/Channel";
 
 interface CreateChannelProps {
   name: string;

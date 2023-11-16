@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Float } from "../Float";
+import { Float } from "@/model/Float";
 
 const floats = writable<Float[]>([
   // new Float({

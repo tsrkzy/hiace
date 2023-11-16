@@ -11,9 +11,9 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { usePawns } from "../store/pawns";
-import { Pawn } from "../Pawn";
+import { db } from "@/util/firestore";
+import { usePawns } from "@/model/store/pawns";
+import { Pawn } from "@/model/Pawn";
 
 const subscribeMap = new Map<
   string,

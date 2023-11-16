@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { useCharacters } from "../model/store/characters";
+import { useCharacters } from "@/model/store/characters";
 import { get } from "svelte/store";
 
 export const postfix = (name: string) => {

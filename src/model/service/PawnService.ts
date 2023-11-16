@@ -9,8 +9,8 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Pawn } from "../Pawn";
+import { db } from "@/util/firestore";
+import { Pawn } from "@/model/Pawn";
 
 const DEFAULT_CHARACTER_IMAGE = "default_character_image";
 

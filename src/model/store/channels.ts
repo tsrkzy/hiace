@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Channel } from "../Channel";
+import { Channel } from "@/model/Channel";
 
 const channels = writable<Channel[]>([]);
 

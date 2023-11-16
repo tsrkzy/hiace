@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Column } from "../Column";
+import { Column } from "@/model/Column";
 
 const columns = writable<Column[]>([]);
 

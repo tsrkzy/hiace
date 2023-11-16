@@ -5,8 +5,8 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { Notice } from "../Notice";
-import { useNotices } from "../store/notices";
+import { Notice } from "@/model/Notice";
+import { useNotices } from "@/model/store/notices";
 
 const { addNotice, removeNotice } = useNotices();
 

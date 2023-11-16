@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Sound } from "../Sound";
+import { Sound } from "@/model/Sound";
 
 const sounds = writable<Sound[]>([]);
 

@@ -9,8 +9,8 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { MapChip } from "../MapChip";
+import { db } from "@/util/firestore";
+import { MapChip } from "@/model/MapChip";
 
 export const DEFAULT_MAP_IMAGE = "3xAeZFAnozZsODuCs9XC";
 
@@ -113,6 +113,7 @@ interface UpdateMapChipProps {
   mapChipId: string;
   criteria: object;
 }
+
 export const updateMapChip = async (props: UpdateMapChipProps) => {
   const { mapChipId, criteria } = props;
   const collectionRef = collection(db, "map");

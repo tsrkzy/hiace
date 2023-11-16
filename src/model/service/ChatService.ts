@@ -1,6 +1,6 @@
 import { setDoc, doc, collection, writeBatch } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "../Chat";
+import { db } from "@/util/firestore";
+import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "@/model/Chat";
 
 interface CreateChatProps {
   roomId: string;

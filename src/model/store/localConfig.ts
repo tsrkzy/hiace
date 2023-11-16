@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 import { writable } from "svelte/store";
-import { LocalConfig } from "../LocalConfig";
+import { LocalConfig } from "@/model/LocalConfig";
 
 const localConfig = writable<LocalConfig>(
   new LocalConfig(JSON.parse(localStorage.getItem("localConfig") || "{}")),

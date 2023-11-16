@@ -9,15 +9,15 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Character } from "../Character";
+import { db } from "@/util/firestore";
+import { Character } from "@/model/Character";
 import {
   createAlias,
   createDefaultAlias,
   deleteAliasesByCharacter,
-} from "./AliasService";
-import { Alias } from "../Alias";
-import { postfix } from "../../util/helper";
+} from "@/model/service/AliasService";
+import { Alias } from "@/model/Alias";
+import { postfix } from "@/util/helper";
 
 const SYSTEM_COLOR = "#EEEEEE";
 

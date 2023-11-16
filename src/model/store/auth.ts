@@ -1,5 +1,5 @@
 import { writable, derived } from "svelte/store";
-import { Auth } from "../Auth";
+import { Auth } from "@/model/Auth";
 
 const auth = writable<Auth>(
   new Auth({

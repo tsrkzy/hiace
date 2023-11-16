@@ -8,8 +8,8 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { User, type UserProps } from "../User";
+import { db } from "@/util/firestore";
+import { User, type UserProps } from "@/model/User";
 
 const SYSTEM_COLOR = "#000000";
 

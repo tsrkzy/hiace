@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Table } from "../Table";
+import { Table } from "@/model/Table";
 
 const tables = writable<Table[]>([]);
 

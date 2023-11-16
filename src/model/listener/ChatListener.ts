@@ -11,9 +11,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useChats } from "../store/chats";
-import { Chat } from "../Chat";
+import { db } from "@/util/firestore";
+import { useChats } from "@/model/store/chats";
+import { Chat } from "@/model/Chat";
 
 const subscribeMap = new Map<
   string,

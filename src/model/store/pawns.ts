@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { Pawn } from "../Pawn";
+import { Pawn } from "@/model/Pawn";
 
 const pawns = writable<Pawn[]>([]);
 

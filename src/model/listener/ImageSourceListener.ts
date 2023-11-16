@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useImageSources } from "../store/imageSources";
-import { ImageSource } from "../ImageSource";
+import { db } from "@/util/firestore";
+import { useImageSources } from "@/model/store/imageSources";
+import { ImageSource } from "@/model/ImageSource";
 
 const subscribeMap = new Map<
   string,

@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
-import { ImageSource } from "../ImageSource";
-import { renewImageUrl, validateImageUrl } from "../service/ImageSourceService";
+import { ImageSource } from "@/model/ImageSource";
+import {
+  renewImageUrl,
+  validateImageUrl,
+} from "@/model/service/ImageSourceService";
 
 const imageSources = writable<ImageSource[]>([]);
 

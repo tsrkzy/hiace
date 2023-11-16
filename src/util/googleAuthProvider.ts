@@ -1,5 +1,5 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { Auth } from "../model/Auth";
+import { Auth } from "@/model/Auth";
 
 export const authenticateWithPopUp = async (): Promise<Auth> => {
   const provider = new GoogleAuthProvider();

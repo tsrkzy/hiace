@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Route, } from "svelte-routing";
-  import Room from "./page/Room.svelte";
-  import CreateRoom from "./page/CreateRoom.svelte";
+  import Room from "@/page/Room.svelte";
+  import CreateRoom from "@/page/CreateRoom.svelte";
 
   export let url = new URL(document.URL).pathname;
 </script>

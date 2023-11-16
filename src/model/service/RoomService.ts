@@ -1,6 +1,6 @@
 import { doc, getDoc, collection, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Room } from "../Room";
+import { db } from "@/util/firestore";
+import { Room } from "@/model/Room";
 
 export const fetchRoomByID = async (roomId: string): Promise<Room> => {
   const collectionRef = collection(db, "room");

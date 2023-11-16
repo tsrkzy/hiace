@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useRoom } from "../store/room";
-import { Room } from "../Room";
+import { db } from "@/util/firestore";
+import { useRoom } from "@/model/store/room";
+import { Room } from "@/model/Room";
 
 const subscribeMap = new Map<
   string,

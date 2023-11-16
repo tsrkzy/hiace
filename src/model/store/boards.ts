@@ -1,6 +1,6 @@
 import { derived, get, writable } from "svelte/store";
-import { Board } from "../Board";
-import { useRoom } from "./room";
+import { Board } from "@/model/Board";
+import { useRoom } from "@/model/store/room";
 
 const { room } = useRoom();
 

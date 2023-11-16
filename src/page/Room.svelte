@@ -2,44 +2,44 @@
   import { get } from "svelte/store";
 
   /* service */
-  import { fetchUserByEmail, } from "../model/service/UserService";
-  import { setRoomStateForUser } from "../model/service/RoomService";
+  import { fetchUserByEmail, } from "@/model/service/UserService";
+  import { setRoomStateForUser } from "@/model/service/RoomService";
 
   /* store */
-  import { useAuth } from "../model/store/auth";
-  import { useRoom } from "../model/store/room";
-  import { useUsers } from "../model/store/users";
-  import "../model/store/localConfig"
+  import { useAuth } from "@/model/store/auth";
+  import { useRoom } from "@/model/store/room";
+  import { useUsers } from "@/model/store/users";
+  import "@/model/store/localConfig"
 
   /* listener */
-  import { RoomListener } from "../model/listener/RoomListener";
-  import { UserListener } from "../model/listener/UserListener";
-  import { CharacterListener } from "../model/listener/CharacterListener";
-  import { AliasListener } from "../model/listener/AliasListener";
-  import { MapChipListener } from "../model/listener/MapChipListener";
-  import { BoardListener } from "../model/listener/BoardListener";
-  import { PawnListener } from "../model/listener/PawnListener";
-  import { ChannelListener } from "../model/listener/ChannelListener";
-  import { ChatListener } from "../model/listener/ChatListener";
-  import { ColumnListener } from "../model/listener/ColumnListener";
-  import { DiceListener } from "../model/listener/DiceListener";
-  import { ImageSourceListener } from "../model/listener/ImageSourceListener";
-  import { SoundListener } from "../model/listener/SoundListener";
-  import { TableListener } from "../model/listener/TableListener";
+  import { RoomListener } from "@/model/listener/RoomListener";
+  import { UserListener } from "@/model/listener/UserListener";
+  import { CharacterListener } from "@/model/listener/CharacterListener";
+  import { AliasListener } from "@/model/listener/AliasListener";
+  import { MapChipListener } from "@/model/listener/MapChipListener";
+  import { BoardListener } from "@/model/listener/BoardListener";
+  import { PawnListener } from "@/model/listener/PawnListener";
+  import { ChannelListener } from "@/model/listener/ChannelListener";
+  import { ChatListener } from "@/model/listener/ChatListener";
+  import { ColumnListener } from "@/model/listener/ColumnListener";
+  import { DiceListener } from "@/model/listener/DiceListener";
+  import { ImageSourceListener } from "@/model/listener/ImageSourceListener";
+  import { SoundListener } from "@/model/listener/SoundListener";
+  import { TableListener } from "@/model/listener/TableListener";
 
   /* debug components */
-  import UserList from "../component/debug/UserList.svelte";
-  import CharacterList from "../component/debug/CharacterList.svelte";
-  import BoardList from "../component/debug/BoardList.svelte";
-  import ChannelList from "../component/debug/ChannelList.svelte";
+  import UserList from "@/component/debug/UserList.svelte";
+  import CharacterList from "@/component/debug/CharacterList.svelte";
+  import BoardList from "@/component/debug/BoardList.svelte";
+  import ChannelList from "@/component/debug/ChannelList.svelte";
 
   /* components */
-  import GoogleLogInButton from "../component/button/GoogleLogInButton.svelte";
-  import FloatGroup from "../component/float/FloatGroup.svelte";
-  import NoticeGroup from "../component/NoticeGroup.svelte";
-  import ImageSourceList from "../component/debug/ImageSourceList.svelte";
-  import SvgBoard from "../component/svg/SvgBoard.svelte";
-  import FloatOpener from "../component/float/FloatOpener.svelte";
+  import GoogleLogInButton from "@/component/button/GoogleLogInButton.svelte";
+  import FloatGroup from "@/component/float/FloatGroup.svelte";
+  import NoticeGroup from "@/component/NoticeGroup.svelte";
+  import ImageSourceList from "@/component/debug/ImageSourceList.svelte";
+  import SvgBoard from "@/component/svg/SvgBoard.svelte";
+  import FloatOpener from "@/component/float/FloatOpener.svelte";
 
   export let roomId = "";
 

@@ -5,9 +5,9 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { useBoards } from "../store/boards";
-import { Board } from "../Board";
+import { db } from "@/util/firestore";
+import { useBoards } from "@/model/store/boards";
+import { Board } from "@/model/Board";
 
 const subscribeMap = new Map<
   string,

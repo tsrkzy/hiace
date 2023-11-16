@@ -6,7 +6,7 @@
  -----------------------------------------------------------------------------*/
 
 import { writable } from "svelte/store";
-import { Notice } from "../Notice";
+import { Notice } from "@/model/Notice";
 
 const notices = writable<Notice[]>([]);
 

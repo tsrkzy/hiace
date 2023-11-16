@@ -1,8 +1,8 @@
 import { collection, setDoc, doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../util/firestore";
-import { Board } from "../Board";
-import { deleteMapChipByBoard } from "./MapChipService";
-import { deletePawnByBoard } from "./PawnService";
+import { db } from "@/util/firestore";
+import { Board } from "@/model/Board";
+import { deleteMapChipByBoard } from "@/model/service/MapChipService";
+import { deletePawnByBoard } from "@/model/service/PawnService";
 
 export const createBoard = async (props: {
   roomId: string;
