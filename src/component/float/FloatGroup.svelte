@@ -17,7 +17,7 @@
   import MapEdit from "./MapEdit.svelte";
   import CharacterEdit from "./CharacterEdit/CharacterEdit.svelte";
   import ImageManager from "./ImageManager.svelte";
-  import ChannelManager from "./ChannelManager.svelte";
+  import ChannelManager from "./ChannelManager/ChannelManager.svelte";
   import ChatManager from "./ChatManager/ChatManager.svelte";
 
   const { floats } = useFloats();

@@ -6,12 +6,12 @@
   ----------------------------------------------------------------------------->
 <script lang="ts">
 
-  import Button from "../button/Button.svelte";
-  import { Float } from "../../model/Float";
-  import { createChannel, deleteChannel, updateChannel } from "../../model/service/ChannelService";
-  import { useRoom } from "../../model/store/room";
-  import { useChannels } from "../../model/store/channels";
-  import InputText from "../input/InputText.svelte";
+  import Button from "../../button/Button.svelte";
+  import { Float } from "../../../model/Float";
+  import { createChannel, deleteChannel, updateChannel } from "../../../model/service/ChannelService";
+  import { useRoom } from "../../../model/store/room";
+  import { useChannels } from "../../../model/store/channels";
+  import InputText from "../../input/InputText.svelte";
 
   export const float = {} as Float;
 
