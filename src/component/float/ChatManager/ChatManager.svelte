@@ -5,15 +5,15 @@
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
 <script lang="ts">
-  import { Float } from "../../model/Float";
-  import ChatLogViewer from "../chat/ChatLogViewer.svelte";
-  import Checkbox from "../input/Checkbox.svelte";
-  import Button from "../button/Button.svelte";
-  import { useAuth } from "../../model/store/auth";
-  import { useCharacters } from "../../model/store/characters";
-  import { useUsers } from "../../model/store/users";
-  import { useAliases } from "../../model/store/aliases";
-  import { useChannels } from "../../model/store/channels";
+  import { Float } from "../../../model/Float";
+  import ChatLogViewer from "../../chat/ChatLogViewer.svelte";
+  import Checkbox from "../../input/Checkbox.svelte";
+  import Button from "../../button/Button.svelte";
+  import { useAuth } from "../../../model/store/auth";
+  import { useCharacters } from "../../../model/store/characters";
+  import { useUsers } from "../../../model/store/users";
+  import { useAliases } from "../../../model/store/aliases";
+  import { useChannels } from "../../../model/store/channels";
 
   export let float = {} as Float;
 

@@ -18,7 +18,7 @@
   import CharacterEdit from "./CharacterEdit/CharacterEdit.svelte";
   import ImageManager from "./ImageManager.svelte";
   import ChannelManager from "./ChannelManager.svelte";
-  import ChatManager from "./ChatManager.svelte";
+  import ChatManager from "./ChatManager/ChatManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
