@@ -6,13 +6,13 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { MapChip } from "../model/MapChip";
-  import Button from "./button/Button.svelte";
-  import { openFloat } from "../model/service/FloatService";
-  import { ContentId } from "../model/Float";
-  import { deleteMapChip } from "../model/service/MapChipService";
-  import { DEFAULT_MAP_IMAGE_URL } from "../constant";
-  import { useImageSources } from "../model/store/imageSources";
+  import { MapChip } from "../../../model/MapChip";
+  import { openFloat } from "../../../model/service/FloatService";
+  import { ContentId } from "../../../model/Float";
+  import { deleteMapChip } from "../../../model/service/MapChipService";
+  import { useImageSources } from "../../../model/store/imageSources";
+  import { DEFAULT_MAP_IMAGE_URL } from "../../../constant";
+  import Button from "../../button/Button.svelte";
 
   export let mapChip: MapChip;
 

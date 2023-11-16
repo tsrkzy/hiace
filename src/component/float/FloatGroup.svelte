@@ -9,7 +9,7 @@
   import FloatWindow from "./FloatWindow.svelte";
   import { ContentId } from "../../model/Float.js";
   import RoomManager from "./RoomManager.svelte";
-  import BoardManager from "./BoardManager.svelte";
+  import BoardManager from "./BoardManager/BoardManager.svelte";
   import { useMapChips } from "../../model/store/mapChips";
   import { usePawns } from "../../model/store/pawns";
   import { useBoards } from "../../model/store/boards";
