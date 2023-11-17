@@ -1,6 +1,7 @@
 import { setDoc, doc, collection, writeBatch } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "@/model/Chat";
+import { ALIAS_ID_NULL, CHANNEL_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
 
 interface CreateChatProps {
   roomId: string;
@@ -71,6 +72,36 @@ export const createSystemChat = async (props: createSystemChatProps) => {
     characterId: null,
     userId,
     type: ChatType.SYSTEM,
+    value: { text },
+  });
+};
+
+interface createUserChatProps {
+  roomId: string;
+  channelId: string;
+  aliasId?: string | null;
+  characterId?: string | null;
+  userId: string;
+  text: string;
+}
+
+export const createUserChat = async (props: createUserChatProps) => {
+  const {
+    roomId,
+    channelId: _channelId,
+    aliasId: _aliasId,
+    characterId: _characterId,
+    userId,
+    text,
+  } = props;
+  console.log("_channelId", _channelId);
+  await createChat({
+    roomId,
+    channelId: _channelId === CHANNEL_ID_NULL ? SYSTEM_CHANNEL_ID : _channelId,
+    aliasId: _aliasId === ALIAS_ID_NULL ? null : _aliasId,
+    characterId: _characterId === CHARACTER_ID_NULL ? null : _characterId,
+    userId,
+    type: ChatType.TEXT,
     value: { text },
   });
 };
