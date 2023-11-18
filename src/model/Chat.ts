@@ -18,6 +18,16 @@ export const ChatType = {
 export type ChatType = (typeof ChatType)[keyof typeof ChatType];
 
 export const SYSTEM_CHANNEL_ID = "SYSTEM";
+type ChatTextValue = {
+  text: string;
+};
+type ChatDiceValue = {
+  text: string;
+  command: string;
+  result: string;
+  secret: boolean;
+};
+export type ChatValue = ChatTextValue | ChatDiceValue;
 
 export type ChatProps = {
   id: string;
@@ -28,7 +38,7 @@ export type ChatProps = {
   owner: string;
   room: string;
   type: string;
-  value: { text: string };
+  value: ChatValue;
   timestamp: number | Date;
 };
 
@@ -97,11 +107,11 @@ export class Chat {
     this._type = value;
   }
 
-  get value(): { text: string } {
+  get value(): ChatValue {
     return this._value;
   }
 
-  set value(value: { text: string }) {
+  set value(value: ChatValue) {
     this._value = value;
   }
 
@@ -121,7 +131,7 @@ export class Chat {
   private _owner: string;
   private _room: string;
   private _type: string;
-  private _value: { text: string };
+  private _value: ChatValue;
   private _timestamp: number | Date;
 
   /**

@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 <script lang="ts">
 
-  import { createUserChat } from "@/model/service/ChatService";
+  import { sendChat } from "@/model/service/ChatService";
   import { useRoom } from "@/model/store/room";
   import { useUsers } from "@/model/store/users";
 
@@ -26,6 +26,7 @@
     console.log("ChatManager.onKeyDownTextarea", e);
     const { code, isComposing, shiftKey } = e;
     const currentTarget = e.currentTarget as HTMLTextAreaElement;
+
     const { value: value = "", selectionStart } = currentTarget;
 
     chatText = value;
@@ -61,33 +62,31 @@
     if (!isComposing && !shiftKey && lowerCode === "enter") {
       /* 変換中でない場合のEnter */
       e.preventDefault();
-      await sendChat();
+      await chatHandler();
     }
 
     /* 〜が入力中 */
     sendChatter();
   }
 
-  const sendChat = () => {
-    console.log("ChatManager.sendChat");
+  const chatHandler = async () => {
+    console.log("ChatManager.chatHandler");
     if (!channelId) {
       throw new Error("no channel found");
     }
-    console.log("gameSystem", gameSystem);
 
     const text = chatText.trim();
     const _chatText = chatText;
     chatText = "";
     try {
-      console.log(channelId);
-      createUserChat({
+      await sendChat({
         roomId: $room.id,
         channelId,
         userId: $myUserId,
         characterId: characterId,
         aliasId: aliasId,
         text,
-      })
+      }, gameSystem)
     } catch (e) {
       chatText = _chatText;
       console.error(e);

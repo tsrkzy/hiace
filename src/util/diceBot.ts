@@ -37,9 +37,18 @@ export function easyDiceCheck(text: string) {
 /**
  * @param system {string} ゲームシステム
  * @param command {string} コマンド文字列
- * @return {Promise<{result?: string, reason?: string, secret?: boolean, ok: boolean, dices:{faces:number, value:number}[]}>}
  */
-export async function callDiceBot(system: string, command: string) {
+export async function callDiceBot(
+  system: string,
+  command: string,
+): Promise<{
+  result: string;
+  reason: string;
+  secret: boolean;
+  ok: boolean;
+  dices: { faces: number; value: number }[];
+}> {
+  console.log("diceBot.callDiceBot");
   const qo = {
     system,
     command,

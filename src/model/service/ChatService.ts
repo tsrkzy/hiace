@@ -1,7 +1,13 @@
 import { setDoc, doc, collection, writeBatch } from "firebase/firestore";
 import { db } from "@/util/firestore";
-import { Chat, ChatType, SYSTEM_CHANNEL_ID } from "@/model/Chat";
+import {
+  Chat,
+  ChatType,
+  type ChatValue,
+  SYSTEM_CHANNEL_ID,
+} from "@/model/Chat";
 import { ALIAS_ID_NULL, CHANNEL_ID_NULL, CHARACTER_ID_NULL } from "@/constant";
+import { callDiceBot, easyDiceCheck } from "@/util/diceBot";
 
 interface CreateChatProps {
   roomId: string;
@@ -11,7 +17,7 @@ interface CreateChatProps {
   color?: string;
   userId: string;
   type: ChatType;
-  value: { text: string };
+  value: ChatValue;
 }
 
 export const createChat = async (props: CreateChatProps): Promise<Chat> => {
@@ -104,6 +110,99 @@ export const createUserChat = async (props: createUserChatProps) => {
     type: ChatType.TEXT,
     value: { text },
   });
+};
+
+interface createDiceBotChatProps {
+  roomId: string;
+  channelId: string;
+  aliasId?: string | null;
+  characterId?: string | null;
+  userId: string;
+  value: {
+    text: string;
+    command: string;
+    result: string;
+    secret: boolean;
+  };
+}
+
+export const createDiceBotChat = async (
+  props: createDiceBotChatProps,
+  isSecret: boolean = false,
+) => {
+  console.log("ChatService.createDiceBotChat", props);
+  const type = isSecret ? ChatType.DICE_SECRET : ChatType.DICE;
+  const {
+    roomId,
+    channelId: _channelId,
+    aliasId: _aliasId,
+    characterId: _characterId,
+    userId,
+    value,
+  } = props;
+  await createChat({
+    roomId,
+    channelId: _channelId === CHANNEL_ID_NULL ? SYSTEM_CHANNEL_ID : _channelId,
+    aliasId: _aliasId === ALIAS_ID_NULL ? null : _aliasId,
+    characterId: _characterId === CHARACTER_ID_NULL ? null : _characterId,
+    userId,
+    type,
+    value,
+  });
+};
+
+interface sendChatProps {
+  roomId: string;
+  channelId: string;
+  userId: string;
+  characterId: string | null;
+  aliasId: string | null;
+  text: string;
+}
+
+export const sendChat = async (props: sendChatProps, gameSystem?: string) => {
+  const { text } = props;
+
+  if (!text.trim()) {
+    console.log("ChatService.sendChat: text is empty");
+    return;
+  }
+
+  const isCommand = easyDiceCheck(text);
+  if (!gameSystem || !isCommand) {
+    return await createUserChat(props);
+  }
+
+  try {
+    const { ok, result, reason, secret } = await callDiceBot(gameSystem, text);
+
+    if (!ok) {
+      throw new Error(`diceBot: ${reason}`);
+    }
+
+    const value = {
+      text,
+      command: text,
+      result: result,
+      secret: secret,
+    };
+
+    // ヒストリーに追加 @TODO
+
+    return await createDiceBotChat({
+      roomId: props.roomId,
+      channelId: props.channelId,
+      userId: props.userId,
+      characterId: props.characterId,
+      aliasId: props.aliasId,
+      value,
+    });
+  } catch (e) {
+    /* 簡易チェックで引っかかったが、BCDiceはコマンドと判定しなかった */
+    console.warn(e);
+  }
+
+  return await createUserChat(props);
 };
 
 interface insertDummyChatProps {
