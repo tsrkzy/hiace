@@ -133,6 +133,7 @@
 
   const sendChatter = () => {
     console.log("ChatManager.sendChatter");
+    // Socket.Send(ON_TYPE, { userName: userName, characterId: characterId });
   }
 </script>
 
