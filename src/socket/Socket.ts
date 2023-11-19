@@ -158,24 +158,27 @@ function generateId(userId: string) {
 }
 
 
-function popBalloon(characterId: string) {
-  const $$s = `div.balloon-holder.alias-${characterId}`;
-  const $elList = Array.from(document.querySelectorAll($$s)).filter(
-    ($e) => !!$e
-  );
-  const cls = "dimming";
-  for (let i = 0; i < $elList.length; i++) {
-    const $el = $elList[i];
-    if ($el.classList.contains(cls)) {
-      $el.classList.remove(cls);
-    }
+export function popBalloon(characterId: string) {
+  const selector = `div[data-character-id=${characterId}].balloon-container`
+
+  const elList = Array.from(document.querySelectorAll(selector))
+    .filter((e) => !!e);
+
+  const d = Date.now();
+  for (let i = 0; i < elList.length; i++) {
+    elList[i].style.opacity = "1";
+    elList[i].dataset.key = `${d}`;
   }
+
   setTimeout(() => {
-    for (let i = 0; i < $elList.length; i++) {
-      const $el = $elList[i];
-      $el.classList.add(cls);
+    for (let i = 0; i < elList.length; i++) {
+      if (elList[i].dataset.key !== `${d}`) {
+        return
+      }
+      elList[i].style.opacity = "0";
+      elList[i].dataset.key = "";
     }
-  }, 10);
+  }, 1000);
 }
 
 

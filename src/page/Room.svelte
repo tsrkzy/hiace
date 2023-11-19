@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { Socket, SocketMessageType } from "@/socket/Socket";
+  import { popBalloon, Socket, } from "@/socket/Socket";
 
   /* service */
   import { fetchUserByEmail, } from "@/model/service/UserService";
@@ -10,6 +10,7 @@
   import { useAuth } from "@/model/store/auth";
   import { useRoom } from "@/model/store/room";
   import { useUsers } from "@/model/store/users";
+  import { useCharacters } from "@/model/store/characters";
   import "@/model/store/localConfig"
 
   /* listener */
@@ -47,7 +48,8 @@
   /* store */
   const { isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
-  const { myUserId, myName } = useUsers();
+  const { myUserId } = useUsers();
+  const { characters } = useCharacters();
 
   /* listener */
   const { setRoomListener } = RoomListener();
@@ -120,7 +122,7 @@
   }
 
   const onType = () => {
-    Socket.Send(SocketMessageType.ON_TYPE, { userName: $myName, characterId: "characterId" });
+    $characters.forEach(c => popBalloon(c.id))
   }
 
   export const setState = (state: string) => {

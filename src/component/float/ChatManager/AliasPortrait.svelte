@@ -41,7 +41,7 @@
 
 <div class="portrait" style={portraitStyle}>
   <span class="billboard">{ billBoard }</span>
-  <div class="balloon-container">
+  <div class="balloon-container" data-character-id={portrait.characterId}>
     <svg class="balloon" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="40" cy="25" rx="2" ry="2" class="mumble"></ellipse>
       <ellipse cx="40" cy="16" rx="5" ry="5" class="mumble"></ellipse>
@@ -65,7 +65,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      background: linear-gradient(-0.25turn, rgba(0,0,0,0), black);
+      background: linear-gradient(-0.25turn, rgba(0, 0, 0, 0), black);
       color: white;
       width: 100%;
       text-overflow: ellipsis;
@@ -78,6 +78,7 @@
       top: -30px;
       left: 10px;
       opacity: 0;
+      transition: opacity 0.5s ;
 
       svg.balloon {
         width: 100px;
