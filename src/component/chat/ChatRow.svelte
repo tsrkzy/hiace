@@ -12,7 +12,6 @@
   import ChatLines from "@/component/chat/ChatLines.svelte";
 
   export let chat: Chat;
-  export let isLatest = false;
   export let floatId: number;
   const isCreatedAsRead = ReadManager.Get(chat.id);
 
@@ -21,7 +20,7 @@
     "chat-row"
     , chat.type === ChatType.SYSTEM ? "system" : ""
     , isCreatedAsRead ? "" : "unread"
-    , isLatest ? "latest" : ""].join(" ")
+  ].join(" ")
 
   onMount(() => {
     if (isCreatedAsRead) {

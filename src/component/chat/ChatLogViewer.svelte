@@ -11,6 +11,7 @@
   import { scrollChatToBottom } from "@/model/service/ChatService";
   import { ReadManager } from "@/model/ReadManager";
   import { get } from "svelte/store";
+  import { getScrollParentClasses, } from "@/model/service/ChatService.js";
 
   export let floatId: number;
 
@@ -60,10 +61,10 @@
 </script>
 
 
-<div class="scroll-parent" on:scroll={onScrollChat}>
+<div class={getScrollParentClasses(floatId).join(" ")} on:scroll={onScrollChat}>
   <ol class="chat-log">
-    {#each derivedChat as chat,i (chat.id)}
-      <ChatRow {chat} floatId={floatId} isLatest={i===derivedChat.length-1}/>
+    {#each derivedChat as chat (chat.id)}
+      <ChatRow {chat} floatId={floatId}/>
     {/each}
   </ol>
 </div>
