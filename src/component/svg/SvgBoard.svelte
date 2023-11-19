@@ -7,9 +7,9 @@
 
 <script lang="ts">
 
-  import { useBoards } from   "@/model/store/boards";
+  import { useBoards } from "@/model/store/boards";
   import { useMapChips } from "@/model/store/mapChips";
-  import { usePawns } from    "@/model/store/pawns";
+  import { usePawns } from "@/model/store/pawns";
   import SvgMapChip from "@/component/svg/SvgMapChip.svelte";
   import SvgPawn from "@/component/svg/SvgPawn.svelte";
   import { toCSS } from "@/util/style";
