@@ -19,8 +19,7 @@
 
   // Chat一覧のfloatを開いた時点で最下部までスクロールするため、
   // その時点でのChatはすべて既読扱いにする
-  const rm = ReadManager.New(get(chats).map(c => c.id));
-  console.log(rm);
+  ReadManager.New(get(chats).map(c => c.id));
 
   const SCROLL_OFFSET = 5;
   const PAGE_SIZE = 200;
@@ -33,17 +32,13 @@
   const subscribe = chats.subscribe(() => {
     if (onBottom) {
       tick().then(() => scrollChatToBottom(floatId))
-    } else {
-      console.log("not on bottom");
     }
   })
 
   const onScrollChat = (e: Event) => {
-    console.log("ChatLogViewer.onScrollChat");
     const target = e.target as HTMLDivElement;
 
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - SCROLL_OFFSET) {
-      console.log("scrolled to bottom");
       onBottom = true;
     } else {
       onBottom = false;
@@ -51,7 +46,6 @@
   };
 
   onMount(() => {
-    console.log("onMount");
     tick().then(() => scrollChatToBottom(floatId))
   })
 

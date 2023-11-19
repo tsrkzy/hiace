@@ -39,7 +39,7 @@
   $: isDragged = $draggedMapChipId === mapChipId;
 
   const onMouseDown = (e: MouseEvent) => {
-    console.log("SvgMap.onMouseDown", e);
+    console.log("SvgMap.onMouseDown");
     if (!mapChip) {
       return;
     }

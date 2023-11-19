@@ -20,6 +20,7 @@
   import ChatEditor from "@/component/float/ChatManager/ChatEditor.svelte";
   import { useRoom } from "@/model/store/room";
   import DiceSelector from "@/component/float/ChatManager/DiceSelector.svelte";
+  import AliasDisplay from "@/component/float/ChatManager/AliasDisplay.svelte";
 
 
   export let float = {} as Float;
@@ -70,8 +71,7 @@
   };
 
 </script>
-
-
+<AliasDisplay></AliasDisplay>
 <ChatLogViewer floatId={float.id}></ChatLogViewer>
 <fieldset>
   <legend>チャット設定</legend>

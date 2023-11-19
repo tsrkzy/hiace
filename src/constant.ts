@@ -16,3 +16,5 @@ export const DEFAULT_MAP_IMAGE_HEIGHT = 840;
 export const CHARACTER_ID_NULL = "NULL";
 export const ALIAS_ID_NULL = "NULL";
 export const CHANNEL_ID_NULL = "NULL";
+
+export const ALIAS_DISPLAY_HEIGHT= 200
