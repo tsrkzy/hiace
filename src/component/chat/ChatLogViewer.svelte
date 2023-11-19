@@ -61,7 +61,7 @@
 
 
 <div class="scroll-parent" on:scroll={onScrollChat}>
-  <ol>
+  <ol class="chat-log">
     {#each derivedChat as chat,i (chat.id)}
       <ChatRow {chat} floatId={floatId} isLatest={i===derivedChat.length-1}/>
     {/each}
@@ -75,6 +75,12 @@
     background-color: floralwhite;
     overflow-y: scroll;
     overflow-x: hidden;
+  }
+
+  ol.chat-log{
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
 </style>

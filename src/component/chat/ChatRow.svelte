@@ -6,9 +6,10 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Chat } from "@/model/Chat.js";
+  import { Chat, ChatType } from "@/model/Chat.js";
   import { onMount } from "svelte";
   import { ReadManager } from "@/model/ReadManager";
+  import ChatLines from "@/component/chat/ChatLines.svelte";
 
   export let chat: Chat;
   export let isLatest = false;
@@ -16,7 +17,11 @@
   const isCreatedAsRead = ReadManager.Get(chat.id);
 
 
-  const classStr = `chat-row ${isCreatedAsRead ? "" : "unread"} ${isLatest ? "latest" : ""}`
+  const classStr = [
+    "chat-row"
+    , chat.type === ChatType.SYSTEM ? "system" : ""
+    , isCreatedAsRead ? "" : "unread"
+    , isLatest ? "latest" : ""].join(" ")
 
   onMount(() => {
     if (isCreatedAsRead) {
@@ -50,13 +55,22 @@
 </script>
 
 <li class={classStr} data-chat-id={chat.id} data-float-id={floatId}>
-  <span>{chat.channel},{chat.owner},{chat.value.text}</span>
+  <ChatLines chat={chat}></ChatLines>
 </li>
 
 <style lang="scss">
-  .chat-row {
+  li.chat-row {
     margin: 0;
     word-break: break-word;
+    font-weight: bold;
+    font-style: normal;
+    color: #000000;
+
+    &.system {
+      font-weight: normal;
+      font-style: italic;
+      color: lightgray;
+    }
   }
 
   .unread {
