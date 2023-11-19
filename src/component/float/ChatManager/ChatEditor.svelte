@@ -9,6 +9,7 @@
   import { sendChat } from "@/model/service/ChatService";
   import { useRoom } from "@/model/store/room";
   import { useUsers } from "@/model/store/users";
+  import { SocketMessageType, Socket } from "@/socket/Socket";
 
   export let channelId: string;
   export let characterId: string;
@@ -19,7 +20,7 @@
   let historyKey = -1;
 
   const { room } = useRoom();
-  const { myUserId } = useUsers();
+  const { myUserId, myName } = useUsers();
 
 
   const onKeyDownTextarea = async (e: KeyboardEvent) => {
@@ -95,7 +96,7 @@
 
   const sendChatter = () => {
     console.log("ChatManager.sendChatter");
-    // Socket.Send(ON_TYPE, { userName: userName, characterId: characterId });
+    Socket.Send(SocketMessageType.ON_TYPE, { userName: $myName, characterId });
   }
 
 </script>

@@ -12,11 +12,15 @@ users.subscribe(a => {
 const myUserId = derived(users, $users => {
   return ($users.find(u => u.email === get(email)) || {}).id || "";
 });
+const myName = derived(users, $users => {
+  return ($users.find(u => u.email === get(email)) || {}).name || "";
+});
 
 export const useUsers = () => {
   return {
     setUsers: users.set,
     myUserId,
+    myName,
     users,
   };
 };

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
+  import { Socket, SocketMessageType } from "@/socket/Socket";
 
   /* service */
   import { fetchUserByEmail, } from "@/model/service/UserService";
@@ -46,7 +47,7 @@
   /* store */
   const { isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
-  const { myUserId } = useUsers();
+  const { myUserId, myName } = useUsers();
 
   /* listener */
   const { setRoomListener } = RoomListener();
@@ -115,6 +116,11 @@
     setImageSourceListener(roomId)
     setSoundListener(roomId)
     setTableListener(roomId)
+    new Socket(roomId, $myUserId);
+  }
+
+  const onType = () => {
+    Socket.Send(SocketMessageType.ON_TYPE, { userName: $myName, characterId: "characterId" });
   }
 
   export const setState = (state: string) => {
@@ -178,6 +184,7 @@
     <BoardList></BoardList>
     <ChannelList></ChannelList>
     <ImageSourceList></ImageSourceList>
+    <button on:click={onType}>on_type</button>
 
   </div>
   <NoticeGroup></NoticeGroup>
