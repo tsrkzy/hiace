@@ -13,21 +13,20 @@
  -----------------------------------------------------------------------------*/
 import { createNotice } from "@/model/service/NoticeService";
 
-
 export const SocketMessageType = {
   JOIN_ROOM: "JOIN_ROOM",
   ON_TYPE: "ON_TYPE",
   TOUCH: "TOUCH",
 } as const;
-export type SocketMessageType = (typeof SocketMessageType)[keyof typeof SocketMessageType];
+export type SocketMessageType =
+  (typeof SocketMessageType)[keyof typeof SocketMessageType];
 
 export class Socket extends WebSocket {
   id: string;
-  roomId: string|null;
-  userId: string|null;
+  roomId: string | null;
+  userId: string | null;
 
-
-  static Instance: Socket|null;
+  static Instance: Socket | null;
 
   constructor(roomId: string, userId: string) {
     const uri = import.meta.env.VITE_WEB_SOCKET_URI ?? "ws://localhost:3000";
@@ -61,7 +60,7 @@ export class Socket extends WebSocket {
   }
 
   static AttachListener() {
-    Socket.Instance?.attachListener()
+    Socket.Instance?.attachListener();
   }
 
   attachListener() {
@@ -72,7 +71,7 @@ export class Socket extends WebSocket {
   }
 
   static RemoveListener() {
-    Socket.Instance?.removeListener()
+    Socket.Instance?.removeListener();
   }
 
   removeListener() {
@@ -138,7 +137,6 @@ export class Socket extends WebSocket {
     }
   }
 
-
   static Dispose() {
     console.log("Socket.Dispose");
     if (!Socket.Instance) {
@@ -157,12 +155,12 @@ function generateId(userId: string) {
   return `${userId}_${timestamp}`;
 }
 
-
 export function popBalloon(characterId: string) {
-  const selector = `div[data-character-id=${characterId}].balloon-container`
+  const selector = `div[data-character-id=${characterId}].balloon-container`;
 
-  const elList = Array.from(document.querySelectorAll(selector))
-    .filter((e) => !!e);
+  const elList = Array.from(document.querySelectorAll(selector)).filter(
+    e => !!e,
+  ) as HTMLElement[];
 
   const d = Date.now();
   for (let i = 0; i < elList.length; i++) {
@@ -173,14 +171,13 @@ export function popBalloon(characterId: string) {
   setTimeout(() => {
     for (let i = 0; i < elList.length; i++) {
       if (elList[i].dataset.key !== `${d}`) {
-        return
+        return;
       }
       elList[i].style.opacity = "0";
       elList[i].dataset.key = "";
     }
   }, 1000);
 }
-
 
 function parseMessage(jsonLike: string) {
   try {

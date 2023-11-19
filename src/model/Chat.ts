@@ -25,18 +25,17 @@ export type ChatValue = {
   secret?: boolean;
 };
 
-
 export type ChatProps = {
   id: string;
   channel: string;
-  alias: string|null;
-  character: string|null;
+  alias: string | null;
+  character: string | null;
   color: string;
   owner: string;
   room: string;
   type: string;
   value: ChatValue;
-  timestamp: number|Date;
+  timestamp: number | Date;
 };
 
 export class Chat {
@@ -56,19 +55,19 @@ export class Chat {
     this._channel = value;
   }
 
-  get alias(): string|null {
+  get alias(): string | null {
     return this._alias;
   }
 
-  set alias(value: string|null) {
+  set alias(value: string | null) {
     this._alias = value;
   }
 
-  get character(): string|null {
+  get character(): string | null {
     return this._character;
   }
 
-  set character(value: string|null) {
+  set character(value: string | null) {
     this._character = value;
   }
 
@@ -112,24 +111,24 @@ export class Chat {
     this._value = value;
   }
 
-  get timestamp(): number|Date {
+  get timestamp(): number | Date {
     return this._timestamp;
   }
 
-  set timestamp(value: number|Date) {
+  set timestamp(value: number | Date) {
     this._timestamp = value;
   }
 
   private _id: string;
   private _channel: string;
-  private _alias: string|null;
-  private _character: string|null;
+  private _alias: string | null;
+  private _character: string | null;
   private _color: string;
   private _owner: string;
   private _room: string;
   private _type: string;
   private _value: ChatValue;
-  private _timestamp: number|Date;
+  private _timestamp: number | Date;
 
   /**
    * @param {ChatProps} args

@@ -17,4 +17,4 @@ export const CHARACTER_ID_NULL = "NULL";
 export const ALIAS_ID_NULL = "NULL";
 export const CHANNEL_ID_NULL = "NULL";
 
-export const ALIAS_DISPLAY_HEIGHT= 200
+export const ALIAS_DISPLAY_HEIGHT = 200;

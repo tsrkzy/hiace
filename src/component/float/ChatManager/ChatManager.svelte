@@ -21,6 +21,7 @@
   import { useRoom } from "@/model/store/room";
   import DiceSelector from "@/component/float/ChatManager/DiceSelector.svelte";
   import AliasDisplay from "@/component/float/ChatManager/AliasDisplay.svelte";
+  import { setActiveAlias } from "@/model/service/CharacterService";
 
 
   export let float = {} as Float;
@@ -49,10 +50,10 @@
     const character = $characters.find((c) => c.id === characterId);
     aliasId = character?.activeAlias || ALIAS_ID_NULL;
   }
-  const onChangeAlias = (e: CustomEvent<string>) => {
+  const onChangeAlias = async (e: CustomEvent<string>) => {
     console.log("ChatManager.onChangeAlias", e);
     aliasId = e.detail;
-    console.log(aliasId);
+    await setActiveAlias({ aliasId, characterId })
   }
 
   const onChangeChannel = (e: CustomEvent<string>) => {
@@ -63,7 +64,6 @@
   const onChangeGameSystem = (e: CustomEvent<string>) => {
     console.log("ChatManager.onChangeGameSystem", e);
     gameSystem = e.detail;
-    console.log(gameSystem);
   }
 
   const onChangeShowAlias = (e: Event) => {

@@ -56,10 +56,11 @@ export const createRoom = async (props: {
 
   /* デフォルトのmapchip */
   await createMapChip({
-    userId: r.owner
-    , roomId: id
-    , boardId: board.id, dragLock: true
-  })
+    userId: r.owner,
+    roomId: id,
+    boardId: board.id,
+    dragLock: true,
+  });
 
   return new Room({
     id,
@@ -153,7 +154,6 @@ export const joinRoom = async (userId: string, roomId: string) => {
     users: room.users,
   });
 };
-
 
 interface UpdateRoomProps {
   roomId: string;

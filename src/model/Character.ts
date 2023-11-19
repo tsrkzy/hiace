@@ -149,7 +149,7 @@ export class Character {
       text,
       color,
       lastPostDatetime,
-      archived
+      archived,
     } = args;
     this._id = id;
     this._name = name;

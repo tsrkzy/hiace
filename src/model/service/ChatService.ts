@@ -12,8 +12,8 @@ import { callDiceBot, easyDiceCheck } from "@/util/diceBot";
 interface CreateChatProps {
   roomId: string;
   channelId: string;
-  aliasId?: string|null;
-  characterId?: string|null;
+  aliasId?: string | null;
+  characterId?: string | null;
   color?: string;
   userId: string;
   type: ChatType;
@@ -85,8 +85,8 @@ export const createSystemChat = async (props: createSystemChatProps) => {
 interface createUserChatProps {
   roomId: string;
   channelId: string;
-  aliasId?: string|null;
-  characterId?: string|null;
+  aliasId?: string | null;
+  characterId?: string | null;
   userId: string;
   text: string;
 }
@@ -115,8 +115,8 @@ export const createUserChat = async (props: createUserChatProps) => {
 interface createDiceBotChatProps {
   roomId: string;
   channelId: string;
-  aliasId?: string|null;
-  characterId?: string|null;
+  aliasId?: string | null;
+  characterId?: string | null;
   userId: string;
   value: {
     text: string;
@@ -155,8 +155,8 @@ interface sendChatProps {
   roomId: string;
   channelId: string;
   userId: string;
-  characterId: string|null;
-  aliasId: string|null;
+  characterId: string | null;
+  aliasId: string | null;
   text: string;
 }
 
@@ -241,15 +241,17 @@ export const insertDummyChat = async (
 };
 
 export const getScrollParentClasses = (floatId: number): string[] => {
-  return ["scroll-parent", `float-${floatId}`]
-}
+  return ["scroll-parent", `float-${floatId}`];
+};
 
 export const scrollChatToBottom = (floatId: number) => {
   console.log("ChatService.scrollChatToBottom", floatId);
-  const selector = getScrollParentClasses(floatId).map(s => `.${s}`).join("");
+  const selector = getScrollParentClasses(floatId)
+    .map(s => `.${s}`)
+    .join("");
   const scrollParent = document.querySelector(selector);
   if (!scrollParent) {
-    console.warn("scroll target not found")
+    console.warn("scroll target not found");
     return;
   }
   scrollParent.scrollTop = scrollParent.scrollHeight;
