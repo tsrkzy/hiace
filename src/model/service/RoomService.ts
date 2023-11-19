@@ -1,6 +1,8 @@
 import { doc, getDoc, collection, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { Room } from "@/model/Room";
+import { createBoard } from "@/model/service/BoardService";
+import { createMapChip } from "@/model/service/MapChipService";
 
 export const fetchRoomByID = async (roomId: string): Promise<Room> => {
   const collectionRef = collection(db, "room");
@@ -42,14 +44,23 @@ export const createRoom = async (props: {
     music: "",
   };
 
-  /* デフォルトのboard作成 @TODO */
-  /* デフォルトのmap作成 @TODO */
-
   const collectionRef = collection(db, "room");
   const docRef = doc(collectionRef);
   await setDoc(docRef, r);
 
   const { id } = docRef;
+
+  /* デフォルトのboard */
+  const board = await createBoard({ roomId: id, userId: r.owner });
+  await updateRoom({ roomId: id, criteria: { activeBoard: board.id } });
+
+  /* デフォルトのmapchip */
+  await createMapChip({
+    userId: r.owner
+    , roomId: id
+    , boardId: board.id, dragLock: true
+  })
+
   return new Room({
     id,
     name: r.name,
@@ -58,7 +69,7 @@ export const createRoom = async (props: {
     requests: r.requests,
     kicked: r.kicked,
     users: r.users,
-    activeBoard: "", // @TODO
+    activeBoard: board.id,
     gameSystem: r.gameSystem,
     music: "",
   });
@@ -141,4 +152,18 @@ export const joinRoom = async (userId: string, roomId: string) => {
     requests: room.requests,
     users: room.users,
   });
+};
+
+
+interface UpdateRoomProps {
+  roomId: string;
+  criteria: object;
+}
+
+export const updateRoom = async (props: UpdateRoomProps) => {
+  const { roomId, criteria } = props;
+
+  const collectionRef = collection(db, "room");
+  const docRef = doc(collectionRef, roomId);
+  await updateDoc(docRef, criteria);
 };

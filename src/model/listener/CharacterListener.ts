@@ -9,10 +9,8 @@ import { db } from "@/util/firestore";
 import { useCharacters } from "@/model/store/characters";
 import { Character } from "@/model/Character";
 
-const subscribeMap = new Map<
-  string,
-  { id: string; unsubscribe: () => unknown }
->();
+const subscribeMap = new Map<string,
+  { id: string; unsubscribe: () => unknown }>();
 
 export function CharacterListener() {
   const { setCharacters } = useCharacters();
@@ -36,6 +34,7 @@ export function CharacterListener() {
           text: d.text,
           color: d.color,
           lastPostDatetime: d.lastPostDatetime,
+          archived: d.archived,
         });
         characters.push(character);
       });

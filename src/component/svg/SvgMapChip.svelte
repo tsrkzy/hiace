@@ -96,7 +96,7 @@
         return;
       }
 
-      console.log("SvgMap.onMouseUp", e);
+      console.log("SvgMap.onMouseUp");
       e.stopPropagation();
 
       setDraggedMapChipId("");

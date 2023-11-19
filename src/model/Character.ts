@@ -17,6 +17,7 @@ export type CharacterProps = {
   text: string;
   color?: string;
   lastPostDatetime?: number;
+  archived?: boolean;
 };
 
 export type UnSavedCharacterProps = Omit<CharacterProps, "id">;
@@ -110,6 +111,14 @@ export class Character {
     this._lastPostDatetime = value;
   }
 
+  get archived(): boolean {
+    return this._archived;
+  }
+
+  set archived(value: boolean) {
+    this._archived = value;
+  }
+
   private _id: string;
   private _name: string;
   private _room: string;
@@ -121,6 +130,7 @@ export class Character {
   private _text: string;
   private _color: string;
   private _lastPostDatetime: number;
+  private _archived: boolean;
 
   /**
    *
@@ -139,6 +149,7 @@ export class Character {
       text,
       color,
       lastPostDatetime,
+      archived
     } = args;
     this._id = id;
     this._name = name;
@@ -151,5 +162,6 @@ export class Character {
     this._text = text;
     this._color = color || "#000000";
     this._lastPostDatetime = lastPostDatetime || 0;
+    this._archived = !!archived;
   }
 }

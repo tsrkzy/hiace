@@ -41,3 +41,4 @@ export const deleteBoard = async (props: { boardId: string }) => {
   /* 紐づくDiceも削除 */
   // await deleteDiceByBoard(boardId)
 };
+
