@@ -23,10 +23,19 @@ export const postfix = (name: string) => {
   const m = regexp.exec(name);
   const base = m ? name.replace(regexp, "") : name;
 
+  function _next(postfix = "") {
+    const i = LIST.indexOf(postfix);
+    if (!postfix || i === -1) {
+      return "A";
+    }
+    if (!LIST[i + 1]) throw new Error("implement error: out of range");
+    return LIST[i + 1];
+  }
+
   let p = m ? m[1] : "";
   try {
     for (let i = 0; i < 26; i++) {
-      p = next(p);
+      p = _next(p);
       const testName = `${base}_${p}`;
       if (nameList.includes(testName)) {
         continue;
@@ -39,15 +48,26 @@ export const postfix = (name: string) => {
   return name;
 };
 
-function next(postfix = "") {
-  const i = LIST.indexOf(postfix);
-  if (!postfix || i === -1) {
-    return "A";
-  }
-  if (!LIST[i + 1]) throw new Error("implement error: out of range");
-  return LIST[i + 1];
-}
 
 const LIST = new Array(26).fill(null).map((_, i) => {
   return String.fromCharCode(65 + i);
 });
+
+
+export function cleanText(str: string) {
+  const lines = str.split("\n");
+  const result = [];
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    line = line.replace(/[\s\t]+$/, "");
+
+    result.push(line);
+  }
+
+  return result.join("\n")
+    .replace(/^"/g, "") // ファイル先頭の二重引用符は削除
+    .replace(/"[\s\t\n]*$/g, "") // ファイル末尾の二重引用符は削除
+    .replace(/\n"/g, "\n") // 行頭の二重引用符を削除
+    .replace(/"\n/g, "\n") // 行末の二重引用符を削除
+    .replace(/\n{3,}/, "\n");
+}

@@ -16,12 +16,13 @@
   import { toCSS } from "@/util/style";
   import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
   import { DEFAULT_PAWN_IMAGE_URL } from "@/constant";
+  import { isMacOS } from "@/util/agent";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;
 
   const { draggedMapChipId } = useMapChips()
-  const { pawns, draggedPawnId, setDraggedPawnId } = usePawns()
+  const { pawns, draggedPawnId, setDraggedPawnId, setPawnDescriptionSide, setPawnDescriptionText } = usePawns()
   const { imageSources } = useImageSources()
   const { characters } = useCharacters()
   const { aliases } = useAliases()
@@ -139,7 +140,51 @@
   }
 
   const onMouseEnter = (e: MouseEvent) => {
-    console.log("SvgPawn.onMouseEnter", e);
+    if (!pawn) {
+      return;
+    }
+    const pawnEl = document.getElementById(`pawn_${pawnId}`) as HTMLElement&SVGGElement;
+    if (!pawnEl) {
+      console.log("SvgPawn.onMouseEnter: pawnEl is null");
+      return;
+    }
+    const characterText = character?.text || "";
+    setPawnDescriptionText(characterText);
+
+    const mouseSide = e.clientX < window.innerWidth / 2 ? "left" : "right";
+    setPawnDescriptionSide(mouseSide);
+
+    const onMouseLeave = () => {
+      setPawnDescriptionText("");
+      pawnEl.removeEventListener("mouseleave", onMouseLeave);
+      pawnEl.removeEventListener("wheel", onWheel);
+    }
+
+    const onMove = (e) => {
+      e.stopPropagation()
+      const mouseSide = e.clientX < window.innerWidth / 2 ? "left" : "right";
+      setPawnDescriptionSide(mouseSide);
+    }
+
+    const onWheel = (e) => {
+      e.stopPropagation()
+      const descriptionEl = document.getElementById("pawn-description") as HTMLElement;
+      if (!descriptionEl) {
+        console.log("SvgPawn.onWheel: descriptionEl is null");
+        return;
+      }
+      /* osxの場合はtrackpadとして扱う
+       * 慣性スクロールでwheelがマウスの場合より多く発生するので、
+       * 係数で抑え込む */
+      const MOUSE_SCROLL_SPEED = 1.0;
+      const TRACKPAD_SCROLL_SPEED = 0.2;
+      const deltaY = isMacOS() ? e.deltaY * TRACKPAD_SCROLL_SPEED : e.deltaY * MOUSE_SCROLL_SPEED;
+      /* OSXとWindowsはスクロール方向が逆 */
+      descriptionEl.scrollTop += isMacOS() ? deltaY : -deltaY
+    }
+    pawnEl.addEventListener("mouseleave", onMouseLeave, false);
+    pawnEl.addEventListener("mousemove", onMove, false);
+    pawnEl.addEventListener("wheel", onWheel, false);
   }
 
 </script>

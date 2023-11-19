@@ -42,6 +42,7 @@
   import ImageSourceList from "@/component/debug/ImageSourceList.svelte";
   import SvgBoard from "@/component/svg/SvgBoard.svelte";
   import FloatOpener from "@/component/float/FloatOpener.svelte";
+  import PawnDescription from "@/component/PawnDescription.svelte";
 
   export let roomId = "";
 
@@ -147,6 +148,7 @@
     {:else if isKicked}
       <p>キックされました</p>
     {:else if isJoined}
+      <PawnDescription></PawnDescription>
       <SvgBoard></SvgBoard>
       <FloatOpener></FloatOpener>
       <!-- <ContextMenu></ContextMenu> -->

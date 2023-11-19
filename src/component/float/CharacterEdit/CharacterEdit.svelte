@@ -23,6 +23,7 @@
   import Checkbox from "@/component/input/Checkbox.svelte";
   import ColorPicker from "@/component/input/ColorPicker.svelte";
   import InputRange from "@/component/input/InputRange.svelte";
+  import { cleanText, } from "@/util/helper";
 
   export let float: Float = {} as Float;
 
@@ -70,7 +71,7 @@
   const onBlurCharacterText = async (e: Event) => {
     console.log("CharacterEdit.onBlurCharacterText");
     const target = e.target as HTMLTextAreaElement;
-    const text = target.value.trim();
+    const text = cleanText(target.value.trim());
     if (text === characterText) {
       return;
     }

@@ -31,7 +31,7 @@ export const ContentTitle = (contentId: ContentId): string => {
       [ContentId.CHARACTER_EDIT]: "キャラクター編集",
       [ContentId.BOARD_MANAGER]: "マップオブジェクト",
       [ContentId.MAP_EDIT]: "マップ編集",
-      [ContentId.CHAT_LIST]: "CHAT_LIST",
+      [ContentId.CHAT_LIST]: "チャット一覧",
       [ContentId.TABLE_VIEW]: "TABLE_VIEW",
       [ContentId.CHAT_PALETTE]: "CHAT_PALETTE",
       [ContentId.IMAGE_MANAGER]: "画像管理",
