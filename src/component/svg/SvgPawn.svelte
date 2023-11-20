@@ -160,13 +160,13 @@
       pawnEl.removeEventListener("wheel", onWheel);
     }
 
-    const onMove = (e) => {
+    const onMove = (e: MouseEvent) => {
       e.stopPropagation()
       const mouseSide = e.clientX < window.innerWidth / 2 ? "left" : "right";
       setPawnDescriptionSide(mouseSide);
     }
 
-    const onWheel = (e) => {
+    const onWheel = (e: WheelEvent) => {
       e.stopPropagation()
       const descriptionEl = document.getElementById("pawn-description") as HTMLElement;
       if (!descriptionEl) {
