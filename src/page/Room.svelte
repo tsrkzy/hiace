@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { popBalloon, Socket, } from "@/socket/Socket";
+  import {  Socket, } from "@/socket/Socket";
 
   /* service */
   import { fetchUserByEmail, } from "@/model/service/UserService";
@@ -10,7 +10,6 @@
   import { useAuth } from "@/model/store/auth";
   import { useRoom } from "@/model/store/room";
   import { useUsers } from "@/model/store/users";
-  import { useCharacters } from "@/model/store/characters";
   import "@/model/store/localConfig"
 
   /* listener */
@@ -43,6 +42,8 @@
   import SvgBoard from "@/component/svg/SvgBoard.svelte";
   import FloatOpener from "@/component/float/FloatOpener.svelte";
   import PawnDescription from "@/component/PawnDescription.svelte";
+  import ContextMenu from "@/component/contextMenu/ContextMenu.svelte";
+  import { dummyContextMenu } from "@/model/service/ContextMenuService";
 
   export let roomId = "";
 
@@ -50,7 +51,7 @@
   const { isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
   const { myUserId } = useUsers();
-  const { characters } = useCharacters();
+
 
   /* listener */
   const { setRoomListener } = RoomListener();
@@ -122,8 +123,8 @@
     new Socket(roomId, $myUserId);
   }
 
-  const onType = () => {
-    $characters.forEach(c => popBalloon(c.id))
+  const contextMenu = () => {
+    dummyContextMenu()
   }
 
   export const setState = (state: string) => {
@@ -151,7 +152,7 @@
       <PawnDescription></PawnDescription>
       <SvgBoard></SvgBoard>
       <FloatOpener></FloatOpener>
-      <!-- <ContextMenu></ContextMenu> -->
+      <ContextMenu></ContextMenu>
       <FloatGroup></FloatGroup>
 
     {:else if isWaiting}
@@ -188,7 +189,7 @@
     <BoardList></BoardList>
     <ChannelList></ChannelList>
     <ImageSourceList></ImageSourceList>
-    <button on:click={onType}>on_type</button>
+    <button on:click={contextMenu}>context</button>
 
   </div>
   <NoticeGroup></NoticeGroup>
