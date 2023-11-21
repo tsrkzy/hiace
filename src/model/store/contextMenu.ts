@@ -5,23 +5,23 @@ const contextMenuItems = writable<ContextMenuItem[]>([]);
 const showContextMenu = writable<boolean>(false);
 const contextMenuX = writable<number>(0);
 const contextMenuY = writable<number>(0);
-const contextMenuId = writable<string>("");
+const contextMenuIds = writable<string[]>([]);
 
 contextMenuItems.subscribe(a => {
   console.log("contextMenuItems.subscribe", a);
 });
 showContextMenu.subscribe(a => {
   console.log("contextMenu.showContextMenu", a);
-})
+});
 contextMenuX.subscribe(a => {
   console.log("contextMenu.contextMenuX", a);
-})
+});
 contextMenuY.subscribe(a => {
   console.log("contextMenu.contextMenuY", a);
-})
-contextMenuId.subscribe(a => {
-  console.log("contextMenu.contextMenuId", a);
-})
+});
+contextMenuIds.subscribe(a => {
+  console.log("contextMenu.contextMenuIds", a);
+});
 
 export const useContextMenu = () => ({
   setContextMenuItems: contextMenuItems.set,
@@ -32,6 +32,6 @@ export const useContextMenu = () => ({
   contextMenuX,
   setContextMenuY: contextMenuY.set,
   contextMenuY,
-  setContextMenuId: contextMenuId.set,
-  contextMenuId,
-})
+  setContextMenuIds: contextMenuIds.set,
+  contextMenuIds,
+});

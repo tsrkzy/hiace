@@ -8,7 +8,7 @@
 interface ContextMenuItemProps {
   id: string;
   text: string;
-  callback?: () => void|Promise<void>;
+  callback?: () => void | Promise<void>;
   children?: ContextMenuItem[];
   disabled?: boolean;
 }
@@ -30,11 +30,11 @@ export class ContextMenuItem {
     this._text = value;
   }
 
-  get callback(): () => (void|Promise<void>) {
+  get callback(): () => void | Promise<void> {
     return this._callback;
   }
 
-  set callback(value: () => (void|Promise<void>)) {
+  set callback(value: () => void | Promise<void>) {
     this._callback = value;
   }
 
@@ -56,10 +56,9 @@ export class ContextMenuItem {
 
   private _id: string;
   private _text: string;
-  private _callback: () => void|Promise<void>;
+  private _callback: () => void | Promise<void>;
   private _children: ContextMenuItem[];
   private _disabled: boolean;
-
 
   constructor(args: ContextMenuItemProps) {
     const { id, text, callback, children = [], disabled } = args;
@@ -70,4 +69,3 @@ export class ContextMenuItem {
     this._disabled = disabled ?? false;
   }
 }
-

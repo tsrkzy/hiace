@@ -9,7 +9,7 @@ pawns.subscribe(a => {
 
 const draggedPawnId = writable<string>("");
 const pawnDescriptionText = writable<string>("");
-const pawnDescriptionSide = writable<"left"|"right">("left");
+const pawnDescriptionSide = writable<"left" | "right">("left");
 
 export const usePawns = () => {
   return {
@@ -20,6 +20,6 @@ export const usePawns = () => {
     pawnDescriptionText,
     setPawnDescriptionText: pawnDescriptionText.set,
     pawnDescriptionSide,
-    setPawnDescriptionSide: pawnDescriptionSide.set
+    setPawnDescriptionSide: pawnDescriptionSide.set,
   };
 };

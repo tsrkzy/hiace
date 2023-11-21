@@ -48,11 +48,9 @@ export const postfix = (name: string) => {
   return name;
 };
 
-
 const LIST = new Array(26).fill(null).map((_, i) => {
   return String.fromCharCode(65 + i);
 });
-
 
 export function cleanText(str: string) {
   const lines = str.split("\n");
@@ -64,7 +62,8 @@ export function cleanText(str: string) {
     result.push(line);
   }
 
-  return result.join("\n")
+  return result
+    .join("\n")
     .replace(/^"/g, "") // ファイル先頭の二重引用符は削除
     .replace(/"[\s\t\n]*$/g, "") // ファイル末尾の二重引用符は削除
     .replace(/\n"/g, "\n") // 行頭の二重引用符を削除
