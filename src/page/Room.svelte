@@ -37,7 +37,7 @@
   /* components */
   import GoogleLogInButton from "@/component/button/GoogleLogInButton.svelte";
   import FloatGroup from "@/component/float/FloatGroup.svelte";
-  import NoticeGroup from "@/component/NoticeGroup.svelte";
+  import NoticeGroup from "@/component/notice/NoticeGroup.svelte";
   import ImageSourceList from "@/component/debug/ImageSourceList.svelte";
   import SvgBoard from "@/component/svg/SvgBoard.svelte";
   import FloatOpener from "@/component/float/FloatOpener.svelte";

@@ -4,19 +4,9 @@
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
-<script lang="ts">
-  import { useNotices } from "@/model/store/notices";
 
-  const { notices } = useNotices()
-
-</script>
-
-<div style="position: absolute; top: 0px; right: 0px">
-  {#each $notices as notice (notice.id)}
-    <div class="notice-bar">
-      <span>{ notice.text }</span>
-    </div>
-  {/each}
+<div class="notice-bar">
+  <span><slot /></span>
 </div>
 
 <style>
