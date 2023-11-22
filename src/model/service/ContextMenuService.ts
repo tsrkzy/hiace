@@ -54,11 +54,25 @@ export const hideContextMenu = () => {
   setContextMenuItems([]);
 };
 
-export const execContextMenu = (
+export const execContextMenu = async (
   level: number,
   contextMenuItem: ContextMenuItem,
 ) => {
   console.log("ContextMenuService.execContextMenu", contextMenuItem);
-  const items = get(contextMenuIds);
-  setContextMenuIds([...items.slice(0, level), contextMenuItem.id]);
+  if (contextMenuItem.children.length) {
+    // childrenを持つ場合は展開する
+    const items = get(contextMenuIds);
+    setContextMenuIds([...items.slice(0, level), contextMenuItem.id]);
+  } else {
+    // クリックしたcontextMenuItemがchildrenを持っていない場合はコールバックを実行
+    if (
+      contextMenuItem.disabled ||
+      typeof contextMenuItem.callback !== "function"
+    ) {
+      return;
+    }
+
+    await contextMenuItem.callback();
+    hideContextMenu();
+  }
 };

@@ -62,6 +62,11 @@ export class ContextMenuItem {
 
   constructor(args: ContextMenuItemProps) {
     const { id, text, callback, children = [], disabled } = args;
+
+    if (callback && children.length) {
+      throw new Error("callbackとchildrenは同時に指定できません");
+    }
+
     this._id = id;
     this._text = text;
     this._callback = callback ?? (() => console.log("there is no callback"));

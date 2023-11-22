@@ -41,6 +41,6 @@
     left: 0;
     top: 0;
     color: dimgray;
-    box-shadow: 0.5px 0.5px 2px dimgray;
+    box-shadow: -1.5px 1.5px 8px dimgray;
   }
 </style>
