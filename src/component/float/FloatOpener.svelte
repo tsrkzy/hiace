@@ -17,6 +17,7 @@
     { id: ContentId.IMAGE_MANAGER, name: ContentTitle(ContentId.IMAGE_MANAGER) },
     { id: ContentId.CHANNEL_LIST, name: ContentTitle(ContentId.CHANNEL_LIST) },
     { id: ContentId.CHAT_LIST, name: ContentTitle(ContentId.CHAT_LIST) },
+    { id: ContentId.SOUND_MANAGER, name: ContentTitle(ContentId.SOUND_MANAGER) },
   ]
 
   const onContentChangeHandler = (e: Event) => {
