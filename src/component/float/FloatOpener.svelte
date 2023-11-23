@@ -37,11 +37,3 @@
     {/each}
   </select>
 </label>
-
-<style>
-    #float-opener {
-        position: fixed;
-        left: 0;
-        top: 0;
-    }
-</style>

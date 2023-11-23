@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import {  Socket, } from "@/socket/Socket";
+  import { Socket, } from "@/socket/Socket";
 
   /* service */
   import { fetchUserByEmail, } from "@/model/service/UserService";
@@ -44,6 +44,7 @@
   import PawnDescription from "@/component/PawnDescription.svelte";
   import ContextMenu from "@/component/contextMenu/ContextMenu.svelte";
   import { dummyContextMenu } from "@/model/service/ContextMenuService";
+  import AudioControler from "@/component/audio/AudioControler.svelte";
 
   export let roomId = "";
 
@@ -151,7 +152,10 @@
     {:else if isJoined}
       <PawnDescription></PawnDescription>
       <SvgBoard></SvgBoard>
-      <FloatOpener></FloatOpener>
+      <div class="menu">
+        <FloatOpener></FloatOpener>
+        <AudioControler></AudioControler>
+      </div>
       <FloatGroup></FloatGroup>
       <ContextMenu></ContextMenu>
     {:else if isWaiting}
@@ -195,4 +199,13 @@
 </main>
 
 <style>
+    div.menu {
+        position: fixed;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
 </style>
