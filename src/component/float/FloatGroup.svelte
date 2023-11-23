@@ -65,6 +65,7 @@
 
 <style lang="scss">
   .float-group__container {
+    z-index: 0;
     position: absolute;
     top: 0;
     left: 0;
