@@ -7,7 +7,7 @@
 
 import { uploadFileToFirebaseStorage } from "@/model/service/FirebaseStorageService";
 import { Sound } from "@/model/Sound";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/util/firestore";
 
 export const registerSound = async (
@@ -119,3 +119,14 @@ export const createSound = async (props: createSoundProps) => {
     tags: s.tags,
   });
 };
+
+interface updateSoundProps {
+  soundId: string;
+  criteria: Partial<createSoundProps>;
+}
+export const updateSound = async (props: updateSoundProps) => {
+  const { soundId, criteria } = props;
+  const collectionRef = collection(db, "sound");
+  const docDef = doc(collectionRef, soundId);
+  await updateDoc(docDef, criteria);
+}

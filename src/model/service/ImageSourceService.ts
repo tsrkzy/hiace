@@ -144,12 +144,12 @@ export const renewImageUrl = async (imageId: string) => {
   return url;
 };
 
-interface updateImageSourceProps {
+interface UpdateImageSourceProps {
   imageSourceId: string;
-  criteria: object;
+  criteria: Partial<CreateImageSourceProps>;
 }
 
-export const updateImageSource = async (props: updateImageSourceProps) => {
+export const updateImageSource = async (props: UpdateImageSourceProps) => {
   const { imageSourceId, criteria } = props;
   console.log("ImageSourceService.updateImageSource", imageSourceId, criteria);
   const collectionRef = collection(db, "image");
