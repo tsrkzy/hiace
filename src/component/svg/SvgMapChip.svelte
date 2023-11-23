@@ -9,7 +9,7 @@
   import { useMapChips } from "@/model/store/mapChips";
   import { useImageSources } from "@/model/store/imageSources";
   import { useBoards } from "@/model/store/boards";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
+  // import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
   import { toCSS } from "@/util/style";
   import { updateMapChip } from "@/model/service/MapChipService";
   import { DEFAULT_MAP_IMAGE_HEIGHT, DEFAULT_MAP_IMAGE_URL, DEFAULT_MAP_IMAGE_WIDTH } from "@/constant";
@@ -38,6 +38,10 @@
 
   $: isDragged = $draggedMapChipId === mapChipId;
 
+  $: isRender = (() => {
+    return mapChip && activeBoard
+  })()
+
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgMap.onMouseDown");
     if (!mapChip) {
@@ -65,7 +69,7 @@
     }
 
     setDraggedMapChipId(mapChipId);
-    hideObstaclesToDrag()
+    // hideObstaclesToDrag()
 
     const ctmB = boardEl.getCTM() as DOMMatrix; // global to board
     const ctmM = mapChipEl.getCTM() as DOMMatrix; // board to mapChip
@@ -100,7 +104,7 @@
       e.stopPropagation();
 
       setDraggedMapChipId("");
-      showObstaclesToDrag()
+      // showObstaclesToDrag()
 
       mapChipEl.removeEventListener("mousemove", onMouseMove);
       mapChipEl.removeEventListener("mouseup", onMouseUp);
@@ -119,7 +123,7 @@
   }
 </script>
 
-{#if mapChip}
+{#if isRender}
   <g
       id={`map_${mapChipId}`}
       style={mapStyleString}
@@ -143,7 +147,7 @@
     >
 
     </image>
-    <text>#{mapChipId.slice(0,3)}</text>
+    <text>#{mapChipId.slice(0, 3)}</text>
     <!-- ドラッグ中の当たり判定拡張 -->
     {#if isDragged}
       <rect

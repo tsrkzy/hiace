@@ -12,7 +12,6 @@
   import { useCharacters } from "@/model/store/characters";
   import { useBoards } from "@/model/store/boards";
   import { useAliases } from "@/model/store/aliases";
-  import { useMapChips } from "@/model/store/mapChips";
   import { toCSS } from "@/util/style";
   import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
   import { DEFAULT_PAWN_IMAGE_URL } from "@/constant";
@@ -21,15 +20,11 @@
   export let pawnId: string = "";
   export let shadow: boolean = false;
 
-  const { draggedMapChipId } = useMapChips()
   const { pawns, draggedPawnId, setDraggedPawnId, setPawnDescriptionSide, setPawnDescriptionText } = usePawns()
   const { imageSources } = useImageSources()
   const { characters } = useCharacters()
   const { aliases } = useAliases()
   const { activeBoard } = useBoards()
-
-  let archived = false;
-  let shadowHandler = true;
 
   $: pawn = $pawns.find(pawn => pawn.id === pawnId);
 
@@ -54,9 +49,24 @@
 
   $: dragged = $draggedPawnId === pawnId;
 
+  $: isRender = (() => {
+    // 控室の場合はshadow問わず非表示
+    if (!character?.archived) {
+      return false
+    }
+
+    if (shadow) {
+      // shadowの場合はdrag中のみ表示
+      return $draggedPawnId;
+    } else {
+      // shadowでない場合、ドラッグ中でない場合、あるいはドラッグ中の場合のみ表示
+      return !$draggedPawnId || dragged;
+    }
+  })()
+
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgPawn.onMouseDown", e);
-    if (!pawn) {
+    if (!pawn || shadow) {
       return;
     }
 
@@ -133,7 +143,7 @@
   }
 
   const onMouseEnter = (e: MouseEvent) => {
-    if (!pawn) {
+    if (!pawn || shadow) {
       return;
     }
     const pawnEl = document.getElementById(`pawn_${pawnId}`) as HTMLElement&SVGGElement;
@@ -182,7 +192,7 @@
 
 </script>
 
-{#if !archived && shadowHandler && !$draggedMapChipId && (!$draggedPawnId || dragged) }
+{#if isRender }
   <g
       id={shadow ? `shadow_pawn_${pawnId}` : `pawn_${pawnId}`}
       style={pawnStyleString}

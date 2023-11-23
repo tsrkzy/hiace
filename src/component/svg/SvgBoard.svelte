@@ -15,8 +15,8 @@
   import { toCSS } from "@/util/style";
   import { isMacOS } from "@/util/agent";
 
-  const { activeBoard, setDraggedBoardId } = useBoards()
-  const { mapChips } = useMapChips()
+  const { activeBoard, setDraggedBoardId, draggedBoardId } = useBoards()
+  const { mapChips, draggedMapChipId } = useMapChips()
   const { pawns } = usePawns()
 
 
@@ -24,6 +24,7 @@
   const z = zoom / 100;
   let transformMatrix = `${new DOMMatrix([z, 0, 0, z, 0, 0]).inverse()}`;
   $: boardStyleString = toCSS({ transform: `${transformMatrix}` });
+  $: isDraggingMapChipOrBoard = $draggedMapChipId || $draggedBoardId;
 
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgBoard.onMouseDown");
@@ -133,23 +134,25 @@
     <!--      />-->
     {#each $mapChips as mapChip(mapChip.id)}
       <SvgMapChip mapChipId={mapChip.id}></SvgMapChip>
+    {/each}
 
-    {/each}
-    {#each $pawns as pawn(pawn.id)}
-      <SvgPawn pawnId={pawn.id}></SvgPawn>
-    {/each}
-    <!--      {#each dices as dice(dice.id)}-->
-    <!--        <SvgDice shadow diceId={dice.id}></SvgDice>-->
-    <!--      {/each}-->
-    <!--      {#each arrows as arrow(arrow.id)}-->
-    <!--        <SvgArrow shadow arrowId={arrow.id}></SvgArrow>-->
-    <!--      {/each}-->
-    <!--      {#each pawns as pawn(pawn.id)}-->
-    <!--        <SvgPawn pawnId={pawn.id}></SvgPawn>-->
-    <!--      {/each}-->
-    <!--      {#each dices as dice(dice.id)}-->
-    <!--        <SvgDice diceId={dice.id}></SvgDice>-->
-    <!--      {/each}-->
+    {#if !isDraggingMapChipOrBoard}
+      {#each $pawns as pawn(pawn.id)}
+        <SvgPawn pawnId={pawn.id} shadow></SvgPawn>
+      {/each}
+      <!--      {#each dices as dice(dice.id)}-->
+      <!--        <SvgDice shadow diceId={dice.id}></SvgDice>-->
+      <!--      {/each}-->
+      <!--      {#each arrows as arrow(arrow.id)}-->
+      <!--        <SvgArrow shadow arrowId={arrow.id}></SvgArrow>-->
+      <!--      {/each}-->
+      {#each $pawns as pawn(pawn.id)}
+        <SvgPawn pawnId={pawn.id}></SvgPawn>
+      {/each}
+      <!--      {#each dices as dice(dice.id)}-->
+      <!--        <SvgDice diceId={dice.id}></SvgDice>-->
+      <!--      {/each}-->
+    {/if}
   </g>
   <!--  <path-->
   <!--      id="weathercock"-->
