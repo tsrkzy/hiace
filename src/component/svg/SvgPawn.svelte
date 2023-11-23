@@ -31,24 +31,17 @@
   let archived = false;
   let shadowHandler = true;
 
-  $: pawn = (() => {
-    return $pawns.find(pawn => pawn.id === pawnId)
-  })();
+  $: pawn = $pawns.find(pawn => pawn.id === pawnId);
 
-  $: character = (() => {
-    return $characters.find(character => character.id === pawn?.character)
-  })()
+  $: character = $characters.find(character => character.id === pawn?.character)
 
-  $: alias = (() => {
-    return $aliases.find(alias =>
+  $: alias =
+    $aliases.find(alias =>
       alias.character === character?.id
       && character?.activeAlias === alias.id
     )
-  })()
 
-  $: imageSource = (() => {
-    return $imageSources.find(imageSource => imageSource.id === alias?.image)
-  })()
+  $: imageSource = $imageSources.find(imageSource => imageSource.id === alias?.image)
 
 
   $: pawnSize = (() => {

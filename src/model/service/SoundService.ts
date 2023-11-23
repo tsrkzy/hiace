@@ -129,4 +129,4 @@ export const updateSound = async (props: updateSoundProps) => {
   const collectionRef = collection(db, "sound");
   const docDef = doc(collectionRef, soundId);
   await updateDoc(docDef, criteria);
-}
+};
