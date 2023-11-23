@@ -152,9 +152,8 @@
       <PawnDescription></PawnDescription>
       <SvgBoard></SvgBoard>
       <FloatOpener></FloatOpener>
-      <ContextMenu></ContextMenu>
       <FloatGroup></FloatGroup>
-
+      <ContextMenu></ContextMenu>
     {:else if isWaiting}
       <p>リクエスト承認待ち</p>
     {/if}

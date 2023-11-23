@@ -15,8 +15,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "@/util/firestore";
-import { getImageMetaData, getImageSize } from "@/util/imageUtil";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getFileMetaData, getImageSize } from "@/util/fileUtil";
+import { getDownloadURL, ref } from "firebase/storage";
+import { uploadFileToFirebaseStorage } from "@/model/service/FirebaseStorageService";
 
 interface CreateImageSourceProps {
   roomId: string;
@@ -95,13 +96,13 @@ export const registerImage = async (
 ) => {
   const { width, height } = await getImageSize(imageFile);
 
-  const metaData = getImageMetaData(imageFile);
+  const metaData = getFileMetaData(imageFile);
   const { name } = metaData;
 
   const fireStoragePath = `${userId}/images/${name}`;
 
   /* firebaseのstorageに画像をアップロードする */
-  const url = await uploadImageToFirebaseStorage(
+  const url = await uploadFileToFirebaseStorage(
     imageFile,
     fireStoragePath,
     metaData,
@@ -141,31 +142,6 @@ export const renewImageUrl = async (imageId: string) => {
   const url = await getDownloadURL(storageRef);
   await updateDoc(docRef, { url });
   return url;
-};
-
-/**
- * firebaseのstorageに画像をアップロードする
- * @param {File} imageFile
- * @param {string} fireStoragePath
- * @param {{}} metaData
- */
-const uploadImageToFirebaseStorage = async (
-  imageFile: File,
-  fireStoragePath: string,
-  metaData: object,
-): Promise<string> => {
-  console.log("ImageSourceList.uploadImageToFirebaseStorage");
-  return new Promise(resolve => {
-    const storageRef = ref(storage, fireStoragePath);
-
-    uploadBytes(storageRef, imageFile, metaData).then(() => {
-      console.log("uploaded");
-      getDownloadURL(storageRef).then(url => {
-        console.log("url", url);
-        resolve(url);
-      });
-    });
-  });
 };
 
 interface updateImageSourceProps {

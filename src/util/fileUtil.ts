@@ -18,16 +18,16 @@ export const getImageSize = (imageFile: File) => {
   });
 };
 
-interface GetImageMetaDataResult {
+interface getFileMetaDataResult {
   name: string;
   size: number;
   contentType: string;
 }
 
-export const getImageMetaData = (imageFile: File): GetImageMetaDataResult => {
-  const name = imageFile.name;
-  const size = imageFile.size;
-  const contentType = imageFile.type;
+export const getFileMetaData = (file: File): getFileMetaDataResult => {
+  const name = file.name;
+  const size = file.size;
+  const contentType = file.type;
   return { name, size, contentType };
 };
 

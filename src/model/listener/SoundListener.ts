@@ -27,6 +27,14 @@ export function SoundListener() {
         const sound = new Sound({
           id: doc.id,
           name: d.name,
+          room: d.room,
+          owner: d.owner,
+          path: d.path,
+          url: d.url,
+          hidden: d.hidden,
+          duration: d.duration,
+          loop: d.loop,
+          tags: d.tags,
         });
         sounds.push(sound);
       });

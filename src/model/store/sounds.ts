@@ -10,5 +10,6 @@ sounds.subscribe(a => {
 export const useSounds = () => {
   return {
     setSounds: sounds.set,
+    sounds,
   };
 };
