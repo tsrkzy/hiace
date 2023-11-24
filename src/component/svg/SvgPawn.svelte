@@ -51,7 +51,7 @@
 
   $: isRender = (() => {
     // 控室の場合はshadow問わず非表示
-    if (!character?.archived) {
+    if (character?.archived) {
       return false
     }
 
