@@ -12,17 +12,20 @@
   import Aster from "@/component/svg/Aster.svelte";
   import Die from "@/component/svg/Die.svelte";
   import { Dice } from "@/model/Dice";
+  import { touchDice, updateDice } from "@/model/service/DiceService";
+  import { useBoards } from "@/model/store/boards";
+  import { useRoom } from "@/model/store/room";
+  import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
 
   export let diceId: string;
   export let shadow: boolean = false;
 
-  const { dices } = useDices();
+  const { dices, draggedDiceId, setDraggedDiceId } = useDices();
+  const { boards } = useBoards();
+  const { room } = useRoom();
 
-
-  $: isRender = (() => {
-    return true
-  })()
-  $: dragged = false
+  $: activeBoard = $boards.find(b => b.id === $room.activeBoard)
+  $: dragged = $draggedDiceId === diceId
   $: dice = $dices.find(dice => dice.id === diceId) as Dice
   $: isAster = dice?.face === DiceValues.ASTER
 
@@ -34,8 +37,77 @@
     transform: `${dice?.transform}`
   })
 
-  export const onMouseDown = async () => {
+  $: isRender = (() => {
+    if (shadow) {
+      return $draggedDiceId;
+    } else {
+      return !$draggedDiceId || dragged;
+    }
+  })()
+  export const onMouseDown = async (e: MouseEvent) => {
     console.log("SvgDice.onMouseDown");
+    e.stopPropagation()
+    e.preventDefault()
+
+
+    const diceEl = document.getElementById(`dice_${diceId}`) as HTMLElement&SVGGElement
+    const boardEl = document.getElementById(`board_${activeBoard?.id}`) as HTMLElement&SVGGElement;
+
+    if (!diceEl || !boardEl) {
+      console.error("SvgDice.onMouseDown: diceEl or boardEl is null");
+      return false;
+    }
+
+    diceEl.classList.remove("token-transition");
+    setDraggedDiceId(diceId)
+    hideObstaclesToDrag();
+
+    const downX = e.clientX;
+    const downY = e.clientY;
+
+    /* globalの座標系をboard,diceの座標系へ変換する行列 */
+    const ctmB = boardEl.getCTM() as DOMMatrix; // global -> board
+    const ctmD = diceEl.getCTM() as DOMMatrix; // global -> dice
+    const ctmBd = ctmB.inverse().multiply(ctmD); // board -> dice
+
+    function globalToLocal(dx: number, dy: number) {
+      /* 変位をglobalからDOMローカルの座標系へ変換 */
+      return new DOMMatrix([1, 0, 0, 1, dx / ctmD.a, dy / ctmD.a]).translate(
+        ctmBd.e,
+        ctmBd.f
+      );
+    }
+
+    const onMove = (e: MouseEvent) => {
+      e.stopPropagation();
+      const t = globalToLocal(e.clientX - downX, e.clientY - downY);
+      dice.transform = `${t}`;
+    };
+
+    const onMouseUp = async (e: MouseEvent) => {
+      console.log("SvgDice.onMouseUp");
+      e.stopPropagation();
+
+
+      setDraggedDiceId("")
+      showObstaclesToDrag()
+
+      diceEl.classList.add("token-transition");
+      diceEl.removeEventListener("mousemove", onMove);
+      diceEl.removeEventListener("mouseup", onMouseUp);
+      diceEl.removeEventListener("mouseleave", onMouseUp);
+
+      const newTransform = `${globalToLocal(e.clientX - downX, e.clientY - downY)}`;
+
+      await updateDice({ diceId, criteria: { transform: newTransform } })
+      await touchDice({ diceId })
+    };
+
+    diceEl.addEventListener("mousemove", onMove, false);
+    diceEl.addEventListener("mouseup", onMouseUp, false);
+    diceEl.addEventListener("mouseleave", onMouseUp, false);
+
+    return false;
   }
 </script>
 
@@ -43,7 +115,7 @@
   <g id={shadow ? `shadow_dice_${diceId}` : `dice_${diceId}`}
      style={diceStyleStr}
      class="token-transition"
-     on:mousedown={()=>onMouseDown()}>
+     on:mousedown={(e)=>onMouseDown(e)}>
     <!-- 外枠 -->
     <rect
         width={DICE_SIZE}
@@ -66,7 +138,7 @@
               color={diceColor}
               diceSize={DICE_SIZE}
           ></Die>
-        {/if             }
+        {/if                       }
       </g>
     {/if}
     <!-- ドラッグ中の当たり判定拡張 -->

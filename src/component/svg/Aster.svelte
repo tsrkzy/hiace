@@ -30,16 +30,14 @@
       c + l * Math.sin(D90 + (D360 * i) / 6) * -1,
     ]);
 
-    const path =  `
+    return `
       M ${nodes[0][0]},${nodes[0][1]}
       L ${nodes[0][2]},${nodes[0][3]}
       M ${nodes[1][0]},${nodes[1][1]}
       L ${nodes[1][2]},${nodes[1][3]}
       M ${nodes[2][0]},${nodes[2][1]}
       L ${nodes[2][2]},${nodes[2][3]}
-      Z`;
-    console.log(">>>>>>>>", path);
-    return path
+      Z`
   })();
 </script>
 
