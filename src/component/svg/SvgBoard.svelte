@@ -14,10 +14,13 @@
   import SvgPawn from "@/component/svg/SvgPawn.svelte";
   import { toCSS } from "@/util/style";
   import { isMacOS } from "@/util/agent";
+  import SvgDice from "@/component/svg/SvgDice.svelte";
+  import { useDices } from "@/model/store/dices";
 
   const { activeBoard, setDraggedBoardId, draggedBoardId } = useBoards()
   const { mapChips, draggedMapChipId } = useMapChips()
   const { pawns } = usePawns()
+  const { dices } = useDices()
 
 
   const zoom = 100;
@@ -140,18 +143,18 @@
       {#each $pawns as pawn(pawn.id)}
         <SvgPawn pawnId={pawn.id} shadow></SvgPawn>
       {/each}
-      <!--      {#each dices as dice(dice.id)}-->
-      <!--        <SvgDice shadow diceId={dice.id}></SvgDice>-->
-      <!--      {/each}-->
+      <!--{#each dices as dice(dice.id)}-->
+      <!--              <SvgDice shadow diceId={dice.id}></SvgDice>-->
+      <!--            {/each}-->
       <!--      {#each arrows as arrow(arrow.id)}-->
       <!--        <SvgArrow shadow arrowId={arrow.id}></SvgArrow>-->
       <!--      {/each}-->
       {#each $pawns as pawn(pawn.id)}
         <SvgPawn pawnId={pawn.id}></SvgPawn>
       {/each}
-      <!--      {#each dices as dice(dice.id)}-->
-      <!--        <SvgDice diceId={dice.id}></SvgDice>-->
-      <!--      {/each}-->
+      {#each $dices as dice(dice.id)}
+        <SvgDice diceId={dice.id}></SvgDice>
+      {/each}
     {/if}
   </g>
   <!--  <path-->

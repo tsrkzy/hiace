@@ -9,10 +9,8 @@ import { db } from "@/util/firestore";
 import { useDices } from "@/model/store/dices";
 import { Dice } from "@/model/Dice";
 
-const subscribeMap = new Map<
-  string,
-  { id: string; unsubscribe: () => unknown }
->();
+const subscribeMap = new Map<string,
+  { id: string; unsubscribe: () => unknown }>();
 
 export function DiceListener() {
   const { setDices } = useDices();
@@ -26,7 +24,14 @@ export function DiceListener() {
         const d = doc.data();
         const dice = new Dice({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          owner: d.owner,
+          board: d.board,
+          color: d.color,
+          face: d.face,
+          hidden: d.hidden,
+          transform: d.transform,
+          updatedAt: d.updatedAt,
         });
         dices.push(dice);
       });
