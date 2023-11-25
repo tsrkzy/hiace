@@ -9,8 +9,13 @@
   import { useColumns } from "@/model/store/columns";
   import { useCharacters } from "@/model/store/characters";
   import { useRoom } from "@/model/store/room";
-  import { type ColumnDataType, ColumnDataTypes } from "@/model/Column";
+  import { ColumnDataTypes } from "@/model/Column";
   import { Character } from "@/model/Character";
+  import {
+    type CellData
+    , type ColData
+    , type RowData
+  } from "@/component/float/TableManager/tableTypes";
 
   export let tableId: string;
 
@@ -23,25 +28,10 @@
   $: data = (() => {
     const roomId = $room.id;
 
-    const colList: {
-      id: string;
-      system: boolean;
-      roomId: string;
-      label: string;
-      dataType: ColumnDataType;
-      refPath: string;
-      dataMap: { [key: string]: string|number|boolean|null };
-    }[] = [];
+    const colList: ColData[] = [];
     const rowList: {
       characterId: string;
-      cells: {
-        columnId: string;
-        system: boolean;
-        characterId: string;
-        value: string|number|boolean|null;
-        dataType: ColumnDataType;
-        refPath: string;
-      }[];
+      cells: CellData[];
     }[] = [];
 
     /* デフォルト列: character.idとcharacter.name */
@@ -80,16 +70,7 @@
     for (let j = 0; j < characters.length; j++) {
       const character = characters[j];
 
-      const row: {
-        characterId: string, cells: {
-          columnId: string;
-          system: boolean;
-          characterId: string;
-          value: string|number|boolean|null;
-          dataType: ColumnDataType;
-          refPath: string;
-        }[]
-      } = {
+      const row: RowData = {
         characterId: character.id,
         cells: [],
       };
@@ -103,14 +84,7 @@
           dataMap,
         } = colList[k];
 
-        const cell: {
-          columnId: string;
-          system: boolean;
-          characterId: string;
-          value: string|number|boolean|null;
-          dataType: ColumnDataType;
-          refPath: string;
-        } = {
+        const cell: CellData = {
           columnId: id,
           system,
           characterId: character.id,
@@ -178,28 +152,29 @@
 <style lang="scss">
   table {
     width: 100%;
+
     thead > tr > th.column--header {
       background-color: lightcyan;
 
-      input {
-        background-color: lightcyan;
-      }
+      //input {
+      //  background-color: lightcyan;
+      //}
 
-      &.column--header__asc, &.column--header__desc {
-        background-color: lightsalmon;
+      //&.column--header__asc, &.column--header__desc {
+      //  background-color: lightsalmon;
 
-        input {
-          background-color: lightsalmon;
-        }
-      }
+        //input {
+        //  background-color: lightsalmon;
+        //}
+      //}
     }
 
     thead > tr > th, tbody > tr > td {
       border: 1px solid gray;
 
-      input {
-        border: none;
-      }
+      //input {
+      //  border: none;
+      //}
     }
   }
 </style>

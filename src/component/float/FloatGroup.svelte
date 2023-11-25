@@ -47,10 +47,11 @@
           {:else if float.contentId === ContentId.MAP_EDIT}
             <MapEdit {float}/>
           {:else if float.contentId === ContentId.TABLE_MANAGER}
-            <TableManager {float}/>
+            <TableManager />
           {:else if float.contentId === ContentId.IMAGE_MANAGER}
             <ImageManager {float}/>
-          {:else if float.contentId === ContentId.SOUND_MANAGER}<SoundManager {float}></SoundManager>
+          {:else if float.contentId === ContentId.SOUND_MANAGER}
+            <SoundManager />
           {:else if float.contentId === ContentId.ROOM_MANAGER}
             <RoomManager {float}/>
           {:else if float.contentId === ContentId.CHANNEL_LIST}

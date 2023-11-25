@@ -128,7 +128,6 @@
       <g>
         {#if isAster }
           <Aster
-              dice={face}
               color={diceColor}
               diceSize={DICE_SIZE}
           ></Aster>
@@ -138,7 +137,7 @@
               color={diceColor}
               diceSize={DICE_SIZE}
           ></Die>
-        {/if                       }
+        {/if}
       </g>
     {/if}
     <!-- ドラッグ中の当たり判定拡張 -->

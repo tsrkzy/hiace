@@ -6,7 +6,6 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Float } from "@/model/Float";
   import { useSounds } from "@/model/store/sounds";
   import Button from "@/component/button/Button.svelte";
   import { registerSound, updateSound } from "@/model/service/SoundService";
@@ -14,8 +13,6 @@
   import { useUsers } from "@/model/store/users";
   import { updateRoom } from "@/model/service/RoomService";
   import Checkbox from "@/component/input/Checkbox.svelte";
-
-  export let float: Float;
 
   const { sounds } = useSounds()
   const { room } = useRoom()
@@ -66,6 +63,7 @@
     await updateSound({ soundId, criteria: { loop: checked } })
   }
 </script>
+
 <Button handle={()=>onClickFileUploadHandler()}>音源のアップロード</Button>
 {#if localMusic}
   <figure>

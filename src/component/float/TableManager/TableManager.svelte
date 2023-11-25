@@ -6,11 +6,8 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Float } from "@/model/Float";
   import { useTables } from "@/model/store/tables";
   import TableView from "@/component/float/TableManager/TableView.svelte";
-
-  export let float: Float;
 
   const { tables } = useTables()
 

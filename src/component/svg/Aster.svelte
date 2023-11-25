@@ -9,8 +9,7 @@
 
   import { DiceBaseColors, type DiceColor, DiceEyeColors } from "@/constant";
 
-  export let dice: string;
-  export let color: DiceColor;
+  export let color: DiceColor = "DICE_BLACK"
   export let diceSize: number;
 
   $: baseColor = DiceBaseColors[color]
