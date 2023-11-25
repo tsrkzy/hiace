@@ -137,7 +137,7 @@
             cell.value = parseInt(`${_v ?? 0}`, 10);
           } else if (dataType === ColumnDataTypes.STR) {
             cell.value = `${_v ?? ""}`;
-          } else if (dataType === ColumnDataTypes.BOOL ) {
+          } else if (dataType === ColumnDataTypes.BOOL) {
             cell.value = !!_v;
           }
         }
@@ -158,7 +158,7 @@
     <thead>
     <tr>
       {#each data.columns as col (col.id)}
-        <th>{col.label}</th>
+        <th class="column--header">{col.label}</th>
       {/each}
     </tr>
     </thead>
@@ -173,3 +173,33 @@
     </tbody>
   </table>
 {/if}
+
+
+<style lang="scss">
+  table {
+    width: 100%;
+    thead > tr > th.column--header {
+      background-color: lightcyan;
+
+      input {
+        background-color: lightcyan;
+      }
+
+      &.column--header__asc, &.column--header__desc {
+        background-color: lightsalmon;
+
+        input {
+          background-color: lightsalmon;
+        }
+      }
+    }
+
+    thead > tr > th, tbody > tr > td {
+      border: 1px solid gray;
+
+      input {
+        border: none;
+      }
+    }
+  }
+</style>

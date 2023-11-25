@@ -18,35 +18,6 @@ html {
     }
   }
 
-  table {
-    thead > tr > th.column--header {
-      background-color: lightcyan;
-
-      input {
-        background-color: lightcyan;
-      }
-
-      &.column--header__asc, &.column--header__desc {
-        background-color: lightsalmon;
-
-        input {
-          background-color: lightsalmon;
-        }
-      }
-
-    }
-
-    thead > tr > th, tbody > tr > td {
-      border: 1px solid gray;
-
-      input {
-        &[type="text"], &[type="number"] {
-          border: none;
-        }
-      }
-    }
-  }
-
   details {
     summary {
       display: list-item;
