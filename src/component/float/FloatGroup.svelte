@@ -21,13 +21,15 @@
   import ChatManager from "./ChatManager/ChatManager.svelte";
   import SoundManager from "@/component/float/SoundManager/SoundManager.svelte";
   import TableManager from "@/component/float/TableManager/TableManager.svelte";
+  import { useDices } from "@/model/store/dices";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
   const { draggedMapChipId } = useMapChips()
   const { draggedPawnId } = usePawns()
+  const { draggedDiceId } = useDices()
 
-  $: isDragging = (!$draggedBoardId) && (!$draggedMapChipId) && !($draggedPawnId)
+  $: isDragging = (!$draggedBoardId) && (!$draggedMapChipId) && !($draggedPawnId) && !($draggedDiceId)
 </script>
 
 

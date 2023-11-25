@@ -15,11 +15,12 @@
   import { touchDice, updateDice } from "@/model/service/DiceService";
   import { useBoards } from "@/model/store/boards";
   import { useRoom } from "@/model/store/room";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
+  import { usePawns } from "@/model/store/pawns";
 
   export let diceId: string;
   export let shadow: boolean = false;
 
+  const { draggedPawnId } = usePawns();
   const { dices, draggedDiceId, setDraggedDiceId } = useDices();
   const { boards } = useBoards();
   const { room } = useRoom();
@@ -41,7 +42,7 @@
     if (shadow) {
       return $draggedDiceId;
     } else {
-      return !$draggedDiceId || dragged;
+      return (!$draggedDiceId && !$draggedPawnId) || dragged;
     }
   })()
   export const onMouseDown = async (e: MouseEvent) => {
@@ -58,9 +59,8 @@
       return false;
     }
 
-    diceEl.classList.remove("token-transition");
     setDraggedDiceId(diceId)
-    hideObstaclesToDrag();
+    diceEl.classList.remove("token-transition");
 
     const downX = e.clientX;
     const downY = e.clientY;
@@ -90,7 +90,6 @@
 
 
       setDraggedDiceId("")
-      showObstaclesToDrag()
 
       diceEl.classList.add("token-transition");
       diceEl.removeEventListener("mousemove", onMove);

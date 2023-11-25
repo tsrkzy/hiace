@@ -13,7 +13,6 @@
   import { useBoards } from "@/model/store/boards";
   import { useAliases } from "@/model/store/aliases";
   import { toCSS } from "@/util/style";
-  import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
   import { DEFAULT_PAWN_IMAGE_URL } from "@/constant";
   import { isMacOS } from "@/util/agent";
 
@@ -86,8 +85,6 @@
     }
 
     setDraggedPawnId(pawnId)
-    hideObstaclesToDrag();
-
     pawnEl.classList.remove("token-transition");
 
     /* globalの座標系をboard,pawnの座標系へ変換する行列 */
@@ -121,7 +118,6 @@
       e.stopPropagation();
 
       setDraggedPawnId("")
-      showObstaclesToDrag()
 
       pawnEl.classList.add("token-transition");
 

@@ -7,16 +7,24 @@
 
 <script lang="ts">
   import { usePawns } from "@/model/store/pawns";
+  import { useBoards } from "@/model/store/boards";
+  import { useMapChips } from "@/model/store/mapChips";
+  import { useDices } from "@/model/store/dices";
 
-  const { pawnDescriptionText, pawnDescriptionSide } = usePawns()
+  const { draggedBoardId } = useBoards()
+  const { draggedMapChipId } = useMapChips()
+  const { pawnDescriptionText, pawnDescriptionSide, draggedPawnId } = usePawns()
+  const { draggedDiceId } = useDices()
 
   $: sideClassName = $pawnDescriptionSide === "left" ? "right" : "left";
   $: lines = (() => {
     return $pawnDescriptionText.split("\n")
   })()
+
+  $: isRender = (!$draggedBoardId) && (!$draggedMapChipId) && !($draggedPawnId) && !($draggedDiceId)
 </script>
 
-{#if $pawnDescriptionText}
+{#if $pawnDescriptionText && isRender }
   <div id="pawn-description" class={`pawn-description ${sideClassName}`}>
     {#each lines as line}
       <p>{line}&nbsp;</p>

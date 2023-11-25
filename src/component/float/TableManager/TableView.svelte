@@ -16,6 +16,8 @@
     , type ColData
     , type RowData
   } from "@/component/float/TableManager/tableTypes";
+  import TableTh from "@/component/float/TableManager/TableTh.svelte";
+  import TableTd from "@/component/float/TableManager/TableTd.svelte";
 
   export let tableId: string;
 
@@ -132,7 +134,7 @@
     <thead>
     <tr>
       {#each data.columns as col (col.id)}
-        <th class="column--header">{col.label}</th>
+        <TableTh col={col}></TableTh>
       {/each}
     </tr>
     </thead>
@@ -140,7 +142,7 @@
     {#each data.rows as column}
       <tr>
         {#each column.cells as cell (cell.columnId)}
-          <td>{cell.value}</td>
+          <TableTd cell={cell}></TableTd>
         {/each}
       </tr>
     {/each}
@@ -152,29 +154,7 @@
 <style lang="scss">
   table {
     width: 100%;
-
-    thead > tr > th.column--header {
-      background-color: lightcyan;
-
-      //input {
-      //  background-color: lightcyan;
-      //}
-
-      //&.column--header__asc, &.column--header__desc {
-      //  background-color: lightsalmon;
-
-        //input {
-        //  background-color: lightsalmon;
-        //}
-      //}
-    }
-
-    thead > tr > th, tbody > tr > td {
-      border: 1px solid gray;
-
-      //input {
-      //  border: none;
-      //}
-    }
+    border-collapse: collapse;
+    border-spacing: 0;
   }
 </style>
