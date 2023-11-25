@@ -5,7 +5,6 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/util/firestore";
 
@@ -20,7 +19,6 @@ export const updateDice = async (props: UpdateDiceProps) => {
   const docRef = doc(collectionRef, diceId);
   await updateDoc(docRef, criteria);
 };
-
 
 export const touchDice = async (props: { diceId: string }) => {
   const { diceId } = props;

@@ -20,6 +20,7 @@
   import ChannelManager from "./ChannelManager/ChannelManager.svelte";
   import ChatManager from "./ChatManager/ChatManager.svelte";
   import SoundManager from "@/component/float/SoundManager/SoundManager.svelte";
+  import TableManager from "@/component/float/TableManager/TableManager.svelte";
 
   const { floats } = useFloats();
   const { draggedBoardId } = useBoards()
@@ -45,7 +46,8 @@
             <BoardManager {float}/>
           {:else if float.contentId === ContentId.MAP_EDIT}
             <MapEdit {float}/>
-          {:else if float.contentId === ContentId.TABLE_VIEW}TABLE_VIEW
+          {:else if float.contentId === ContentId.TABLE_MANAGER}
+            <TableManager {float}/>
           {:else if float.contentId === ContentId.IMAGE_MANAGER}
             <ImageManager {float}/>
           {:else if float.contentId === ContentId.SOUND_MANAGER}<SoundManager {float}></SoundManager>

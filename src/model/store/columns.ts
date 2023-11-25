@@ -10,5 +10,6 @@ columns.subscribe(a => {
 export const useColumns = () => {
   return {
     setColumns: columns.set,
+    columns,
   };
 };

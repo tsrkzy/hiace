@@ -9,8 +9,10 @@ import { db } from "@/util/firestore";
 import { useDices } from "@/model/store/dices";
 import { Dice } from "@/model/Dice";
 
-const subscribeMap = new Map<string,
-  { id: string; unsubscribe: () => unknown }>();
+const subscribeMap = new Map<
+  string,
+  { id: string; unsubscribe: () => unknown }
+>();
 
 export function DiceListener() {
   const { setDices } = useDices();

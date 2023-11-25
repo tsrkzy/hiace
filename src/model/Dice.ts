@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { type DiceColor ,type DiceValue } from "@/constant";
+import { type DiceColor, type DiceValue } from "@/constant";
 
 export type DiceProps = {
   id: string;
@@ -16,7 +16,7 @@ export type DiceProps = {
   face: DiceValue;
   hidden: boolean;
   transform: string;
-  updatedAt: number|Date;
+  updatedAt: number | Date;
 };
 
 export class Dice {
@@ -84,11 +84,11 @@ export class Dice {
     this._transform = value;
   }
 
-  get updatedAt(): number|Date {
+  get updatedAt(): number | Date {
     return this._updatedAt;
   }
 
-  set updatedAt(value: number|Date) {
+  set updatedAt(value: number | Date) {
     this._updatedAt = value;
   }
 
@@ -100,32 +100,31 @@ export class Dice {
   private _face: DiceValue;
   private _hidden: boolean;
   private _transform: string;
-  private _updatedAt: number|Date;
+  private _updatedAt: number | Date;
 
   /**
    * @param {DiceProps} args
    */
   constructor(args: DiceProps) {
-    const
-      {
-        id,
-        room,
-        owner,
-        board,
-        color,
-        face,
-        hidden = false,
-        transform,
-        updatedAt,
-      } = args;
+    const {
+      id,
+      room,
+      owner,
+      board,
+      color,
+      face,
+      hidden = false,
+      transform,
+      updatedAt,
+    } = args;
     this._id = id;
-    this._room = room
-    this._owner = owner
-    this._board = board
-    this._color = color
-    this._face = face
-    this._hidden = hidden
-    this._transform = transform
-    this._updatedAt = updatedAt
+    this._room = room;
+    this._owner = owner;
+    this._board = board;
+    this._color = color;
+    this._face = face;
+    this._hidden = hidden;
+    this._transform = transform;
+    this._updatedAt = updatedAt;
   }
 }

@@ -18,6 +18,7 @@
     { id: ContentId.CHANNEL_LIST, name: ContentTitle(ContentId.CHANNEL_LIST) },
     { id: ContentId.CHAT_LIST, name: ContentTitle(ContentId.CHAT_LIST) },
     { id: ContentId.SOUND_MANAGER, name: ContentTitle(ContentId.SOUND_MANAGER) },
+    { id: ContentId.TABLE_MANAGER, name: ContentTitle(ContentId.TABLE_MANAGER) },
   ]
 
   const onContentChangeHandler = (e: Event) => {

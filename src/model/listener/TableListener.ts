@@ -27,6 +27,9 @@ export function TableListener() {
         const table = new Table({
           id: doc.id,
           name: d.name,
+          room: d.room,
+          filterColumns: d.filterColumns,
+          filterCharacters: d.filterCharacters,
         });
         tables.push(table);
       });

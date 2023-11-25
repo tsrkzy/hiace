@@ -26,7 +26,14 @@ export function ColumnListener() {
         const d = doc.data();
         const column = new Column({
           id: doc.id,
-          name: d.name,
+          room: d.room,
+          table: d.table,
+          label: d.label,
+          show: d.show,
+          dataType: d.dataType,
+          refPath: d.refPath,
+          dataMap: d.dataMap,
+          order: d.order,
         });
         columns.push(column);
       });

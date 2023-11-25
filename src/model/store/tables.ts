@@ -10,5 +10,6 @@ tables.subscribe(a => {
 export const useTables = () => {
   return {
     setTables: tables.set,
+    tables,
   };
 };
