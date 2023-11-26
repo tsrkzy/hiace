@@ -184,9 +184,12 @@
 </div>
 
 <style lang="scss">
-  pre.error {
-    color: darkred;
+  pre {
     margin: 0;
+
+    &.error {
+      color: darkred;
+    }
   }
 
   div.calc.container {
