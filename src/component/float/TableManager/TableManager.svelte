@@ -11,16 +11,16 @@
   import { useColumns } from "@/model/store/columns";
   import InputText from "@/component/input/InputText.svelte";
   import Button from "@/component/button/Button.svelte";
-  import { type ColumnDataType,ColumnDataTypes } from "@/model/Column";
+  import { type ColumnDataType, ColumnDataTypes } from "@/model/Column";
+  import { deleteColumn } from "@/model/service/ColumnService";
 
   const { tables } = useTables()
   const { columns } = useColumns()
 
   let tableId = $tables[0]?.id || "";
 
-  const onClickDeleteColumn = async (e: Event) => {
-    console.log("TableManager.onClickDeleteColumn");
-    e.stopPropagation();
+  const onClickDeleteColumn = async (columnId: string) => {
+    await deleteColumn({ columnId })
   }
   const onBlurColumnName = async (e: Event) => {
     console.log("TableManager.onBlurColumnName", e);
@@ -55,7 +55,7 @@
           {column.dataType}
         </td>
         <td>
-          <button on:click={(e) => onClickDeleteColumn(e)}>削除</button>
+          <Button handle={()=>onClickDeleteColumn( column.id)}>削除</Button>
         </td>
       </tr>
     {/each}
