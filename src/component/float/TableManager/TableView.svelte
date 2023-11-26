@@ -20,6 +20,7 @@
   import TableTd from "@/component/float/TableManager/TableTd.svelte";
 
   export let tableId: string;
+  export let debug: boolean = false;
 
   const { columns: _columns } = useColumns();
   const { characters: _characters } = useCharacters();
@@ -55,7 +56,10 @@
       refPath: "character.name",
       dataMap: {},
     };
-    colList.push(idColumn, nameColumn);
+    if (debug) {
+      colList.push(idColumn);
+    }
+    colList.push(nameColumn);
     for (let i = 0; i < columns.length; i++) {
       colList.push({
         system: false,
@@ -112,7 +116,7 @@
           if (dataType === ColumnDataTypes.INT) {
             cell.value = parseInt(`${_v ?? 0}`, 10);
           } else if (dataType === ColumnDataTypes.STR) {
-            cell.value = `${_v ?? ""}`;
+            cell.value = `${_v ?? " "}`;
           } else if (dataType === ColumnDataTypes.BOOL) {
             cell.value = !!_v;
           }

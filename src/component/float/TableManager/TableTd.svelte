@@ -6,6 +6,8 @@
   ----------------------------------------------------------------------------->
 <script lang="ts">
   import { type CellData } from "@/component/float/TableManager/tableTypes";
+  import { ColumnDataTypes } from "@/model/Column";
+  import Checkbox from "@/component/input/Checkbox.svelte";
 
   export let cell: CellData;
 
@@ -13,11 +15,20 @@
     console.log("TableTd.onClickHandler", e);
     e.stopPropagation()
   }
+
+  const onChangeHandler = (e: Event) => {
+    console.log("TableTd.onChangeHandler", e);
+    e.stopPropagation()
+  }
 </script>
 <td>
-  <div class="cell" on:click={e=>onClickHandler(e)}>
-    <span>{cell.value}</span>
-  </div>
+  {#if cell.dataType === ColumnDataTypes.BOOL}
+    <Checkbox checked={!!cell.value} label="" onChange={(e)=>onChangeHandler(e)}></Checkbox>
+  {:else }
+    <div class={`cell ${cell.system? "disabled":""}`} on:click={e=>onClickHandler(e)}>
+      <span>{cell.value}</span>
+    </div>
+  {/if}
 </td>
 
 <style lang="scss">
@@ -27,9 +38,9 @@
 
     div.cell {
       width: 100%;
-      height: 100%;
+      height:100%;
+      min-height: 1.0rem;
       cursor: pointer;
-
 
       &.disabled {
         cursor: not-allowed;

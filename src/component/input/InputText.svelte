@@ -18,3 +18,8 @@
          placeholder={placeholder}
          on:blur={(e)=>onBlur(e)}>
 </label>
+<style lang="scss">
+  input {
+    cursor: pointer;
+  }
+</style>
