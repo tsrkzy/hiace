@@ -10,6 +10,7 @@
   import { useTables } from "@/model/store/tables";
   import { ColumnDataTypes } from "@/model/Column.js";
   import StringCellEditor from "@/component/cellEditor/StringCellEditor.svelte";
+  import NumberCellEditor from "@/component/cellEditor/NumberCellEditor.svelte";
   const { cellEditorX, cellEditorY, cellEditorTarget } = useTables()
 
   $: accordionCss = (() => {
@@ -46,7 +47,7 @@
   {#if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.STR}
     <StringCellEditor></StringCellEditor>
   {:else if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.INT}
-    <p>int</p>
+    <NumberCellEditor></NumberCellEditor>
   {:else if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.BOOL}
     <p>bool</p>
   {/if}
