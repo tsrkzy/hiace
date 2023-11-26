@@ -12,10 +12,14 @@
   import InputText from "@/component/input/InputText.svelte";
   import Button from "@/component/button/Button.svelte";
   import { Column, type ColumnDataType, ColumnDataTypes } from "@/model/Column";
-  import { deleteColumn, updateColumn } from "@/model/service/ColumnService";
+  import { createColumn, deleteColumn, updateColumn } from "@/model/service/ColumnService";
+  import { useRoom } from "@/model/store/room";
 
+  const { room } = useRoom();
   const { tables } = useTables()
   const { columns } = useColumns()
+
+  $: columnSorted = $columns.sort((a, b) => a.order - b.order);
 
   let tableId = $tables[0]?.id || "";
 
@@ -35,6 +39,13 @@
 
   const onClickAddColumn = async (dataType: ColumnDataType) => {
     console.log("TableManager.onClickAddColumn", dataType);
+    await createColumn({
+      roomId: $room.id,
+      tableId,
+      label: "新しい項目",
+      dataType,
+      order: $columns.length,
+    })
   }
 </script>
 
@@ -50,7 +61,7 @@
     </tr>
     </thead>
     <tbody>
-    {#each $columns as column(column.id)}
+    {#each columnSorted as column(column.id)}
       <tr>
         <td>
           <InputText label="" value={column.label} onBlur={e=>onBlurColumnName(e, column)}></InputText>

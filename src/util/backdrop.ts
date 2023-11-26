@@ -10,5 +10,5 @@ import { hideCellEditor } from "@/model/service/CellEditorService";
 
 export const hideBackdrop = () => {
   hideContextMenu();
-  hideCellEditor()
-}
+  hideCellEditor();
+};

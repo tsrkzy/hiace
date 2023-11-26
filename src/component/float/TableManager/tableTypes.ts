@@ -34,4 +34,4 @@ export type RowData = {
 export type CellEditorTarget = {
   tableId: string;
   cellData: CellData;
-}
+};
