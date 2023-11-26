@@ -70,3 +70,5 @@ export const DiceLabels = {
   ASTER: "*",
 } as const;
 export type DiceLabel = (typeof DiceLabels)[keyof typeof DiceLabels];
+
+export const CELL_EDITOR_INPUT_ID = "cell-editor-input";

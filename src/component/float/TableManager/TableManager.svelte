@@ -50,7 +50,7 @@
 </script>
 
 <TableView {tableId} debug={false}></TableView>
-<details open>
+<details>
   <summary>項目の追加と編集</summary>
   <table>
     <thead>

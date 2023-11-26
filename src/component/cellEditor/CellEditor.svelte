@@ -8,31 +8,54 @@
 
   import { toCSS } from "@/util/style";
   import { useTables } from "@/model/store/tables";
-
+  import { ColumnDataTypes } from "@/model/Column.js";
+  import StringCellEditor from "@/component/cellEditor/StringCellEditor.svelte";
   const { cellEditorX, cellEditorY, cellEditorTarget } = useTables()
 
-  $: accordionCss = toCSS({
-    left: `${$cellEditorX + 5}px`,
-    top: `${$cellEditorY + 5}px`,
-  })
+  $: accordionCss = (() => {
+    const OFFSET = 5;
+    const { innerHeight, innerWidth } = window
+    const isWest = $cellEditorX < innerWidth / 2;
+    const isNorth = $cellEditorY < innerHeight / 2;
+    const cssObj: {
+      left?: string,
+      right?: string,
+      top?: string,
+      bottom?: string,
 
+    } = {};
+    if (isWest) {
+      cssObj.left = `${$cellEditorX + OFFSET}px`;
+    } else {
+      cssObj.right = `${innerWidth - $cellEditorX - OFFSET}px`;
+    }
+
+    if (isNorth) {
+      cssObj.top = `${$cellEditorY + OFFSET}px`;
+    } else {
+      cssObj.bottom = `${innerHeight - $cellEditorY - OFFSET}px`;
+    }
+    return toCSS(cssObj);
+  })()
+  const onClickCellEditorWindow = async (e: Event) => {
+    e.stopPropagation();
+  }
 </script>
 
-<div class={`cell-editor`} style={accordionCss}>
-  <p>tableId: {$cellEditorTarget?.tableId}</p>
-  <p>columnId: {$cellEditorTarget?.cellData.columnId}</p>
-  <p>characterId: {$cellEditorTarget?.cellData.characterId}</p>
-  <p>value: {$cellEditorTarget?.cellData.value}</p>
-  <p>dataType: {$cellEditorTarget?.cellData.dataType}</p>
+<div class={`cell-editor`} style={accordionCss} on:click={e=>onClickCellEditorWindow(e)}>
+  {#if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.STR}
+    <StringCellEditor></StringCellEditor>
+  {:else if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.INT}
+    <p>int</p>
+  {:else if $cellEditorTarget?.cellData.dataType === ColumnDataTypes.BOOL}
+    <p>bool</p>
+  {/if}
 </div>
 
 <style lang="scss">
   div.cell-editor {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 200px;
-    height: 200px;
+    padding: 1rem;
     background-color: ghostwhite;
     box-shadow: -1.5px 1.5px 8px dimgray;
   }

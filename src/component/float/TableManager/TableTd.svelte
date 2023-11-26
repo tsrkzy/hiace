@@ -9,11 +9,17 @@
   import { ColumnDataTypes } from "@/model/Column";
   import Checkbox from "@/component/input/Checkbox.svelte";
   import { useTables } from "@/model/store/tables";
+  import { tick } from "svelte";
 
   export let tableId: string;
   export let cell: CellData;
 
-  const { setCellEditorTarget, setShowCellEditor } = useTables()
+  const {
+    setCellEditorTarget,
+    setCellEditorX,
+    setCellEditorY,
+    setShowCellEditor
+  } = useTables()
 
   const onClickHandler = (e: MouseEvent, cell: CellData) => {
     console.log("TableTd.onClickHandler", e);
@@ -23,8 +29,18 @@
       console.log("ignore");
       return false;
     }
+
+    const { clientX, clientY } = e
+
     setCellEditorTarget({ tableId, cellData: cell })
+    setCellEditorX(clientX)
+    setCellEditorY(clientY)
     setShowCellEditor(true)
+
+    tick().then(()=>{
+      const editor = document.getElementById("cell-editor-input") as HTMLInputElement
+      editor.select()
+    })
   }
 
   const onChangeHandler = (e: Event,) => {
