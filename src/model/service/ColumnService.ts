@@ -5,8 +5,21 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/util/firestore";
+
+interface updateColumnProps {
+  columnId: string,
+  criteria: object;
+}
+
+export const updateColumn = async (props: updateColumnProps) => {
+  const { columnId, criteria } = props;
+  console.log("ColumnService.updateColumn", columnId, criteria);
+  const collectionRef = collection(db, "column");
+  const docRef = doc(collectionRef, columnId);
+  await updateDoc(docRef, criteria);
+}
 
 export const deleteColumn = async (props: { columnId: string }) => {
   const { columnId } = props;

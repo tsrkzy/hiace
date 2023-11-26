@@ -11,8 +11,8 @@
   import { useColumns } from "@/model/store/columns";
   import InputText from "@/component/input/InputText.svelte";
   import Button from "@/component/button/Button.svelte";
-  import { type ColumnDataType, ColumnDataTypes } from "@/model/Column";
-  import { deleteColumn } from "@/model/service/ColumnService";
+  import { Column, type ColumnDataType, ColumnDataTypes } from "@/model/Column";
+  import { deleteColumn, updateColumn } from "@/model/service/ColumnService";
 
   const { tables } = useTables()
   const { columns } = useColumns()
@@ -22,11 +22,15 @@
   const onClickDeleteColumn = async (columnId: string) => {
     await deleteColumn({ columnId })
   }
-  const onBlurColumnName = async (e: Event) => {
+  const onBlurColumnName = async (e: Event, column: Column) => {
     console.log("TableManager.onBlurColumnName", e);
     const target = e.target as HTMLInputElement;
-    const newColumnName = target.value;
-    console.log(newColumnName);
+    const newColumnName = (target.value || "").trim();
+    if (!newColumnName || newColumnName === column.label) {
+      target.value = column.label;
+      return;
+    }
+    await updateColumn({ columnId: column.id, criteria: { label: newColumnName } });
   }
 
   const onClickAddColumn = async (dataType: ColumnDataType) => {
@@ -49,7 +53,7 @@
     {#each $columns as column(column.id)}
       <tr>
         <td>
-          <InputText label="" value={column.label} onBlur={e=>onBlurColumnName(e)}></InputText>
+          <InputText label="" value={column.label} onBlur={e=>onBlurColumnName(e, column)}></InputText>
         </td>
         <td>
           {column.dataType}
