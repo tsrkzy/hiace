@@ -143,10 +143,10 @@
     </tr>
     </thead>
     <tbody>
-    {#each data.rows as column}
+    {#each data.rows as row(row.characterId)}
       <tr>
-        {#each column.cells as cell (cell.columnId)}
-          <TableTd cell={cell}></TableTd>
+        {#each row.cells as cell (cell.columnId)}
+          <TableTd tableId={tableId} cell={cell}></TableTd>
         {/each}
       </tr>
     {/each}

@@ -30,3 +30,8 @@ export type RowData = {
   characterId: string;
   cells: CellData[];
 };
+
+export type CellEditorTarget = {
+  tableId: string;
+  cellData: CellData;
+}

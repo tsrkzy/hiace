@@ -10,6 +10,8 @@
   import { useAuth } from "@/model/store/auth";
   import { useRoom } from "@/model/store/room";
   import { useUsers } from "@/model/store/users";
+  import { dummyContextMenu } from "@/model/service/ContextMenuService";
+  import { useTables } from "@/model/store/tables";
   import "@/model/store/localConfig"
 
   /* listener */
@@ -43,8 +45,8 @@
   import FloatOpener from "@/component/float/FloatOpener.svelte";
   import PawnDescription from "@/component/PawnDescription.svelte";
   import ContextMenu from "@/component/contextMenu/ContextMenu.svelte";
-  import { dummyContextMenu } from "@/model/service/ContextMenuService";
-  import AudioControler from "@/component/audio/AudioControler.svelte";
+  import AudioController from "@/component/audio/AudioController.svelte";
+  import CellEditorWindow from "@/component/cellEditor/CellEditorWindow.svelte";
 
   export let roomId = "";
 
@@ -52,6 +54,7 @@
   const { isLoggedIn, email } = useAuth();
   const { room, userIdForRoomState, setUserIdForRoomState } = useRoom();
   const { myUserId } = useUsers();
+  const { setShowCellEditor } = useTables();
 
 
   /* listener */
@@ -140,6 +143,7 @@
 
   export const tableEditor = () => {
     console.log("Room.tableEditor");
+    setShowCellEditor(true)
   }
 
 </script>
@@ -150,7 +154,9 @@
       <!-- Google認証がまだならGoogle認証ボタンのみ表示 -->
       <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
     {:else if noRequest}
-      <button on:click={setState("WAITING")}>入室リクエスト</button>
+      <button on:click={setState("WAITING")}
+      >入室リクエスト
+      </button>
     {:else if isKicked}
       <p>キックされました</p>
     {:else if isJoined}
@@ -158,11 +164,11 @@
       <PawnDescription></PawnDescription>
       <div class="menu">
         <FloatOpener></FloatOpener>
-        <AudioControler></AudioControler>
+        <AudioController></AudioController>
       </div>
       <FloatGroup></FloatGroup>
       <ContextMenu></ContextMenu>
-      <!--      <TableEditor></TableEditor>-->
+      <CellEditorWindow></CellEditorWindow>
     {:else if isWaiting}
       <p>リクエスト承認待ち</p>
     {/if}

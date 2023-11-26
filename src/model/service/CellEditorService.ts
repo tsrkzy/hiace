@@ -4,11 +4,12 @@
  - tsrmix@gmail.com                                                           -
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
+import { useTables } from "@/model/store/tables";
 
-import { hideContextMenu } from "@/model/service/ContextMenuService";
-import { hideCellEditor } from "@/model/service/CellEditorService";
+const { setShowCellEditor, setCellEditorTarget } = useTables();
 
-export const hideBackdrop = () => {
-  hideContextMenu();
-  hideCellEditor()
-}
+export const hideCellEditor = () => {
+  console.log("CellEditorService.hideCellEditor");
+  setShowCellEditor(false);
+  setCellEditorTarget(null);
+};
