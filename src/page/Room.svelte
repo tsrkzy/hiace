@@ -138,6 +138,10 @@
     }
   }
 
+  export const tableEditor = () => {
+    console.log("Room.tableEditor");
+  }
+
 </script>
 
 <main>
@@ -150,14 +154,15 @@
     {:else if isKicked}
       <p>キックされました</p>
     {:else if isJoined}
-      <PawnDescription></PawnDescription>
       <SvgBoard></SvgBoard>
+      <PawnDescription></PawnDescription>
       <div class="menu">
         <FloatOpener></FloatOpener>
         <AudioControler></AudioControler>
       </div>
       <FloatGroup></FloatGroup>
       <ContextMenu></ContextMenu>
+      <!--      <TableEditor></TableEditor>-->
     {:else if isWaiting}
       <p>リクエスト承認待ち</p>
     {/if}
@@ -193,6 +198,7 @@
     <ChannelList></ChannelList>
     <ImageSourceList></ImageSourceList>
     <button on:click={contextMenu}>context</button>
+    <button on:click={tableEditor}>editor</button>
 
   </div>
   <NoticeGroup></NoticeGroup>
