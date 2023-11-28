@@ -21,6 +21,7 @@
   import ChatManager from "./ChatManager/ChatManager.svelte";
   import SoundManager from "@/component/float/SoundManager/SoundManager.svelte";
   import TableManager from "@/component/float/TableManager/TableManager.svelte";
+  import NoteManager from "@/component/float/NoteManager/NoteManager.svelte";
   import { useDices } from "@/model/store/dices";
 
   const { floats } = useFloats();
@@ -58,7 +59,8 @@
             <RoomManager {float}/>
           {:else if float.contentId === ContentId.CHANNEL_LIST}
             <ChannelManager {float}/>
-          {:else if float.contentId === ContentId.NOTE_MANAGER}NOTE_MANAGER
+          {:else if float.contentId === ContentId.NOTE_MANAGER}
+            <NoteManager></NoteManager>
           {:else if float.contentId === ContentId.ISSUE_WRITER}ISSUE_WRITER
           {:else }<h1>content not found</h1>
           {/if}

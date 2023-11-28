@@ -36,7 +36,7 @@ export const ContentTitle = (contentId: ContentId): string => {
       [ContentId.SOUND_MANAGER]: "BGM管理",
       [ContentId.ROOM_MANAGER]: "ルーム",
       [ContentId.CHANNEL_LIST]: "チャンネル一覧",
-      [ContentId.NOTE_MANAGER]: "NOTE_MANAGER",
+      [ContentId.NOTE_MANAGER]: "共有メモ",
       [ContentId.ISSUE_WRITER]: "ISSUE_WRITER",
     }[contentId] || "ERROR: CANNOT GET CONTENT TITLE"
   );

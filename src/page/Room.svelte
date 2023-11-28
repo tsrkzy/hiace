@@ -29,6 +29,7 @@
   import { ImageSourceListener } from "@/model/listener/ImageSourceListener";
   import { SoundListener } from "@/model/listener/SoundListener";
   import { TableListener } from "@/model/listener/TableListener";
+  import { NoteListener } from "@/model/listener/NoteListener";
 
   /* debug components */
   import UserList from "@/component/debug/UserList.svelte";
@@ -72,6 +73,7 @@
   const { setImageSourceListener } = ImageSourceListener();
   const { setSoundListener } = SoundListener();
   const { setTableListener } = TableListener();
+  const { setNoteListener } = NoteListener();
 
   $: state = "NOT_AUTHORIZED";
   $: isJoined = state === "JOINED"
@@ -124,6 +126,7 @@
     setImageSourceListener(roomId)
     setSoundListener(roomId)
     setTableListener(roomId)
+    setNoteListener(roomId)
     new Socket(roomId, $myUserId);
   }
 

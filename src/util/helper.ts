@@ -70,3 +70,11 @@ export function cleanText(str: string) {
     .replace(/"\n/g, "\n") // 行末の二重引用符を削除
     .replace(/\n{3,}/, "\n");
 }
+
+export function yyyymmdd() {
+  const d = new Date();
+  const yyyy = `${d.getFullYear()}`.padStart(4, "0");
+  const mm = `${d.getMonth() + 1}`.padStart(2, "0");
+  const dd = `${d.getDate()}`.padStart(2, "0");
+  return `${yyyy}${mm}${dd}`;
+}
