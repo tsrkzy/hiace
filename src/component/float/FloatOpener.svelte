@@ -20,6 +20,7 @@
     { id: ContentId.SOUND_MANAGER, name: ContentTitle(ContentId.SOUND_MANAGER) },
     { id: ContentId.TABLE_MANAGER, name: ContentTitle(ContentId.TABLE_MANAGER) },
     { id: ContentId.NOTE_MANAGER, name: ContentTitle(ContentId.NOTE_MANAGER) },
+    { id: ContentId.ISSUE_WRITER, name: ContentTitle(ContentId.ISSUE_WRITER) },
   ]
 
   const onContentChangeHandler = (e: Event) => {

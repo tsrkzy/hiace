@@ -22,6 +22,7 @@
   import SoundManager from "@/component/float/SoundManager/SoundManager.svelte";
   import TableManager from "@/component/float/TableManager/TableManager.svelte";
   import NoteManager from "@/component/float/NoteManager/NoteManager.svelte";
+  import IssueWriter from "@/component/float/IssueWriter/IssueWriter.svelte";
   import { useDices } from "@/model/store/dices";
 
   const { floats } = useFloats();
@@ -61,7 +62,8 @@
             <ChannelManager {float}/>
           {:else if float.contentId === ContentId.NOTE_MANAGER}
             <NoteManager></NoteManager>
-          {:else if float.contentId === ContentId.ISSUE_WRITER}ISSUE_WRITER
+          {:else if float.contentId === ContentId.ISSUE_WRITER}
+            <IssueWriter></IssueWriter>
           {:else }<h1>content not found</h1>
           {/if}
         </div>
