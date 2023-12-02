@@ -8,6 +8,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { octokit } from "@/util/octokit";
+  import { createNotice } from "@/model/service/NoticeService";
+
+  let issueType = "bug";
+  let title = "";
+  let description = "";
 
   interface GithubIssue {
     html_url: string;
@@ -17,21 +22,40 @@
 
   let issues: GithubIssue[] = []
 
-  const onClickSubmit = () => {
-    console.log("IssueWriter.onClickSubmit");
-    // const title = this.title;
-    // const body = this.issueJson;
-    // const labels = [CATEGORY_RAW[this.category]].filter((l) => !!l);
-    // await octokit.request("POST /repos/{owner}/{repo}/issues", {
-    //   owner: "tsrkzy",
-    //   repo: "hiace",
-    //   title,
-    //   body,
-    //   labels,
-    // });
+  const onClickSubmit = async () => {
+    const body = `${issueType}:\n\`\`\`${description}\`\`\``;
+    await octokit.request("POST /repos/{owner}/{repo}/issues", {
+      owner: "tsrkzy",
+      repo: "hiace",
+      title,
+      body,
+    });
+
+    title = "";
+    description = "";
+    createNotice("不具合・要望を送信しました")
+
+    await reloadIssues();
   }
 
-  onMount(async () => {
+  const onChangeIssueType = (e: Event) => {
+    e.stopPropagation();
+    const target = e.target as HTMLInputElement;
+    issueType = target.value;
+  }
+  const onInputTitle = (e: Event) => {
+    e.stopPropagation();
+    const target = e.target as HTMLInputElement;
+    title = target.value.trim();
+  }
+
+  const onInputDescription = (e: Event) => {
+    e.stopPropagation();
+    const target = e.target as HTMLInputElement;
+    description = target.value.trim();
+  }
+
+  const reloadIssues = async () => {
     const { data = [] } = await octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: "tsrkzy",
       repo: "hiace",
@@ -41,6 +65,10 @@
       per_page: 40,
     });
     issues = data;
+  }
+
+  onMount(async () => {
+    await reloadIssues()
   })
 </script>
 
@@ -48,15 +76,31 @@
 <fieldset>
   <legend>報告内容</legend>
   <label>
-    <input type="radio" name="issue_type" value="bug" checked>
+    <input
+        type="radio"
+        name="issue_type"
+        value="bug"
+        on:change={e=>onChangeIssueType(e)}
+        checked>
     <span>不具合</span>
   </label>
   <label>
-    <input type="radio" name="issue_type" value="request">
+    <input
+        type="radio"
+        name="issue_type"
+        value="request"
+        on:change={e=>onChangeIssueType(e)}
+    >
     <span>要望</span>
   </label><br/>
-  <input type="text" placeholder="タイトル"> <br/>
-  <textarea placeholder="内容"></textarea><br/>
+  <input type="text" placeholder="タイトル"
+         value={title}
+         on:input={e=>onInputTitle(e)}
+  > <br/>
+  <textarea placeholder="内容"
+            value={description}
+            on:input={e=>onInputDescription(e)  }
+  ></textarea><br/>
   <button on:click={()=>onClickSubmit()}>送信</button>
 </fieldset>
 <details open>
