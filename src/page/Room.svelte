@@ -75,6 +75,10 @@
   const { setTableListener } = TableListener();
   const { setNoteListener } = NoteListener();
 
+  /* debug */
+   let debug = false;
+  /* debug */
+
   $: state = "NOT_AUTHORIZED";
   $: isJoined = state === "JOINED"
   $: isKicked = state === "KICKED"
@@ -176,40 +180,42 @@
       <p>リクエスト承認待ち</p>
     {/if}
   </div>
-  <div style="position:absolute;top:0;right:0;width:50vw;user-select: unset;background-color: lightgray;">
-    <details>
-      <summary>Auth</summary>
-      <h5>userIdForRoomState: {$userIdForRoomState}</h5>
-      <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
-      <p>isLoggedIn: {$isLoggedIn}</p>
-      <button on:click={setState("KICKED")}>KICKED</button>
-      <button on:click={setState("JOINED")}>JOINED</button>
-      <button on:click={setState("WAITING")}>WAITING</button>
-      <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
-      {#if $isLoggedIn}
-        <p>email: {$email}</p>
-      {/if}
-    </details>
-    <details>
-      <summary>Me</summary>
-      me.id: {$myUserId}
-    </details>
-    <details>
-      <summary>Room</summary>
-      <p>roomId: {roomId}</p>
-      <p>roomState: {state}</p>
-      <p>requests: {$room.requests}</p>
-      <p>users: {$room.users}</p>
-    </details>
-    <UserList></UserList>
-    <CharacterList></CharacterList>
-    <BoardList></BoardList>
-    <ChannelList></ChannelList>
-    <ImageSourceList></ImageSourceList>
-    <button on:click={contextMenu}>context</button>
-    <button on:click={tableEditor}>editor</button>
+  {#if debug}
+    <div style="position:absolute;top:0;right:0;width:50vw;user-select: unset;background-color: lightgray;">
+      <details>
+        <summary>Auth</summary>
+        <h5>userIdForRoomState: {$userIdForRoomState}</h5>
+        <GoogleLogInButton cb={()=>setRoomListener(roomId)}></GoogleLogInButton>
+        <p>isLoggedIn: {$isLoggedIn}</p>
+        <button on:click={setState("KICKED")}>KICKED</button>
+        <button on:click={setState("JOINED")}>JOINED</button>
+        <button on:click={setState("WAITING")}>WAITING</button>
+        <button on:click={setState("NO_REQUEST")}>NO_REQUEST</button>
+        {#if $isLoggedIn}
+          <p>email: {$email}</p>
+        {/if}
+      </details>
+      <details>
+        <summary>Me</summary>
+        me.id: {$myUserId}
+      </details>
+      <details>
+        <summary>Room</summary>
+        <p>roomId: {roomId}</p>
+        <p>roomState: {state}</p>
+        <p>requests: {$room.requests}</p>
+        <p>users: {$room.users}</p>
+      </details>
+      <UserList></UserList>
+      <CharacterList></CharacterList>
+      <BoardList></BoardList>
+      <ChannelList></ChannelList>
+      <ImageSourceList></ImageSourceList>
+      <button on:click={contextMenu}>context</button>
+      <button on:click={tableEditor}>editor</button>
 
-  </div>
+    </div>
+  {/if}
   <NoticeGroup></NoticeGroup>
 </main>
 
