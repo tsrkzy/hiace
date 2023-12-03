@@ -9,10 +9,11 @@
   import { useMapChips } from "@/model/store/mapChips";
   import { useImageSources } from "@/model/store/imageSources";
   import { useBoards } from "@/model/store/boards";
-  // import { hideObstaclesToDrag, showObstaclesToDrag } from "@/util/drag";
   import { toCSS } from "@/util/style";
   import { updateMapChip } from "@/model/service/MapChipService";
   import { DEFAULT_MAP_IMAGE_HEIGHT, DEFAULT_MAP_IMAGE_URL, DEFAULT_MAP_IMAGE_WIDTH } from "@/constant";
+  import { isContextMenu } from "@/util/agent";
+  import { showMapChipContextMenu } from "@/model/service/ContextMenu/MapChip";
 
   export let mapChipId: string = "";
 
@@ -44,8 +45,16 @@
 
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgMap.onMouseDown");
+
     if (!mapChip) {
       return;
+    }
+
+    if (isContextMenu(e)) {
+      e.preventDefault()
+      e.stopPropagation();
+      showMapChipContextMenu(e, mapChipId);
+      return false;
     }
 
     if (mapChip?.dragLock) {

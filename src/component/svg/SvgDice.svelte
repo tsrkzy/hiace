@@ -16,6 +16,8 @@
   import { useBoards } from "@/model/store/boards";
   import { useRoom } from "@/model/store/room";
   import { usePawns } from "@/model/store/pawns";
+  import { isContextMenu } from "@/util/agent";
+  import { showDiceContextMenu } from "@/model/service/ContextMenu/Dice";
 
   export let diceId: string;
   export let shadow: boolean = false;
@@ -50,6 +52,10 @@
     e.stopPropagation()
     e.preventDefault()
 
+    if (isContextMenu(e)) {
+      showDiceContextMenu(e, diceId)
+      return false;
+    }
 
     const diceEl = document.getElementById(`dice_${diceId}`) as HTMLElement&SVGGElement
     const boardEl = document.getElementById(`board_${activeBoard?.id}`) as HTMLElement&SVGGElement;

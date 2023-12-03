@@ -13,9 +13,10 @@
   import SvgMapChip from "@/component/svg/SvgMapChip.svelte";
   import SvgPawn from "@/component/svg/SvgPawn.svelte";
   import { toCSS } from "@/util/style";
-  import { isMacOS } from "@/util/agent";
+  import { isContextMenu, isMacOS } from "@/util/agent";
   import SvgDice from "@/component/svg/SvgDice.svelte";
   import { useDices } from "@/model/store/dices";
+  import { showBoardContextMenu } from "@/model/service/ContextMenu/Board";
 
   const { activeBoard, setDraggedBoardId, draggedBoardId } = useBoards()
   const { mapChips, draggedMapChipId } = useMapChips()
@@ -29,12 +30,23 @@
   $: boardStyleString = toCSS({ transform: `${transformMatrix}` });
   $: isDraggingMapChipOrBoard = $draggedMapChipId || $draggedBoardId;
 
+
   const onMouseDown = (e: MouseEvent) => {
-    console.log("SvgBoard.onMouseDown");
     e.stopPropagation();
     e.preventDefault();
 
-    setDraggedBoardId($activeBoard?.id || "");
+    if (!$activeBoard) {
+      return false;
+    }
+
+    if (isContextMenu(e)) {
+      showBoardContextMenu(e, $activeBoard.id);
+      return false;
+    }
+
+
+
+    setDraggedBoardId($activeBoard.id || "");
 
     const elSvg = document.getElementById("svg-table") as HTMLElement;
     elSvg.classList.add("drag");
@@ -43,7 +55,7 @@
     const downY = e.clientY;
 
     /* boardの座標系をglobalへ変換する行列 */
-    const boardEl = document.getElementById(`board_${$activeBoard?.id}`) as HTMLElement&SVGGElement;
+    const boardEl = document.getElementById(`board_${$activeBoard.id}`) as HTMLElement&SVGGElement;
     const ctmBoard = boardEl.getCTM() as DOMMatrix
 
     const onMove = (e: MouseEvent) => {

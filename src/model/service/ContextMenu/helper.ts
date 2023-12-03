@@ -5,18 +5,13 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-/**
- * ブラウザがMacOSならtrueを返す
- */
-export const isMacOS = (): boolean => {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf("mac") > 0 && ua.indexOf("os") > 0;
-};
+import { useContextMenu } from "@/model/store/contextMenu";
 
-/**
- * MouseEventを引数にとり、それが右クリックならtrueを返す
- * @param {MouseEvent} e
- */
-export const isContextMenu = (e: MouseEvent): boolean => {
-  return e.button === 2 || e.ctrlKey;
+const { setContextMenuX, setContextMenuY, setShowContextMenu } =
+  useContextMenu();
+
+export const showContextMenuByMouseCursor = (e: MouseEvent) => {
+  setContextMenuX(e.pageX);
+  setContextMenuY(e.pageY);
+  setShowContextMenu(true);
 };

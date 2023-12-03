@@ -14,7 +14,8 @@
   import { useAliases } from "@/model/store/aliases";
   import { toCSS } from "@/util/style";
   import { DEFAULT_PAWN_IMAGE_URL } from "@/constant";
-  import { isMacOS } from "@/util/agent";
+  import { isContextMenu, isMacOS } from "@/util/agent";
+  import { showPawnContextMenu } from "@/model/service/ContextMenu/Pawn";
 
   export let pawnId: string = "";
   export let shadow: boolean = false;
@@ -72,6 +73,10 @@
     e.stopPropagation();
     e.preventDefault();
 
+    if (isContextMenu(e)) {
+      showPawnContextMenu(e, pawnId)
+      return false;
+    }
 
     const downX = e.clientX;
     const downY = e.clientY;
