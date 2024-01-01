@@ -8,42 +8,49 @@
 import { ContextMenuItem } from "@/model/ContextMenu";
 import { showContextMenuByMouseCursor } from "@/model/service/ContextMenu/helper";
 import { useContextMenu } from "@/model/store/contextMenu";
+import { openFloat } from "@/model/service/FloatService";
+import { ContentId } from "@/model/Float";
 
 const { setContextMenuItems } = useContextMenu();
 
-export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
+export const showPawnContextMenu = (e: MouseEvent, pawnId: string, characterId: string) => {
   console.log("ContextMenuService.showPawnContextMenu", e, pawnId);
   setContextMenuItems([
-    new ContextMenuItem({
-      text: "コマを原点に戻す",
-      id: `reset_pawn_${pawnId}`,
-      callback: () => {},
-    }),
+    // new ContextMenuItem({
+    //   text: "コマを原点に戻す",
+    //   id: `reset_pawn_${pawnId}`,
+    //   callback: () => {},
+    // }),
     new ContextMenuItem({
       text: "キャラクタの編集",
-      id: `edit_pawn_character_${pawnId}`,
-      callback: () => {},
-    }),
-
-    new ContextMenuItem({
-      text: "キャラクタを複製する",
-      id: `copy_character_${pawnId}`,
-      callback: () => {},
-    }),
-    new ContextMenuItem({
-      text: "キャラクタを控室へ隠す",
-      id: `archive_character_${pawnId}`,
-      callback: () => {},
+      id: `edit_pawn_character_${characterId}`,
+      callback: () => {
+        openFloat(ContentId.CHARACTER_EDIT, { args: { characterId } })
+      },
     }),
     new ContextMenuItem({
       text: "コマを複製する",
       id: `copy_pawn_${pawnId}`,
-      callback: () => {},
+      callback: () => {
+      },
     }),
     new ContextMenuItem({
       text: "コマの削除",
       id: `delete_pawn_${pawnId}`,
-      callback: () => {},
+      callback: () => {
+      },
+    }),
+    new ContextMenuItem({
+      text: "キャラクタを複製する",
+      id: `copy_character_${pawnId}`,
+      callback: () => {
+      },
+    }),
+    new ContextMenuItem({
+      text: "キャラクタを控室へ隠す",
+      id: `archive_character_${pawnId}`,
+      callback: () => {
+      },
     }),
     new ContextMenuItem({
       text: "コマの大きさを変更する",
@@ -58,7 +65,8 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
     new ContextMenuItem({
       text: "コマの重ね順を一番下にする",
       id: `send_to_back_${pawnId}`,
-      callback: () => {},
+      callback: () => {
+      },
     }),
   ]);
 

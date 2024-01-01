@@ -66,7 +66,7 @@
 
   const onMouseDown = (e: MouseEvent) => {
     console.log("SvgPawn.onMouseDown", e);
-    if (!pawn || shadow) {
+    if (!pawn || !character || shadow) {
       return;
     }
 
@@ -74,7 +74,7 @@
     e.preventDefault();
 
     if (isContextMenu(e)) {
-      showPawnContextMenu(e, pawnId)
+      showPawnContextMenu(e, pawnId, character.id)
       return false;
     }
 
