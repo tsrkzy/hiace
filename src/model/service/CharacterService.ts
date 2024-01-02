@@ -234,3 +234,22 @@ export const updateCharacter = async (props: UpdateCharacterProps) => {
   const docRef = doc(collectionRef, characterId);
   await updateDoc(docRef, criteria);
 };
+
+export const increasePawnSize = async (props: { characterId: string }) => {
+  const character = await fetchCharacter(props.characterId);
+  const { pawnSize: _pawnSize } = character;
+  const pawnSize = _pawnSize + 1;
+  await updateCharacter({
+    characterId: props.characterId,
+    criteria: { pawnSize },
+  });
+};
+export const decreasePawnSize = async (props: { characterId: string }) => {
+  const character = await fetchCharacter(props.characterId);
+  const { pawnSize: _pawnSize } = character;
+  const pawnSize = _pawnSize > 1 ? _pawnSize - 1 : 1;
+  await updateCharacter({
+    characterId: props.characterId,
+    criteria: { pawnSize },
+  });
+};

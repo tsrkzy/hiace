@@ -16,6 +16,8 @@ import { clonePawn, deletePawn } from "@/model/service/PawnService";
 import { Pawn } from "@/model/Pawn";
 import {
   cloneCharacter,
+  decreasePawnSize,
+  increasePawnSize,
   updateCharacter,
 } from "@/model/service/CharacterService";
 import { useUsers } from "@/model/store/users";
@@ -79,13 +81,13 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
       children: [
         new ContextMenuItem({
           text: "小さくする",
-          id: `resize_pawn_small_${pawnId}`,
-          callback: () => {},
+          id: `resize_pawn_small_${characterId}`,
+          callback: () => decreasePawnSize({ characterId }),
         }),
         new ContextMenuItem({
           text: "大きくする",
-          id: `resize_pawn_large_${pawnId}`,
-          callback: () => {},
+          id: `resize_pawn_large_${characterId}`,
+          callback: () => increasePawnSize({ characterId }),
         }),
       ],
     }),
