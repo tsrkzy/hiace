@@ -81,6 +81,27 @@ export const createCharacter = async (
   });
 };
 
+export const fetchCharacter = async (
+  characterId: string,
+): Promise<Character> => {
+  const characterDoc = await getDoc(doc(db, "character", characterId));
+  if (!characterDoc.exists()) {
+    throw new Error(`Character ${characterId} not found`);
+  }
+  const c = characterDoc.data();
+  return new Character({
+    id: characterDoc.id,
+    name: c.name,
+    room: c.room,
+    owner: c.owner,
+    activeAlias: c.activeAlias,
+    chatPosition: c.chatPosition,
+    pawnSize: c.pawnSize,
+    showOnInitiative: c.showOnInitiative,
+    text: c.text,
+  });
+};
+
 export const createCharacterWithoutAlias = async (
   props: CreateCharacterProps,
 ) => {
@@ -152,12 +173,16 @@ export const cloneCharacter = async (props: {
   userId: string;
 }) => {
   const { characterId, userId } = props;
-  const collectionRef = collection(db, "character");
-  const docRef = doc(collectionRef, characterId);
-  const d = await getDoc(docRef);
-  const c = d.data() as Character;
-  const { name, room, text, showOnInitiative, chatPosition, pawnSize } = c;
-  const { id: srcCharacterId } = docRef;
+  const c = await fetchCharacter(characterId);
+  const {
+    id: srcCharacterId,
+    name,
+    room,
+    text,
+    showOnInitiative,
+    chatPosition,
+    pawnSize,
+  } = c;
 
   /* characterの複製 */
   const newCharacter = await createCharacterWithoutAlias({

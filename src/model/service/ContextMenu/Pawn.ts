@@ -14,6 +14,11 @@ import { ContentId } from "@/model/Float";
 import { usePawns } from "@/model/store/pawns";
 import { clonePawn, deletePawn } from "@/model/service/PawnService";
 import { Pawn } from "@/model/Pawn";
+import {
+  cloneCharacter,
+  updateCharacter,
+} from "@/model/service/CharacterService";
+import { useUsers } from "@/model/store/users";
 
 const { setContextMenuItems } = useContextMenu();
 
@@ -24,7 +29,9 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
   const pawn = pawns.find(p => p.id === pawnId) as Pawn;
   const { character: characterId } = pawn;
 
-  console.log("ContextMenuService.showPawnContextMenu", e, pawnId);
+  const { myUserId } = useUsers();
+  const userId = get(myUserId);
+
   setContextMenuItems([
     new ContextMenuItem({
       text: "キャラクタの編集",
@@ -49,13 +56,22 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
     }),
     new ContextMenuItem({
       text: "キャラクタを複製する",
-      id: `copy_character_${characterId}`,
-      callback: () => {},
+      id: `clone_character_${characterId}`,
+      callback: async () => {
+        await cloneCharacter({ characterId, userId });
+      },
     }),
     new ContextMenuItem({
       text: "キャラクタを控室へ隠す",
       id: `archive_character_${characterId}`,
-      callback: () => {},
+      callback: async () => {
+        await updateCharacter({
+          characterId,
+          criteria: {
+            archived: true,
+          },
+        });
+      },
     }),
     new ContextMenuItem({
       text: "コマの大きさを変更する",
