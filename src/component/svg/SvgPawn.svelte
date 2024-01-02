@@ -74,7 +74,7 @@
     e.preventDefault();
 
     if (isContextMenu(e)) {
-      showPawnContextMenu(e, pawnId, character.id)
+      showPawnContextMenu(e, pawnId)
       return false;
     }
 

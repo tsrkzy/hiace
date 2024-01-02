@@ -5,6 +5,7 @@ import {
   writeBatch,
   query,
   where,
+  getDoc,
   getDocs,
   deleteDoc,
   updateDoc,
@@ -34,7 +35,6 @@ export const createPawn = async (props: CreatePawnProps) => {
     transform: `${transform ?? new DOMMatrix()}`,
     updatedAt: Date.now(),
   };
-
   const collectionRef = collection(db, "pawn");
   const docRef = doc(collectionRef);
   await setDoc(docRef, p);
@@ -49,6 +49,36 @@ export const createPawn = async (props: CreatePawnProps) => {
     image: p.image,
     character: p.character,
     transform: p.transform,
+  });
+};
+
+export const fetchPawn = async (pawnId: string): Promise<Pawn> => {
+  const pawnDoc = await getDoc(doc(db, "pawn", pawnId));
+  if (!pawnDoc.exists()) {
+    throw new Error(`Pawn ${pawnId} not found`);
+  }
+  const p = pawnDoc.data();
+  return new Pawn({
+    id: pawnDoc.id,
+    room: p.room,
+    owner: p.owner,
+    board: p.board,
+    image: p.image,
+    character: p.character,
+    transform: p.transform,
+  });
+};
+
+export const clonePawn = async (props: { pawnId: string }) => {
+  const { pawnId } = props;
+  const sourcePawn = await fetchPawn(pawnId);
+  return await createPawn({
+    roomId: sourcePawn.room,
+    userId: sourcePawn.owner,
+    boardId: sourcePawn.board,
+    imageId: sourcePawn.image,
+    characterId: sourcePawn.character,
+    transform: sourcePawn.transform,
   });
 };
 
