@@ -1,4 +1,4 @@
-import { collection, setDoc, doc, deleteDoc } from "firebase/firestore";
+import { collection, setDoc, doc, deleteDoc, getDoc } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { Board } from "@/model/Board";
 import { deleteMapChipByBoard } from "@/model/service/MapChipService";
@@ -21,6 +21,19 @@ export const createBoard = async (props: {
   const { id } = docRef;
   return new Board({
     id,
+    room: b.room,
+    owner: b.owner,
+  });
+};
+
+export const fetchBoard = async (boardId: string): Promise<Board> => {
+  const boardDoc = await getDoc(doc(db, "board", boardId));
+  if (!boardDoc.exists()) {
+    throw new Error(`Board ${boardId} not found`);
+  }
+  const b = boardDoc.data();
+  return new Board({
+    id: boardDoc.id,
     room: b.room,
     owner: b.owner,
   });

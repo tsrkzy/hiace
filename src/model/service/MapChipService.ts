@@ -8,6 +8,7 @@ import {
   where,
   getDocs,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { MapChip } from "@/model/MapChip";
@@ -74,6 +75,28 @@ export const createMapChip = async (
   const { id } = docRef;
   return new MapChip({
     id,
+    room: m.room,
+    board: m.board,
+    owner: m.owner,
+    image: m.image,
+    backgroundColor: m.backgroundColor,
+    offsetX: m.offsetX,
+    offsetY: m.offsetY,
+    scalePp: m.scalePp,
+    dragLock: m.dragLock,
+    transform: m.transform,
+    grid: m.grid,
+  });
+};
+
+export const fetchMapChip = async (mapChipId: string): Promise<MapChip> => {
+  const mapChipDoc = await getDoc(doc(db, "map", mapChipId));
+  if (!mapChipDoc.exists()) {
+    throw new Error(`MapChip ${mapChipId} not found`);
+  }
+  const m = mapChipDoc.data();
+  return new MapChip({
+    id: mapChipDoc.id,
     room: m.room,
     board: m.board,
     owner: m.owner,
