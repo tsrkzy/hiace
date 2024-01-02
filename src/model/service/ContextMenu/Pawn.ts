@@ -12,7 +12,11 @@ import { useContextMenu } from "@/model/store/contextMenu";
 import { openFloat } from "@/model/service/FloatService";
 import { ContentId } from "@/model/Float";
 import { usePawns } from "@/model/store/pawns";
-import { clonePawn, deletePawn } from "@/model/service/PawnService";
+import {
+  clonePawn,
+  deletePawn,
+  pawnToBottom,
+} from "@/model/service/PawnService";
 import { Pawn } from "@/model/Pawn";
 import {
   cloneCharacter,
@@ -92,7 +96,7 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
       ],
     }),
     new ContextMenuItem({
-      text: "線を引く/消す",
+      text: "線を引く/消す(未実装)",
       id: `manage_line_${pawnId}`,
       children: pawnIdList
         .filter(_pawnId => _pawnId !== pawnId)
@@ -102,7 +106,7 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
               text: `${_pawnId}へ引く`,
               id: `manage_line_${pawnId}_to_${_pawnId}`,
               callback: () => {
-                console.log("manage_line", pawnId, _pawnId);
+                console.log("manage_line @TODO", pawnId, _pawnId);
               },
             }),
         ),
@@ -110,7 +114,9 @@ export const showPawnContextMenu = (e: MouseEvent, pawnId: string) => {
     new ContextMenuItem({
       text: "コマの重ね順を一番下にする",
       id: `send_to_back_${pawnId}`,
-      callback: () => {},
+      callback: async () => {
+        await pawnToBottom({ pawnId });
+      },
     }),
   ]);
 

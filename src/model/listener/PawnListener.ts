@@ -42,6 +42,7 @@ export function PawnListener() {
           image: d.image,
           character: d.character,
           transform: d.transform,
+          updatedAt: d.updatedAt,
         });
 
         /* コンポーネントのmap機能がvueと逆なので、重ね順序をここで入れ替える */

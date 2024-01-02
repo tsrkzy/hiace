@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { Pawn } from "@/model/Pawn";
+import { usePawns } from "@/model/store/pawns";
+import { get } from "svelte/store";
 
 const DEFAULT_CHARACTER_IMAGE = "default_character_image";
 
@@ -22,10 +24,19 @@ interface CreatePawnProps {
   imageId?: string;
   characterId: string;
   transform?: string | DOMMatrix;
+  updatedAt?: number;
 }
 
 export const createPawn = async (props: CreatePawnProps) => {
-  const { roomId, userId, boardId, imageId, characterId, transform } = props;
+  const {
+    roomId,
+    userId,
+    boardId,
+    imageId,
+    characterId,
+    transform,
+    updatedAt,
+  } = props;
   const p = {
     room: roomId,
     owner: userId,
@@ -33,7 +44,7 @@ export const createPawn = async (props: CreatePawnProps) => {
     image: imageId ?? DEFAULT_CHARACTER_IMAGE,
     character: characterId,
     transform: `${transform ?? new DOMMatrix()}`,
-    updatedAt: Date.now(),
+    updatedAt: updatedAt || Date.now(),
   };
   const collectionRef = collection(db, "pawn");
   const docRef = doc(collectionRef);
@@ -49,6 +60,7 @@ export const createPawn = async (props: CreatePawnProps) => {
     image: p.image,
     character: p.character,
     transform: p.transform,
+    updatedAt: p.updatedAt,
   });
 };
 
@@ -66,6 +78,7 @@ export const fetchPawn = async (pawnId: string): Promise<Pawn> => {
     image: p.image,
     character: p.character,
     transform: p.transform,
+    updatedAt: p.updatedAt,
   });
 };
 
@@ -79,6 +92,7 @@ export const clonePawn = async (props: { pawnId: string }) => {
     imageId: sourcePawn.image,
     characterId: sourcePawn.character,
     transform: sourcePawn.transform,
+    updatedAt: sourcePawn.updatedAt,
   });
 };
 
@@ -119,4 +133,22 @@ export const updatePawn = async (props: UpdatePawnProps) => {
 export const touchPawn = async (props: { pawnId: string }) => {
   const { pawnId } = props;
   await updatePawn({ pawnId, criteria: { updatedAt: Date.now() } });
+};
+
+export const pawnToBottom = async (props: { pawnId: string }) => {
+  const { pawnId } = props;
+  const { pawns: _pawns } = usePawns();
+  const pawns = get(_pawns);
+  const batch = writeBatch(db);
+  const now = Date.now();
+  for (let i = 0; i < pawns.length; i++) {
+    const { id } = pawns[i];
+
+    const delta = pawnId === id ? pawns.length : i;
+    const updatedAt = now - delta;
+    const docRef = doc(await collection(db, "pawn"), id);
+    batch.update(docRef, { updatedAt });
+  }
+
+  await batch.commit();
 };

@@ -13,6 +13,7 @@ export type PawnProps = {
   image: string;
   character: string;
   transform: string;
+  updatedAt: number;
 };
 
 export class Pawn {
@@ -23,6 +24,7 @@ export class Pawn {
   set id(value: string) {
     this._id = value;
   }
+
   get room(): string {
     return this._room;
   }
@@ -30,6 +32,7 @@ export class Pawn {
   set room(value: string) {
     this._room = value;
   }
+
   get owner(): string {
     return this._owner;
   }
@@ -37,6 +40,7 @@ export class Pawn {
   set owner(value: string) {
     this._owner = value;
   }
+
   get board(): string {
     return this._board;
   }
@@ -44,6 +48,7 @@ export class Pawn {
   set board(value: string) {
     this._board = value;
   }
+
   get image(): string {
     return this._image;
   }
@@ -51,6 +56,7 @@ export class Pawn {
   set image(value: string) {
     this._image = value;
   }
+
   get character(): string {
     return this._character;
   }
@@ -58,6 +64,7 @@ export class Pawn {
   set character(value: string) {
     this._character = value;
   }
+
   get transform(): string {
     return this._transform;
   }
@@ -65,6 +72,15 @@ export class Pawn {
   set transform(value: string) {
     this._transform = value;
   }
+
+  get updatedAt(): number {
+    return this._updatedAt;
+  }
+
+  set updatedAt(value: number) {
+    this._updatedAt = value;
+  }
+
   private _id: string;
   private _room: string;
   private _owner: string;
@@ -72,12 +88,14 @@ export class Pawn {
   private _image: string;
   private _character: string;
   private _transform: string;
+  private _updatedAt: number;
 
   /**
    * @param {PawnProps} args
    */
   constructor(args: PawnProps) {
-    const { id, room, owner, board, image, character, transform } = args;
+    const { id, room, owner, board, image, character, transform, updatedAt } =
+      args;
     this._id = id;
     this._room = room;
     this._owner = owner;
@@ -85,5 +103,6 @@ export class Pawn {
     this._image = image;
     this._character = character;
     this._transform = transform;
+    this._updatedAt = updatedAt;
   }
 }

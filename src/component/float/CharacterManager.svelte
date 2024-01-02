@@ -9,7 +9,7 @@
   import { useCharacters } from "@/model/store/characters";
   import { ContentId, Float } from "@/model/Float";
   import Button from "@/component/button/Button.svelte";
-  import { cloneCharacter, createCharacter, deleteCharacter } from "@/model/service/CharacterService";
+  import { cloneCharacter, createCharacter, deleteCharacter, updateCharacter } from "@/model/service/CharacterService";
   import { useUsers } from "@/model/store/users";
   import { useRoom } from "@/model/store/room";
   import { openFloat } from "@/model/service/FloatService";
@@ -64,15 +64,19 @@
       , boardId: $room.activeBoard
     })
   }
-  const onClickArchiveHandler = (characterId: string) => {
+  const onClickArchiveHandler = async (characterId: string) => {
     console.log("CharacterManager.onClickArchiveHandler");
-    console.log(characterId);
+    await updateCharacter({ characterId, criteria: { archived: true } })
+  }
+  const onClickUnArchiveHandler = async (characterId: string) => {
+    console.log("CharacterManager.onClickUnArchiveHandler");
+    await updateCharacter({ characterId, criteria: { archived: false } })
   }
 
-  const onClickDeleteHandler  = async (characterId:string) => {
+  const onClickDeleteHandler = async (characterId: string) => {
     console.log("CharacterManager.onClickDeleteHandler");
     console.log(characterId);
-    await deleteCharacter({characterId})
+    await deleteCharacter({ characterId })
   }
 </script>
 <ul>
@@ -88,6 +92,7 @@
       <Button handle={()=>onClickCloneHandler(c.id)}>複製</Button>
       <Button handle={()=>onClickAddPawnHandler(c.id)}>コマ追加</Button>
       <Button handle={()=>onClickArchiveHandler(c.id)}>控室に入れる</Button>
+      <Button handle={()=>onClickUnArchiveHandler(c.id)}>控室から出す</Button>
       <Button handle={()=>onClickDeleteHandler(c.id)}>キャラクターの削除</Button>
     </li>
   {/each}
