@@ -15,6 +15,8 @@ import { db } from "@/util/firestore";
 import { useChats } from "@/model/store/chats";
 import { Chat } from "@/model/Chat";
 import { chatBell } from "@/util/chatBell";
+import { get } from "svelte/store";
+import { diceBell } from "@/util/diceBell";
 
 const subscribeMap = new Map<
   string,
@@ -22,8 +24,7 @@ const subscribeMap = new Map<
 >();
 
 export function ChatListener() {
-  const { setChats } = useChats();
-  let isFirstRead = true;
+  const { setChats, chats: _chats } = useChats();
 
   const setChatListener = (roomId: string) => {
     console.log("setChatListener");
@@ -33,8 +34,31 @@ export function ChatListener() {
       orderBy("timestamp", "asc"),
     );
     const unsubscribe = onSnapshot(q, querySnapshot => {
+      const changes = querySnapshot.docChanges();
+
       const chats: Chat[] = [];
-      querySnapshot.forEach(doc => {
+      if (changes.length !== 1 && changes.every(c => c.type === "added")) {
+        console.log("first read");
+        // 初回ロード時
+        querySnapshot.forEach(doc => {
+          const d = doc.data();
+          const chat = new Chat({
+            id: doc.id,
+            room: d.room,
+            channel: d.channel,
+            alias: d.alias,
+            character: d.character,
+            color: d.color,
+            owner: d.owner,
+            type: d.type,
+            value: d.value,
+            timestamp: d.timestamp,
+          });
+          chats.push(chat);
+        });
+      } else if (changes.length === 1 && changes[0].type === "added") {
+        // チャット追加時
+        const doc = changes[0].doc;
         const d = doc.data();
         const chat = new Chat({
           id: doc.id,
@@ -48,15 +72,22 @@ export function ChatListener() {
           value: d.value,
           timestamp: d.timestamp,
         });
-        chats.push(chat);
-      });
-      console.log(">>>>>>>>>>>");
-      console.log(">>>>>>>>>>>");
-      setChats(chats);
-      if(chats.length !==0 && !isFirstRead) {
-        chatBell()
+        const cccc = get(_chats);
+        chats.push(...cccc, chat);
+        if (chat.type === "TEXT") {
+          chatBell();
+        } else if (chat.type === "DICE") {
+          diceBell();
+        }
+      } else {
+        // それ以外のケースは起こり得ない想定のためエラーにする
+        console.error(changes);
+        throw new Error(
+          "ChatListener.onSnapshot: 不正なケースが発生しました。",
+        );
       }
-      isFirstRead = false
+
+      setChats(chats);
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });

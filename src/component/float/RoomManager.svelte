@@ -64,7 +64,7 @@
   <h5>タブが非アクティブの時に通知音を鳴らす</h5>
   <Checkbox
       label="新着チャットを通知する"
-      checked={$localConfig.ring}
+      checked={$localConfig.isRing}
       onChange={onChangeRing}></Checkbox>
 </fieldset>
 {#if isOwner}

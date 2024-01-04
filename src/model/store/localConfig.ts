@@ -22,18 +22,18 @@ localConfig.subscribe((l: LocalConfig) => {
   updateLocalStorage(l);
 });
 
-const setIsRing = (isRing :boolean) =>{
+const setIsRing = (isRing: boolean) => {
   localConfig.update(l => {
     l.isRing = isRing;
     return l;
   });
-} 
-const setIsBackGround = (isBackGround :boolean) =>{
+};
+const setIsBackGround = (isBackGround: boolean) => {
   localConfig.update(l => {
     l.isBackGround = isBackGround;
     return l;
   });
-} 
+};
 
 export const useLocalConfig = () => {
   return {
