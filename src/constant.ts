@@ -72,6 +72,6 @@ export const DiceLabels = {
   SIX: "6",
   ASTER: "*",
 } as const;
-export type DiceLabel = (typeof DiceLabels)[keyof typeof DiceLabels];
+export type DiceLabel = (typeof DiceLabels)[keyof typeof DiceValues];
 
 export const CELL_EDITOR_INPUT_ID = "cell-editor-input";
