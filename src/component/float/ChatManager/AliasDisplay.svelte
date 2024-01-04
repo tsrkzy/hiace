@@ -22,8 +22,6 @@
   });
 
   $: portraits = (() => {
-    console.warn("AliasDisplay.portraits computing...");
-    // @TODO dragによるfloat再描画のたびに走ってしまうのでstoreに切り出したほうがいいかも
     const items = [];
 
     const cMap = new Map();
