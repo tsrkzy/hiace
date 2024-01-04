@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Chat, ChatType } from "@/model/Chat.js";
+  import { Chat, ChatTypes } from "@/model/Chat.js";
   import { onMount } from "svelte";
   import { ReadManager } from "@/model/ReadManager";
   import ChatLines from "@/component/chat/ChatLines.svelte";
@@ -18,7 +18,7 @@
 
   const classStr = [
     "chat-row"
-    , chat.type === ChatType.SYSTEM ? "system" : ""
+    , chat.type === ChatTypes.SYSTEM ? "system" : ""
     , isCreatedAsRead ? "" : "unread"
   ].join(" ")
 

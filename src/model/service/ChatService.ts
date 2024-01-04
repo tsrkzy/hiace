@@ -2,7 +2,8 @@ import { setDoc, doc, collection, writeBatch } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import {
   Chat,
-  ChatType,
+  type ChatType,
+  ChatTypes,
   type ChatValue,
   SYSTEM_CHANNEL_ID,
 } from "@/model/Chat";
@@ -77,7 +78,7 @@ export const createSystemChat = async (props: createSystemChatProps) => {
     aliasId: null,
     characterId: null,
     userId,
-    type: ChatType.SYSTEM,
+    type: ChatTypes.SYSTEM,
     value: { text },
   });
 };
@@ -107,7 +108,7 @@ export const createUserChat = async (props: createUserChatProps) => {
     aliasId: _aliasId === ALIAS_ID_NULL ? null : _aliasId,
     characterId: _characterId === CHARACTER_ID_NULL ? null : _characterId,
     userId,
-    type: ChatType.TEXT,
+    type: ChatTypes.TEXT,
     value: { text },
   });
 };
@@ -131,7 +132,7 @@ export const createDiceBotChat = async (
   isSecret: boolean = false,
 ) => {
   console.log("ChatService.createDiceBotChat", props);
-  const type = isSecret ? ChatType.DICE_SECRET : ChatType.DICE;
+  const type = isSecret ? ChatTypes.DICE_SECRET : ChatTypes.DICE;
   const {
     roomId,
     channelId: _channelId,
@@ -230,7 +231,7 @@ export const insertDummyChat = async (
       color: "#000000",
       owner: userId,
       room: roomId,
-      type: ChatType.TEXT,
+      type: ChatTypes.TEXT,
       value: { text: `dummy_${seq}` },
       timestamp: Date.now() - (amountOfChat - i),
     };

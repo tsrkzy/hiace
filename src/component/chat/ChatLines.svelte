@@ -6,7 +6,7 @@
   ----------------------------------------------------------------------------->
 
 <script lang="ts">
-  import { Chat, ChatType } from "@/model/Chat";
+  import { Chat, ChatTypes } from "@/model/Chat";
   import { useChannels } from "@/model/store/channels";
   import { useCharacters } from "@/model/store/characters";
   import { useUsers } from "@/model/store/users";
@@ -28,7 +28,7 @@
   } = chat;
 
   const lines = [...text.split("\n")];
-  if (type === ChatType.DICE || type === ChatType.DICE_SECRET) {
+  if (type === ChatTypes.DICE || type === ChatTypes.DICE_SECRET) {
     lines.push(result);
   }
 
@@ -45,7 +45,7 @@
   <span class={`chat-line`}>{lines[0]}</span>
 {:else }
   {#each lines as line, i }
-    {#if !(i === 0 && (type === ChatType.DICE || type === ChatType.DICE_SECRET))}
+    {#if !(i === 0 && (type === ChatTypes.DICE || type === ChatTypes.DICE_SECRET))}
       <br/>
     {/if}
     <span class={`chat-line ${i!==0? "multi":""}`}>{line}</span>

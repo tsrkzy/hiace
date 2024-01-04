@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/util/firestore";
 import { useChats } from "@/model/store/chats";
-import { Chat } from "@/model/Chat";
+import { Chat, ChatTypes } from "@/model/Chat";
 import { chatBell } from "@/util/chatBell";
 import { get } from "svelte/store";
 import { diceBell } from "@/util/diceBell";
@@ -74,9 +74,9 @@ export function ChatListener() {
         });
         const cccc = get(_chats);
         chats.push(...cccc, chat);
-        if (chat.type === "TEXT") {
+        if (chat.type === ChatTypes.TEXT) {
           chatBell();
-        } else if (chat.type === "DICE") {
+        } else if (chat.type === ChatTypes.DICE) {
           diceBell();
         }
       } else {

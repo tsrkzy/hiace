@@ -13,6 +13,7 @@
   import { useChats } from "@/model/store/chats";
   import { createChat, insertDummyChat } from "@/model/service/ChatService";
   import { useUsers } from "@/model/store/users";
+  import { ChatTypes } from "@/model/Chat";
 
 
   export let open = false;
@@ -40,7 +41,7 @@
       characterId: null,
       color: "#000000",
       userId: $myUserId,
-      type: "SYSTEM",
+      type: ChatTypes.SYSTEM,
       value: {
         text: `${Date.now()}`
       }
@@ -56,7 +57,7 @@
       characterId: null,
       color: "#000000",
       userId: $myUserId,
-      type: "SYSTEM",
+      type: ChatTypes.SYSTEM,
       value: {
         text: `${Date.now()}`
       }

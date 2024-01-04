@@ -5,7 +5,7 @@
  - All rights reserved.                                                       -
  -----------------------------------------------------------------------------*/
 
-export const ChatType = {
+export const ChatTypes = {
   /* ユーザーのチャット */
   TEXT: "TEXT",
   /* BCDiceの結果 */
@@ -15,7 +15,7 @@ export const ChatType = {
   /* ログイン通知、ダイス操作ログなどのシステム通知 */
   SYSTEM: "SYSTEM",
 } as const;
-export type ChatType = (typeof ChatType)[keyof typeof ChatType];
+export type ChatType = (typeof ChatTypes)[keyof typeof ChatTypes];
 
 export const SYSTEM_CHANNEL_ID = "SYSTEM";
 export type ChatValue = {
