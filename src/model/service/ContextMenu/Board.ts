@@ -18,11 +18,9 @@ export const showBoardContextMenu = (e: MouseEvent, boardId: string) => {
 
   setContextMenuItems([
     new ContextMenuItem({
-      text: "ウィンドウの位置をリセット(未実装)",
+      text: "ウィンドウの位置をリセット",
       id: "reset_float_windows",
-      callback: () => {
-        resetFloatWindows();
-      },
+      callback: () => resetFloatWindows()
     }),
     new ContextMenuItem({
       text: "ボードの位置をリセット",

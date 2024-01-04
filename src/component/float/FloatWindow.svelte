@@ -229,8 +229,6 @@
       >
         閉じる
       </button>
-      <!--      <float-duplicator v-if="!isDragMove" :float-id="floatId"/>-->
-      <!--      <hint-container v-if="!isDragMove" :float-id="floatId"/>-->
     </div>
     <!-- scale diagonal -->
     {#if !isDragMove}
