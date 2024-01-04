@@ -77,18 +77,21 @@ export const resetFloatWindows = () => {
   console.log("FloatService.resetFloatWindows");
   const floatList = get(floats);
   const maxId = Math.max(...floatList.map(f => f.id));
-  const newFloatList = floatList.map((f, index) => new Float({
-    id: maxId + index + 1,
-    show: f.show,
-    contentId: f.contentId,
-    contentTitle: f.contentTitle,
-    x: 200 + index * 50,
-    y: 200 + index * 50,
-    w: f.w,
-    h: f.h,
-    z: f.z,
-    args: f.args,
-  }));
+  const newFloatList = floatList.map(
+    (f, index) =>
+      new Float({
+        id: maxId + index + 1,
+        show: f.show,
+        contentId: f.contentId,
+        contentTitle: f.contentTitle,
+        x: 200 + index * 50,
+        y: 200 + index * 50,
+        w: f.w,
+        h: f.h,
+        z: f.z,
+        args: f.args,
+      }),
+  );
 
   setFloats(newFloatList);
 };
