@@ -4,7 +4,6 @@
   - tsrmix@gmail.com                                                          -
   - All rights reserved.                                                      -
   ----------------------------------------------------------------------------->
-
 <script lang="ts">
 
   import { useBoards } from "@/model/store/boards";
@@ -18,16 +17,13 @@
   import { useDices } from "@/model/store/dices";
   import { showBoardContextMenu } from "@/model/service/ContextMenu/Board";
 
-  const { activeBoard, setDraggedBoardId, draggedBoardId } = useBoards()
+  const { activeBoard, setDraggedBoardId, draggedBoardId, transform, setTransform } = useBoards()
   const { mapChips, draggedMapChipId } = useMapChips()
   const { pawns } = usePawns()
   const { dices } = useDices()
 
 
-  const zoom = 100;
-  const z = zoom / 100;
-  let transformMatrix = `${new DOMMatrix([z, 0, 0, z, 0, 0]).inverse()}`;
-  $: boardStyleString = toCSS({ transform: `${transformMatrix}` });
+  $: boardStyleString = toCSS({ transform: `${$transform}` });
   $: isDraggingMapChipOrBoard = $draggedMapChipId || $draggedBoardId;
 
 
@@ -44,8 +40,6 @@
       return false;
     }
 
-
-
     setDraggedBoardId($activeBoard.id || "");
 
     const elSvg = document.getElementById("svg-table") as HTMLElement;
@@ -61,14 +55,14 @@
     const onMove = (e: MouseEvent) => {
       e.stopPropagation();
       const t = globalToLocal(e.clientX - downX, e.clientY - downY, ctmBoard);
-      transformMatrix = `${t}`
+      setTransform(t);
     }
 
     const onMouseUp = (e: MouseEvent) => {
       console.log("SvgBoard.onMouseUp");
       e.stopPropagation();
       const t = globalToLocal(e.clientX - downX, e.clientY - downY, ctmBoard);
-      transformMatrix = `${t}`
+      setTransform(t);
       elSvg.classList.remove("drag");
 
       setDraggedBoardId("");
@@ -97,7 +91,7 @@
 
     /* windowsの場合の正。osxは逆 */
     const dir = (event.deltaY > 0 ? 1 : -1) * (isMacOS() ? -1 : 1);
-    const t = new DOMMatrix(transformMatrix);
+    const t = new DOMMatrix(`${$transform}`);
     let { a, e, f } = t;
 
     /* osxの場合はtrackpadとして扱う
@@ -130,7 +124,7 @@
 
     const newTransform = new DOMMatrix([a, 0, 0, a, newE, newF]);
     // this.updateWeathercock(newTransform);
-    transformMatrix = `${newTransform}`;
+    setTransform(newTransform);
   }
 
 </script>

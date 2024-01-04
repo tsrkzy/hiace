@@ -15,6 +15,7 @@ const activeBoard = derived(boards, $boards => {
 });
 
 const draggedBoardId = writable<string>("");
+const transform = writable<DOMMatrix>(new DOMMatrix());
 
 export const useBoards = () => {
   return {
@@ -23,5 +24,7 @@ export const useBoards = () => {
     activeBoard,
     draggedBoardId,
     setDraggedBoardId: draggedBoardId.set,
+    transform,
+    setTransform: transform.set,
   };
 };

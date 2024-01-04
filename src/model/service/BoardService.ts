@@ -3,6 +3,7 @@ import { db } from "@/util/firestore";
 import { Board } from "@/model/Board";
 import { deleteMapChipByBoard } from "@/model/service/MapChipService";
 import { deletePawnByBoard } from "@/model/service/PawnService";
+import { useBoards } from "@/model/store/boards";
 
 export const createBoard = async (props: {
   roomId: string;
@@ -53,4 +54,9 @@ export const deleteBoard = async (props: { boardId: string }) => {
 
   /* 紐づくDiceも削除 */
   // await deleteDiceByBoard(boardId)
+};
+
+export const resetAllMapChipPosition = () => {
+  const { setTransform } = useBoards();
+  setTransform(new DOMMatrix());
 };

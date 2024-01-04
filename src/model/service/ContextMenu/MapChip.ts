@@ -61,26 +61,54 @@ export const showMapChipContextMenu = (e: MouseEvent, mapChipId: string) => {
       id: `create_dice_on_map_chip_${mapChipId}`,
       children: [
         new ContextMenuItem({
-          text: "白", id: `create_white_dice_${mapChipId}`, callback: async () => {
-            await createDice({ roomId, boardId, userId, color: DiceColors.DICE_WHITE });
+          text: "白",
+          id: `create_white_dice_${mapChipId}`,
+          callback: async () => {
+            await createDice({
+              roomId,
+              boardId,
+              userId,
+              color: DiceColors.DICE_WHITE,
+            });
           },
         }),
         new ContextMenuItem({
-          text: "黒", id: `create_black_dice_${mapChipId}`, callback: async () => {
-            await createDice({ roomId, boardId, userId, color: DiceColors.DICE_BLACK });
+          text: "黒",
+          id: `create_black_dice_${mapChipId}`,
+          callback: async () => {
+            await createDice({
+              roomId,
+              boardId,
+              userId,
+              color: DiceColors.DICE_BLACK,
+            });
           },
         }),
         new ContextMenuItem({
-          text: "赤", id: `create_red_dice_${mapChipId}`, callback: async () => {
-            await createDice({ roomId, boardId, userId, color: DiceColors.DICE_RED });
+          text: "赤",
+          id: `create_red_dice_${mapChipId}`,
+          callback: async () => {
+            await createDice({
+              roomId,
+              boardId,
+              userId,
+              color: DiceColors.DICE_RED,
+            });
           },
         }),
         new ContextMenuItem({
-          text: "ハロウィン", id: `create_haloween_dice_${mapChipId}`, callback: async () => {
-            await createDice({ roomId, boardId, userId, color: DiceColors.DICE_HALLOWEEN });
+          text: "ハロウィン",
+          id: `create_haloween_dice_${mapChipId}`,
+          callback: async () => {
+            await createDice({
+              roomId,
+              boardId,
+              userId,
+              color: DiceColors.DICE_HALLOWEEN,
+            });
           },
-        })
-      ]
+        }),
+      ],
     }),
   ]);
 

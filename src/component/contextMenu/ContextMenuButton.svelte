@@ -20,7 +20,6 @@
   const onClickItem = (e: MouseEvent, item: ContextMenuItem) => {
     console.log("ContextMenu.onClickItem");
     e.stopPropagation()
-    console.log(item);
     execContextMenu(level, item)
   }
 </script>

@@ -72,3 +72,14 @@ export const openFloat = (
 
   setFloats(floatList);
 };
+
+export const resetFloatWindows = () => {
+  console.log("FloatService.resetFloatWindows");
+  const floatList = get(floats);
+  const newFloatList = floatList.map((f, index) => {
+    f.x = 300 + index * 20;
+    f.y = 300 + index * 20;
+    return f;
+  });
+  setFloats(newFloatList);
+};
