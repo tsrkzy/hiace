@@ -16,6 +16,7 @@
   import SvgDice from "@/component/svg/SvgDice.svelte";
   import { useDices } from "@/model/store/dices";
   import { showBoardContextMenu } from "@/model/service/ContextMenu/Board";
+  import Weathercock from "@/component/svg/Weathercock.svelte";
 
   const { activeBoard, setDraggedBoardId, draggedBoardId, transform, setTransform } = useBoards()
   const { mapChips, draggedMapChipId } = useMapChips()
@@ -136,11 +137,6 @@
     on:wheel={(e)=>onWheel(e)}
 >
   <g id={`board_${$activeBoard?.id}`} style={boardStyleString}>
-    <text class="crosshair-text" x="0" y="-3">O</text>
-    <!--      <path-->
-    <!--          d={crossHair}-->
-    <!--          style="fill: none; stroke: dimgray; stroke-width: 1px"-->
-    <!--      />-->
     {#each $mapChips as mapChip(mapChip.id)}
       <SvgMapChip mapChipId={mapChip.id}></SvgMapChip>
     {/each}
@@ -163,10 +159,7 @@
       {/each}
     {/if}
   </g>
-  <!--  <path-->
-  <!--      id="weathercock"-->
-  <!--      d={weathercockPath}-->
-  <!--  ></path>-->
+  <Weathercock></Weathercock>
 </svg>
 
 
@@ -182,9 +175,5 @@
     fill: lightgray;
     fill-opacity: 0.8;
     transform: matrix(1, 0, 0, 1, 20, 20);
-  }
-
-  text.crosshair-text {
-    fill: black;
   }
 </style>
