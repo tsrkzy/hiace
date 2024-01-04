@@ -17,6 +17,9 @@ export const CHARACTER_ID_NULL = "NULL";
 export const ALIAS_ID_NULL = "NULL";
 export const CHANNEL_ID_NULL = "NULL";
 
+export const DUPLICATE_PAWN_OFFSET = 50;
+export const WEATHERCOCK_OFFSET = 40;
+
 export const ALIAS_DISPLAY_HEIGHT = 200;
 
 export const DICE_SIZE = 100;

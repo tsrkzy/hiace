@@ -14,6 +14,7 @@ import { db } from "@/util/firestore";
 import { Pawn } from "@/model/Pawn";
 import { usePawns } from "@/model/store/pawns";
 import { get } from "svelte/store";
+import { DUPLICATE_PAWN_OFFSET } from "@/constant";
 
 const DEFAULT_CHARACTER_IMAGE = "default_character_image";
 
@@ -85,13 +86,23 @@ export const fetchPawn = async (pawnId: string): Promise<Pawn> => {
 export const clonePawn = async (props: { pawnId: string }) => {
   const { pawnId } = props;
   const sourcePawn = await fetchPawn(pawnId);
+  const { transform } = sourcePawn;
+  const { a, b, c, d, e, f } = new DOMMatrix(transform);
+  const newTransform = new DOMMatrix([
+    a,
+    b,
+    c,
+    d,
+    e + DUPLICATE_PAWN_OFFSET,
+    f + DUPLICATE_PAWN_OFFSET,
+  ]);
   return await createPawn({
     roomId: sourcePawn.room,
     userId: sourcePawn.owner,
     boardId: sourcePawn.board,
     imageId: sourcePawn.image,
     characterId: sourcePawn.character,
-    transform: sourcePawn.transform,
+    transform: newTransform,
     updatedAt: sourcePawn.updatedAt,
   });
 };
