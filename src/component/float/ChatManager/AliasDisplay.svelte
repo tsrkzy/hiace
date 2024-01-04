@@ -12,14 +12,17 @@
   import { useChats } from "@/model/store/chats";
   import { toCSS } from "@/util/style";
 
+  export let isDisplay = false;
+
   const { characters } = useCharacters();
   const { chats } = useChats();
   const { aliases } = useAliases();
 
-  const displayBaseStyle = toCSS({
+  $: displayBaseStyle = (() => toCSS({
+    display: isDisplay ? "block" : "none",
     top: `-${ALIAS_DISPLAY_HEIGHT}px`,
     height: `${ALIAS_DISPLAY_HEIGHT}px`
-  });
+  }))();
 
   $: portraits = (() => {
     const items = [];

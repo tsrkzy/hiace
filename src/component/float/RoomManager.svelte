@@ -20,7 +20,7 @@
 
   const { myUserId, users } = useUsers();
   const { room } = useRoom();
-  const { localConfig } = useLocalConfig();
+  const { localConfig, setIsRing } = useLocalConfig();
 
   export const float = {} as Float
 
@@ -49,17 +49,11 @@
     console.log("RoomManager.onClickKick", userId);
     createNotice("未実装です");
   };
-
-  const onChangeMaskChannel = (e: Event) => {
-    console.log("RoomManager.onChangeMaskChannel");
-    const { checked } = e.currentTarget as HTMLInputElement;
-    $localConfig.maskChannel = checked;
-  }
-
+  
   const onChangeRing = (e: Event) => {
     console.log("RoomManager.onChangeRing");
     const { checked } = e.currentTarget as HTMLInputElement
-    $localConfig.ring = checked;
+    setIsRing(checked)
   }
 
 </script>
@@ -67,12 +61,6 @@
 <fieldset>
   <legend>個人設定</legend>
   <ColorPicker onChange={()=>{}}/>
-  <h5>個別のチャンネル(全体以外)への発言</h5>
-  <Checkbox
-      label="発言内容を伏せる"
-      checked={$localConfig.maskChannel}
-      onChange={onChangeMaskChannel}
-  ></Checkbox>
   <h5>タブが非アクティブの時に通知音を鳴らす</h5>
   <Checkbox
       label="新着チャットを通知する"

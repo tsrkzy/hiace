@@ -14,6 +14,7 @@ import {
 import { db } from "@/util/firestore";
 import { useChats } from "@/model/store/chats";
 import { Chat } from "@/model/Chat";
+import { chatBell } from "@/util/chatBell";
 
 const subscribeMap = new Map<
   string,
@@ -22,13 +23,14 @@ const subscribeMap = new Map<
 
 export function ChatListener() {
   const { setChats } = useChats();
+  let isFirstRead = true;
 
   const setChatListener = (roomId: string) => {
     console.log("setChatListener");
     const q = query(
       collection(db, "chat"),
       where("room", "==", roomId),
-      orderBy("timestamp", "asc"), // @TODO should be "asc"
+      orderBy("timestamp", "asc"),
     );
     const unsubscribe = onSnapshot(q, querySnapshot => {
       const chats: Chat[] = [];
@@ -48,7 +50,13 @@ export function ChatListener() {
         });
         chats.push(chat);
       });
+      console.log(">>>>>>>>>>>");
+      console.log(">>>>>>>>>>>");
       setChats(chats);
+      if(chats.length !==0 && !isFirstRead) {
+        chatBell()
+      }
+      isFirstRead = false
     });
 
     subscribeMap.set(roomId, { id: roomId, unsubscribe });

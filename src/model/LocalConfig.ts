@@ -6,39 +6,39 @@
  -----------------------------------------------------------------------------*/
 
 type LocalConfigProps = {
-  maskChannel: boolean;
-  ring: boolean;
+  isRing: boolean;
+  isBackGround: boolean;
 };
 
 export class LocalConfig {
-  get maskChannel(): boolean {
-    return this._maskChannel;
+  get isRing(): boolean {
+    return this._isRing;
   }
 
-  set maskChannel(value: boolean) {
-    this._maskChannel = value;
+  set isRing(value: boolean) {
+    this._isRing = value;
   }
 
-  get ring(): boolean {
-    return this._ring;
+  get isBackGround(): boolean {
+    return this._isBackGround;
   }
 
-  set ring(value: boolean) {
-    this._ring = value;
+  set isBackGround(value: boolean) {
+    this._isBackGround = value;
   }
 
-  private _maskChannel: boolean;
-  private _ring: boolean;
+  private _isRing: boolean;
+  private _isBackGround: boolean;
 
   constructor(props: LocalConfigProps) {
-    this._maskChannel = props.maskChannel || false;
-    this._ring = props.ring || false;
+    this._isRing = props.isRing || false;
+    this._isBackGround = props.isBackGround || false;
   }
 
   toJSONStr() {
     return JSON.stringify({
-      maskChannel: this.maskChannel,
-      ring: this.ring,
+      isRing: this.isRing,
+      isBackGround: this.isBackGround,
     });
   }
 }
